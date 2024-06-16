@@ -9,7 +9,7 @@ const createUser = async (
   kakaoId = null,
   naverId = null
 ) => {
-  return await prisma.user.create({
+  return await prisma.users.create({
     data: {
       nickname,
       email,
@@ -22,25 +22,25 @@ const createUser = async (
 };
 
 const findUserByEmail = async (email) => {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: { email },
   });
 };
 
 const findUserByGoogleId = async (googleId) => {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: { googleId },
   });
 };
 
 const findUserByKakaoId = async (kakaoId) => {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: { kakaoId },
   });
 };
 
 const findUserByNaverId = async (naverId) => {
-  return await prisma.user.findUnique({
+  return await prisma.users.findUnique({
     where: { naverId },
   });
 };

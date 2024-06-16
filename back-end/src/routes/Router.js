@@ -5,9 +5,13 @@ const router = express.Router();
 const userRoute = require("./userRoute");
 const postRoute = require("./postRoute");
 const homeRoute = require("./homeRoute");
+const commentRoute = require("./commentRoute");
+const rankRoute = require("./rankRoute");
 
 router.use("/user", userRoute);
 router.use("/post", postRoute);
+router.use("/comment", commentRoute);
 router.use("/home", homeRoute);
+router.use("/rank", rankRoute);
 
 module.exports = router;

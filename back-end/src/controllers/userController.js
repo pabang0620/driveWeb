@@ -18,9 +18,12 @@ const registerUser = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
     const user = await createUser(nickname, email, hashedPassword);
+    console.log(user);
     res.status(201).json(user);
   } catch (error) {
+    res.status(500).json(error);
     res.status(500).json({ error: "사용자 생성 중 오류가 발생했습니다." });
   }
 };
