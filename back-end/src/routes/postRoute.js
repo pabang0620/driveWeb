@@ -9,6 +9,7 @@ const {
   removePost,
   likePost,
   unlikePost,
+  getTopPosts,
 } = require("../controllers/postController");
 
 const router = express.Router();
@@ -231,5 +232,26 @@ router.post("/:id/like", likePost);
  *         description: Server error
  */
 router.post("/:id/unlike", unlikePost);
+
+/**
+ * @swagger
+ * /api/posts/{boardId}/top:
+ *   get:
+ *     summary: 각 게시판의 인기 게시글 조회
+ *     tags: [Post]
+ *     parameters:
+ *       - in: path
+ *         name: boardId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Board ID
+ *     responses:
+ *       200:
+ *         description: Top posts retrieved successfully
+ *       500:
+ *         description: Server error
+ */
+router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
 
 module.exports = router;

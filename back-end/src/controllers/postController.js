@@ -6,6 +6,7 @@ const {
   getPostById,
   updatePost,
   deletePost,
+  incrementViewCount,
 } = require("../models/postModel");
 
 const addBoard = async (req, res) => {
@@ -99,7 +100,18 @@ const removePost = async (req, res) => {
     res.status(500).json({ error: "게시글 삭제 중 오류가 발생했습니다." });
   }
 };
-
+// 1위 ~ 10위 게시글
+const getTopPosts = async (req, res) => {
+  const { boardId } = req.params;
+  try {
+    const { topLikedPosts, topViewedPosts } = await getTopPostsByLikesAndViews(
+      Number(boardId)
+    );
+    res.status(200).json({ topLikedPosts, topViewedPosts });
+  } catch (error) {
+    res.status(500).json({ error: "인기 게시글 조회 중 오류가 발생했습니다." });
+  }
+};
 module.exports = {
   addBoard,
   removeBoard,
@@ -110,4 +122,5 @@ module.exports = {
   unlikePost,
   editPost,
   removePost,
+  getTopPosts,
 };

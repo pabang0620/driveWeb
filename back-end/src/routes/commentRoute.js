@@ -28,6 +28,8 @@ const router = express.Router();
  *                 type: integer
  *               userId:
  *                 type: integer
+ *               parentId:
+ *                 type: integer
  *             required:
  *               - content
  *               - postId
@@ -38,6 +40,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+// parentId를 보내지 않으면 일반 댓글 생성, parentId를 보내면 해당 댓글에 대한 대댓글을 생성하는 방식
 router.post("/comment", addComment);
 
 /**

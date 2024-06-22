@@ -2,19 +2,19 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createBoard = async (name) => {
-  return await prisma.board.create({
+  return await prisma.boards.create({
     data: { name },
   });
 };
 
 const deleteBoard = async (id) => {
-  return await prisma.board.delete({
+  return await prisma.boards.delete({
     where: { id },
   });
 };
 
 const createPost = async (title, content, boardId, userId) => {
-  return await prisma.post.create({
+  return await prisma.posts.create({
     data: {
       title,
       content,
@@ -25,35 +25,35 @@ const createPost = async (title, content, boardId, userId) => {
 };
 
 const getPostsByBoard = async (boardId) => {
-  return await prisma.post.findMany({
+  return await prisma.posts.findMany({
     where: { boardId },
     include: { user: true },
   });
 };
 
 const getPostById = async (id) => {
-  return await prisma.post.findUnique({
+  return await prisma.posts.findUnique({
     where: { id },
     include: { user: true, board: true },
   });
 };
 
 const updatePost = async (id, title, content) => {
-  return await prisma.post.update({
+  return await prisma.posts.update({
     where: { id },
     data: { title, content },
   });
 };
 
 const deletePost = async (id) => {
-  return await prisma.post.delete({
+  return await prisma.posts.delete({
     where: { id },
   });
 };
 
 // 조회수
 const incrementViewCount = async (id) => {
-  return await prisma.post.update({
+  return await prisma.posts.update({
     where: { id },
     data: {
       viewCount: {
@@ -64,7 +64,7 @@ const incrementViewCount = async (id) => {
 };
 // 추천수
 const incrementLikeCount = async (id) => {
-  return await prisma.post.update({
+  return await prisma.posts.update({
     where: { id },
     data: {
       likeCount: {
@@ -75,7 +75,7 @@ const incrementLikeCount = async (id) => {
 };
 
 const decrementLikeCount = async (id) => {
-  return await prisma.post.update({
+  return await prisma.posts.update({
     where: { id },
     data: {
       likeCount: {
@@ -85,17 +85,39 @@ const decrementLikeCount = async (id) => {
   });
 };
 
-const getTopPostsByViews = async () => {
-  return await prisma.post.findMany({
-    orderBy: {
-      viewCount: "desc",
-    },
+// 게시글
+const getTopPostsByLikesAndViews = async (boardId) => {
+  const topLikedPosts = await prisma.posts.findMany({
+    where: { boardId },
+    orderBy: { likeCount: "desc" },
     take: 10,
-    include: {
-      user: true,
-      board: true,
+    select: {
+      id: true,
+      viewCount: true,
+      title: true,
+      likeCount: true,
+      _count: {
+        select: { comments: true },
+      },
     },
   });
+
+  const topViewedPosts = await prisma.posts.findMany({
+    where: { boardId },
+    orderBy: { viewCount: "desc" },
+    take: 10,
+    select: {
+      id: true,
+      viewCount: true,
+      title: true,
+      likeCount: true,
+      _count: {
+        select: { comments: true },
+      },
+    },
+  });
+
+  return { topLikedPosts, topViewedPosts };
 };
 
 module.exports = {
@@ -105,9 +127,9 @@ module.exports = {
   getPostsByBoard,
   getPostById,
   updatePost,
+  getTopPostsByLikesAndViews,
   deletePost,
   incrementViewCount,
   incrementLikeCount,
   decrementLikeCount,
-  getTopPostsByViews,
 };

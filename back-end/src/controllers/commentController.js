@@ -7,9 +7,9 @@ const {
 } = require("../models/commentModel");
 
 const addComment = async (req, res) => {
-  const { content, postId, userId } = req.body;
+  const { content, postId, userId, parentId } = req.body; // parentId 추가
   try {
-    const comment = await createComment(content, postId, userId);
+    const comment = await createComment(content, postId, userId, parentId); // parentId 전달
     res.status(201).json(comment);
   } catch (error) {
     res.status(500).json({ error: "덧글 생성 중 오류가 발생했습니다." });

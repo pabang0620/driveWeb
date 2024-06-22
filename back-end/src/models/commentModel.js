@@ -1,20 +1,24 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const createComment = async (content, postId, userId) => {
-  return await prisma.comment.create({
+const createComment = async (content, postId, userId, parentId = null) => {
+  return await prisma.comments.create({
     data: {
       content,
-      post: { connect: { id: postId } },
-      user: { connect: { id: userId } },
+      postId,
+      userId,
+      parentId, // parentId 추가
     },
   });
 };
 
 const getCommentsByPost = async (postId) => {
-  return await prisma.comment.findMany({
+  return await prisma.comments.findMany({
     where: { postId },
-    include: { user: true },
+    include: {
+      user: true,
+      replies: { include: { user: true } }, // 대댓글 포함
+    },
   });
 };
 
