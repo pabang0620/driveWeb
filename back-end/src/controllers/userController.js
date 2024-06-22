@@ -4,6 +4,10 @@ const {
   findUserByGoogleId,
   findUserByKakaoId,
   findUserByNaverId,
+  deleteFranchiseFee,
+  updateFranchiseFee,
+  createFranchiseFee,
+  getUserProfile,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -122,7 +126,7 @@ const kakaoLogin = (req, res) => socialLogin(req, res, "kakao");
 const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const addUserProfile = async (req, res) => {
-  const { userId } = req;
+  const { userId } = req.userId;
   const profileData = req.body;
 
   try {
@@ -134,7 +138,7 @@ const addUserProfile = async (req, res) => {
 };
 
 const addUserVehicle = async (req, res) => {
-  const { userId } = req;
+  const { userId } = req.userId;
   const vehicleData = req.body;
 
   try {
@@ -146,7 +150,7 @@ const addUserVehicle = async (req, res) => {
 };
 
 const addUserIncome = async (req, res) => {
-  const { userId } = req;
+  const { userId } = req.userId;
   const incomeData = req.body;
 
   try {
@@ -157,6 +161,95 @@ const addUserIncome = async (req, res) => {
   }
 };
 
+// 수수료 등록 수정 삭제 컨트롤러
+const addFranchiseFee = async (req, res) => {
+  const { userId } = req.userId;
+  const { franchiseName, fee } = req.body;
+
+  try {
+    const franchiseFee = await createFranchiseFee(userId, franchiseName, fee);
+    res.status(201).json(franchiseFee);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "가맹점 수수료 생성 중 오류가 발생했습니다." });
+  }
+};
+
+// Update Franchise Fee
+const editFranchiseFee = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+
+  try {
+    const franchiseFee = await updateFranchiseFee(Number(id), data);
+    res.status(200).json(franchiseFee);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "가맹점 수수료 수정 중 오류가 발생했습니다." });
+  }
+};
+
+// Delete Franchise Fee
+const removeFranchiseFee = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await deleteFranchiseFee(Number(id));
+    res.status(200).json({ message: "가맹점 수수료가 삭제되었습니다." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "가맹점 수수료 삭제 중 오류가 발생했습니다." });
+  }
+};
+
+// 회원정보 - 개인정보 조회
+const fetchUserProfile = async (req, res) => {
+  const { userId } = req.userId;
+
+  try {
+    const userProfile = await getUserProfile(Number(userId));
+    if (userProfile) {
+      res.status(200).json(userProfile);
+    } else {
+      res.status(404).json({ error: "회원 정보를 찾을 수 없습니다." });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "회원 정보를 조회하는 중 오류가 발생했습니다." });
+  }
+};
+
+// 회원정보 - 차량정보 및 수수료 조회
+const fetchUserVehiclesWithFees = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const userVehicles = await getUserVehiclesWithFees(Number(userId));
+    res.status(200).json(userVehicles);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "회원 차량 정보를 조회하는 중 오류가 발생했습니다." });
+  }
+};
+
+// 회원정보 - 소득정보 조회
+const fetchUserIncomeRecords = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const incomeRecords = await getUserIncomeRecords(Number(userId));
+    res.status(200).json(incomeRecords);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "회원 수입 정보를 조회하는 중 오류가 발생했습니다." });
+  }
+};
 module.exports = {
   registerUser,
   loginUser,
@@ -166,4 +259,10 @@ module.exports = {
   addUserProfile,
   addUserVehicle,
   addUserIncome,
+  addFranchiseFee,
+  editFranchiseFee,
+  removeFranchiseFee,
+  fetchUserProfile,
+  fetchUserVehiclesWithFees,
+  fetchUserIncomeRecords,
 };

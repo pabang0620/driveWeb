@@ -91,7 +91,55 @@ const createUserIncome = async (userId, incomeData) => {
     },
   });
 };
+// 수수료 입력 및 삭제 수정
+const createFranchiseFee = async (userId, franchiseName, fee) => {
+  return await prisma.franchiseFee.create({
+    data: {
+      userId,
+      franchiseName,
+      fee,
+    },
+  });
+};
 
+// Update Franchise Fee
+const updateFranchiseFee = async (id, data) => {
+  return await prisma.franchiseFee.update({
+    where: { id },
+    data,
+  });
+};
+
+// Delete Franchise Fee
+const deleteFranchiseFee = async (id) => {
+  return await prisma.franchiseFee.delete({
+    where: { id },
+  });
+};
+// 회원정보 - 개인 정보 조회
+const getUserProfile = async (userId) => {
+  return await prisma.user_profiles.findUnique({
+    where: { userId },
+  });
+};
+
+// 회원정보 - 차량 및 수수료 조회
+const getUserVehiclesWithFees = async (userId) => {
+  const userVehicles = await prisma.user_vehicles.findMany({
+    where: { userId },
+    include: {
+      franchise_fees: true,
+    },
+  });
+  return userVehicles;
+};
+
+// 회원정보 - 소득정보 조회
+const getUserIncomeRecords = async (userId) => {
+  return await prisma.income_records.findMany({
+    where: { userId },
+  });
+};
 module.exports = {
   createUser,
   findUserByEmail,
@@ -101,4 +149,10 @@ module.exports = {
   createUserProfile,
   createUserVehicle,
   createUserIncome,
+  createFranchiseFee,
+  updateFranchiseFee,
+  deleteFranchiseFee,
+  getUserProfile,
+  getUserVehiclesWithFees,
+  getUserIncomeRecords,
 };
