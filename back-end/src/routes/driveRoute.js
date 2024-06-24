@@ -18,7 +18,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 // 운행일지 - 운행
 /**
  * @swagger
- * /api/drive:
+ * /api/drive/log:
  *   post:
  *     summary: 운행 일지 등록
  *     tags: [운행일지 - 운행]
@@ -55,7 +55,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 router.post("/log", authMiddleware, addDrivingRecord);
 /**
  * @swagger
- * /api/drive/{id}:
+ * /api/drive/log/{id}:
  *   put:
  *     summary: 운행 일지 수정
  *     tags: [운행일지 - 운행]
@@ -97,7 +97,7 @@ router.post("/log", authMiddleware, addDrivingRecord);
 router.put("/log/:id", authMiddleware, editDrivingRecord);
 /**
  * @swagger
- * /api/drive/{id}:
+ * /api/drive/log/{id}:
  *   delete:
  *     summary: 운행 일지 삭제
  *     tags: [운행일지 - 운행]
@@ -164,9 +164,6 @@ router.delete("/log/:id", authMiddleware, removeDrivingRecord);
  *               incomeSpare4:
  *                 type: number
  *                 format: double
- *               workingHours:
- *                 type: number
- *                 format: double
  *     responses:
  *       201:
  *         description: 수입 기록이 성공적으로 생성되었습니다.
@@ -227,9 +224,6 @@ router.post("/income", authMiddleware, addIncomeRecord);
  *                 type: number
  *                 format: double
  *               incomeSpare4:
- *                 type: number
- *                 format: double
- *               workingHours:
  *                 type: number
  *                 format: double
  *     responses:
