@@ -55,9 +55,11 @@ const loginUser = async (req, res) => {
     console.log("username", username);
     console.log("user", user);
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user.id, jobType: user.jobType }, // jobType을 토큰의 페이로드에 추가
+      process.env.JWT_SECRET,
+      { expiresIn: "10h" }
+    );
     console.log(token);
     res.status(200).json({ token });
   } catch (error) {
