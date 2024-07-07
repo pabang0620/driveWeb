@@ -38,10 +38,13 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *  *            jobType:
+ *                 type: string
  *             required:
  *               - nickname
  *               - email
  *               - password
+ *               - jobType
  *     responses:
  *       201:
  *         description: User created successfully

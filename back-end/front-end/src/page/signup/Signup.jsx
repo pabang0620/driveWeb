@@ -4,14 +4,14 @@ import axios from "axios";
 
 function Signup() {
   const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignup = async () => {
     try {
       const response = await axios.post("/api/user/register", {
         nickname,
-        email,
+        username,
         password,
       });
       console.log("Signup successful:", response.data);
@@ -26,7 +26,7 @@ function Signup() {
       <div className="signup-box">
         <h2>Sign Up</h2>
         <div className="input-container">
-          <label htmlFor="nickname">Nickname:</label>
+          <label htmlFor="nickname">닉네임:</label>
           <input
             type="text"
             id="nickname"
@@ -36,13 +36,13 @@ function Signup() {
           />
         </div>
         <div className="input-container">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="username">ID:</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="username"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="input-container">
