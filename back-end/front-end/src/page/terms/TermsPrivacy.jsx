@@ -112,7 +112,7 @@ const TermsPrivacy = () => {
             margin-top: 20px;
           }
           .outer_list {
-            padding-left: 5px;
+            padding-left: 15px;
             li {
               font-size: 14px;
               line-height: 20px;
