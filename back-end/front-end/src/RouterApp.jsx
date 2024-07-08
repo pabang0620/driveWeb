@@ -6,6 +6,8 @@ import Home from "./page/home/Home";
 import Layout from "./layout/Layout";
 import SignupEmail from "./page/signup/SignupEmail";
 import SignupPassword from "./page/signup/SignupPassword";
+import SignupJob from "./page/signup/SignupJob";
+import PersonalInfo from "./page/user/PersonalInfo";
 import TermsPrivacy from "./page/terms/TermsPrivacy";
 import TermsGeneral from "./page/terms/TermsGeneral";
 
@@ -21,6 +23,7 @@ function RouterApp() {
             </Layout>
           }
         />
+        {/* 로그인 */}
         <Route
           path="/login"
           element={
@@ -29,6 +32,7 @@ function RouterApp() {
             </Layout>
           }
         />
+        {/* 회원가입 */}
         <Route
           path="/signup"
           element={
@@ -50,6 +54,24 @@ function RouterApp() {
           element={
             <Layout>
               <SignupPassword />
+            </Layout>
+          }
+        />
+        <Route
+          path="/signup/job"
+          element={
+            <Layout>
+              <SignupJob />
+            </Layout>
+          }
+        />
+
+        {/* 회원정보 */}
+        <Route
+          path="/user/personalInfo"
+          element={
+            <Layout>
+              <PersonalInfo />
             </Layout>
           }
         />

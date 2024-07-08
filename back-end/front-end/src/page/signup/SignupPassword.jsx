@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import TermsPrivacy from "../../page/terms/TermsPrivacy";
+import { useNavigate, useLocation } from "react-router-dom";
+
 function SignupPassword() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [isMatch, setIsMatch] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const goBack = () => {
-    window.history.back(); // 이전 페이지로 돌아가는 기능
-  };
+  const location = useLocation();
+  const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
-  const handleSubmit = () => {
-    setIsSubmitted(true);
-    if (password === passwordCheck) {
-      // 비밀번호가 일치하면 다음 페이지로 이동
-      // 페이지 이동 로직 여기에 추가.
+  // 다음 버튼 클릭 시 처리 함수
+  const handleNext = () => {
+    console.log("d", location.state, password);
+    if (location.state && password === passwordCheck) {
+      alert("비밀번호 일치");
+      // 모든 조건이 충족되면 다음 페이지로 이동
+      navigate("/signup/job", {
+        state: { ...location.state, password: password },
+      });
+    } else {
+      alert("비밀번호가 일치하지 않아요.");
     }
   };
 
@@ -26,7 +31,7 @@ function SignupPassword() {
   return (
     <div className="container signup-container">
       <div className="signup-box">
-        <button className="goBack" onClick={goBack}>
+        <button className="goBack" onClick={() => navigate(-1)}>
           &lt;
         </button>
         <h3>비밀번호 설정</h3>
@@ -57,8 +62,8 @@ function SignupPassword() {
             <p className="error">*비밀번호가 일치하지 않습니다.</p>
           )}
         </div>
-        <button className="navyBox" onClick={handleSubmit}>
-          {isMatch ? <Link to="/">다음</Link> : "다음"}
+        <button className="navyBox" onClick={handleNext}>
+          다음
         </button>
       </div>
 

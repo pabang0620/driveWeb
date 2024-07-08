@@ -3,12 +3,16 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
+    console.log(username, password);
     try {
-      const response = await axios.post("/api/user/login", { email, password });
+      const response = await axios.post("/api/user/login", {
+        username,
+        password,
+      });
       console.log("Login successful:", response.data);
       // 로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
     } catch (error) {
@@ -24,17 +28,16 @@ function Login() {
           <img
             src={`${process.env.PUBLIC_URL}/images/mainlogo_1.png`}
             alt=""
-            x
           />{" "}
         </h2>
         <div className="input-container">
-          <label htmlFor="email">이메일</label>
+          <label htmlFor="username">이메일</label>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="username"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             placeholder="이메일을 입력해주세요."
           />
         </div>

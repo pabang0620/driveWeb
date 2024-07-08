@@ -1,23 +1,8 @@
 // SignupPage.jsx
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
 import { Link } from "react-router-dom";
 
 function Signup() {
-  // const handleSignup = async () => {
-  //   try {
-  //     const response = await axios.post("/api/user/register", {
-  //       nickname,
-  //       email,
-  //       password,
-  //     });
-  //     console.log("Signup successful:", response.data);
-  //     // 회원가입 성공 후, 리다이렉트하는 로직 추가
-  //   } catch (error) {
-  //     console.error("Signup error:", error.response?.data || error.message);
-  //   }
-  // };
-
   return (
     <div className="container signup-container">
       <div className="signup-box">
