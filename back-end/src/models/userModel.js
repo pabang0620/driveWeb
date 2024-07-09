@@ -5,7 +5,7 @@ const createUser = async (
   nickname,
   username,
   password,
-  jobType,
+  jobtype,
   googleId = null,
   kakaoId = null,
   naverId = null
@@ -15,7 +15,7 @@ const createUser = async (
       nickname,
       username,
       password, // 일반 로그인 용
-      jobType, // jobType 추가
+      jobtype, // jobtype 추가
       googleId,
       kakaoId,
       naverId,
@@ -23,9 +23,9 @@ const createUser = async (
   });
 };
 
-const findUserByEmail = async (email) => {
+const findUserByUsername = async (username) => {
   return await prisma.users.findUnique({
-    where: { email },
+    where: { username },
   });
 };
 
@@ -142,7 +142,7 @@ const getUserIncomeRecords = async (userId) => {
 };
 module.exports = {
   createUser,
-  findUserByEmail,
+  findUserByUsername,
   findUserByGoogleId,
   findUserByKakaoId,
   findUserByNaverId,

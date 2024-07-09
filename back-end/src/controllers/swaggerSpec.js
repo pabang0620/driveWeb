@@ -1,17 +1,27 @@
-const swaggerJsdoc = require("swagger-jsdoc");
+// controllers/swaggerSpec.js
+const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "API Documentation",
+      title: "API 문서",
       version: "1.0.0",
+      description: "API 설명",
     },
+    servers: [
+      {
+        url: "http://krdriver.com", // 배포된 서버의 URL
+      },
+    ],
   },
-  apis: ["./src/routes/*.js", "./src/controllers/*.js"], // API 경로
+  apis: ["./routes/*.js"], // 주석이 작성된 파일 경로
 };
 
-const swaggerSpec = swaggerJsdoc(options);
+const swaggerSpec = swaggerJSDoc(options);
 
-module.exports = { swaggerUi, swaggerSpec };
+module.exports = {
+  swaggerUi,
+  swaggerSpec,
+};

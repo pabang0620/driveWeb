@@ -24,7 +24,7 @@ const router = express.Router();
  * /api/user/register:
  *   post:
  *     summary: Register a new user
- *     tags: [User]
+ *     tags: [User - 완료]
  *     requestBody:
  *       required: true
  *       content:
@@ -34,14 +34,17 @@ const router = express.Router();
  *             properties:
  *               nickname:
  *                 type: string
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
+ *               jobType:
+ *                 type: string
  *             required:
  *               - nickname
- *               - email
+ *               - username
  *               - password
+ *               - jobType
  *     responses:
  *       201:
  *         description: User created successfully
@@ -55,7 +58,7 @@ router.post("/register", registerUser);
  * /api/user/login:
  *   post:
  *     summary: Login a user
- *     tags: [User]
+ *     tags: [User - 완료]
  *     requestBody:
  *       required: true
  *       content:
@@ -63,12 +66,12 @@ router.post("/register", registerUser);
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
  *             required:
- *               - email
+ *               - username
  *               - password
  *     responses:
  *       200:
@@ -102,6 +105,7 @@ router.post("/naver-login", naverLogin);
  *         description: 서버 오류
  */
 router.get("/profile", authMiddleware, fetchUserProfile);
+
 /**
  * @swagger
  * /api/user/profile:

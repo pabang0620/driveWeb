@@ -38,7 +38,6 @@ const addDrivingRecord = async (req, res) => {
     res.status(500).json({ error: "운행 기록 생성 중 오류가 발생했습니다." });
   }
 };
-
 const editDrivingRecord = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
@@ -50,7 +49,6 @@ const editDrivingRecord = async (req, res) => {
     res.status(500).json({ error: "운행 기록 수정 중 오류가 발생했습니다." });
   }
 };
-
 const removeDrivingRecord = async (req, res) => {
   const { id } = req.params;
 

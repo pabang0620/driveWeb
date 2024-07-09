@@ -129,7 +129,7 @@ model users {
   naverId        String?          @unique(map: "naverId") @db.VarChar(255)
   createdAt      DateTime?        @default(now()) @db.Timestamp(0)
   updatedAt      DateTime?        @default(now()) @db.Timestamp(0)
-  jobType        users_jobType    @default(OTHER)
+  jobtype        Int?
   comments       comments[]
   driving_logs   driving_logs[]
   franchise_fees franchise_fees[]
@@ -235,10 +235,4 @@ model franchise_fees {
   users          users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "franchise_fees_ibfk_1")
 
   @@index([user_id], map: "user_id")
-}
-
-enum users_jobType {
-  TAXI
-  DELIVERY
-  OTHER
 }
