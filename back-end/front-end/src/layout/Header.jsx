@@ -1,13 +1,15 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
   // 로그인 및 회원가입 페이지에서는 네비게이션을 숨김
   const hideNav =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup");
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // 스크롤에 따라 헤더가 위로 움직이도록 처리
   const handleScroll = () => {
@@ -34,6 +36,14 @@ function Header() {
     return currentPath.startsWith(pathPrefix) ? "selected" : "";
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+    setShowLogoutModal(false);
+  };
+
+  const isLoggedIn = !!localStorage.getItem("token");
+
   return (
     <header className={hideNav ? "hidden" : ""}>
       <div className="header_inner">
@@ -48,13 +58,30 @@ function Header() {
             </Link>
           </h1>
           <ul className="login">
-            <li>
-              <Link to="/signup">회원가입</Link>
-            </li>
-            <li>
-              <Link to="/login">로그인</Link>
-            </li>
+            {!isLoggedIn && (
+              <li>
+                <Link to="/signup">회원가입</Link>
+              </li>
+            )}
+            {isLoggedIn ? (
+              <li onClick={() => setShowLogoutModal(true)}>로그아웃</li>
+            ) : (
+              <li>
+                <Link to="/login">로그인</Link>
+              </li>
+            )}
           </ul>
+          {showLogoutModal && (
+            <div className="logout_modal">
+              <div className="modal_content">
+                <p>정말 로그아웃 하시겠습니까?</p>
+                <button onClick={handleLogout}>로그아웃</button>
+                <button onClick={() => setShowLogoutModal(false)}>
+                  로그인 유지
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         <nav className={hideNav ? "hidden" : ""}>
           <ul className="mainmenu">
@@ -133,9 +160,11 @@ function Header() {
                   height: 40px;
                   line-height: 40px;
                   font-weight: bold;
+                  padding: 0 15px;
                   a {
-                    display: inline-block;
-                    padding: 0 15px;
+                    width: 100%;
+                    height: 100%;
+                    display: inline;
                     font-weight: 500;
                   }
                   &:nth-of-type(1) {
@@ -143,6 +172,7 @@ function Header() {
                   }
                   &:nth-of-type(2) {
                     background-color: #3c5997;
+                    color: white;
                     a {
                       color: white;
                     }
@@ -175,6 +205,54 @@ function Header() {
                   border-bottom: 3px solid #3c5997;
                   a {
                     color: #3c5997;
+                  }
+                }
+              }
+            }
+            .logout_modal {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.5);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .modal_content {
+                background: white;
+                padding: 30px 10px;
+                border-radius: 5px;
+                text-align: center;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                p {
+                  width: 100%;
+                  margin-bottom: 30px;
+                }
+                button {
+                  width: 30%;
+                  padding: 10px;
+                  border: none;
+                  border-radius: 5px;
+                  cursor: pointer;
+
+                  color: white;
+                  cursor: pointer;
+                  &:nth-of-type(1) {
+                    background-color: #7388b6;
+                    &:hover {
+                      background-color: #9ab1d6; /* 약간 밝게 */
+                    }
+                  }
+                  &:nth-of-type(2) {
+                    background-color: #3c5997;
+                    &:hover {
+                      background-color: #2c4375; /* 약간 어둡게 */
+                    }
                   }
                 }
               }

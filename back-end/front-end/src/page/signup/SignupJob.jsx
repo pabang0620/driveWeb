@@ -15,16 +15,12 @@ const SignupJob = () => {
   };
 
   const handleSignup = async () => {
-    console.log("d", {
-      ...location.state,
-      jobtype: jobtype,
-    });
     try {
       const response = await axios.post("/api/user/register", {
         ...location.state,
         jobtype: jobtype,
       });
-      console.log("Signup successful:", response.data);
+      navigate("/login");
       //로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
     } catch (error) {
       console.error("Signup error:", error.response?.data || error.message);

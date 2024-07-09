@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 function DynamicInput({
   labelName,
@@ -82,6 +83,36 @@ function DynamicInput({
 }
 
 const PersonalInfo = () => {
+  const [userInfo, setUserInfo] = useState({
+    nickname: "",
+    birthdate: "",
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  //const [token, setToken] = useState(""); // 로그인 후 받은 토큰 상태
+  const token = localStorage.getItem("token"); // 토큰 가져오기
+  // 회원 정보 조회 함수
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get("/api/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      //setUserInfo(response.data); // 서버에서 받은 회원 정보 설정
+    } catch (error) {
+      console.error("회원 정보 조회 실패:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    // 페이지 로드 시 회원 정보 조회
+    if (token) {
+      fetchUserProfile();
+    }
+  }, []);
+
   return (
     <div className="container userInfo">
       <h2>
@@ -94,6 +125,7 @@ const PersonalInfo = () => {
           <DynamicInput
             labelName={"이름"}
             inputType={"text"}
+            value={userInfo.nickname}
             placeholder={"이름을 입력해주세요."}
           />
           <DynamicInput
