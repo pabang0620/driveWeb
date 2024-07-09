@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const createUser = async (
   nickname,
-  email,
+  username,
   password,
   jobType,
   googleId = null,
@@ -13,7 +13,7 @@ const createUser = async (
   return await prisma.users.create({
     data: {
       nickname,
-      email,
+      username,
       password, // 일반 로그인 용
       jobType, // jobType 추가
       googleId,

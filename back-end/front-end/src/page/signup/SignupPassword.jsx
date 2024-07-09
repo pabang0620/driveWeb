@@ -13,12 +13,14 @@ function SignupPassword() {
   // 다음 버튼 클릭 시 처리 함수
   const handleNext = () => {
     console.log("d", location.state, password);
-    if (location.state && password === passwordCheck) {
+    if (location.state && password === passwordCheck && password.length >= 4) {
       alert("비밀번호 일치");
       // 모든 조건이 충족되면 다음 페이지로 이동
       navigate("/signup/job", {
         state: { ...location.state, password: password },
       });
+    } else if (password.length < 4) {
+      alert("4자 이상 입력해 주세요.");
     } else {
       alert("비밀번호가 일치하지 않아요.");
     }
@@ -45,8 +47,7 @@ function SignupPassword() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <ul>
-            <li>8자 이상</li>
-            <li>영문, 숫자, 특수문자</li>
+            <li>4자 이상</li>
           </ul>
         </div>
         <div className="input-container">

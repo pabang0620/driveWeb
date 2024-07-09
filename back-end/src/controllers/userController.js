@@ -14,15 +14,15 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
 const registerUser = async (req, res) => {
-  const { nickname, email, password, jobType } = req.body;
+  const { nickname, username, password, jobType } = req.body;
 
-  if (!nickname || !email || !password || !jobType) {
+  if (!nickname || !username || !password || !jobType) {
     return res.status(400).json({ error: "모든 필드를 입력해주세요." });
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser(nickname, email, hashedPassword, jobType);
+    const user = await createUser(nickname, username, hashedPassword, jobType);
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: "사용자 생성 중 오류가 발생했습니다." });

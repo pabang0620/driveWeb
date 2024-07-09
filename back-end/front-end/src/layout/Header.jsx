@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 function Header() {
   const location = useLocation();
-
+  const currentPath = location.pathname;
   // 로그인 및 회원가입 페이지에서는 네비게이션을 숨김
   const hideNav =
     location.pathname.startsWith("/login") ||
@@ -29,6 +29,11 @@ function Header() {
     };
   }, []);
 
+  // 현재 경로와 비교하여 선택된 클래스를 반환하는 함수
+  const getSelectedClass = (pathPrefix) => {
+    return currentPath.startsWith(pathPrefix) ? "selected" : "";
+  };
+
   return (
     <header className={hideNav ? "hidden" : ""}>
       <div className="header_inner">
@@ -52,29 +57,29 @@ function Header() {
           </ul>
         </div>
         <nav className={hideNav ? "hidden" : ""}>
-          <ul>
-            <li className="selected">
+          <ul className="mainmenu">
+            <li className={currentPath === "/" ? "selected" : ""}>
               <Link to="/">홈</Link>
             </li>
-            <li>
-              <Link to="/profile">회원정보</Link>
+            <li className={getSelectedClass("/user")}>
+              <Link to="/user/personalInfo">회원정보</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/mypage")}>
               <Link to="/mypage">마이페이지</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/driving_log")}>
               <Link to="/driving_log">운행일지</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/car_ledger")}>
               <Link to="/car_ledger">차계부</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/board")}>
               <Link to="/board">게시판</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/ranking")}>
               <Link to="/ranking">랭킹</Link>
             </li>
-            <li>
+            <li className={getSelectedClass("/admin_page")}>
               <Link to="/admin_page">관리자페이지</Link>
             </li>
           </ul>
@@ -149,26 +154,30 @@ function Header() {
             nav {
               width: 100%;
               margin-top: 15px;
+              position: relative;
             }
-            nav ul {
-              list-style: none;
-              display: flex;
-              gap: 15px;
-            }
-            nav ul li {
+            nav:hover {
               cursor: pointer;
-              font-weight: 500;
-              padding: 5px;
-              font-size: 15px;
-            }
-            nav ul li.selected {
-              border-bottom: 3px solid #3c5997;
-              a {
-                color: #3c5997;
+              .submenu {
+                display: flex;
               }
             }
-            .hidden {
-              display: none;
+
+            nav .mainmenu {
+              display: flex;
+              gap: 15px;
+              li {
+                cursor: pointer;
+                font-weight: 500;
+                padding: 5px;
+                font-size: 15px;
+                &.selected {
+                  border-bottom: 3px solid #3c5997;
+                  a {
+                    color: #3c5997;
+                  }
+                }
+              }
             }
           }
         `}</style>

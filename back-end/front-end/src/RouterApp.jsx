@@ -8,6 +8,8 @@ import SignupEmail from "./page/signup/SignupEmail";
 import SignupPassword from "./page/signup/SignupPassword";
 import SignupJob from "./page/signup/SignupJob";
 import PersonalInfo from "./page/user/PersonalInfo";
+import CarInfo from "./page/user/CarInfo";
+import IncomeInfo from "./page/user/IncomeInfo";
 import TermsPrivacy from "./page/terms/TermsPrivacy";
 import TermsGeneral from "./page/terms/TermsGeneral";
 
@@ -72,6 +74,22 @@ function RouterApp() {
           element={
             <Layout>
               <PersonalInfo />
+            </Layout>
+          }
+        />
+        <Route
+          path="/user/carInfo"
+          element={
+            <Layout>
+              <CarInfo />
+            </Layout>
+          }
+        />
+        <Route
+          path="/user/incomeInfo"
+          element={
+            <Layout>
+              <IncomeInfo />d
             </Layout>
           }
         />

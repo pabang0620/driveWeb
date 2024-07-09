@@ -12,8 +12,8 @@ function SignupEmail() {
   const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
   // 이메일 유효성 검사 함수
-  const isValidEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
+  const isValidEmail = (username) => {
+    return /\S+@\S+\.\S+/.test(username);
   };
 
   // 전체 동의 체크

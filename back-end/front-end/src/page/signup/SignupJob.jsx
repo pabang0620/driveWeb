@@ -27,7 +27,7 @@ const SignupJob = () => {
       console.log("Signup successful:", response.data);
       //로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
     } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
+      console.error("Signup error:", error.response?.data || error.message);
     }
   };
 
