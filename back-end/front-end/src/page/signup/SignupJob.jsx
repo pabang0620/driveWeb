@@ -7,22 +7,22 @@ const SignupJob = () => {
   const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
   // 초기 상태 설정
-  const [jobType, setJobType] = useState(null);
+  const [jobtype, setJobtype] = useState(null);
 
   // 직종 선택 핸들러
   const handleJobSelection = (job) => {
-    setJobType(job);
+    setJobtype(job);
   };
 
   const handleSignup = async () => {
     console.log("d", {
       ...location.state,
-      jobType: jobType,
+      jobtype: jobtype,
     });
     try {
       const response = await axios.post("/api/user/register", {
         ...location.state,
-        jobType: jobType,
+        jobtype: jobtype,
       });
       console.log("Signup successful:", response.data);
       //로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
@@ -41,19 +41,19 @@ const SignupJob = () => {
         <p>현재 종사하고 있는 직종 하나를 선택해주세요.</p>
         <div className="jobBox">
           <button
-            className={jobType === 1 ? "selected" : ""}
+            className={jobtype === 1 ? "selected" : ""}
             onClick={() => handleJobSelection(1)}
           >
             택시
           </button>
           <button
-            className={jobType === 2 ? "selected" : ""}
+            className={jobtype === 2 ? "selected" : ""}
             onClick={() => handleJobSelection(2)}
           >
             배달
           </button>
           <button
-            className={jobType === 3 ? "selected" : ""}
+            className={jobtype === 3 ? "selected" : ""}
             onClick={() => handleJobSelection(3)}
           >
             기타
