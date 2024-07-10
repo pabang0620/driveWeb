@@ -43,3 +43,6 @@ button {
 .main2-sub-font-color {
   color: #69c2ef;
 }
+input {
+  outline: none;
+}
