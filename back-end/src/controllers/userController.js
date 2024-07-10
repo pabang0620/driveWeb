@@ -57,8 +57,9 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "10h" }
     );
+
     console.log(token);
-    res.status(200).json({ token });
+    res.status(200).json(token);
   } catch (error) {
     res.status(500).json({ error: "일반 로그인 중 오류가 발생했습니다." });
   }
