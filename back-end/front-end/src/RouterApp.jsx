@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 import Login from "./page/login/Login";
 import Signup from "./page/signup/Signup";
 import Home from "./page/home/Home";
@@ -12,91 +17,45 @@ import CarInfo from "./page/user/CarInfo";
 import IncomeInfo from "./page/user/IncomeInfo";
 import TermsPrivacy from "./page/terms/TermsPrivacy";
 import TermsGeneral from "./page/terms/TermsGeneral";
+import Board from "./page/board/Board";
+import BoardPost from "./page/board/BoardPost";
+import BoardDetail from "./page/board/BoardDetail";
+import BoardPostAdd from "./page/board/BoardPostAdd";
 
 function RouterApp() {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
-        {/* 로그인 */}
-        <Route
-          path="/login"
-          element={
-            <Layout>
-              <Login />
-            </Layout>
-          }
-        />
-        {/* 회원가입 */}
-        <Route
-          path="/signup"
-          element={
-            <Layout>
-              <Signup />
-            </Layout>
-          }
-        />
-        <Route
-          path="/signup/email"
-          element={
-            <Layout>
-              <SignupEmail />
-            </Layout>
-          }
-        />
-        <Route
-          path="/signup/password"
-          element={
-            <Layout>
-              <SignupPassword />
-            </Layout>
-          }
-        />
-        <Route
-          path="/signup/job"
-          element={
-            <Layout>
-              <SignupJob />
-            </Layout>
-          }
-        />
+        {/* Layout이 적용된 경로 */}
+        <Route element={<LayoutWithOutlet />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup/email" element={<SignupEmail />} />
+          <Route path="/signup/password" element={<SignupPassword />} />
+          <Route path="/signup/job" element={<SignupJob />} />
+          <Route path="/user/personalInfo" element={<PersonalInfo />} />
+          <Route path="/user/carInfo" element={<CarInfo />} />
+          <Route path="/user/incomeInfo" element={<IncomeInfo />} />
+          <Route path="/board" element={<Board />} />
+          <Route path="/board/list" element={<BoardPost />} />
+          <Route path="/board/post/:postId" element={<BoardDetail />} />
+          <Route path="/board/post/add" element={<BoardPostAdd />} />
+        </Route>
 
-        {/* 회원정보 */}
-        <Route
-          path="/user/personalInfo"
-          element={
-            <Layout>
-              <PersonalInfo />
-            </Layout>
-          }
-        />
-        <Route
-          path="/user/carInfo"
-          element={
-            <Layout>
-              <CarInfo />
-            </Layout>
-          }
-        />
-        <Route
-          path="/user/incomeInfo"
-          element={
-            <Layout>
-              <IncomeInfo />d
-            </Layout>
-          }
-        />
+        {/* Layout이 적용되지 않은 경로 */}
         <Route path="/terms/privacy_policy" element={<TermsPrivacy />} />
         <Route path="/terms/general" element={<TermsGeneral />} />
       </Routes>
     </Router>
+  );
+}
+
+function LayoutWithOutlet() {
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
   );
 }
 

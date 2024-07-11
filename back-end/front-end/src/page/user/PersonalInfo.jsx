@@ -1,87 +1,38 @@
-import React, { useState } from "react";
-
-function DynamicInput({
-  labelName,
-  inputType,
-  placeholder,
-  value,
-  options,
-  onChange,
-}) {
-  const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
-
-  const handleChange = (e) => {
-    if (inputType === "checkbox") {
-      onChange(e.target.checked);
-    } else {
-      onChange(e.target.value);
-    }
-  };
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing); // 수정 버튼 클릭 시 상태 토글
-  };
-
-  const renderInput = () => {
-    switch (inputType) {
-      case "text":
-      case "number":
-        return (
-          <>
-            <input
-              type={inputType}
-              placeholder={placeholder}
-              value={value}
-              onChange={handleChange}
-              disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
-            />
-
-            <button
-              onClick={handleEditToggle}
-              className={isEditing ? "savebtn" : "editBtn"}
-            >
-              {isEditing ? "저장" : "수정"}
-            </button>
-          </>
-        );
-      case "select":
-        return (
-          <>
-            <select value={value} onChange={handleChange} disabled={!isEditing}>
-              <option value="">선택하세요</option>
-              {options.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={handleEditToggle}
-              className={isEditing ? "savebtn" : "editBtn"}
-            >
-              {isEditing ? "저장" : "수정"}
-            </button>
-          </>
-        );
-      case "checkbox":
-        return (
-          <input type="checkbox" checked={value} onChange={handleChange} />
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="dynamicInput">
-      <label>{labelName}</label>
-      {renderInput()}
-    </div>
-  );
-}
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { DynamicInput } from "../../components/InputBox";
 
 const PersonalInfo = () => {
+  const [userInfo, setUserInfo] = useState({
+    nickname: "",
+    birthdate: "",
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  //const [token, setToken] = useState(""); // 로그인 후 받은 토큰 상태
+  const token = localStorage.getItem("token"); // 토큰 가져오기
+  // 회원 정보 조회 함수
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get("/api/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      //setUserInfo(response.data); // 서버에서 받은 회원 정보 설정
+    } catch (error) {
+      console.error("회원 정보 조회 실패:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    // 페이지 로드 시 회원 정보 조회
+    if (token) {
+      fetchUserProfile();
+    }
+  }, []);
+
   return (
     <div className="container userInfo">
       <h2>
@@ -94,6 +45,7 @@ const PersonalInfo = () => {
           <DynamicInput
             labelName={"이름"}
             inputType={"text"}
+            value={userInfo.nickname}
             placeholder={"이름을 입력해주세요."}
           />
           <DynamicInput

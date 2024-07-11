@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
-    console.log(username, password);
     try {
       const response = await axios.post("/api/user/login", {
         username,
         password,
       });
-      console.log("Login successful:", response.data);
-      // 로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
+      // 로그인 성공 후 토큰을 로컬 스토리지에 저장
+      localStorage.setItem("token", response.data);
+      //홈으로 이동
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
     }
