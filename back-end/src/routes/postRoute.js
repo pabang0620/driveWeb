@@ -29,6 +29,8 @@ router.get("/board/:boardId", getPosts);
 
 router.get("/:id", getPost);
 
+router.post("/:id/like", likePost);
+
 // ====================================
 
 /**
@@ -106,7 +108,6 @@ router.delete("/:id", removePost);
  *       500:
  *         description: Server error
  */
-router.post("/:id/like", likePost);
 
 /**
  * @swagger

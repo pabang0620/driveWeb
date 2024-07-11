@@ -1,12 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import Spinner from "../../components/Spinner";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import {
+  fetchPost,
+  likePost,
+  createComment,
+  deletePost,
+  deleteComment,
+} from "../../utils/post/postapis";
 
 const BoardDetail = () => {
   const boardId = 2;
@@ -15,30 +21,95 @@ const BoardDetail = () => {
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [postOptionModalOpen, setPostOptionModalOpen] = useState(false);
+  const [commentOptionModalOpen, setCommentOptionModalOpen] = useState({});
+
+  const togglePostOptionModal = () => {
+    setPostOptionModalOpen(!postOptionModalOpen);
+  };
+
+  const toggleCommentOptionModal = (commentId) => {
+    setCommentOptionModalOpen((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
 
   useEffect(() => {
-    const fetchPost = async () => {
+    const loadPost = async () => {
       try {
-        const response = await axios.get(`/api/post/${postId}`);
-        setPost(response.data);
-        setIsLiked(response.data.isLiked);
+        const postData = await fetchPost(postId);
+        setPost(postData);
+        setIsLiked(postData.isLiked);
       } catch (err) {
         setError(err.message);
       }
     };
 
-    fetchPost();
+    loadPost();
   }, [postId]);
 
   const handleLikeClick = async () => {
     try {
-      const response = await axios.post(`/api/post/${postId}/like`, {
-        liked: !isLiked,
-      });
+      const data = await likePost(postId, isLiked);
       setIsLiked(!isLiked);
-      setPost({ ...post, likeCount: response.data.likeCount });
+      setPost({ ...post, likeCount: data.likeCount });
     } catch (err) {
       console.error("좋아요 처리 중 오류가 발생했습니다:", err);
+    }
+  };
+
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async () => {
+    setIsCommenting(true);
+    try {
+      const comment = await createComment(newComment, Number(postId), 1); // 사용자의 ID를 지정해야 합니다.
+      setPost({
+        ...post,
+        comments: [...post.comments, comment],
+      });
+      setNewComment("");
+    } catch (err) {
+      console.error("덧글 작성 중 오류가 발생했습니다:", err);
+    } finally {
+      setIsCommenting(false);
+    }
+  };
+
+  const handlePostDelete = async () => {
+    const confirmed = window.confirm("게시글을 삭제하시겠습니까?");
+    if (!confirmed) {
+      return;
+    }
+    try {
+      await deletePost(postId);
+      alert("게시글이 성공적으로 삭제되었습니다.");
+      navigate(`/board/list/${boardId}`);
+    } catch (err) {
+      console.error("게시글 삭제 중 오류가 발생했습니다:", err);
+      alert("게시글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    const confirmed = window.confirm("덧글을 삭제하시겠습니까?");
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteComment(commentId);
+      setPost({
+        ...post,
+        comments: post.comments.filter((comment) => comment.id !== commentId),
+      });
+    } catch (err) {
+      console.error("덧글 삭제 중 오류가 발생했습니다:", err);
     }
   };
 
@@ -53,6 +124,11 @@ const BoardDetail = () => {
   const handleWriteButtonClick = () => {
     navigate("/board/post/add", { state: { boardId } });
   };
+
+  const handleEdit = () => {
+    navigate(`/board/post/edit/${postId}`, { state: { boardId } });
+  };
+
   return (
     <div className="boardDetail">
       <TitleBox title="게시판" subtitle="게시글" />
@@ -60,7 +136,7 @@ const BoardDetail = () => {
         <button className="writeButton">목록</button>
         <button className="writeButton" onClick={handleWriteButtonClick}>
           글쓰기
-        </button>{" "}
+        </button>
       </div>
       <section>
         <h2>{post.title}</h2>
@@ -70,16 +146,30 @@ const BoardDetail = () => {
               <img src="" alt="" />
             </div>
             <div className="detailUserdetail detailUserdetailAdd">
-              <p className="detailName">작성자: {post.users.nickname}</p>
+              <p className="detailName"> {post.users.nickname}</p>
 
               <div className="detailUserLast">
-                <p>작성일: {new Date(post.createdAt).toLocaleDateString()}</p>
-                <p>조회수: {post.viewCount}</p>
+                <p>{new Date(post.createdAt).toLocaleDateString()}</p>
+                <p>조회수 {post.viewCount}</p>
               </div>
             </div>
           </div>
-          <div>
-            <FontAwesomeIcon icon={faEllipsisV} />
+          <div className="burgerRelate">
+            <FontAwesomeIcon
+              icon={faEllipsisV}
+              onClick={togglePostOptionModal}
+              style={{ padding: "3px", cursor: "pointer" }}
+            />
+            {postOptionModalOpen && (
+              <div className="postControllButtonBox">
+                <div className="postDelectButton adited" onClick={handleEdit}>
+                  수정
+                </div>
+                <div className="postDelectButton" onClick={handlePostDelete}>
+                  삭제
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div
@@ -91,10 +181,7 @@ const BoardDetail = () => {
             onClick={handleLikeClick}
             style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
-            <FontAwesomeIcon
-              icon={isLiked ? solidHeart : regularHeart}
-              color={isLiked ? "red" : "gray"}
-            />
+            <FontAwesomeIcon icon={isLiked ? solidHeart : regularHeart} />
             <span style={{ marginLeft: "5px" }}>좋아요 {post.likeCount}</span>
           </div>
           <div>덧글 {post.comments.length}</div>
@@ -108,16 +195,33 @@ const BoardDetail = () => {
                   <img src="" alt="" />
                 </div>
                 <div className="detailUserdetail">
-                  <p className="detailName">작성자: {comment.userId}</p>
+                  <p className="detailName">
+                    {comment.users
+                      ? comment.users.nickname
+                      : comment.user.nickname}
+                  </p>
                   <p className="commentDetail">{comment.content}</p>
                   <div className="detailUserLast">
-                    <p>
-                      작성일: {new Date(comment.createdAt).toLocaleDateString()}
-                    </p>
+                    <p>{new Date(comment.createdAt).toLocaleString()}</p>
                   </div>
                 </div>
-                <div>
-                  <FontAwesomeIcon icon={faEllipsisV} />
+                <div className="burgerRelate">
+                  <FontAwesomeIcon
+                    icon={faEllipsisV}
+                    onClick={() => toggleCommentOptionModal(comment.id)}
+                    style={{ padding: "3px", cursor: "pointer" }}
+                  />
+                  {commentOptionModalOpen[comment.id] && (
+                    <div className="postControllButtonBox">
+                      <div className="postDelectButton adited">수정</div>
+                      <div
+                        className="postDelectButton"
+                        onClick={() => handleCommentDelete(comment.id)}
+                      >
+                        삭제
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -128,8 +232,17 @@ const BoardDetail = () => {
             className="commentInput"
             type="text"
             placeholder="덧글을 입력해주세요"
+            value={newComment}
+            onChange={handleCommentChange}
+            disabled={isCommenting}
           />
-          <button className="commentPost">작성</button>
+          <button
+            className="commentPost"
+            onClick={handleCommentSubmit}
+            disabled={isCommenting}
+          >
+            작성
+          </button>
         </div>
       </section>
       <style jsx>{`
@@ -138,6 +251,27 @@ const BoardDetail = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0 200px;
+          .burgerRelate {
+            position: relative;
+            .postControllButtonBox {
+              position: absolute;
+              right: 4px;
+              border: 1px solid #d9d9d9;
+              font-size: 14px;
+              width: 116px;
+              border-radius: 3px;
+              background-color: #ffffff;
+            }
+            .adited {
+              border-bottom: 1px solid #d9d9d9;
+            }
+            .postDelectButton {
+              height: 35px;
+              line-height: 35px;
+              padding: 0 10px;
+              cursor: pointer;
+            }
+          }
           .commentInputSet {
             padding: 40px;
             display: flex;
@@ -165,7 +299,7 @@ const BoardDetail = () => {
             padding: 80px 20px 20px;
           }
           .commentSetting {
-            padding: 10px 0px;
+            padding: 15px 0px;
             border-bottom: 1px solid #d9d9d9;
           }
           .detailUser {

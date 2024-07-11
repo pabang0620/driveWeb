@@ -41,6 +41,7 @@ function RouterApp() {
           <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
+          <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

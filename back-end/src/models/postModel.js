@@ -128,13 +128,16 @@ const getPostsByPage = async (boardId, page, search) => {
     throw err;
   }
 };
-
-// 게시물 불러오기
+// 게시물조회
 const getPostById = async (id, userId) => {
   const post = await prisma.posts.findUnique({
     where: { id },
     include: {
-      comments: true,
+      comments: {
+        include: {
+          users: true, // 댓글 작성자의 정보를 포함
+        },
+      },
       postImages: true,
       users: true,
     },
@@ -215,6 +218,22 @@ const updatePost = async (id, title, content) => {
 };
 
 const deletePost = async (id) => {
+  // 좋아요 먼저 삭제
+  await prisma.likes.deleteMany({
+    where: { postId: id },
+  });
+
+  // 댓글 먼저 삭제
+  await prisma.comments.deleteMany({
+    where: { postId: id },
+  });
+
+  // 이미지 삭제
+  await prisma.postImages.deleteMany({
+    where: { postId: id },
+  });
+
+  // 게시글 삭제
   return await prisma.posts.delete({
     where: { id },
   });

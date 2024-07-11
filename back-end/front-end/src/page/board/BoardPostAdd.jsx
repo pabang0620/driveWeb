@@ -3,15 +3,13 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const BoardPostAdd = () => {
-  const location = useLocation();
+  const { id } = useParams(); // URL의 id 파라미터를 가져옵니다.
   const navigate = useNavigate();
-  // const { boardId } = location.state || {};
-  const boardId = 1;
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // content 상태 추가
+  const [content, setContent] = useState("");
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +27,7 @@ const BoardPostAdd = () => {
             ["code-block"],
           ],
           handlers: {
-            image: imageHandler, // 이미지 핸들러 추가
+            image: imageHandler,
           },
         },
       },
@@ -40,7 +38,28 @@ const BoardPostAdd = () => {
     });
 
     quillRef.current = quill;
-  }, []);
+
+    if (id) {
+      fetchPostData(id);
+    }
+  }, [id]);
+  // id 가 있을때만 불러옴
+  const fetchPostData = async (postId) => {
+    try {
+      const response = await axios.get(`/api/post/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const postData = response.data;
+      setTitle(postData.title);
+      quillRef.current.root.innerHTML = postData.content;
+      setContent(postData.content);
+    } catch (error) {
+      console.error("게시글 데이터를 불러오는 중 오류가 발생했습니다.", error);
+      alert("게시글 데이터를 불러오는 중 오류가 발생했습니다.");
+    }
+  };
 
   const imageHandler = () => {
     const input = document.createElement("input");
@@ -53,7 +72,6 @@ const BoardPostAdd = () => {
         const formData = new FormData();
         formData.append("image", file);
 
-        // 로컬 파일 미리보기
         const reader = new FileReader();
         reader.onload = (e) => {
           const quill = quillRef.current;
@@ -67,23 +85,30 @@ const BoardPostAdd = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post(
-        "/api/post",
-        {
-          title,
-          content: quillRef.current.root.innerHTML, // Quill 에디터의 내용 가져오기
-          boardId,
-        },
-        {
+      const postData = {
+        title,
+        content: quillRef.current.root.innerHTML,
+        boardId: id,
+      };
+
+      let response;
+      if (id) {
+        response = await axios.put(`/api/post/${id}`, postData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
-      );
+        });
+      } else {
+        response = await axios.post("/api/post", postData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+      }
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         alert("게시글이 성공적으로 저장되었습니다.");
-        navigate(`/board/${boardId}`);
+        navigate(`/board/post/${id}`);
       }
     } catch (error) {
       console.error("게시글 저장 중 오류가 발생했습니다.", error);
@@ -93,11 +118,11 @@ const BoardPostAdd = () => {
 
   return (
     <div className="BoardPostAdd">
-      <TitleBox title="게시판" subtitle="글쓰기" />
+      <TitleBox title="게시판" subtitle={id ? "글 수정" : "글쓰기"} />
       <div className="boardPostHeader">
         <button
           className="writeButton"
-          onClick={() => navigate(`/board/list/${boardId}`)}
+          onClick={() => navigate(`/board/list/${id || ""}`)}
         >
           목록
         </button>
@@ -132,7 +157,7 @@ const BoardPostAdd = () => {
         .BoardPostSection {
           border: 1px solid #999;
           border-radius: 10px;
-          padding: 30px;
+          padding: 30px 30px 100px;
         }
         .boardPostHeader {
           display: flex;
@@ -167,6 +192,11 @@ const BoardPostAdd = () => {
         }
         .EditorWrapper {
           margin-top: 20px;
+          height: 700px; /* 높이 600픽셀로 설정 */
+        }
+
+        .EditorWrapper .ql-container {
+          height: 100%; /* 부모 높이에 맞게 설정 */
         }
       `}</style>
     </div>

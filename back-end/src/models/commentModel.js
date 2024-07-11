@@ -2,14 +2,26 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const createComment = async (content, postId, userId, parentId = null) => {
-  return await prisma.comments.create({
+  const comment = await prisma.comments.create({
     data: {
       content,
       postId,
       userId,
-      parentId, // parentId 추가
+      parentId,
     },
   });
+
+  const user = await prisma.users.findUnique({
+    where: { id: userId },
+    select: { nickname: true },
+  });
+
+  return {
+    ...comment,
+    user: {
+      nickname: user.nickname,
+    },
+  };
 };
 
 const getCommentsByPost = async (postId) => {
@@ -22,13 +34,6 @@ const getCommentsByPost = async (postId) => {
   });
 };
 
-const getCommentById = async (id) => {
-  return await prisma.comment.findUnique({
-    where: { id },
-    include: { user: true, post: true },
-  });
-};
-
 const updateComment = async (id, content) => {
   return await prisma.comment.update({
     where: { id },
@@ -37,7 +42,7 @@ const updateComment = async (id, content) => {
 };
 
 const deleteComment = async (id) => {
-  return await prisma.comment.delete({
+  return await prisma.comments.delete({
     where: { id },
   });
 };
@@ -45,7 +50,6 @@ const deleteComment = async (id) => {
 module.exports = {
   createComment,
   getCommentsByPost,
-  getCommentById,
   updateComment,
   deleteComment,
 };
