@@ -1,70 +1,127 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import TitleBox from "../../components/TitleBox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import Spinner from "../../components/Spinner";
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 
 const BoardDetail = () => {
-  const { postId } = useParams(); // URL에서 postId 파라미터 추출
+  const boardId = 2;
+  const navigate = useNavigate();
+  const { postId } = useParams();
+  const [post, setPost] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
 
-  // 더미 데이터
-  const dummyPost = {
-    id: 1,
-    title: "운행일지 개발일지",
-    content:
-      "더미 포스트 내용입니다. 여기에는 실제 게시글 내용이 들어갈 수 있습니다.",
-    date: "2024-07-10",
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/api/post/${postId}`);
+        setPost(response.data);
+        setIsLiked(response.data.isLiked);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchPost();
+  }, [postId]);
+
+  const handleLikeClick = async () => {
+    try {
+      const response = await axios.post(`/api/post/${postId}/like`, {
+        liked: !isLiked,
+      });
+      setIsLiked(!isLiked);
+      setPost({ ...post, likeCount: response.data.likeCount });
+    } catch (err) {
+      console.error("좋아요 처리 중 오류가 발생했습니다:", err);
+    }
   };
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!post) {
+    return <Spinner />;
+  }
+
+  const handleWriteButtonClick = () => {
+    navigate("/board/post/add", { state: { boardId } });
+  };
   return (
     <div className="boardDetail">
       <TitleBox title="게시판" subtitle="게시글" />
       <div className="boardPostHeader">
         <button className="writeButton">목록</button>
-        <button className="writeButton">글쓰기</button>
+        <button className="writeButton" onClick={handleWriteButtonClick}>
+          글쓰기
+        </button>{" "}
       </div>
       <section>
-        <h2>{dummyPost.title}</h2>
+        <h2>{post.title}</h2>
         <div className="detailHeaderSet">
           <div className="detailUser DetailTopFlex">
             <div className="dlatl">
               <img src="" alt="" />
             </div>
             <div className="detailUserdetail detailUserdetailAdd">
-              <p className="detailName">이름</p>
+              <p className="detailName">작성자: {post.users.nickname}</p>
+
               <div className="detailUserLast">
-                <p>2024.11.11</p>
-                <p>조회수 </p>
+                <p>작성일: {new Date(post.createdAt).toLocaleDateString()}</p>
+                <p>조회수: {post.viewCount}</p>
               </div>
             </div>
           </div>
-          <div>햄버거</div>
+          <div>
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </div>
         </div>
-        <div className="detailBodyDetail">sodyd sodyd </div>
+        <div
+          className="detailBodyDetail"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        ></div>
         <div className="detailFooterStart">
-          <div>좋아요</div>
-          <div>덧글</div>
+          <div
+            onClick={handleLikeClick}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+          >
+            <FontAwesomeIcon
+              icon={isLiked ? solidHeart : regularHeart}
+              color={isLiked ? "red" : "gray"}
+            />
+            <span style={{ marginLeft: "5px" }}>좋아요 {post.likeCount}</span>
+          </div>
+          <div>덧글 {post.comments.length}</div>
         </div>
 
         <div className="detailFooterSet">
-          <div className="commentSetting">
-            <div className="detailUser">
-              <div className="dlatldlatl">
-                <img src="" alt="" />
-              </div>
-              <div className="detailUserdetail">
-                <p className="detailName">이원호</p>
-                <p className="commentDetail">
-                  국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한
-                  이유로 폐기되지 아니한다. 다만, 국회의원의 임기가 만료된
-                  때에는 그러하지 아니하다. 국방상 또는 국민경제상 긴절한 필요로
-                  인하여 법률이 정하는 경우를 제외하고는, 사영기업을 국유 또는
-                  공유로 이전하거나 그 경영을 통제 또는 관리할 수 없다.
-                </p>
-                <div className="detailUserLast">
-                  <p>2024.11.11</p>
+          {post.comments.map((comment) => (
+            <div className="commentSetting" key={comment.id}>
+              <div className="detailUser">
+                <div className="dlatldlatl">
+                  <img src="" alt="" />
+                </div>
+                <div className="detailUserdetail">
+                  <p className="detailName">작성자: {comment.userId}</p>
+                  <p className="commentDetail">{comment.content}</p>
+                  <div className="detailUserLast">
+                    <p>
+                      작성일: {new Date(comment.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <FontAwesomeIcon icon={faEllipsisV} />
                 </div>
               </div>
-              <div>햄버거</div>
             </div>
-          </div>
+          ))}
         </div>
         <div className="commentInputSet">
           <textarea
@@ -108,7 +165,7 @@ const BoardDetail = () => {
             padding: 80px 20px 20px;
           }
           .commentSetting {
-            padding-bottom: 20px;
+            padding: 10px 0px;
             border-bottom: 1px solid #d9d9d9;
           }
           .detailUser {
@@ -182,6 +239,8 @@ const BoardDetail = () => {
             .detailFooterStart {
               display: flex;
               flex-direction: row;
+              padding-bottom: 30px;
+              border-bottom: 1px solid #d9d9d9;
               div {
                 margin: 0px 5px;
               }

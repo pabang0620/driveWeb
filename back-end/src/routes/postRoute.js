@@ -10,130 +10,26 @@ const {
   likePost,
   unlikePost,
   getTopPosts,
+  fetchAllLatestPosts,
+  createPost,
 } = require("../controllers/postController");
+const handleFileUpload = require("../middleware/postFileUpload");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/post/board:
- *   post:
- *     summary: 게시판 종류 추가
- *     tags: [Board]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *             required:
- *               - name
- *     responses:
- *       201:
- *         description: Board created successfully
- *       500:
- *         description: Server error
- */
-router.post("/board", addBoard);
+// 게시물 작성 /api/post
+router.post("/", createPost);
+// router.post("/", authMiddleware, createPostController);
 
-/**
- * @swagger
- * /api/post/board/{id}:
- *   delete:
- *     summary: 게시판 종류 삭제
- *     tags: [Board]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Board ID
- *     responses:
- *       200:
- *         description: Board deleted successfully
- *       500:
- *         description: Server error
- */
-router.delete("/board/:id", removeBoard);
-
-/**
- * @swagger
- * /api/post/board/{boardId}:
- *   get:
- *     summary: 선택한 게시판의 게시글 모두 가져오기
- *     tags: [Board]
- *     parameters:
- *       - in: path
- *         name: boardId
- *         schema:
- *           type: integer
- *         required: true
- *         description: Board ID
- *     responses:
- *       200:
- *         description: Successfully retrieved posts
- *       500:
- *         description: Server error
- */
+// 홈 최근 게시글
+router.get("/latest", fetchAllLatestPosts);
+// 해당 보드의 게시글 모두 조회 100개씩
 router.get("/board/:boardId", getPosts);
-/**
- * @swagger
- * /api/post:
- *   post:
- *     summary: 게시물 작성
- *     tags: [Post]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               content:
- *                 type: string
- *               boardId:
- *                 type: integer
- *               userId:
- *                 type: integer
- *             required:
- *               - title
- *               - content
- *               - boardId
- *               - userId
- *     responses:
- *       201:
- *         description: Post created successfully
- *       500:
- *         description: Server error
- */
-router.post("/", addPost);
 
-/**
- * @swagger
- * /api/post/{id}:
- *   get:
- *     summary: 선택한 게시글 가져오기
- *     tags: [Post]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Post ID
- *     responses:
- *       200:
- *         description: Successfully retrieved post
- *       500:
- *         description: Server error
- */
 router.get("/:id", getPost);
+
+// ====================================
 
 /**
  * @swagger
@@ -214,27 +110,6 @@ router.post("/:id/like", likePost);
 
 /**
  * @swagger
- * /api/post/{id}/unlike:
- *   post:
- *     summary: 추천 취소
- *     tags: [Post]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Post ID
- *     responses:
- *       200:
- *         description: Post unliked successfully
- *       500:
- *         description: Server error
- */
-router.post("/:id/unlike", unlikePost);
-
-/**
- * @swagger
  * /api/posts/{boardId}/top:
  *   get:
  *     summary: 각 게시판의 인기 게시글 조회
@@ -253,5 +128,52 @@ router.post("/:id/unlike", unlikePost);
  *         description: Server error
  */
 router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
+
+// 관리자 모드
+/**
+ * @swagger
+ * /api/post/board:
+ *   post:
+ *     summary: 게시판 종류 추가
+ *     tags: [Board]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *             required:
+ *               - name
+ *     responses:
+ *       201:
+ *         description: Board created successfully
+ *       500:
+ *         description: Server error
+ */
+router.post("/board", addBoard);
+
+/**
+ * @swagger
+ * /api/post/board/{id}:
+ *   delete:
+ *     summary: 게시판 종류 삭제
+ *     tags: [Board]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Board ID
+ *     responses:
+ *       200:
+ *         description: Board deleted successfully
+ *       500:
+ *         description: Server error
+ */
+router.delete("/board/:id", removeBoard);
 
 module.exports = router;

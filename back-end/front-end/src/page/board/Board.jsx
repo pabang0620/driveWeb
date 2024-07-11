@@ -1,24 +1,26 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import BoardBox from "./BoardBox";
 
 const Board = () => {
-  const boardData = [
-    {
-      title: "공지사항",
-      notices: Array(10).fill("공지사항 내용 1"),
-      date: "2024.06.12.",
-    },
-    {
-      title: "자유게시판",
-      notices: Array(10).fill("자유게시판 내용 2"),
-      date: "2024.06.13.",
-    },
-    {
-      title: "갤러리 게시판",
-      notices: Array(10).fill("갤러리 내용 3"),
-      date: "2024.06.14.",
-    },
-  ];
+  const [boardData, setBoardData] = useState([]);
+
+  useEffect(() => {
+    const fetchBoardData = async () => {
+      try {
+        const response = await axios.get("/api/post/latest");
+        setBoardData(response.data);
+      } catch (error) {
+        console.error(
+          "게시판 데이터를 가져오는 중 오류가 발생했습니다.",
+          error
+        );
+      }
+    };
+
+    fetchBoardData();
+  }, []);
 
   return (
     <div className="board">
@@ -27,9 +29,13 @@ const Board = () => {
         {boardData.map((data, index) => (
           <BoardBox
             key={index}
-            boardTitle={data.title}
-            notices={data.notices}
-            date={data.date}
+            boardTitle={data.boardName}
+            notices={data.posts.map((post) => post.title)}
+            date={
+              data.posts.length > 0
+                ? new Date(data.posts[0].createdAt).toLocaleDateString()
+                : ""
+            }
           />
         ))}
       </div>
@@ -40,6 +46,7 @@ const Board = () => {
           margin: 0 auto;
           padding: 100px 0;
           .boardFlex {
+            height: 821px;
             margin: 50px 0 0;
             display: flex;
             flex-direction: row;

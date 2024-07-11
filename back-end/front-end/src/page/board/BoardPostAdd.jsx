@@ -3,43 +3,45 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const BoardPostAdd = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  // const { boardId } = location.state || {};
+  const boardId = 1;
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(""); // content 상태 추가
   const quillRef = useRef(null);
 
   useEffect(() => {
-    if (quillRef.current) {
-      const quill = new Quill(quillRef.current, {
-        theme: "snow",
-        modules: {
-          toolbar: {
-            container: [
-              [{ header: "1" }, { header: "2" }, { font: [] }],
-              [{ size: [] }],
-              ["bold", "italic", "underline", "strike", "blockquote"],
-              [{ list: "ordered" }, { list: "bullet" }],
-              ["link", "image", "video"],
-              ["clean"],
-              ["code-block"],
-            ],
-            handlers: {
-              image: imageHandler, // 이미지 핸들러 추가
-            },
+    const quill = new Quill(quillRef.current, {
+      theme: "snow",
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: "1" }, { header: "2" }, { font: [] }],
+            [{ size: [] }],
+            ["bold", "italic", "underline", "strike", "blockquote"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["link", "image", "video"],
+            ["clean"],
+            ["code-block"],
+          ],
+          handlers: {
+            image: imageHandler, // 이미지 핸들러 추가
           },
         },
-      });
+      },
+    });
 
-      quill.on("text-change", () => {
-        setContent(quill.root.innerHTML);
-      });
+    quill.on("text-change", () => {
+      setContent(quill.root.innerHTML);
+    });
 
-      quillRef.current.quill = quill;
-    }
+    quillRef.current = quill;
   }, []);
 
-  // 이미지 업로드 핸들러
   const imageHandler = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -47,48 +49,61 @@ const BoardPostAdd = () => {
     input.click();
     input.onchange = async () => {
       const file = input.files[0];
-      if (!file) return;
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
 
-      const formData = new FormData();
-      formData.append("image", file);
-
-      // 로컬 파일 미리보기
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const quill = quillRef.current.quill;
-        const range = quill.getSelection();
-        quill.insertEmbed(range.index, "image", e.target.result);
-      };
-      reader.readAsDataURL(file);
-
-      try {
-        const response = await axios.post(
-          "http://example.com/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        const imageUrl = response.data.url; // 서버에서 받은 이미지 URL
-        const quill = quillRef.current.quill;
-        const range = quill.getSelection(true);
-        quill.deleteText(range.index, 1); // 로컬 미리보기 이미지 제거
-        quill.insertEmbed(range.index, "image", imageUrl);
-      } catch (error) {
-        console.error("Error uploading image: ", error);
+        // 로컬 파일 미리보기
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const quill = quillRef.current;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, "image", e.target.result);
+        };
+        reader.readAsDataURL(file);
       }
     };
+  };
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.post(
+        "/api/post",
+        {
+          title,
+          content: quillRef.current.root.innerHTML, // Quill 에디터의 내용 가져오기
+          boardId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        alert("게시글이 성공적으로 저장되었습니다.");
+        navigate(`/board/${boardId}`);
+      }
+    } catch (error) {
+      console.error("게시글 저장 중 오류가 발생했습니다.", error);
+      alert("게시글 저장 중 오류가 발생했습니다.");
+    }
   };
 
   return (
     <div className="BoardPostAdd">
       <TitleBox title="게시판" subtitle="글쓰기" />
       <div className="boardPostHeader">
-        <button className="writeButton">목록</button>
-        <button className="writeButton">저장</button>
+        <button
+          className="writeButton"
+          onClick={() => navigate(`/board/list/${boardId}`)}
+        >
+          목록
+        </button>
+        <button className="writeButton" onClick={handleSave}>
+          저장
+        </button>
       </div>
       <section className="BoardPostSection">
         <div className="BoardPostHeader">

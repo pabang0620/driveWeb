@@ -38,7 +38,7 @@ function RouterApp() {
           <Route path="/user/carInfo" element={<CarInfo />} />
           <Route path="/user/incomeInfo" element={<IncomeInfo />} />
           <Route path="/board" element={<Board />} />
-          <Route path="/board/list" element={<BoardPost />} />
+          <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
         </Route>
