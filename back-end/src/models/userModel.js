@@ -160,7 +160,7 @@ const getUserProfile = async (userId) => {
   try {
     const userProfile = await prisma.user_profiles.findUnique({
       where: {
-        userId: Number(userId), // userId를 정수형으로 변환하여 전달
+        id: userId, // userId를 정수형으로 변환하여 전달
       },
     });
     console.log("사용자 프로필:", userProfile);
@@ -174,7 +174,7 @@ const getUserProfile = async (userId) => {
 // 회원정보 - 차량 및 수수료 조회
 const getUserVehiclesWithFees = async (userId) => {
   const userVehicles = await prisma.user_vehicles.findMany({
-    where: { userId },
+    where: { id: userId },
     include: {
       franchise_fees: true,
     },
@@ -185,7 +185,7 @@ const getUserVehiclesWithFees = async (userId) => {
 // 회원정보 - 소득정보 조회
 const getUserIncomeRecords = async (userId) => {
   return await prisma.income_records.findMany({
-    where: { userId },
+    where: { id: userId },
   });
 };
 module.exports = {

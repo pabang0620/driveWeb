@@ -26,55 +26,8 @@ router.post("/google-login", googleLogin);
 router.post("/kakao-login", kakaoLogin);
 router.post("/naver-login", naverLogin);
 
-// 회원정보
-/**
- * @swagger
- * /api/user/profile:
- *   get:
- *     summary: 회원 개인 정보 조회
- *     tags: [UserProfile]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: 성공적으로 회원 정보를 조회했습니다.
- *       404:
- *         description: 회원 정보를 찾을 수 없습니다.
- *       500:
- *         description: 서버 오류
- */
 router.get("/profile", authMiddleware, fetchUserProfile);
 
-/**
- * @swagger
- * /api/user/profile:
- *   post:
- *     summary: 회원정보 - 개인정보
- *     tags: [UserProfile]
- *     security:
- *       - BearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               birth_date:
- *                 type: string
- *                 format: date
- *               phone:
- *                 type: string
- *               email:
- *                 type: string
- *     responses:
- *       201:
- *         description: User profile added successfully
- *       500:
- *         description: Server error
- */
 router.post("/profile", authMiddleware, addUserProfile);
 /**
  * @swagger

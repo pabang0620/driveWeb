@@ -15,7 +15,7 @@ const PersonalInfo = () => {
   // 회원 정보 조회 함수
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.post("/api/user/profile", {
+      const response = await axios.get("/api/user/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -37,9 +37,15 @@ const PersonalInfo = () => {
   const handlePostUserProfile = async (field, value) => {
     console.log({ [field]: value });
     try {
-      const response = await axios.post("/api/user/profile", {
-        [field]: value,
-      });
+      const response = await axios.post(
+        "/api/user/profile",
+        { [field]: value },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error("회원 정보 보내기 실패?:", error.message);
