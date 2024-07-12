@@ -35,7 +35,7 @@ model comments {
 
 model my_car {
   id                      Int       @id @default(autoincrement())
-  user_id                 Int
+  userId                 Int
   vehicle_name            String?   @db.VarChar(255)
   fuel_type               String?   @db.VarChar(255)
   year                    Int?      @db.Year
@@ -47,9 +47,9 @@ model my_car {
   insurance_fee           Decimal?  @db.Decimal(15, 2)
   created_at              DateTime? @default(now()) @db.Timestamp(0)
   updated_at              DateTime? @default(now()) @db.Timestamp(0)
-  users                   users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "my_car_ibfk_1")
+  users                   users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "my_car_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model posts {
@@ -75,7 +75,7 @@ model posts {
 
 model user_incomes {
   id                    Int       @id @default(autoincrement())
-  user_id               Int
+  userId               Int
   income_type           String?   @db.VarChar(255)
   start_date            DateTime? @db.Date
   region1               String?   @db.VarChar(255)
@@ -86,28 +86,28 @@ model user_incomes {
   standard_expense_rate Decimal?  @db.Decimal(5, 2)
   created_at            DateTime? @default(now()) @db.Timestamp(0)
   updated_at            DateTime? @default(now()) @db.Timestamp(0)
-  users                 users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_incomes_ibfk_1")
+  users                 users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_incomes_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model user_profiles {
   id         Int       @id @default(autoincrement())
-  user_id    Int
+  userId    Int
   name       String?   @db.VarChar(255)
   birth_date DateTime? @db.Date
   phone      String?   @db.VarChar(20)
   email      String?   @db.VarChar(255)
   created_at DateTime? @default(now()) @db.Timestamp(0)
   updated_at DateTime? @default(now()) @db.Timestamp(0)
-  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_profiles_ibfk_1")
+  users      users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_profiles_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model user_vehicles {
   id               Int       @id @default(autoincrement())
-  user_id          Int
+  userId          Int
   taxi_type        String?   @db.VarChar(255)
   franchise_status String?   @db.VarChar(255)
   vehicle_name     String?   @db.VarChar(255)
@@ -117,9 +117,9 @@ model user_vehicles {
   commission_rate  Decimal?  @db.Decimal(5, 2)
   created_at       DateTime? @default(now()) @db.Timestamp(0)
   updated_at       DateTime? @default(now()) @db.Timestamp(0)
-  users            users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_vehicles_ibfk_1")
+  users            users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_vehicles_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model users {
@@ -145,17 +145,17 @@ model users {
 
 model driving_logs {
   id              Int               @id @default(autoincrement())
-  user_id         Int
+  userId         Int
   date            DateTime?         @db.Date
   memo            String?           @db.Text
   created_at      DateTime?         @default(now()) @db.Timestamp(0)
   updated_at      DateTime?         @default(now()) @db.Timestamp(0)
-  users           users             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "driving_logs_ibfk_1")
+  users           users             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "driving_logs_ibfk_1")
   driving_records driving_records[]
   expense_records expense_records[]
   income_records  income_records[]
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model driving_records {
@@ -230,14 +230,14 @@ model income_records {
 
 model franchise_fees {
   id             Int       @id @default(autoincrement())
-  user_id        Int?
+  userId        Int?
   franchise_name String?   @db.VarChar(255)
   fee            Decimal?  @db.Decimal(15, 2)
   created_at     DateTime? @default(now()) @db.Timestamp(0)
   updated_at     DateTime? @default(now()) @db.Timestamp(0)
-  users          users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "franchise_fees_ibfk_1")
+  users          users?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "franchise_fees_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  @@index([userId], map: "userId")
 }
 
 model postImages {

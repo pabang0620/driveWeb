@@ -19,68 +19,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/user/register:
- *   post:
- *     summary: Register a new user
- *     tags: [User - 완료]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nickname:
- *                 type: string
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *               jobType:
- *                 type: string
- *             required:
- *               - nickname
- *               - username
- *               - password
- *               - jobType
- *     responses:
- *       201:
- *         description: User created successfully
- *       500:
- *         description: Server error
- */
 router.post("/register", registerUser);
-
-/**
- * @swagger
- * /api/user/login:
- *   post:
- *     summary: Login a user
- *     tags: [User - 완료]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - username
- *               - password
- *     responses:
- *       200:
- *         description: User logged in successfully
- *       401:
- *         description: Invalid credentials
- *       500:
- *         description: Server error
- */
 router.post("/login", loginUser);
 
 router.post("/google-login", googleLogin);

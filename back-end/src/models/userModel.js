@@ -10,17 +10,55 @@ const createUser = async (
   kakaoId = null,
   naverId = null
 ) => {
-  return await prisma.users.create({
+  const user = await prisma.users.create({
     data: {
       nickname,
       username,
-      password, // 일반 로그인 용
-      jobtype, // jobtype 추가
+      password, // 비밀번호는 해시처리된 상태로 저장
+      jobtype,
       googleId,
       kakaoId,
       naverId,
+      user_profiles: {
+        create: {
+          name: "", // 이름 초기화
+          birth_date: null, // 생년월일 초기화
+          phone: "", // 전화번호 초기화
+          email: "", // 이메일 초기화
+        },
+      },
+      user_vehicles: {
+        create: {
+          taxi_type: "", // 택시 유형 초기화
+          franchise_status: "", // 프랜차이즈 상태 초기화
+          vehicle_name: "", // 차량명 초기화
+          year: null, // 연식 초기화
+          fuel_type: "", // 연료 타입 초기화
+          mileage: null, // 주행 거리 초기화
+          commission_rate: null, // 수수료율 초기화
+        },
+      },
+      user_incomes: {
+        create: {
+          income_type: "", // 소득 유형 초기화
+          start_date: null, // 시작일 초기화
+          region1: "", // 지역1 초기화
+          region2: "", // 지역2 초기화
+          monthly_payment: null, // 월급여 초기화
+          fuel_allowance: null, // 연료 보조금 초기화
+          investment: null, // 투자 초기화
+          standard_expense_rate: null, // 표준 경비율 초기화
+        },
+      },
+    },
+    include: {
+      user_profiles: true,
+      user_vehicles: true,
+      user_incomes: true,
     },
   });
+
+  return user;
 };
 
 const findUserByUsername = async (username) => {
@@ -118,6 +156,7 @@ const deleteFranchiseFee = async (id) => {
 };
 // 회원정보 - 개인 정보 조회
 const getUserProfile = async (userId) => {
+  console.log(1);
   return await prisma.user_profiles.findUnique({
     where: { userId },
   });

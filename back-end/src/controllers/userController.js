@@ -49,8 +49,8 @@ const loginUser = async (req, res) => {
         .json({ error: "잘못된 이메일 또는 비밀번호입니다." });
     }
 
-    console.log("username", username);
-    console.log("user", user);
+    // console.log("username", username);
+    // console.log("user", user);
 
     const token = jwt.sign(
       { userId: user.id, jobtype: user.jobtype }, // jobtype을 토큰의 페이로드에 추가
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
       { expiresIn: "10h" }
     );
 
-    console.log(token);
+    // console.log(token);
     res.status(200).json(token);
   } catch (error) {
     res.status(500).json({ error: "일반 로그인 중 오류가 발생했습니다." });
@@ -138,9 +138,10 @@ const kakaoLogin = (req, res) => socialLogin(req, res, "kakao");
 const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const addUserProfile = async (req, res) => {
+  console.log(1);
   const { userId } = req.userId;
   const profileData = req.body;
-
+  console.log(profileData);
   try {
     const profile = await createUserProfile(userId, profileData);
     res.status(201).json(profile);
@@ -220,13 +221,16 @@ const removeFranchiseFee = async (req, res) => {
 // 회원정보 - 개인정보 조회
 const fetchUserProfile = async (req, res) => {
   const { userId } = req.userId;
-
   try {
     const userProfile = await getUserProfile(Number(userId));
+    console.log(1);
+
     if (userProfile) {
       res.status(200).json(userProfile);
+      console.log(2);
     } else {
       res.status(404).json({ error: "회원 정보를 찾을 수 없습니다." });
+      console.log(3);
     }
   } catch (error) {
     res
