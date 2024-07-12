@@ -5,21 +5,24 @@ export function DynamicInput({
   inputType,
   placeholder,
   value,
+  fieldName,
   options,
   onChange,
+  onSave,
 }) {
   const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
 
   const handleChange = (e) => {
-    if (inputType === "checkbox") {
-      onChange(e.target.checked);
-    } else {
-      onChange(e.target.value);
-    }
+    const newValue =
+      inputType === "checkbox" ? e.target.checked : e.target.value;
+    onChange(fieldName, newValue); // 필드 이름과 값을 전달
   };
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing); // 수정 버튼 클릭 시 상태 토글
+    if (isEditing) {
+      onSave(fieldName, value);
+    }
   };
 
   const renderInput = () => {

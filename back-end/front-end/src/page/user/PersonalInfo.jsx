@@ -4,28 +4,28 @@ import { DynamicInput } from "../../components/InputBox";
 
 const PersonalInfo = () => {
   const [userInfo, setUserInfo] = useState({
+    name: "test",
+    birth_date: "2024-07-12",
+    phone: "010-1111-1111",
+    email: "test@test.com",
     nickname: "",
-    birthdate: "",
   });
-
-  const [isEditing, setIsEditing] = useState(false);
-  //const [token, setToken] = useState(""); // 로그인 후 받은 토큰 상태
   const token = localStorage.getItem("token"); // 토큰 가져오기
+
   // 회원 정보 조회 함수
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get("/api/user/profile", {
+      const response = await axios.post("/api/user/profile", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      setUserInfo(response.data); // 서버에서 받은 회원 정보 설정
       console.log(response.data);
-      //setUserInfo(response.data); // 서버에서 받은 회원 정보 설정
     } catch (error) {
       console.error("회원 정보 조회 실패:", error.message);
     }
   };
-
   useEffect(() => {
     // 페이지 로드 시 회원 정보 조회
     if (token) {
@@ -33,38 +33,73 @@ const PersonalInfo = () => {
     }
   }, []);
 
+  // 회원 정보 보내기 함수
+  const handlePostUserProfile = async (field, value) => {
+    console.log({ [field]: value });
+    try {
+      const response = await axios.post("/api/user/profile", {
+        [field]: value,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error("회원 정보 보내기 실패?:", error.message);
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    console.log(value);
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
   return (
     <div className="container userInfo">
       <h2>
         회원정보 <span>개인정보 수정</span>
       </h2>
-
       <div className="content">
         <div className="inputWrap">
           <h3>기본정보</h3>
           <DynamicInput
             labelName={"이름"}
             inputType={"text"}
-            value={userInfo.nickname}
+            value={userInfo.name}
+            fieldName="name"
+            onChange={handleInputChange}
             placeholder={"이름을 입력해주세요."}
+            onSave={handlePostUserProfile}
           />
           <DynamicInput
             labelName={"생년월일"}
             inputType={"text"}
+            value={userInfo.birth_date}
+            fieldName="birth_date"
+            onChange={handleInputChange}
             placeholder={"생년월일을 입력해주세요."}
+            onSave={handlePostUserProfile}
           />
         </div>
         <div className="inputWrap">
           <h3>연락처 정보</h3>
           <DynamicInput
-            labelName={"이름"}
+            labelName={"휴대폰"}
             inputType={"text"}
-            placeholder={"이름을 입력해주세요."}
+            value={userInfo.phone}
+            fieldName="phone"
+            onChange={handleInputChange}
+            placeholder={"휴대폰 번호를 입력해주세요."}
+            onSave={handlePostUserProfile}
           />
           <DynamicInput
-            labelName={"생년월일"}
+            labelName={"이메일"}
             inputType={"text"}
-            placeholder={"생년월일을 입력해주세요."}
+            value={userInfo.email}
+            fieldName="email"
+            onChange={handleInputChange}
+            placeholder={"이메일을 입력해주세요."}
+            onSave={handlePostUserProfile}
           />
         </div>
       </div>
