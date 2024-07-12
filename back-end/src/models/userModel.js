@@ -156,10 +156,19 @@ const deleteFranchiseFee = async (id) => {
 };
 // 회원정보 - 개인 정보 조회
 const getUserProfile = async (userId) => {
-  console.log(1);
-  return await prisma.user_profiles.findUnique({
-    where: { userId },
-  });
+  console.log("모델에서 유저아이디", userId);
+  try {
+    const userProfile = await prisma.user_profiles.findUnique({
+      where: {
+        userId: Number(userId), // userId를 정수형으로 변환하여 전달
+      },
+    });
+    console.log("사용자 프로필:", userProfile);
+    return userProfile;
+  } catch (error) {
+    console.error("getUserProfile 오류:", error);
+    throw error;
+  }
 };
 
 // 회원정보 - 차량 및 수수료 조회

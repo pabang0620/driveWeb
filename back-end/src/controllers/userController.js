@@ -139,7 +139,7 @@ const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const addUserProfile = async (req, res) => {
   console.log(1);
-  const { userId } = req.userId;
+  const { userId } = req;
   const profileData = req.body;
   console.log(profileData);
   try {
@@ -151,7 +151,7 @@ const addUserProfile = async (req, res) => {
 };
 
 const addUserVehicle = async (req, res) => {
-  const { userId } = req.userId;
+  const { userId } = req;
   const vehicleData = req.body;
 
   try {
@@ -163,7 +163,7 @@ const addUserVehicle = async (req, res) => {
 };
 
 const addUserIncome = async (req, res) => {
-  const { userId } = req.userId;
+  const { userId } = req;
   const incomeData = req.body;
 
   try {
@@ -176,7 +176,7 @@ const addUserIncome = async (req, res) => {
 
 // 수수료 등록 수정 삭제 컨트롤러
 const addFranchiseFee = async (req, res) => {
-  const { userId } = req.userId;
+  const { userId } = req;
   const { franchiseName, fee } = req.body;
 
   try {
@@ -220,17 +220,17 @@ const removeFranchiseFee = async (req, res) => {
 
 // 회원정보 - 개인정보 조회
 const fetchUserProfile = async (req, res) => {
-  const { userId } = req.userId;
+  const { userId } = req;
   try {
     const userProfile = await getUserProfile(Number(userId));
     console.log(1);
 
     if (userProfile) {
       res.status(200).json(userProfile);
-      console.log(2);
+      console.log("성공", userProfile);
     } else {
       res.status(404).json({ error: "회원 정보를 찾을 수 없습니다." });
-      console.log(3);
+      console.log();
     }
   } catch (error) {
     res
