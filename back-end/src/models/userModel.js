@@ -87,14 +87,22 @@ const findUserByNaverId = async (naverId) => {
 
 // 회원정보등록 관련
 const createUserProfile = async (userId, profileData) => {
-  return await prisma.user_profiles.create({
-    data: {
-      userId,
-      ...profileData,
-    },
-  });
+  try {
+    const userProfile = await prisma.user_profiles.create({
+      data: {
+        userId,
+        ...profileData,
+      },
+    });
+    return userProfile; // 프로필 생성 성공 시 반환
+  } catch (error) {
+    console.error("프로필 생성 중 오류 발생:", error); // 오류 로깅
+    throw error; // 오류를 다시 던져 호출한 곳에서 처리할 수 있도록 함
+  }
 };
+// 자동차등록 관련
 const createUserVehicle = async (userId, vehicleData) => {
+  // 새 차량 데이터 생성
   const vehicle = await prisma.user_vehicles.create({
     data: {
       userId,
@@ -102,12 +110,19 @@ const createUserVehicle = async (userId, vehicleData) => {
     },
   });
 
+  // 사용자의 가장 최신 차량 정보 가져오기
+  const latestVehicle = await prisma.user_vehicles.findFirst({
+    where: { userId },
+    orderBy: { id: "desc" },
+  });
+
+  // 차량 관련 데이터 준비
   const myCarData = {
     userId,
-    vehicle_name: vehicle.vehicle_name,
-    fuel_type: vehicle.fuel_type,
-    year: vehicle.year,
-    mileage: vehicle.mileage,
+    vehicle_name: latestVehicle.vehicle_name,
+    fuel_type: latestVehicle.fuel_type,
+    year: latestVehicle.year,
+    mileage: latestVehicle.mileage,
     license_plate: vehicleData.license_plate,
     first_registration_date: vehicleData.first_registration_date,
     insurance_company: vehicleData.insurance_company,
@@ -115,20 +130,44 @@ const createUserVehicle = async (userId, vehicleData) => {
     insurance_fee: vehicleData.insurance_fee,
   };
 
+  // my_car 테이블에 데이터 생성
   await prisma.my_car.create({
     data: myCarData,
   });
 
-  return vehicle;
-};
-const createUserIncome = async (userId, incomeData) => {
-  return await prisma.user_incomes.create({
-    data: {
-      userId,
-      ...incomeData,
-    },
+  // 수수료 정보 가져오기
+  const fees = await prisma.franchise_fees.findMany({
+    where: { userId },
   });
+
+  // 최신 차량 정보와 수수료 정보를 함께 반환
+  return { vehicle: latestVehicle, fees };
 };
+
+// 지출정보등록 관련
+const createUserIncome = async (userId, incomeData) => {
+  try {
+    // 입력 데이터 검증 (예시: 필수 필드 검사)
+    if (!userId || !incomeData.income_type) {
+      throw new Error("필수 정보가 누락되었습니다.");
+    }
+
+    // 데이터베이스에 지출 정보 등록
+    const newIncome = await prisma.user_incomes.create({
+      data: {
+        userId,
+        ...incomeData,
+      },
+    });
+
+    console.log("지출 정보 등록 성공:", newIncome);
+    return newIncome;
+  } catch (error) {
+    console.error("지출 정보 등록 중 오류 발생:", error);
+    throw new Error("지출 정보 등록에 실패했습니다.");
+  }
+};
+
 // 수수료 입력 및 삭제 수정
 const createFranchiseFee = async (userId, franchiseName, fee) => {
   return await prisma.franchiseFee.create({
@@ -158,36 +197,66 @@ const deleteFranchiseFee = async (id) => {
 const getUserProfile = async (userId) => {
   console.log("모델에서 유저아이디", userId);
   try {
-    const userProfile = await prisma.user_profiles.findUnique({
-      where: {
-        id: userId, // userId를 정수형으로 변환하여 전달
-      },
+    const latestUserProfile = await prisma.user_profiles.findMany({
+      where: { userId: userId },
+      orderBy: { id: "desc" }, // 'desc'는 내림차순으로 정렬함을 의미합니다.
     });
-    console.log("사용자 프로필:", userProfile);
-    return userProfile;
+
+    if (!latestUserProfile) {
+      console.log("해당 사용자에 대한 소득 정보가 없습니다.");
+      return null; // 소득 정보가 없는 경우 null 반환
+    }
+
+    return latestUserProfile[0];
   } catch (error) {
-    console.error("getUserProfile 오류:", error);
-    throw error;
+    console.error("최신 프로필 정보 조회 중 오류가 발생했습니다.", error);
+    throw new Error("프로필 정보 조회 중 오류가 발생했습니다.");
   }
 };
 
 // 회원정보 - 차량 및 수수료 조회
 const getUserVehiclesWithFees = async (userId) => {
-  const userVehicles = await prisma.user_vehicles.findMany({
-    where: { id: userId },
-    include: {
-      franchise_fees: true,
-    },
-  });
-  return userVehicles;
+  try {
+    const latestVehicleWithFees = await prisma.user_vehicles.findMany({
+      where: { userId: userId },
+      orderBy: { id: "desc" },
+      include: {
+        franchise_fees: true, // 관련 수수료 정보도 함께 가져옴
+      },
+    });
+
+    if (!latestVehicleWithFees) {
+      console.log("해당 사용자에 대한 소득 정보가 없습니다.");
+      return null; // 소득 정보가 없는 경우 null 반환
+    }
+
+    return latestVehicleWithFees; // 가장 최신의 차량 정보와 관련 수수료 정보를 반환
+  } catch (error) {
+    console.error("최신 차량 정보 조회 중 오류가 발생했습니다.", error);
+    throw new Error("차량 정보 조회 중 오류가 발생했습니다.");
+  }
 };
 
 // 회원정보 - 소득정보 조회
 const getUserIncomeRecords = async (userId) => {
-  return await prisma.income_records.findMany({
-    where: { id: userId },
-  });
+  try {
+    const latestIncomeRecord = await prisma.income_records.findFirst({
+      where: { userId: userId },
+      orderBy: { id: "desc" }, // 'desc'는 내림차순으로 정렬함을 의미합니다.
+    });
+
+    if (!latestIncomeRecord) {
+      console.log("해당 사용자에 대한 소득 정보가 없습니다.");
+      return null; // 소득 정보가 없는 경우 null 반환
+    }
+
+    return latestIncomeRecord;
+  } catch (error) {
+    console.error("소득 정보 조회 중 오류가 발생했습니다.", error);
+    throw new Error("소득 정보 조회 중 오류가 발생했습니다.");
+  }
 };
+
 module.exports = {
   createUser,
   findUserByUsername,

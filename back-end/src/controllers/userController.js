@@ -11,6 +11,7 @@ const {
   createUserProfile,
   getUserIncomeRecords,
   getUserVehiclesWithFees,
+  createUserIncome,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
