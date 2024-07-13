@@ -37,7 +37,7 @@ router.post("/profile", authMiddleware, addUserProfile);
  *     summary: Fetch user vehicles with fees
  *     security:
  *       - bearerAuth: []
- *     tags: [Vehicles]
+ *     tags: [차량 정보]
  *     responses:
  *       200:
  *         description: A list of user vehicles with fees
@@ -53,7 +53,7 @@ router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
  *     summary: Add a new vehicle
  *     security:
  *       - bearerAuth: []
- *     tags: [Vehicles]
+ *     tags: [차량 정보]
  *     requestBody:
  *       required: true
  *       content:
@@ -97,7 +97,7 @@ router.post("/vehicle", authMiddleware, addUserVehicle);
  *     summary: Fetch user income records
  *     security:
  *       - bearerAuth: []
- *     tags: [Income]
+ *     tags: [지출 정보]
  *     responses:
  *       200:
  *         description: A list of user income records
@@ -113,7 +113,7 @@ router.get("/income", authMiddleware, fetchUserIncomeRecords);
  *     summary: Add new income record
  *     security:
  *       - bearerAuth: []
- *     tags: [Income]
+ *     tags: [지출 정보]
  *     requestBody:
  *       required: true
  *       content:
@@ -157,7 +157,7 @@ router.post("/income", authMiddleware, addUserIncome);
  *     summary: Add new franchise fee
  *     security:
  *       - bearerAuth: []
- *     tags: [FranchiseFee]
+ *     tags: [차량정보 - 수수료]
  *     requestBody:
  *       required: true
  *       content:
@@ -183,7 +183,7 @@ router.post("/franchise-fee", authMiddleware, addFranchiseFee);
  * /franchise-fee/{id}:
  *   put:
  *     summary: Update franchise fee
- *     tags: [FranchiseFee]
+ *     tags: [차량정보 - 수수료]
  *     parameters:
  *       - in: path
  *         name: id
@@ -209,14 +209,14 @@ router.post("/franchise-fee", authMiddleware, addFranchiseFee);
  *       500:
  *         description: Server error
  */
-router.put("/franchise-fee/:id", editFranchiseFee);
+router.put("/franchise-fee/:id", authMiddleware, editFranchiseFee);
 
 /**
  * @swagger
  * /franchise-fee/{id}:
  *   delete:
  *     summary: Delete franchise fee
- *     tags: [FranchiseFee]
+ *     tags: [차량정보 - 수수료]
  *     parameters:
  *       - in: path
  *         name: id
@@ -230,6 +230,6 @@ router.put("/franchise-fee/:id", editFranchiseFee);
  *       500:
  *         description: Server error
  */
-router.delete("/franchise-fee/:id", removeFranchiseFee);
+router.delete("/franchise-fee/:id", authMiddleware, removeFranchiseFee);
 
 module.exports = router;
