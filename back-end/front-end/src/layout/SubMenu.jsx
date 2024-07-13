@@ -98,7 +98,7 @@ function SubMenu() {
           align-items: center;
         }
         .width-2 li {
-          width: 24px;
+          width: 23px;
           text-align: center;
         }
         .width-5-5 li {
