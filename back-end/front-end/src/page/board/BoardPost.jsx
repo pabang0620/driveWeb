@@ -67,7 +67,7 @@ const BoardPost = () => {
   };
 
   const handlePostClick = (postId) => {
-    navigate(`/board/post/${postId}`);
+    navigate(`/board/post/${postId}`, { state: { boardId } });
   };
 
   const totalPages = Math.ceil(totalPosts / 10);

@@ -47,7 +47,10 @@ function SubMenu() {
         </li>
       </ul>
       <ul className="width-3-2">
-        <li className="listOption">랭킹</li>
+        <li className="listOption">
+          {" "}
+          <Link to="/rank">랭킹</Link>
+        </li>
       </ul>
       <ul className="width-8">
         <li className="listOption">관리자 페이지</li>
@@ -61,7 +64,7 @@ function SubMenu() {
           width: 100%;
           margin: 0 auto;
           max-width: 1200px;
-          height: 150px;
+          height: 140px;
           background-color: #ffffff;
           display: flex;
           border-bottom-left-radius: 7px;

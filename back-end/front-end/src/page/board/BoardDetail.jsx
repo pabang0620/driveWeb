@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TitleBox from "../../components/TitleBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,10 +12,14 @@ import {
   createComment,
   deletePost,
   deleteComment,
+  createReply,
+  deleteReply,
 } from "../../utils/post/postapis";
 
 const BoardDetail = () => {
-  const boardId = 2;
+  const location = useLocation();
+  const { boardId = 2 } = location.state || {}; // 전달된 state가 없는
+
   const navigate = useNavigate();
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -25,6 +29,9 @@ const BoardDetail = () => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [postOptionModalOpen, setPostOptionModalOpen] = useState(false);
   const [commentOptionModalOpen, setCommentOptionModalOpen] = useState({});
+  // 대댓글
+  const [replyOptionModalOpen, setReplyOptionModalOpen] = useState({});
+  const [replyContent, setReplyContent] = useState({});
 
   const togglePostOptionModal = () => {
     setPostOptionModalOpen(!postOptionModalOpen);
@@ -37,11 +44,24 @@ const BoardDetail = () => {
     }));
   };
 
+  // 대댓글
+  const toggleReplyOptionModal = (replyId) => {
+    setReplyOptionModalOpen((prev) => ({
+      ...prev,
+      [replyId]: !prev[replyId],
+    }));
+  };
+
   useEffect(() => {
     const loadPost = async () => {
       try {
         const postData = await fetchPost(postId);
-        setPost(postData);
+        // 댓글에 replies 속성이 없는 경우 빈 배열로 초기화
+        const commentsWithReplies = postData.comments.map((comment) => ({
+          ...comment,
+          replies: comment.replies || [],
+        }));
+        setPost({ ...postData, comments: commentsWithReplies });
         setIsLiked(postData.isLiked);
       } catch (err) {
         setError(err.message);
@@ -113,6 +133,67 @@ const BoardDetail = () => {
     }
   };
 
+  // 대댓글 작성
+  const handleReplySubmit = async (commentId) => {
+    if (replyContent[commentId]?.trim() === "") return;
+
+    try {
+      const newReply = await createReply(
+        replyContent[commentId],
+        post.id,
+        1,
+        commentId
+      ); // userId를 1로 가정
+      setPost({
+        ...post,
+        comments: post.comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              replies: [...(comment.replies || []), newReply],
+            };
+          }
+          return comment;
+        }),
+      });
+      setReplyContent((prev) => ({ ...prev, [commentId]: "" }));
+    } catch (err) {
+      console.error("대댓글 작성 중 오류가 발생했습니다:", err);
+    }
+  };
+
+  const handleReplyChange = (commentId, content) => {
+    setReplyContent((prev) => ({
+      ...prev,
+      [commentId]: content,
+    }));
+  };
+
+  const handleReplyDelete = async (replyId, commentId) => {
+    const confirmed = window.confirm("대댓글을 삭제하시겠습니까?");
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteReply(replyId);
+      setPost({
+        ...post,
+        comments: post.comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              replies: comment.replies.filter((reply) => reply.id !== replyId),
+            };
+          }
+          return comment;
+        }),
+      });
+    } catch (err) {
+      console.error("대댓글 삭제 중 오류가 발생했습니다:", err);
+    }
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -147,7 +228,6 @@ const BoardDetail = () => {
             </div>
             <div className="detailUserdetail detailUserdetailAdd">
               <p className="detailName"> {post.users.nickname}</p>
-
               <div className="detailUserLast">
                 <p>{new Date(post.createdAt).toLocaleDateString()}</p>
                 <p>조회수 {post.viewCount}</p>
@@ -224,6 +304,66 @@ const BoardDetail = () => {
                   )}
                 </div>
               </div>
+
+              {/* {comment.replies && comment.replies.length > 0 && (
+                <div className="replySection">
+                  {comment.replies.map((reply) => (
+                    <div className="replySetting" key={reply.id}>
+                      <div className="detailUser">
+                        <div className="dlatldlatl">
+                          <img src="" alt="" />
+                        </div>
+                        <div className="detailUserdetail">
+                          <p className="detailName">
+                            {reply.users
+                              ? reply.users.nickname
+                              : reply.user.nickname}
+                          </p>
+                          <p className="commentDetail">{reply.content}</p>
+                          <div className="detailUserLast">
+                            <p>{new Date(reply.createdAt).toLocaleString()}</p>
+                          </div>
+                        </div>
+                        <div className="burgerRelate">
+                          <FontAwesomeIcon
+                            icon={faEllipsisV}
+                            onClick={() => toggleReplyOptionModal(reply.id)}
+                            style={{ padding: "3px", cursor: "pointer" }}
+                          />
+                          {replyOptionModalOpen[reply.id] && (
+                            <div className="postControllButtonBox">
+                              <div className="postDelectButton adited">
+                                수정
+                              </div>
+                              <div
+                                className="postDelectButton"
+                                onClick={() =>
+                                  handleReplyDelete(reply.id, comment.id)
+                                }
+                              >
+                                삭제
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )} */}
+              {/* <div className="replyInput">
+                <input
+                  type="text"
+                  value={replyContent[comment.id] || ""}
+                  onChange={(e) =>
+                    handleReplyChange(comment.id, e.target.value)
+                  }
+                  placeholder="대댓글을 입력하세요..."
+                />
+                <button onClick={() => handleReplySubmit(comment.id)}>
+                  작성
+                </button>
+              </div> */}
             </div>
           ))}
         </div>

@@ -356,6 +356,84 @@ const getExpenseRecordsByDrivingLogId = async (drivingLogId) => {
     where: { drivingLogId },
   });
 };
+
+// 연비 랭킹 탑 5를 가져오는 함수
+const getTopFuelEfficiency = async (fuelType) => {
+  const filter = fuelType ? { fuel_type: fuelType } : {};
+  const topFuelEfficiency = await prisma.driving_records.findMany({
+    where: filter,
+    orderBy: {
+      fuel_efficiency: "desc",
+    },
+    take: 5,
+    select: {
+      id: true,
+      fuel_efficiency: true,
+      driving_distance: true,
+      fuel_amount: true,
+      driving_logs: {
+        select: {
+          users: {
+            select: {
+              nickname: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return topFuelEfficiency;
+};
+
+// 운행시간 랭킹 탑 5를 가져오는 함수
+// 운행시간 랭킹 탑 5를 가져오는 함수
+const getTopWorkingHours = async (jobType) => {
+  const filter = jobType !== 0 ? { jobtype: jobType } : {};
+  const topWorkingHours = await prisma.users.findMany({
+    where: filter,
+    select: {
+      id: true,
+      nickname: true,
+      jobtype: true,
+      _sum: {
+        select: {
+          working_hours: true,
+        },
+      },
+      driving_logs: {
+        select: {
+          driving_records: {
+            select: {
+              working_hours: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      _sum: {
+        working_hours: "desc",
+      },
+    },
+    take: 5,
+  });
+
+  return topWorkingHours.map((user) => ({
+    id: user.id,
+    nickname: user.nickname,
+    jobtype: user.jobtype,
+    total_working_hours: user.driving_logs.reduce(
+      (sum, log) =>
+        sum +
+        log.driving_records.reduce(
+          (logSum, record) => logSum + record.working_hours,
+          0
+        ),
+      0
+    ),
+  }));
+};
+
 module.exports = {
   createDrivingRecord,
   updateDrivingRecord,
@@ -368,4 +446,7 @@ module.exports = {
   createExpenseRecord,
   updateExpenseRecord,
   deleteExpenseRecord,
+  // ----------------------
+  getTopFuelEfficiency,
+  getTopWorkingHours,
 };

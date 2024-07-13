@@ -28,7 +28,7 @@ const createPostModel = async ({
     imageUrl,
   });
   try {
-    return await prisma.posts.create({
+    const createdPost = await prisma.posts.create({
       data: {
         title,
         content,
@@ -37,12 +37,14 @@ const createPostModel = async ({
         imageUrl,
       },
     });
+
+    // 생성된 게시물의 ID를 반환
+    return createdPost.id;
   } catch (error) {
     console.error("Error creating post:", error);
     throw error;
   }
 };
-
 const createPostImages = async (postId, imageUrls) => {
   try {
     await prisma.postImages.createMany({
@@ -239,39 +241,21 @@ const deletePost = async (id) => {
   });
 };
 
-// 게시글
-const getTopPostsByLikesAndViews = async (boardId) => {
-  const topLikedPosts = await prisma.posts.findMany({
-    where: { boardId },
-    orderBy: { likeCount: "desc" },
-    take: 10,
+// 10개 최신 id 값에 따라 게시판별
+const getRecentPosts = async (boardId) => {
+  const recentPosts = await prisma.posts.findMany({
+    where: { boardId: boardId },
+    orderBy: { createdAt: "desc" }, // 생성일자를 기준으로 내림차순 정렬합니다.
+    take: 10, // 최근 10개 글을 가져옵니다.
     select: {
       id: true,
-      viewCount: true,
       title: true,
-      likeCount: true,
       _count: {
         select: { comments: true },
       },
     },
   });
-
-  const topViewedPosts = await prisma.posts.findMany({
-    where: { boardId },
-    orderBy: { viewCount: "desc" },
-    take: 10,
-    select: {
-      id: true,
-      viewCount: true,
-      title: true,
-      likeCount: true,
-      _count: {
-        select: { comments: true },
-      },
-    },
-  });
-
-  return { topLikedPosts, topViewedPosts };
+  return recentPosts;
 };
 
 // 보드별로 10위까지 가져오기 getBoards getLatestPostsByBoard getAllLatestPosts
@@ -344,6 +328,14 @@ const getAllLatestPosts = async () => {
   }
 };
 
+const getBoardsName = async () => {
+  return await prisma.boards.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+};
 module.exports = {
   createBoard,
   deleteBoard,
@@ -353,9 +345,10 @@ module.exports = {
   getPostsByPage,
   getPostById,
   updatePost,
-  getTopPostsByLikesAndViews,
+  getRecentPosts,
   deletePost,
   incrementViewCount,
   toggleLike,
   getAllLatestPosts,
+  getBoardsName,
 };

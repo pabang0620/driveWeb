@@ -10,6 +10,7 @@ const {
   getPostsByPage,
   getBoardById,
   toggleLike,
+  getBoardsName,
 } = require("../models/postModel");
 
 const addBoard = async (req, res) => {
@@ -34,8 +35,8 @@ const removeBoard = async (req, res) => {
 // 게시물 작성
 const createPost = async (req, res) => {
   try {
+    const { userId } = req;
     const { title, content, boardId } = req.body;
-    const userId = 1; // 실제 구현 시에는 적절한 방법으로 userId를 가져와야 합니다.
     const imageUrls = req.files ? req.files.map((file) => file.location) : []; // 업로드된 이미지의 URL들
     const post = await createPostModel({
       title,
@@ -49,7 +50,7 @@ const createPost = async (req, res) => {
       await createPostImages(post.id, imageUrls);
     }
 
-    res.status(201).json(post);
+    res.status(201).json({ post }); // 생성된 게시물의 ID를 반환
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -75,7 +76,8 @@ const getPosts = async (req, res) => {
 
 const getPost = async (req, res) => {
   const { id } = req.params;
-  const userId = 1;
+  const { userId } = req;
+  console.log(userId);
   try {
     const post = await getPostById(Number(id), userId);
     if (!post) {
@@ -147,6 +149,17 @@ const fetchAllLatestPosts = async (req, res) => {
   }
 };
 
+// 보드 목록 (게시글작성)
+const getBoards = async (req, res) => {
+  try {
+    const boards = await getBoardsName();
+    res.status(200).json(boards);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "게시물 종류를 불러오는 중 오류가 발생했습니다." });
+  }
+};
 module.exports = {
   addBoard,
   removeBoard,
@@ -158,4 +171,5 @@ module.exports = {
   removePost,
   getTopPosts,
   fetchAllLatestPosts,
+  getBoards,
 };

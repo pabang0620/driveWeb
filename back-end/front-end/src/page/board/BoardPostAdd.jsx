@@ -1,15 +1,20 @@
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const BoardPostAdd = () => {
-  const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [selectedBoardId, setSelectedBoardId] = useState(
+    location.state?.boardId || 2
+  ); // 기본값 설정
+  const [boards, setBoards] = useState([]); // 게시판 리스트 상태
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -42,8 +47,24 @@ const BoardPostAdd = () => {
     if (id) {
       fetchPostData(id);
     }
+
+    fetchBoards(); // 게시판 리스트를 불러오는 함수 호출
   }, [id]);
-  // id 가 있을때만 불러옴
+
+  const fetchBoards = async () => {
+    try {
+      const response = await axios.get("/api/post/boardsName", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setBoards(response.data);
+    } catch (error) {
+      console.error("게시판 리스트를 불러오는 중 오류가 발생했습니다.", error);
+      alert("게시판 리스트를 불러오는 중 오류가 발생했습니다.");
+    }
+  };
+
   const fetchPostData = async (postId) => {
     try {
       const response = await axios.get(`/api/post/${postId}`, {
@@ -88,7 +109,7 @@ const BoardPostAdd = () => {
       const postData = {
         title,
         content: quillRef.current.root.innerHTML,
-        boardId: id,
+        boardId: selectedBoardId,
       };
 
       let response;
@@ -107,8 +128,9 @@ const BoardPostAdd = () => {
       }
 
       if (response.status === 201 || response.status === 200) {
+        console.log(response.data.postId);
         alert("게시글이 성공적으로 저장되었습니다.");
-        navigate(`/board/post/${id}`);
+        navigate(`/board/list/${selectedBoardId}`);
       }
     } catch (error) {
       console.error("게시글 저장 중 오류가 발생했습니다.", error);
@@ -141,6 +163,18 @@ const BoardPostAdd = () => {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
+          <select
+            value={selectedBoardId}
+            onChange={(e) => setSelectedBoardId(e.target.value)}
+            className="boardSelect"
+          >
+            {Array.isArray(boards) &&
+              boards.map((board) => (
+                <option key={board.id} value={board.id}>
+                  {board.name}
+                </option>
+              ))}
+          </select>
         </div>
         <div className="EditorWrapper">
           <div ref={quillRef} />
@@ -182,6 +216,14 @@ const BoardPostAdd = () => {
           font-size: 32px;
           border: none;
           padding: 0 0 0 25px;
+          flex-grow: 1;
+        }
+        .boardSelect {
+          margin-left: 20px;
+          font-size: 16px;
+          padding: 5px;
+          border-radius: 5px;
+          outline: none;
         }
         .BoardPostHeader {
           padding-bottom: 10px;
@@ -189,12 +231,12 @@ const BoardPostAdd = () => {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          align-items: center;
         }
         .EditorWrapper {
           margin-top: 20px;
           height: 700px; /* 높이 600픽셀로 설정 */
         }
-
         .EditorWrapper .ql-container {
           height: 100%; /* 부모 높이에 맞게 설정 */
         }

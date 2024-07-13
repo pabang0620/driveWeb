@@ -1,20 +1,16 @@
 const express = require("express");
-const { getTopViewedPosts } = require("../controllers/rankController");
+const {
+  getRecentPostsByBoard,
+  getFuelEfficiencyRanking,
+  getWorkingHoursRanking,
+} = require("../controllers/rankController");
 
 const router = express.Router();
 
-/**
- * @swagger
- * /api/rank/top-views:
- *   get:
- *     summary: Get top 10 posts by view count
- *     tags: [Ranking]
- *     responses:
- *       200:
- *         description: Successfully retrieved top posts
- *       500:
- *         description: Server error
- */
-router.get("/top-views", getTopViewedPosts);
+router.get("/fuel-efficiency/:fuelType", getFuelEfficiencyRanking);
+router.get("/working-hours/:jobType", getWorkingHoursRanking);
 
+// 홈에서 쓰는 게시물 최신
+router.get("/top-views/:boardId", getRecentPostsByBoard);
+// 홈에서 쓰는 게시물 인기
 module.exports = router;

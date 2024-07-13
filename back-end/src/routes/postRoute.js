@@ -12,30 +12,34 @@ const {
   getTopPosts,
   fetchAllLatestPosts,
   createPost,
+  getBoards,
 } = require("../controllers/postController");
 const handleFileUpload = require("../middleware/postFileUpload");
 const authMiddleware = require("../middleware/authMiddleware");
+const { getBoardsName } = require("../models/postModel");
 
 const router = express.Router();
 
 // 게시물 작성 /api/post
-router.post("/", createPost);
-// router.post("/", authMiddleware, createPostController);
+router.post("/", authMiddleware, createPost);
+// router.post("/", authMiddleware , authMiddleware, createPostController);
 
 // 홈 최근 게시글
 router.get("/latest", fetchAllLatestPosts);
 // 해당 보드의 게시글 모두 조회 100개씩
 router.get("/board/:boardId", getPosts);
 
-router.get("/:id", getPost);
+router.get("/boardsName", getBoards);
 
-router.post("/:id/like", likePost);
-
-router.put("/:id", editPost);
-
-router.delete("/:id", removePost);
+router.get("/:id", authMiddleware, getPost);
 
 router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
+
+router.post("/:id/like", authMiddleware, likePost);
+
+router.put("/:id", authMiddleware, editPost);
+
+router.delete("/:id", authMiddleware, removePost);
 
 // 관리자 모드
 /**
@@ -61,7 +65,7 @@ router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
  *       500:
  *         description: Server error
  */
-router.post("/board", addBoard);
+router.post("/board", authMiddleware, addBoard);
 
 /**
  * @swagger
@@ -82,6 +86,6 @@ router.post("/board", addBoard);
  *       500:
  *         description: Server error
  */
-router.delete("/board/:id", removeBoard);
+router.delete("/board/:id", authMiddleware, removeBoard);
 
 module.exports = router;
