@@ -29,29 +29,31 @@ router.post("/naver-login", naverLogin);
 router.get("/profile", authMiddleware, fetchUserProfile);
 
 router.post("/profile", authMiddleware, addUserProfile);
+
 /**
  * @swagger
- * /api/user/vehicles:
+ * /vehicles:
  *   get:
- *     summary: 회원 차량 정보 및 가맹점 수수료 조회
- *     tags: [UserVehicle]
+ *     summary: Fetch user vehicles with fees
  *     security:
  *       - bearerAuth: []
+ *     tags: [Vehicles]
  *     responses:
  *       200:
- *         description: 성공적으로 회원 차량 정보를 조회했습니다.
+ *         description: A list of user vehicles with fees
  *       500:
- *         description: 서버 오류
+ *         description: Server error
  */
 router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
+
 /**
  * @swagger
- * /api/user/vehicle:
+ * /vehicle:
  *   post:
- *     summary: 회원정보 - 차량정보
- *     tags: [UserVehicle]
+ *     summary: Add a new vehicle
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
+ *     tags: [Vehicles]
  *     requestBody:
  *       required: true
  *       content:
@@ -59,51 +61,59 @@ router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
  *           schema:
  *             type: object
  *             properties:
- *               taxi_type:
- *                 type: string
- *               franchise_status:
- *                 type: string
  *               vehicle_name:
+ *                 type: string
+ *               fuel_type:
  *                 type: string
  *               year:
  *                 type: integer
- *               fuel_type:
- *                 type: string
  *               mileage:
  *                 type: integer
- *               commission_rate:
+ *               license_plate:
+ *                 type: string
+ *               first_registration_date:
+ *                 type: string
+ *                 format: date
+ *               insurance_company:
+ *                 type: string
+ *               insurance_period:
+ *                 type: string
+ *                 format: date
+ *               insurance_fee:
  *                 type: number
- *                 format: float
+ *                 format: double
  *     responses:
  *       201:
- *         description: User vehicle added successfully
+ *         description: Vehicle created successfully
  *       500:
  *         description: Server error
  */
 router.post("/vehicle", authMiddleware, addUserVehicle);
+
 /**
  * @swagger
- * /api/user/income:
+ * /income:
  *   get:
- *     summary: 회원 수입 정보 조회
- *     tags: [IncomeRecords]
+ *     summary: Fetch user income records
  *     security:
  *       - bearerAuth: []
+ *     tags: [Income]
  *     responses:
  *       200:
- *         description: 성공적으로 회원 수입 정보를 조회했습니다.
+ *         description: A list of user income records
  *       500:
- *         description: 서버 오류
+ *         description: Server error
  */
 router.get("/income", authMiddleware, fetchUserIncomeRecords);
+
 /**
  * @swagger
- * /api/user/income:
+ * /income:
  *   post:
- *     summary: 회원정보 - 소득정보
- *     tags: [UserIncome]
+ *     summary: Add new income record
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
+ *     tags: [Income]
  *     requestBody:
  *       required: true
  *       content:
@@ -122,30 +132,31 @@ router.get("/income", authMiddleware, fetchUserIncomeRecords);
  *                 type: string
  *               monthly_payment:
  *                 type: number
- *                 format: float
+ *                 format: double
  *               fuel_allowance:
  *                 type: number
- *                 format: float
+ *                 format: double
  *               investment:
  *                 type: number
- *                 format: float
+ *                 format: double
  *               standard_expense_rate:
  *                 type: number
- *                 format: float
+ *                 format: double
  *     responses:
  *       201:
- *         description: User income added successfully
+ *         description: Income record created successfully
  *       500:
  *         description: Server error
  */
 router.post("/income", authMiddleware, addUserIncome);
 
-// 수수료 // 수수료 // 수수료 // 수수료
 /**
  * @swagger
- * /api/user/franchise-fee:
+ * /franchise-fee:
  *   post:
- *     summary: 가맹점 수수료 생성
+ *     summary: Add new franchise fee
+ *     security:
+ *       - bearerAuth: []
  *     tags: [FranchiseFee]
  *     requestBody:
  *       required: true
@@ -154,8 +165,6 @@ router.post("/income", authMiddleware, addUserIncome);
  *           schema:
  *             type: object
  *             properties:
- *               userId:
- *                 type: integer
  *               franchiseName:
  *                 type: string
  *               fee:
@@ -163,17 +172,17 @@ router.post("/income", authMiddleware, addUserIncome);
  *                 format: double
  *     responses:
  *       201:
- *         description: 가맹점 수수료가 성공적으로 생성되었습니다.
+ *         description: Franchise fee created successfully
  *       500:
- *         description: 서버 오류
+ *         description: Server error
  */
 router.post("/franchise-fee", authMiddleware, addFranchiseFee);
 
 /**
  * @swagger
- * /api/user/franchise-fee/{id}:
+ * /franchise-fee/{id}:
  *   put:
- *     summary: 가맹점 수수료 수정
+ *     summary: Update franchise fee
  *     tags: [FranchiseFee]
  *     parameters:
  *       - in: path
@@ -181,7 +190,7 @@ router.post("/franchise-fee", authMiddleware, addFranchiseFee);
  *         schema:
  *           type: integer
  *         required: true
- *         description: 가맹점 수수료 ID
+ *         description: Franchise fee ID
  *     requestBody:
  *       required: true
  *       content:
@@ -196,17 +205,17 @@ router.post("/franchise-fee", authMiddleware, addFranchiseFee);
  *                 format: double
  *     responses:
  *       200:
- *         description: 성공적으로 가맹점 수수료를 수정했습니다.
+ *         description: Franchise fee updated successfully
  *       500:
- *         description: 서버 오류
+ *         description: Server error
  */
 router.put("/franchise-fee/:id", editFranchiseFee);
 
 /**
  * @swagger
- * /api/user/franchise-fee/{id}:
+ * /franchise-fee/{id}:
  *   delete:
- *     summary: 가맹점 수수료 삭제
+ *     summary: Delete franchise fee
  *     tags: [FranchiseFee]
  *     parameters:
  *       - in: path
@@ -214,13 +223,13 @@ router.put("/franchise-fee/:id", editFranchiseFee);
  *         schema:
  *           type: integer
  *         required: true
- *         description: 가맹점 수수료 ID
+ *         description: Franchise fee ID
  *     responses:
  *       200:
- *         description: 성공적으로 가맹점 수수료를 삭제했습니다.
+ *         description: Franchise fee deleted successfully
  *       500:
- *         description: 서버 오류
+ *         description: Server error
  */
 router.delete("/franchise-fee/:id", removeFranchiseFee);
-// 회원정보 - 차량정보
+
 module.exports = router;
