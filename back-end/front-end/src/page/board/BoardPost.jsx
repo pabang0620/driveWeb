@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import Spinner from "../../components/Spinner";
 
 const BoardPost = () => {
   const navigate = useNavigate();
-  const boardId = 2;
-  // const { boardId } = useParams();
+  const { boardId } = useParams();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

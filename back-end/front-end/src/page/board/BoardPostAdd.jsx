@@ -6,7 +6,7 @@ import TitleBox from "../../components/TitleBox";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const BoardPostAdd = () => {
-  const { id } = useParams(); // URL의 id 파라미터를 가져옵니다.
+  const { id } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

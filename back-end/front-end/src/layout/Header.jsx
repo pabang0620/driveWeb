@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import SubMenu from "./SubMenu";
 
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
   // 로그인 및 회원가입 페이지에서는 네비게이션을 숨김
   const hideNav =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup");
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // 스크롤에 따라 헤더가 위로 움직이도록 처리
   const handleScroll = () => {
@@ -84,29 +88,58 @@ function Header() {
           )}
         </div>
         <nav className={hideNav ? "hidden" : ""}>
-          <ul className="mainmenu">
-            <li className={currentPath === "/" ? "selected" : ""}>
+          <ul
+            className="mainmenu"
+            onMouseEnter={() => setShowSubMenu(true)}
+            onMouseLeave={() => setShowSubMenu(false)}
+          >
+            {showSubMenu && <SubMenu />}
+            <li
+              style={{ width: "24px", textAlign: "center" }}
+              className={currentPath === "/" ? "selected" : ""}
+            >
               <Link to="/">홈</Link>
             </li>
-            <li className={getSelectedClass("/user")}>
+            <li
+              style={{ width: "66px", textAlign: "center" }}
+              className={getSelectedClass("/user")}
+            >
               <Link to="/user/personalInfo">회원정보</Link>
             </li>
-            <li className={getSelectedClass("/mypage")}>
+            <li
+              style={{ width: "84px", textAlign: "center" }}
+              className={getSelectedClass("/mypage")}
+            >
               <Link to="/mypage">마이페이지</Link>
             </li>
-            <li className={getSelectedClass("/driving_log")}>
+            <li
+              style={{ width: "66px", textAlign: "center" }}
+              className={getSelectedClass("/driving_log")}
+            >
               <Link to="/driving_log">운행일지</Link>
             </li>
-            <li className={getSelectedClass("/car_ledger")}>
+            <li
+              style={{ width: "66px", textAlign: "center" }}
+              className={getSelectedClass("/car_ledger")}
+            >
               <Link to="/car_ledger">차계부</Link>
             </li>
-            <li className={getSelectedClass("/board")}>
+            <li
+              style={{ width: "78px", textAlign: "center" }}
+              className={getSelectedClass("/board")}
+            >
               <Link to="/board">게시판</Link>
             </li>
-            <li className={getSelectedClass("/ranking")}>
+            <li
+              style={{ width: "42px", textAlign: "center" }}
+              className={getSelectedClass("/ranking")}
+            >
               <Link to="/ranking">랭킹</Link>
             </li>
-            <li className={getSelectedClass("/admin_page")}>
+            <li
+              style={{ width: "82.81px", textAlign: "center" }}
+              className={getSelectedClass("/admin_page")}
+            >
               <Link to="/admin_page">관리자페이지</Link>
             </li>
           </ul>
@@ -182,6 +215,7 @@ function Header() {
             }
 
             nav {
+              white-space: nowrap;
               width: 100%;
               margin-top: 15px;
               position: relative;
@@ -200,6 +234,7 @@ function Header() {
                 cursor: pointer;
                 font-weight: 500;
                 padding: 5px;
+                margin: 0 3px;
                 font-size: 15px;
                 &.selected {
                   border-bottom: 3px solid #3c5997;
