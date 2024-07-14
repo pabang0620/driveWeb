@@ -40,14 +40,13 @@ const createUser = async (
       },
       user_incomes: {
         create: {
-          income_type: "", // 소득 유형 초기화
-          start_date: null, // 시작일 초기화
-          region1: "", // 지역1 초기화
-          region2: "", // 지역2 초기화
-          monthly_payment: null, // 월급여 초기화
-          fuel_allowance: null, // 연료 보조금 초기화
-          investment: null, // 투자 초기화
-          standard_expense_rate: null, // 표준 경비율 초기화
+          carType: "", // 차량구분 초기화
+          franchise_status: "", // 가맹여부 초기화
+          commission_rate: null, // 카드수수료 초기화
+          vehicle_name: "", // 차량명 초기화
+          year: null, // 연식 초기화
+          fuel_type: "", // 연료 타입 초기화
+          mileage: null, // 누적 주행거리 초기화
         },
       },
     },
@@ -101,8 +100,7 @@ const createUserProfile = async (userId, profileData) => {
   }
 };
 // 자동차등록 관련
-const createUserVehicle = async (userId, vehicleData) => {
-  // 새 차량 데이터 생성
+const addUserVehicle = async (userId, vehicleData) => {
   const vehicle = await prisma.user_vehicles.create({
     data: {
       userId,
@@ -110,48 +108,23 @@ const createUserVehicle = async (userId, vehicleData) => {
     },
   });
 
-  // 사용자의 가장 최신 차량 정보 가져오기
-  const latestVehicle = await prisma.user_vehicles.findFirst({
-    where: { userId },
-    orderBy: { id: "desc" },
-  });
-
-  // 차량 관련 데이터 준비
-  const myCarData = {
-    userId,
-    vehicle_name: latestVehicle.vehicle_name,
-    fuel_type: latestVehicle.fuel_type,
-    year: latestVehicle.year,
-    mileage: latestVehicle.mileage,
-    license_plate: vehicleData.license_plate,
-    first_registration_date: vehicleData.first_registration_date,
-    insurance_company: vehicleData.insurance_company,
-    insurance_period: vehicleData.insurance_period,
-    insurance_fee: vehicleData.insurance_fee,
-  };
-
-  // my_car 테이블에 데이터 생성
+  // my_car 테이블에 동일한 데이터를 저장
   await prisma.my_car.create({
-    data: myCarData,
+    data: {
+      userId,
+      vehicle_name: vehicleData.vehicle_name,
+      fuel_type: vehicleData.fuel_type,
+      year: vehicleData.year,
+      mileage: vehicleData.mileage,
+    },
   });
 
-  // 수수료 정보 가져오기
-  const fees = await prisma.franchise_fees.findMany({
-    where: { userId },
-  });
-
-  // 최신 차량 정보와 수수료 정보를 함께 반환
-  return { vehicle: latestVehicle, fees };
+  return vehicle;
 };
 
 // 지출정보등록 관련
 const createUserIncome = async (userId, incomeData) => {
   try {
-    // 입력 데이터 검증 (예시: 필수 필드 검사)
-    if (!userId || !incomeData.income_type) {
-      throw new Error("필수 정보가 누락되었습니다.");
-    }
-
     // 데이터베이스에 지출 정보 등록
     const newIncome = await prisma.user_incomes.create({
       data: {
@@ -169,25 +142,25 @@ const createUserIncome = async (userId, incomeData) => {
 };
 
 // 수수료 입력 및 삭제 수정
-const createFranchiseFee = async (userId, franchiseName, fee) => {
-  return await prisma.franchiseFee.create({
+const createFranchiseFee = async (userId, franchise_name, fee) => {
+  return await prisma.franchise_fees.create({
     data: {
       userId,
-      franchiseName,
+      franchise_name,
       fee,
     },
   });
 };
 
-// Update Franchise Fee
-const updateFranchiseFee = async (id, data) => {
-  return await prisma.franchiseFee.update({
-    where: { id },
-    data,
+// 수수료 조회
+const getFranchiseFees = async (userId) => {
+  return await prisma.franchise_fees.findMany({
+    where: {
+      userId,
+    },
   });
 };
-
-// Delete Franchise Fee
+// 수수료율 삭제
 const deleteFranchiseFee = async (id) => {
   return await prisma.franchiseFee.delete({
     where: { id },
@@ -264,10 +237,10 @@ module.exports = {
   findUserByKakaoId,
   findUserByNaverId,
   createUserProfile,
-  createUserVehicle,
+  addUserVehicle,
   createUserIncome,
   createFranchiseFee,
-  updateFranchiseFee,
+  getFranchiseFees,
   deleteFranchiseFee,
   getUserProfile,
   getUserVehiclesWithFees,

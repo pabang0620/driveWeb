@@ -12,6 +12,8 @@ const {
   getUserIncomeRecords,
   getUserVehiclesWithFees,
   createUserIncome,
+  addUserVehicle,
+  getFranchiseFees,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -139,7 +141,6 @@ const kakaoLogin = (req, res) => socialLogin(req, res, "kakao");
 const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const addUserProfile = async (req, res) => {
-  console.log(1);
   const { userId } = req;
   const profileData = req.body;
   console.log(profileData);
@@ -151,15 +152,34 @@ const addUserProfile = async (req, res) => {
   }
 };
 
-const addUserVehicle = async (req, res) => {
-  const { userId } = req;
-  const vehicleData = req.body;
+const addUserVehicleHandler = async (req, res) => {
+  const { id: userId } = req;
+  const {
+    carType,
+    franchise_status,
+    commission_rate,
+    vehicle_name,
+    year,
+    fuel_type,
+    mileage,
+  } = req.body;
 
   try {
-    const vehicle = await createUserVehicle(userId, vehicleData);
+    const vehicle = await addUserVehicle(userId, {
+      carType,
+      franchise_status,
+      commission_rate,
+      vehicle_name,
+      year,
+      fuel_type,
+      mileage,
+    });
+
     res.status(201).json(vehicle);
   } catch (error) {
-    res.status(500).json({ error: "차량 정보 생성 중 오류가 발생했습니다." });
+    res
+      .status(500)
+      .json({ error: "차량 정보를 추가하는 중 오류가 발생했습니다." });
   }
 };
 
@@ -177,11 +197,11 @@ const addUserIncome = async (req, res) => {
 
 // 수수료 등록 수정 삭제 컨트롤러
 const addFranchiseFee = async (req, res) => {
-  const { userId } = req;
-  const { franchiseName, fee } = req.body;
+  const { id: userId } = req;
+  const { franchise_name, fee } = req.body;
 
   try {
-    const franchiseFee = await createFranchiseFee(userId, franchiseName, fee);
+    const franchiseFee = await createFranchiseFee(userId, franchise_name, fee);
     res.status(201).json(franchiseFee);
   } catch (error) {
     res
@@ -190,18 +210,16 @@ const addFranchiseFee = async (req, res) => {
   }
 };
 
-// Update Franchise Fee
-const editFranchiseFee = async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
+const fetchFranchiseFees = async (req, res) => {
+  const { id: userId } = req;
 
   try {
-    const franchiseFee = await updateFranchiseFee(Number(id), data);
-    res.status(200).json(franchiseFee);
+    const franchiseFees = await getFranchiseFees(userId);
+    res.status(200).json(franchiseFees);
   } catch (error) {
     res
       .status(500)
-      .json({ error: "가맹점 수수료 수정 중 오류가 발생했습니다." });
+      .json({ error: "가맹점 수수료 조회 중 오류가 발생했습니다." });
   }
 };
 
@@ -242,7 +260,7 @@ const fetchUserProfile = async (req, res) => {
 
 // 회원정보 - 차량정보 및 수수료 조회
 const fetchUserVehiclesWithFees = async (req, res) => {
-  const userId = req.userId;
+  const { userId } = req;
 
   try {
     const userVehicles = await getUserVehiclesWithFees(Number(userId));
@@ -256,7 +274,7 @@ const fetchUserVehiclesWithFees = async (req, res) => {
 
 // 회원정보 - 소득정보 조회
 const fetchUserIncomeRecords = async (req, res) => {
-  const userId = req.userId;
+  const { userId } = req;
 
   try {
     const incomeRecords = await getUserIncomeRecords(Number(userId));
@@ -274,10 +292,10 @@ module.exports = {
   kakaoLogin,
   naverLogin,
   addUserProfile,
-  addUserVehicle,
+  addUserVehicleHandler,
   addUserIncome,
   addFranchiseFee,
-  editFranchiseFee,
+  fetchFranchiseFees,
   removeFranchiseFee,
   fetchUserProfile,
   fetchUserVehiclesWithFees,

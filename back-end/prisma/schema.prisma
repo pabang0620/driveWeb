@@ -108,18 +108,18 @@ model user_profiles {
 model user_vehicles {
   id               Int       @id @default(autoincrement())
   userId           Int
-  taxi_type        String?   @db.VarChar(255)
+  carType          String?   @db.VarChar(255)
   franchise_status String?   @db.VarChar(255)
+  commission_rate  Decimal?  @db.Decimal(5, 2)
   vehicle_name     String?   @db.VarChar(255)
-  year             Int?      @db.Year
+  year             Int?
   fuel_type        String?   @db.VarChar(255)
   mileage          Int?
-  commission_rate  Decimal?  @db.Decimal(5, 2)
   created_at       DateTime? @default(now()) @db.Timestamp(0)
   updated_at       DateTime? @default(now()) @db.Timestamp(0)
   users            users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_vehicles_ibfk_1")
 
-  @@index([userId], map: "userId")
+  @@index([userId], map: "idx_user_vehicles_userId")
 }
 
 model users {
