@@ -106,18 +106,19 @@ model user_profiles {
 }
 
 model user_vehicles {
-  id               Int       @id @default(autoincrement())
+  id               Int              @id @default(autoincrement())
   userId           Int
-  carType          String?   @db.VarChar(255)
-  franchise_status String?   @db.VarChar(255)
-  commission_rate  Decimal?  @db.Decimal(5, 2)
-  vehicle_name     String?   @db.VarChar(255)
+  carType          String?          @db.VarChar(255)
+  franchise_status String?          @db.VarChar(255)
+  commission_rate  Decimal?         @db.Decimal(5, 2)
+  vehicle_name     String?          @db.VarChar(255)
   year             Int?
-  fuel_type        String?   @db.VarChar(255)
+  fuel_type        String?          @db.VarChar(255)
   mileage          Int?
-  created_at       DateTime? @default(now()) @db.Timestamp(0)
-  updated_at       DateTime? @default(now()) @db.Timestamp(0)
-  users            users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_vehicles_ibfk_1")
+  created_at       DateTime?        @default(now()) @db.Timestamp(0)
+  updated_at       DateTime?        @default(now()) @db.Timestamp(0)
+  franchise_fees   franchise_fees[]
+  users            users            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_vehicles_ibfk_1")
 
   @@index([userId], map: "idx_user_vehicles_userId")
 }
@@ -229,15 +230,18 @@ model income_records {
 }
 
 model franchise_fees {
-  id             Int       @id @default(autoincrement())
-  userId         Int?
-  franchise_name String?   @db.VarChar(255)
-  fee            Decimal?  @db.Decimal(15, 2)
-  created_at     DateTime? @default(now()) @db.Timestamp(0)
-  updated_at     DateTime? @default(now()) @db.Timestamp(0)
-  users          users?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "franchise_fees_ibfk_1")
+  id              Int            @id @default(autoincrement())
+  userId          Int?
+  franchise_name  String?        @db.VarChar(255)
+  fee             Decimal?       @db.Decimal(15, 2)
+  created_at      DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?      @default(now()) @db.Timestamp(0)
+  user_vehicle_id Int?
+  user_vehicles   user_vehicles? @relation(fields: [user_vehicle_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_UserVehicle")
+  users           users?         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "franchise_fees_ibfk_1")
 
   @@index([userId], map: "userId")
+  @@index([user_vehicle_id], map: "FK_UserVehicle")
 }
 
 model postImages {

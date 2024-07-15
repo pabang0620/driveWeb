@@ -76,7 +76,7 @@ router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
  *       500:
  *         description: "회원 차량 정보를 추가하는 중 오류가 발생했습니다."
  */
-router.post("/vehicle", authMiddleware, addUserVehicleHandler);
+router.post("/vehicles", authMiddleware, addUserVehicleHandler);
 
 router.get("/income", authMiddleware, fetchUserIncomeRecords);
 

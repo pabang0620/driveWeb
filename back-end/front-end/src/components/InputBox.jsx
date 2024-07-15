@@ -40,8 +40,6 @@ export function DynamicInput({
 
   const handleCustomInputSave = () => {
     onSave(fieldName, customValue);
-    // onChange(fieldName, customValue);
-    // setCustomValue(""); // 입력 후 값 초기화
   };
 
   const renderInput = () => {
@@ -53,7 +51,7 @@ export function DynamicInput({
             <input
               type={inputType}
               placeholder={placeholder}
-              value={value}
+              value={value || ""}
               onChange={handleChange}
               disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
             />
@@ -70,7 +68,11 @@ export function DynamicInput({
       case "select":
         return (
           <>
-            <select value={value} onChange={handleChange} disabled={!isEditing}>
+            <select
+              value={value || ""}
+              onChange={handleChange}
+              disabled={!isEditing}
+            >
               <option value="">선택</option>
               {options.map((option, index) => (
                 <option key={index} value={option}>
@@ -131,9 +133,14 @@ export function DynamicInput({
           </>
         );
       case "date":
-        const formattedDate = value
-          ? new Date(value).toISOString().substring(0, 10)
-          : "";
+        let formattedDate = "";
+        if (value) {
+          try {
+            formattedDate = new Date(value).toISOString().substring(0, 10);
+          } catch (error) {
+            formattedDate = "";
+          }
+        }
         return (
           <div>
             <input

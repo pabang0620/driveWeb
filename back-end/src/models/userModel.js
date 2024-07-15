@@ -190,7 +190,7 @@ const getUserProfile = async (userId) => {
 // 회원정보 - 차량 및 수수료 조회
 const getUserVehiclesWithFees = async (userId) => {
   try {
-    const latestVehicleWithFees = await prisma.user_vehicles.findMany({
+    const latestVehicleWithFees = await prisma.user_vehicles.findFirst({
       where: { userId: userId },
       orderBy: { id: "desc" },
       include: {
@@ -213,17 +213,17 @@ const getUserVehiclesWithFees = async (userId) => {
 // 회원정보 - 소득정보 조회
 const getUserIncomeRecords = async (userId) => {
   try {
-    const latestIncomeRecord = await prisma.income_records.findFirst({
+    const latestIncomeRecord = await prisma.user_incomes.findFirst({
       where: { userId: userId },
-      orderBy: { id: "desc" }, // 'desc'는 내림차순으로 정렬함을 의미합니다.
+      orderBy: { id: "desc" }, // 내림차순으로 정렬
     });
 
-    if (!latestIncomeRecord) {
+    if (!latestIncomeRecord || latestIncomeRecord.length === 0) {
       console.log("해당 사용자에 대한 소득 정보가 없습니다.");
       return null; // 소득 정보가 없는 경우 null 반환
     }
 
-    return latestIncomeRecord;
+    return latestIncomeRecord; // 배열로 반환
   } catch (error) {
     console.error("소득 정보 조회 중 오류가 발생했습니다.", error);
     throw new Error("소득 정보 조회 중 오류가 발생했습니다.");

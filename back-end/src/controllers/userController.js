@@ -153,7 +153,8 @@ const addUserProfile = async (req, res) => {
 };
 
 const addUserVehicleHandler = async (req, res) => {
-  const { id: userId } = req;
+  const { userId } = req;
+  console.log(1);
   const {
     carType,
     franchise_status,
@@ -199,6 +200,7 @@ const addUserIncome = async (req, res) => {
 const addFranchiseFee = async (req, res) => {
   const { id: userId } = req;
   const { franchise_name, fee } = req.body;
+  console.log(id);
 
   try {
     const franchiseFee = await createFranchiseFee(userId, franchise_name, fee);
@@ -285,6 +287,7 @@ const fetchUserIncomeRecords = async (req, res) => {
       .json({ error: "회원 수입 정보를 조회하는 중 오류가 발생했습니다." });
   }
 };
+
 module.exports = {
   registerUser,
   loginUser,

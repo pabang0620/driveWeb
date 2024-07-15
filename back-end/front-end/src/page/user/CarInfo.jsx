@@ -9,6 +9,7 @@ import {
   postProfileVehicle,
   postProfilefranchise,
 } from "../../components/ApiPost";
+import carsData from "../../utils/cars.json";
 
 const FranchiseFee = ({
   carType,
@@ -249,17 +250,7 @@ const CarInfo = () => {
           <DynamicInput
             labelName={"차명"}
             inputType={"select"}
-            options={[
-              "소나타",
-              "k5",
-              "SM6",
-              "그랜저",
-              "K8",
-              "K9",
-              "스타렉스",
-              "카니발",
-              "직접입력",
-            ]}
+            options={[...carsData.taxiVehicles, "직접입력"]}
             value={vehicleInfo.vehicle_name}
             fieldName="vehicle_name"
             onChange={handleInputChange}
