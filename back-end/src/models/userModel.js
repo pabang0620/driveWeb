@@ -135,6 +135,10 @@ const updateUserVehicle = async (userId, vehicleData) => {
 // 지출정보등록 관련
 const updateUserIncomeData = async (userId, incomeData) => {
   try {
+    if (incomeData.start_date) {
+      incomeData.start_date = new Date(incomeData.start_date);
+    }
+
     const existingIncome = await prisma.user_incomes.findUnique({
       where: { userId },
     });
