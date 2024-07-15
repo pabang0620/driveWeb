@@ -2,6 +2,16 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // 운행일지 - 운행  // 운행일지 - 운행 // 운행일지 - 운행 // 운행일지 - 운행
+const createDrivingLog = async (userId, date, memo) => {
+  return await prisma.driving_logs.create({
+    data: {
+      userId,
+      date: new Date(date),
+      memo,
+    },
+  });
+};
+
 const createDrivingRecord = async (
   drivingLogId,
   startTime,
@@ -19,14 +29,22 @@ const createDrivingRecord = async (
   const dayOfWeek = startTimeObj.toLocaleString("en-US", { weekday: "long" });
 
   // 주행 거리 계산
-  const drivingLog = await prisma.drivingLog.findUnique({
+  const drivingLog = await prisma.driving_logs.findUnique({
     where: { id: drivingLogId },
-    include: { user: true },
+    include: { users: true },
   });
+
+  if (!drivingLog) {
+    throw new Error("Driving log not found");
+  }
 
   const userVehicle = await prisma.user_vehicles.findFirst({
     where: { userId: drivingLog.userId },
   });
+
+  if (!userVehicle) {
+    throw new Error("User vehicle not found");
+  }
 
   const drivingDistance = cumulativeKm - userVehicle.mileage;
 
@@ -64,6 +82,8 @@ const createDrivingRecord = async (
     },
   });
 };
+
+// ------
 const updateDrivingRecord = async (id, data) => {
   return await prisma.driving_records.update({
     where: { id },
@@ -77,65 +97,7 @@ const deleteDrivingRecord = async (id) => {
 };
 
 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입
-const createIncomeRecord = async (data) => {
-  const {
-    drivingLogId,
-    cardIncome,
-    cashIncome,
-    kakaoIncome,
-    uberIncome,
-    ondaIncome,
-    tadaIncome,
-    otherIncome,
-    incomeSpare1,
-    incomeSpare2,
-    incomeSpare3,
-    incomeSpare4,
-  } = data;
 
-  const drivingRecord = await prisma.driving_records.findUnique({
-    where: { id: drivingLogId },
-  });
-
-  const drivingDistance = drivingRecord.drivingDistance;
-  const workingHours = drivingRecord.workingHours;
-
-  const totalIncome =
-    (cardIncome || 0) +
-    (cashIncome || 0) +
-    (kakaoIncome || 0) +
-    (uberIncome || 0) +
-    (ondaIncome || 0) +
-    (tadaIncome || 0) +
-    (otherIncome || 0) +
-    (incomeSpare1 || 0) +
-    (incomeSpare2 || 0) +
-    (incomeSpare3 || 0) +
-    (incomeSpare4 || 0);
-
-  const incomePerKm = totalIncome / drivingDistance;
-  const incomePerHour = totalIncome / workingHours;
-
-  return await prisma.incomeRecord.create({
-    data: {
-      drivingLogId,
-      cardIncome,
-      cashIncome,
-      kakaoIncome,
-      uberIncome,
-      ondaIncome,
-      tadaIncome,
-      otherIncome,
-      incomeSpare1,
-      incomeSpare2,
-      incomeSpare3,
-      incomeSpare4,
-      totalIncome,
-      incomePerKm,
-      incomePerHour,
-    },
-  });
-};
 const updateIncomeRecord = async (id, data) => {
   const {
     drivingLogId,
@@ -153,8 +115,12 @@ const updateIncomeRecord = async (id, data) => {
   } = data;
 
   const drivingRecord = await prisma.driving_records.findUnique({
-    where: { id: drivingLogId },
+    where: { drivingLogId },
   });
+
+  if (!drivingRecord) {
+    throw new Error("Driving record not found");
+  }
 
   const drivingDistance = drivingRecord.drivingDistance;
   const workingHours = drivingRecord.workingHours;
@@ -175,7 +141,7 @@ const updateIncomeRecord = async (id, data) => {
   const incomePerKm = totalIncome / drivingDistance;
   const incomePerHour = totalIncome / workingHours;
 
-  return await prisma.incomeRecord.update({
+  return await prisma.income_records.update({
     where: { id },
     data: {
       cardIncome,
@@ -201,89 +167,6 @@ const deleteIncomeRecord = async (id) => {
   });
 };
 // 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출
-const createExpenseRecord = async (data) => {
-  const {
-    drivingLogId,
-    fuelCost,
-    tollCost,
-    mealCost,
-    fineCost,
-    otherExpense,
-    expenseSpare1,
-    expenseSpare2,
-    expenseSpare3,
-    expenseSpare4,
-  } = data;
-
-  // 가맹점 수수료 계산
-  const franchiseFees = await prisma.franchiseFee.findMany({
-    where: { userId: drivingLogId },
-  });
-  // 수수료 항목 정의 DB에도 정의
-  // ALTER TABLE expense_records
-  // ADD COLUMN cardFee FLOAT,
-  // ADD COLUMN kakaoFee FLOAT,
-  // ADD COLUMN uberFee FLOAT;
-
-  const cardFee = franchiseFees.reduce(
-    (acc, fee) => acc + (fee.franchiseName === "카드" ? fee.fee : 0),
-    0
-  );
-  const kakaoFee = franchiseFees.reduce(
-    (acc, fee) => acc + (fee.franchiseName === "카카오" ? fee.fee : 0),
-    0
-  );
-  const uberFee = franchiseFees.reduce(
-    (acc, fee) => acc + (fee.franchiseName === "우버" ? fee.fee : 0),
-    0
-  );
-  const totalFranchiseFee = franchiseFees.reduce(
-    (acc, fee) => acc + fee.fee,
-    0
-  );
-
-  const totalExpense =
-    cardFee +
-    kakaoFee +
-    uberFee +
-    totalFranchiseFee +
-    (fuelCost || 0) +
-    (tollCost || 0) +
-    (mealCost || 0) +
-    (fineCost || 0) +
-    (otherExpense || 0) +
-    (expenseSpare1 || 0) +
-    (expenseSpare2 || 0) +
-    (expenseSpare3 || 0) +
-    (expenseSpare4 || 0);
-
-  const incomeRecord = await prisma.incomeRecord.findFirst({
-    where: { drivingLogId },
-  });
-
-  const netIncome = (incomeRecord.totalIncome || 0) - totalExpense;
-
-  return await prisma.expenseRecord.create({
-    data: {
-      drivingLogId,
-      cardFee,
-      kakaoFee,
-      uberFee,
-      franchiseFee: totalFranchiseFee,
-      fuelCost,
-      tollCost,
-      mealCost,
-      fineCost,
-      otherExpense,
-      expenseSpare1,
-      expenseSpare2,
-      expenseSpare3,
-      expenseSpare4,
-      totalExpense,
-      netIncome,
-    },
-  });
-};
 const updateExpenseRecord = async (id, data) => {
   const {
     drivingLogId,
@@ -299,7 +182,7 @@ const updateExpenseRecord = async (id, data) => {
   } = data;
 
   // 가맹점 수수료 계산
-  const franchiseFees = await prisma.franchiseFee.findMany({
+  const franchiseFees = await prisma.franchise_fees.findMany({
     where: { userId: drivingLogId },
   });
 
@@ -320,13 +203,17 @@ const updateExpenseRecord = async (id, data) => {
     (expenseSpare3 || 0) +
     (expenseSpare4 || 0);
 
-  const incomeRecord = await prisma.incomeRecord.findFirst({
+  const incomeRecord = await prisma.income_records.findFirst({
     where: { drivingLogId },
   });
 
-  const netIncome = (incomeRecord.totalIncome || 0) - totalExpense;
+  if (!incomeRecord) {
+    throw new Error("Income record not found");
+  }
 
-  return await prisma.expenseRecord.update({
+  const netIncome = (incomeRecord.total_income || 0) - totalExpense;
+
+  return await prisma.expense_records.update({
     where: { id },
     data: {
       franchiseFee: totalFranchiseFee,
@@ -345,108 +232,217 @@ const updateExpenseRecord = async (id, data) => {
   });
 };
 const deleteExpenseRecord = async (id) => {
-  return await prisma.expenseRecord.delete({
+  return await prisma.expense_records.delete({
     where: { id },
   });
 };
 
-// Get Expense Records by Driving Log ID
-const getExpenseRecordsByDrivingLogId = async (drivingLogId) => {
-  return await prisma.expenseRecord.findMany({
-    where: { drivingLogId },
-  });
-};
-
-// 연비 랭킹 탑 5를 가져오는 함수
-const getTopFuelEfficiency = async (fuelType) => {
-  const filter = fuelType ? { fuel_type: fuelType } : {};
-  const topFuelEfficiency = await prisma.driving_records.findMany({
-    where: filter,
-    orderBy: {
-      fuel_efficiency: "desc",
-    },
-    take: 5,
-    select: {
-      id: true,
-      fuel_efficiency: true,
-      driving_distance: true,
-      fuel_amount: true,
-      driving_logs: {
-        select: {
-          users: {
-            select: {
-              nickname: true,
+// 랭킹
+// 랭킹
+// 랭킹
+// 랭킹
+// 총 운행시간 랭크
+const getTopUsersByDrivingTime = async (jobtype) => {
+  try {
+    console.log("Fetching top users by driving time...");
+    const users = await prisma.users.findMany({
+      where: jobtype ? { jobtype } : {},
+      select: {
+        id: true,
+        nickname: true,
+        driving_logs: {
+          select: {
+            driving_records: {
+              select: {
+                working_hours: true,
+              },
             },
           },
         },
       },
-    },
-  });
-  return topFuelEfficiency;
-};
+    });
 
-// 운행시간 랭킹 탑 5를 가져오는 함수
-// 운행시간 랭킹 탑 5를 가져오는 함수
-const getTopWorkingHours = async (jobType) => {
-  const filter = jobType !== 0 ? { jobtype: jobType } : {};
-  const topWorkingHours = await prisma.users.findMany({
-    where: filter,
-    select: {
-      id: true,
-      nickname: true,
-      jobtype: true,
-      _sum: {
-        select: {
-          working_hours: true,
-        },
-      },
-      driving_logs: {
-        select: {
-          driving_records: {
-            select: {
-              working_hours: true,
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      _sum: {
-        working_hours: "desc",
-      },
-    },
-    take: 5,
-  });
-
-  return topWorkingHours.map((user) => ({
-    id: user.id,
-    nickname: user.nickname,
-    jobtype: user.jobtype,
-    total_working_hours: user.driving_logs.reduce(
-      (sum, log) =>
-        sum +
-        log.driving_records.reduce(
-          (logSum, record) => logSum + record.working_hours,
+    // 유저별 총 운행 시간 계산
+    const usersWithTotalDrivingTime = users.map((user) => {
+      const totalDrivingTime = user.driving_logs.reduce((acc, log) => {
+        const logDrivingTime = log.driving_records.reduce(
+          (logAcc, record) => logAcc + record.working_hours.getHours(),
           0
-        ),
-      0
-    ),
-  }));
+        );
+        return acc + logDrivingTime;
+      }, 0);
+
+      return {
+        id: user.id,
+        nickname: user.nickname,
+        totalDrivingTime,
+      };
+    });
+
+    // 총 운행 시간이 높은 순으로 상위 5명 가져오기
+    usersWithTotalDrivingTime.sort(
+      (a, b) => b.totalDrivingTime - a.totalDrivingTime
+    );
+
+    console.log(
+      "Top 5 users by driving time fetched successfully:",
+      usersWithTotalDrivingTime.slice(0, 5)
+    );
+    return usersWithTotalDrivingTime.slice(0, 5);
+  } catch (error) {
+    console.error("Error fetching top users by driving time:", error);
+    throw error;
+  }
+};
+// 총 순이익 랭크
+const getTopUsersByNetIncome = async (carType) => {
+  try {
+    console.log("Fetching top users by net income...");
+    const users = await prisma.users.findMany({
+      where: carType
+        ? {
+            user_vehicles: {
+              some: {
+                carType,
+              },
+            },
+          }
+        : {},
+      select: {
+        id: true,
+        nickname: true,
+        income_records: {
+          select: {
+            total_income: true,
+          },
+        },
+        expense_records: {
+          select: {
+            total_expense: true,
+          },
+        },
+      },
+    });
+
+    // 유저별 순수익 계산
+    const usersWithNetIncome = users.map((user) => {
+      const totalIncome = user.income_records.reduce(
+        (acc, record) => acc + record.total_income,
+        0
+      );
+      const totalExpense = user.expense_records.reduce(
+        (acc, record) => acc + record.total_expense,
+        0
+      );
+      const netIncome = totalIncome - totalExpense;
+
+      return {
+        id: user.id,
+        nickname: user.nickname,
+        netIncome,
+      };
+    });
+
+    // 순수익이 높은 순으로 상위 5명 가져오기
+    usersWithNetIncome.sort((a, b) => b.netIncome - a.netIncome);
+
+    console.log(
+      "Top 5 users by net income fetched successfully:",
+      usersWithNetIncome.slice(0, 5)
+    );
+    return usersWithNetIncome.slice(0, 5);
+  } catch (error) {
+    console.error("Error fetching top users by net income:", error);
+    throw error;
+  }
+};
+// 연비 랭크
+const getTopUsersByFuelEfficiency = async (fuelType) => {
+  try {
+    console.log("Fetching top users by fuel efficiency...");
+    const users = await prisma.users.findMany({
+      where: fuelType
+        ? {
+            user_vehicles: {
+              some: {
+                fuel_type: fuelType,
+              },
+            },
+          }
+        : {},
+      select: {
+        id: true,
+        nickname: true,
+        driving_logs: {
+          select: {
+            driving_records: {
+              select: {
+                driving_distance: true,
+                fuel_amount: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // 유저별 연비 계산
+    const usersWithFuelEfficiency = users.map((user) => {
+      const totalDistance = user.driving_logs.reduce((acc, log) => {
+        return (
+          acc +
+          log.driving_records.reduce(
+            (logAcc, record) => logAcc + record.driving_distance,
+            0
+          )
+        );
+      }, 0);
+      const totalFuel = user.driving_logs.reduce((acc, log) => {
+        return (
+          acc +
+          log.driving_records.reduce(
+            (logAcc, record) => logAcc + record.fuel_amount,
+            0
+          )
+        );
+      }, 0);
+
+      const fuelEfficiency = totalFuel > 0 ? totalDistance / totalFuel : 0;
+
+      return {
+        id: user.id,
+        nickname: user.nickname,
+        fuelEfficiency,
+      };
+    });
+
+    // 연비가 좋은 순으로 상위 5명 가져오기
+    usersWithFuelEfficiency.sort((a, b) => b.fuelEfficiency - a.fuelEfficiency);
+
+    console.log(
+      "Top 5 users by fuel efficiency fetched successfully:",
+      usersWithFuelEfficiency.slice(0, 5)
+    );
+    return usersWithFuelEfficiency.slice(0, 5);
+  } catch (error) {
+    console.error("Error fetching top users by fuel efficiency:", error);
+    throw error;
+  }
 };
 
 module.exports = {
+  createDrivingLog,
   createDrivingRecord,
   updateDrivingRecord,
   deleteDrivingRecord,
   // -----------------------
-  createIncomeRecord,
   updateIncomeRecord,
   deleteIncomeRecord,
   // ----------------------
-  createExpenseRecord,
   updateExpenseRecord,
   deleteExpenseRecord,
   // ----------------------
-  getTopFuelEfficiency,
-  getTopWorkingHours,
+  getTopUsersByDrivingTime,
+  getTopUsersByNetIncome,
+  getTopUsersByFuelEfficiency,
 };

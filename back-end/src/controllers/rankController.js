@@ -1,6 +1,9 @@
 const {
-  getTopFuelEfficiency,
-  getTopWorkingHours,
+  getTopUsersByDrivingTime,
+  getTopUsersByNetIncome,
+  getTopUsersByFuelEfficiency,
+  getTopUsersByDrivingDistance,
+  getTopUsersByTotalIncome,
 } = require("../models/driveModel");
 const { getRecentPosts } = require("../models/postModel");
 
@@ -18,31 +21,53 @@ const getRecentPostsByBoard = async (req, res) => {
   }
 };
 
-// 연비 랭킹 컨트롤러
-const getFuelEfficiencyRanking = async (req, res) => {
+// 랭킹
+// 랭킹
+// 랭킹
+// 랭킹
+// 랭킹
+const getTopUsers = async (req, res) => {
   try {
-    const { fuelType } = req.params; // URL parameter에서 fuelType을 받음
-    const topFuelEfficiency = await getTopFuelEfficiency(fuelType);
-    res.status(200).json(topFuelEfficiency);
+    const { jobtype } = req.body;
+    const users = await getTopUsersByDrivingTime(jobtype);
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "연비 랭킹 조회 중 오류가 발생했습니다." });
+    console.error("Error fetching top users by driving time:", error);
+    res.status(500).json({
+      error: "유저 정보를 가져오는 중 오류가 발생했습니다: " + error.message,
+    });
+  }
+};
+// 순이익 탑
+const getTopNetIncomeUsers = async (req, res) => {
+  try {
+    const { carType } = req.body;
+    const users = await getTopUsersByNetIncome(carType);
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching top net income users:", error);
+    res.status(500).json({
+      error: "유저 정보를 가져오는 중 오류가 발생했습니다: " + error.message,
+    });
+  }
+};
+// 연비 랭크
+const getTopFuelEfficiencyUsers = async (req, res) => {
+  try {
+    const { fuelType } = req.body;
+    const users = await getTopUsersByFuelEfficiency(fuelType);
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching top fuel efficiency users:", error);
+    res.status(500).json({
+      error: "유저 정보를 가져오는 중 오류가 발생했습니다: " + error.message,
+    });
   }
 };
 
-// 운행시간 랭킹 컨트롤러
-const getWorkingHoursRanking = async (req, res) => {
-  try {
-    const { jobType } = req.params; // URL parameter에서 jobType을 받음
-    const topWorkingHours = await getTopWorkingHours(parseInt(jobType, 10));
-    res.status(200).json(topWorkingHours);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "운행시간 랭킹 조회 중 오류가 발생했습니다." });
-  }
-};
 module.exports = {
   getRecentPostsByBoard,
-  getFuelEfficiencyRanking,
-  getWorkingHoursRanking,
+  getTopUsers,
+  getTopNetIncomeUsers,
+  getTopFuelEfficiencyUsers,
 };

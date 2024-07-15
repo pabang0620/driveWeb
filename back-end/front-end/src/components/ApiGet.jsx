@@ -1,11 +1,10 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // 이름 지정된 내보내기로 가져오기
 
 const getToken = () => {
   return localStorage.getItem("token");
 };
 
-// 직종번호
 export const getJobtype = () => {
   const token = getToken();
   const decodedToken = jwtDecode(token); // jwt-decode 라이브러리 사용

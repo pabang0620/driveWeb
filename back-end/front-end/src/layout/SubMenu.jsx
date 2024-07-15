@@ -49,7 +49,7 @@ function SubMenu() {
       <ul className="width-3-2">
         <li className="listOption">
           {" "}
-          <Link to="/rank">랭킹</Link>
+          <Link to="/ranking">랭킹</Link>
         </li>
       </ul>
       <ul className="width-8">

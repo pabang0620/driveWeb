@@ -5,6 +5,10 @@ const {
   createIncomeRecord,
   updateIncomeRecord,
   deleteIncomeRecord,
+  createExpenseRecord,
+  updateExpenseRecord,
+  deleteExpenseRecord,
+  getTopUsersByDrivingTime,
 } = require("../models/driveModel");
 
 // 운행 일지 - 운행
@@ -14,7 +18,9 @@ const {
 // 운행 일지 - 운행
 const addDrivingRecord = async (req, res) => {
   const {
-    drivingLogId,
+    userId,
+    date,
+    memo,
     startTime,
     endTime,
     cumulativeKm,
@@ -24,8 +30,9 @@ const addDrivingRecord = async (req, res) => {
   } = req.body;
 
   try {
+    const newDrivingLog = await createDrivingLog(userId, date, memo);
     const record = await createDrivingRecord(
-      drivingLogId,
+      newDrivingLog.id,
       startTime,
       endTime,
       cumulativeKm,
@@ -33,9 +40,12 @@ const addDrivingRecord = async (req, res) => {
       fuelAmount,
       totalDrivingCases
     );
-    res.status(201).json(record);
+
+    res.status(201).json({ drivingLogId: newDrivingLog.id, record });
   } catch (error) {
-    res.status(500).json({ error: "운행 기록 생성 중 오류가 발생했습니다." });
+    res.status(500).json({
+      error: "운행 기록 생성 중 오류가 발생했습니다: " + error.message,
+    });
   }
 };
 const editDrivingRecord = async (req, res) => {
@@ -65,16 +75,7 @@ const removeDrivingRecord = async (req, res) => {
 // 운행 일지 - 수입
 // 운행 일지 - 수입
 // 운행 일지 - 수입
-const addIncomeRecord = async (req, res) => {
-  const data = req.body;
 
-  try {
-    const incomeRecord = await createIncomeRecord(data);
-    res.status(201).json(incomeRecord);
-  } catch (error) {
-    res.status(500).json({ error: "수입 기록 생성 중 오류가 발생했습니다." });
-  }
-};
 const editIncomeRecord = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
@@ -83,7 +84,9 @@ const editIncomeRecord = async (req, res) => {
     const incomeRecord = await updateIncomeRecord(Number(id), data);
     res.status(200).json(incomeRecord);
   } catch (error) {
-    res.status(500).json({ error: "수입 기록 수정 중 오류가 발생했습니다." });
+    res.status(500).json({
+      error: "수입 기록 수정 중 오류가 발생했습니다: " + error.message,
+    });
   }
 };
 const removeIncomeRecord = async (req, res) => {
@@ -101,16 +104,7 @@ const removeIncomeRecord = async (req, res) => {
 // 운행 일지 - 지출
 // 운행 일지 - 지출
 // 운행 일지 - 지출
-const addExpenseRecord = async (req, res) => {
-  const data = req.body;
 
-  try {
-    const expenseRecord = await createExpenseRecord(data);
-    res.status(201).json(expenseRecord);
-  } catch (error) {
-    res.status(500).json({ error: "지출 기록 생성 중 오류가 발생했습니다." });
-  }
-};
 const editExpenseRecord = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
@@ -119,7 +113,9 @@ const editExpenseRecord = async (req, res) => {
     const expenseRecord = await updateExpenseRecord(Number(id), data);
     res.status(200).json(expenseRecord);
   } catch (error) {
-    res.status(500).json({ error: "지출 기록 수정 중 오류가 발생했습니다." });
+    res.status(500).json({
+      error: "지출 기록 수정 중 오류가 발생했습니다: " + error.message,
+    });
   }
 };
 const removeExpenseRecord = async (req, res) => {
@@ -138,11 +134,10 @@ module.exports = {
   editDrivingRecord,
   removeDrivingRecord,
   // ----------------
-  addIncomeRecord,
   editIncomeRecord,
   removeIncomeRecord,
   // ----------------
-  addExpenseRecord,
   editExpenseRecord,
   removeExpenseRecord,
+  // ----------------
 };

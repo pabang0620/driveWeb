@@ -124,24 +124,26 @@ model user_vehicles {
 }
 
 model users {
-  id             Int              @id @default(autoincrement())
-  nickname       String           @db.VarChar(255)
-  username       String           @unique(map: "email") @db.VarChar(255)
-  password       String?          @db.VarChar(255)
-  googleId       String?          @unique(map: "googleId") @db.VarChar(255)
-  kakaoId        String?          @unique(map: "kakaoId") @db.VarChar(255)
-  naverId        String?          @unique(map: "naverId") @db.VarChar(255)
-  createdAt      DateTime?        @default(now()) @db.Timestamp(0)
-  updatedAt      DateTime?        @default(now()) @db.Timestamp(0)
-  jobtype        Int?
-  comments       comments[]
-  driving_logs   driving_logs[]
-  franchise_fees franchise_fees[]
-  my_car         my_car?
-  posts          posts[]
-  user_incomes   user_incomes?
-  user_profiles  user_profiles?
-  user_vehicles  user_vehicles?
+  id              Int               @id @default(autoincrement())
+  nickname        String            @db.VarChar(255)
+  username        String            @unique(map: "email") @db.VarChar(255)
+  password        String?           @db.VarChar(255)
+  googleId        String?           @unique(map: "googleId") @db.VarChar(255)
+  kakaoId         String?           @unique(map: "kakaoId") @db.VarChar(255)
+  naverId         String?           @unique(map: "naverId") @db.VarChar(255)
+  createdAt       DateTime?         @default(now()) @db.Timestamp(0)
+  updatedAt       DateTime?         @default(now()) @db.Timestamp(0)
+  jobtype         Int?
+  comments        comments[]
+  driving_logs    driving_logs[]
+  expense_records expense_records[]
+  franchise_fees  franchise_fees[]
+  income_records  income_records[]
+  my_car          my_car?
+  posts           posts[]
+  user_incomes    user_incomes?
+  user_profiles   user_profiles?
+  user_vehicles   user_vehicles?
 }
 
 model driving_logs {
@@ -175,6 +177,7 @@ model driving_records {
   total_driving_cases Int?
   created_at          DateTime?     @default(now()) @db.Timestamp(0)
   updated_at          DateTime?     @default(now()) @db.Timestamp(0)
+  totalDrivingTime    Float?        @db.Float
   driving_logs        driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "driving_records_ibfk_1")
 
   @@index([driving_log_id], map: "driving_log_id")
@@ -199,9 +202,12 @@ model expense_records {
   cardFee        Float?        @db.Float
   kakaoFee       Float?        @db.Float
   uberFee        Float?        @db.Float
+  userId         Int?
   driving_logs   driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "expense_records_ibfk_1")
+  users          users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_expense_user")
 
   @@index([driving_log_id], map: "driving_log_id")
+  @@index([userId], map: "fk_expense_user")
 }
 
 model income_records {
@@ -224,9 +230,13 @@ model income_records {
   total_transport_income Decimal?      @db.Decimal(15, 2)
   created_at             DateTime?     @default(now()) @db.Timestamp(0)
   updated_at             DateTime?     @default(now()) @db.Timestamp(0)
+  totalTransportIncome   Float?        @db.Float
+  userId                 Int?
+  users                  users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_income_user")
   driving_logs           driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "income_records_ibfk_1")
 
   @@index([driving_log_id], map: "driving_log_id")
+  @@index([userId], map: "fk_income_user")
 }
 
 model franchise_fees {
