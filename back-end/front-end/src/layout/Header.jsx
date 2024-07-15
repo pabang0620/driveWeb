@@ -120,9 +120,9 @@ function Header() {
             </li>
             <li
               style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/car_ledger")}
+              className={getSelectedClass("/mycar")}
             >
-              <Link to="/car_ledger">차계부</Link>
+              <Link to="/mycar">차계부</Link>
             </li>
             <li
               style={{ width: "78px", textAlign: "center" }}

@@ -23,6 +23,7 @@ import BoardDetail from "./page/board/BoardDetail";
 import BoardPostAdd from "./page/board/BoardPostAdd";
 import Ranking from "./page/ranking/Ranking";
 import MyPage from "./page/mypage/MyPage";
+import MyCar from "./page/mycar/MyCar";
 
 function RouterApp() {
   return (
@@ -46,6 +47,7 @@ function RouterApp() {
           <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mycar" element={<MyCar />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

@@ -19,7 +19,9 @@ function SubMenu() {
         </li>
       </ul>
       <ul className="width-7">
-        <li className="listOption">마이페이지</li>
+        <li className="listOption">
+          <Link to="/mypage">마이페이지</Link>
+        </li>
       </ul>
       <ul className="width-5-5">
         <li className="listOption">대쉬보드</li>
@@ -27,7 +29,7 @@ function SubMenu() {
       </ul>
       <ul className="width-4-3">
         <li className="listOption">
-          <Link to="/user/carInfo">차량정보</Link>
+          <Link to="/mycar">차량정보</Link>
         </li>
         <li className="listOption">정비항목</li>
         <li className="listOption">정비이력</li>

@@ -9,6 +9,7 @@ const commentRoute = require("./commentRoute");
 const rankRoute = require("./rankRoute");
 const driveRoute = require("./driveRoute");
 const mypageRoute = require("./mypageRoute");
+const mycarRoute = require("./mycarRoute");
 
 router.use("/user", userRoute);
 router.use("/post", postRoute);
@@ -17,5 +18,6 @@ router.use("/home", homeRoute);
 router.use("/rank", rankRoute);
 router.use("/drive", driveRoute);
 router.use("/mypage", mypageRoute);
+router.use("/mycar", mycarRoute);
 
 module.exports = router;
