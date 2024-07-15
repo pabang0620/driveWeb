@@ -13,15 +13,31 @@ const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const getYesterday = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    return date.toISOString().split("T")[0];
+  };
+
+  const getToday = () => {
+    const date = new Date();
+    return date.toISOString().split("T")[0];
+  };
+
   useEffect(() => {
     const fetchMyPageData = async () => {
       try {
         const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
-        const response = await axios.get("/api/mypage", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const startDate = getYesterday();
+        const endDate = getToday();
+        const response = await axios.get(
+          `/api/mypage/${startDate}/${endDate}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setData(response.data);
         setLoading(false);
       } catch (error) {
@@ -29,10 +45,73 @@ const MyPage = () => {
         setLoading(false);
       }
     };
-
+    const fetchChart2Data = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+        const startDate = getYesterday();
+        const endDate = getToday();
+        const response = await axios.get(
+          `/api/mypage/expense-summary/${startDate}/${endDate}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+    const fetchChart1Data = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+        const startDate = getYesterday();
+        const endDate = getToday();
+        const response = await axios.get(
+          `/api/mypage/income-summary/${startDate}/${endDate}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+    const fetchMixChartData = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+        const startDate = getYesterday();
+        const endDate = getToday();
+        const response = await axios.get(
+          `/api/mypage/mixChart/${startDate}/${endDate}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
     fetchMyPageData();
+    fetchChart1Data();
+    fetchChart2Data();
+    fetchMixChartData();
   }, []);
 
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading data: {error.message}</p>;
 
   return (

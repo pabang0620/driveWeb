@@ -13,7 +13,7 @@ const router = express.Router();
  * @swagger
  * /api/rank/top-users:
  *   post:
- *     summary: Fetch top users by driving time
+ *     summary: 운행시간 TOP5
  *     tags: [Ranking]
  *     security:
  *       - BearerAuth: []
@@ -25,8 +25,8 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               jobtype:
- *                 type: string
- *                 example: "driver"
+ *                 type: number
+ *                 example: 1
  *     responses:
  *       200:
  *         description: A list of top users by driving time
@@ -52,7 +52,7 @@ router.post("/top-users", authMiddleware, getTopUsers);
  * @swagger
  * /api/rank/top-net-income:
  *   post:
- *     summary: Fetch top users by net income
+ *     summary: 손익 Top 5
  *     tags: [Ranking]
  *     security:
  *       - BearerAuth: []
@@ -65,7 +65,7 @@ router.post("/top-users", authMiddleware, getTopUsers);
  *             properties:
  *               carType:
  *                 type: string
- *                 example: "sedan"
+ *                 example: "택시(중형)"
  *     responses:
  *       200:
  *         description: A list of top users by net income
@@ -91,7 +91,7 @@ router.post("/top-net-income", authMiddleware, getTopNetIncomeUsers);
  * @swagger
  * /api/rank/top-fuel-efficiency:
  *   post:
- *     summary: Fetch top users by fuel efficiency
+ *     summary: 연비 Top 5
  *     tags: [Ranking]
  *     security:
  *       - BearerAuth: []
@@ -104,7 +104,7 @@ router.post("/top-net-income", authMiddleware, getTopNetIncomeUsers);
  *             properties:
  *               fuelType:
  *                 type: string
- *                 example: "diesel"
+ *                 example: "LPG"
  *     responses:
  *       200:
  *         description: A list of top users by fuel efficiency
