@@ -21,7 +21,6 @@ import Board from "./page/board/Board";
 import BoardPost from "./page/board/BoardPost";
 import BoardDetail from "./page/board/BoardDetail";
 import BoardPostAdd from "./page/board/BoardPostAdd";
-import Drive from "./page/drive/Drive";
 import Ranking from "./page/ranking/Ranking";
 
 function RouterApp() {
@@ -44,6 +43,7 @@ function RouterApp() {
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
           <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
+          <Route path="/ranking" element={<Ranking />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}
