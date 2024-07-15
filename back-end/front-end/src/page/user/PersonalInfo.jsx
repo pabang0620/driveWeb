@@ -1,57 +1,50 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { DynamicInput } from "../../components/InputBox";
+import { getProfile, getJobtype } from "../../components/ApiGet";
+import { postUserProfile } from "../../components/ApiPost";
+import { validatePhone, validateEmail } from "../../components/Validators";
 
 const PersonalInfo = () => {
   const [userInfo, setUserInfo] = useState({
     name: "test",
     birth_date: "2024-07-12",
     phone: "010-1111-1111",
-    email: "test@test.com",
-    nickname: "",
+    username: "test@test.com",
   });
-  const token = localStorage.getItem("token"); // 토큰 가져오기
 
-  // 회원 정보 조회 함수
-  const fetchUserProfile = async () => {
-    try {
-      const response = await axios.get("/api/user/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUserInfo(response.data); // 서버에서 받은 회원 정보 설정
-      console.log(response.data);
-    } catch (error) {
-      console.error("회원 정보 조회 실패:", error.message);
-    }
-  };
+  //회원정보 불러오기
   useEffect(() => {
-    // 페이지 로드 시 회원 정보 조회
-    if (token) {
-      fetchUserProfile();
-    }
+    const getUserData = async () => {
+      try {
+        getJobtype();
+        const data = await getProfile();
+        setUserInfo(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getUserData();
   }, []);
 
-  // 회원 정보 보내기 함수
-  const handlePostUserProfile = async (field, value) => {
-    console.log({ [field]: value });
+  //회원정보 보내기
+  const handleSaveUserInfo = async (field, value) => {
     try {
-      const response = await axios.post(
-        "/api/user/profile",
-        { [field]: value },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data);
+      if (field === "phone" && !validatePhone(value)) {
+        alert("유효한 휴대폰 번호 형식이 아닙니다.");
+        return;
+      }
+      if (field === "username" && !validateEmail(value)) {
+        alert("유효한 이메일 형식이 아닙니다.");
+        return;
+      }
+      await postUserProfile(field, value);
+      console.log("회원 정보 저장 성공!");
     } catch (error) {
-      console.error("회원 정보 보내기 실패?:", error.message);
+      console.error("회원 정보 저장 실패:", error.message);
     }
   };
 
+  // Input 값 변경 함수
   const handleInputChange = (field, value) => {
     console.log(value);
     setUserInfo((prevState) => ({
@@ -63,7 +56,7 @@ const PersonalInfo = () => {
   return (
     <div className="container userInfo">
       <h2>
-        회원정보 <span>개인정보 수정</span>
+        회원정보 <span>개인정보</span>
       </h2>
       <div className="content">
         <div className="inputWrap">
@@ -75,7 +68,8 @@ const PersonalInfo = () => {
             fieldName="name"
             onChange={handleInputChange}
             placeholder={"이름을 입력해주세요."}
-            onSave={handlePostUserProfile}
+            onSave={handleSaveUserInfo}
+            showEditButton={true}
           />
           <DynamicInput
             labelName={"생년월일"}
@@ -84,7 +78,8 @@ const PersonalInfo = () => {
             fieldName="birth_date"
             onChange={handleInputChange}
             placeholder={"생년월일을 입력해주세요."}
-            onSave={handlePostUserProfile}
+            onSave={handleSaveUserInfo}
+            showEditButton={true}
           />
         </div>
         <div className="inputWrap">
@@ -96,16 +91,18 @@ const PersonalInfo = () => {
             fieldName="phone"
             onChange={handleInputChange}
             placeholder={"휴대폰 번호를 입력해주세요."}
-            onSave={handlePostUserProfile}
+            onSave={handleSaveUserInfo}
+            showEditButton={true}
           />
           <DynamicInput
             labelName={"이메일"}
             inputType={"text"}
-            value={userInfo.email}
-            fieldName="email"
+            value={userInfo.username}
+            fieldName="username"
             onChange={handleInputChange}
             placeholder={"이메일을 입력해주세요."}
-            onSave={handlePostUserProfile}
+            onSave={handleSaveUserInfo}
+            showEditButton={true}
           />
         </div>
       </div>
@@ -160,18 +157,22 @@ const PersonalInfo = () => {
                 color: #222;
               }
             }
-            button {
+             button {
+              margin-left: auto;
+              cursor: pointer;
               font-size: 14px;
               border: 1px solid #4c4c4c;
               color: #4c4c4c;
               border-radius: 5px;
-              padding: 5px 7px 3px 7px;
-
+              width: 40px;
+              height: 25px;
+              text-align: center;
               &.savebtn {
                 border-color: rgb(100 255 0);
                 color: rgb(100 255 0);
               }
             }
+          }
           }
         }
       `}</style>

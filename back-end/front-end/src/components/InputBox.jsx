@@ -4,13 +4,15 @@ export function DynamicInput({
   labelName,
   inputType,
   placeholder,
-  value,
+  value = [],
   fieldName,
   options,
   onChange,
   onSave,
+  showEditButton, // 수정 버튼을 보일지 여부를 결정하는 프롭스 추가
 }) {
   const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
+  const [customValue, setCustomValue] = useState(""); // 직접 입력 값 상태 관리
 
   const handleChange = (e) => {
     const newValue =
@@ -18,11 +20,28 @@ export function DynamicInput({
     onChange(fieldName, newValue); // 필드 이름과 값을 전달
   };
 
+  const handleCheckboxChange = (e, option) => {
+    const newValue = value.includes(option)
+      ? value.filter((item) => item !== option)
+      : [...value, option];
+    onChange(fieldName, newValue);
+  };
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing); // 수정 버튼 클릭 시 상태 토글
     if (isEditing) {
       onSave(fieldName, value);
     }
+  };
+
+  const handleCustomInputChange = (e) => {
+    setCustomValue(e.target.value);
+  };
+
+  const handleCustomInputSave = () => {
+    onSave(fieldName, customValue);
+    // onChange(fieldName, customValue);
+    // setCustomValue(""); // 입력 후 값 초기화
   };
 
   const renderInput = () => {
@@ -38,13 +57,14 @@ export function DynamicInput({
               onChange={handleChange}
               disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
             />
-
-            <button
-              onClick={handleEditToggle}
-              className={isEditing ? "savebtn" : "editBtn"}
-            >
-              {isEditing ? "저장" : "수정"}
-            </button>
+            {showEditButton && (
+              <button
+                onClick={handleEditToggle}
+                className={isEditing ? "savebtn" : "editBtn"}
+              >
+                {isEditing ? "저장" : "수정"}
+              </button>
+            )}
           </>
         );
       case "select":
@@ -58,18 +78,79 @@ export function DynamicInput({
                 </option>
               ))}
             </select>
-
-            <button
-              onClick={handleEditToggle}
-              className={isEditing ? "savebtn" : "editBtn"}
-            >
-              {isEditing ? "저장" : "수정"}
-            </button>
+            {options.includes("직접입력") &&
+              isEditing &&
+              value === "직접입력" && (
+                <div className="etc" style={{ marginLeft: "10px" }}>
+                  <input
+                    type="text"
+                    value={customValue}
+                    onChange={handleCustomInputChange}
+                    placeholder="직접 입력"
+                  />
+                </div>
+              )}
+            {options.includes("직접입력") &&
+            isEditing &&
+            value === "직접입력" ? (
+              <button onClick={handleCustomInputSave}>저장</button>
+            ) : (
+              showEditButton && (
+                <button
+                  onClick={handleEditToggle}
+                  className={isEditing ? "savebtn" : "editBtn"}
+                >
+                  {isEditing ? "저장" : "수정"}
+                </button>
+              )
+            )}
           </>
         );
       case "checkbox":
         return (
-          <input type="checkbox" checked={value} onChange={handleChange} />
+          <>
+            {options.map((option, index) => (
+              <label key={index}>
+                <input
+                  type="checkbox"
+                  checked={value.includes(option)}
+                  onChange={(e) => handleCheckboxChange(e, option)}
+                  disabled={!isEditing}
+                />
+                {option}
+              </label>
+            ))}
+            {showEditButton && (
+              <button
+                onClick={handleEditToggle}
+                className={isEditing ? "savebtn" : "editBtn"}
+              >
+                {isEditing ? "저장" : "수정"}
+              </button>
+            )}
+          </>
+        );
+      case "date":
+        const formattedDate = value
+          ? new Date(value).toISOString().substring(0, 10)
+          : "";
+        return (
+          <div>
+            <input
+              type="date"
+              value={formattedDate}
+              onChange={handleChange}
+              disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
+            />
+            {showEditButton && (
+              <button
+                onClick={handleEditToggle}
+                className={isEditing ? "savebtn" : "editBtn"}
+              >
+                {isEditing ? "저장" : "수정"}
+              </button>
+            )}
+          </div>
         );
       default:
         return null;
@@ -77,7 +158,7 @@ export function DynamicInput({
   };
 
   return (
-    <div className="dynamicInput">
+    <div className={`dynamicInput ${inputType}Type`}>
       <label>{labelName}</label>
       {renderInput()}
     </div>

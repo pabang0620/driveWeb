@@ -21,7 +21,8 @@ import Board from "./page/board/Board";
 import BoardPost from "./page/board/BoardPost";
 import BoardDetail from "./page/board/BoardDetail";
 import BoardPostAdd from "./page/board/BoardPostAdd";
-import Rank from "./page/rank/Rank";
+import Drive from "./page/drive/Drive";
+import Ranking from "./page/ranking/Ranking";
 
 function RouterApp() {
   return (
@@ -35,15 +36,14 @@ function RouterApp() {
           <Route path="/signup/email" element={<SignupEmail />} />
           <Route path="/signup/password" element={<SignupPassword />} />
           <Route path="/signup/job" element={<SignupJob />} />
-          <Route path="/user/personalInfo" element={<PersonalInfo />} />
-          <Route path="/user/carInfo" element={<CarInfo />} />
-          <Route path="/user/incomeInfo" element={<IncomeInfo />} />
+          <Route path="/user/personalinfo" element={<PersonalInfo />} />
+          <Route path="/user/carinfo" element={<CarInfo />} />
+          <Route path="/user/incomeinfo" element={<IncomeInfo />} />
           <Route path="/board" element={<Board />} />
           <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
           <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
-          <Route path="/rank" element={<Rank />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}
