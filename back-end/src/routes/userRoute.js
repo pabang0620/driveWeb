@@ -10,7 +10,6 @@ const {
   fetchUserProfile,
   fetchUserVehiclesWithFees,
   fetchUserIncomeRecords,
-  addUserVehicleHandler,
   updateUserProfile,
   updateUserIncome,
   updateUserVehicleHandler,

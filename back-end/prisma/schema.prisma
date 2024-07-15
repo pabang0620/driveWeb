@@ -207,7 +207,7 @@ model expense_records {
   users          users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_expense_user")
 
   @@index([driving_log_id], map: "driving_log_id")
-  @@index([userId], map: "fk_expense_user")
+  @@index([userId], map: "fk_expense_records_user")
 }
 
 model income_records {
@@ -232,11 +232,11 @@ model income_records {
   updated_at             DateTime?     @default(now()) @db.Timestamp(0)
   totalTransportIncome   Float?        @db.Float
   userId                 Int?
-  users                  users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_income_user")
   driving_logs           driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "income_records_ibfk_1")
+  users                  users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_income_user")
 
   @@index([driving_log_id], map: "driving_log_id")
-  @@index([userId], map: "fk_income_user")
+  @@index([userId], map: "fk_income_records_user")
 }
 
 model franchise_fees {
