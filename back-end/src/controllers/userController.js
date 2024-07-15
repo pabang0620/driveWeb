@@ -14,6 +14,9 @@ const {
   createUserIncome,
   addUserVehicle,
   getFranchiseFees,
+  updateUserProfileData,
+  updateUserIncomeData,
+  updateUserVehicle,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -140,21 +143,20 @@ const googleLogin = (req, res) => socialLogin(req, res, "google");
 const kakaoLogin = (req, res) => socialLogin(req, res, "kakao");
 const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
-const addUserProfile = async (req, res) => {
+const updateUserProfile = async (req, res) => {
   const { userId } = req;
   const profileData = req.body;
   console.log(profileData);
   try {
-    const profile = await createUserProfile(userId, profileData);
-    res.status(201).json(profile);
+    const profile = await updateUserProfileData(userId, profileData);
+    res.status(200).json(profile);
   } catch (error) {
-    res.status(500).json({ error: "프로필 생성 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "프로필 업데이트 중 오류가 발생했습니다." });
   }
 };
 
-const addUserVehicleHandler = async (req, res) => {
+const updateUserVehicleHandler = async (req, res) => {
   const { userId } = req;
-  console.log(1);
   const {
     carType,
     franchise_status,
@@ -166,7 +168,7 @@ const addUserVehicleHandler = async (req, res) => {
   } = req.body;
 
   try {
-    const vehicle = await addUserVehicle(userId, {
+    const vehicle = await updateUserVehicle(userId, {
       carType,
       franchise_status,
       commission_rate,
@@ -176,23 +178,25 @@ const addUserVehicleHandler = async (req, res) => {
       mileage,
     });
 
-    res.status(201).json(vehicle);
+    res.status(200).json(vehicle);
   } catch (error) {
     res
       .status(500)
-      .json({ error: "차량 정보를 추가하는 중 오류가 발생했습니다." });
+      .json({ error: "차량 정보를 업데이트하는 중 오류가 발생했습니다." });
   }
 };
 
-const addUserIncome = async (req, res) => {
+const updateUserIncome = async (req, res) => {
   const { userId } = req;
   const incomeData = req.body;
 
   try {
-    const income = await createUserIncome(userId, incomeData);
-    res.status(201).json(income);
+    const income = await updateUserIncomeData(userId, incomeData);
+    res.status(200).json(income);
   } catch (error) {
-    res.status(500).json({ error: "소득 정보 생성 중 오류가 발생했습니다." });
+    res
+      .status(500)
+      .json({ error: "소득 정보 업데이트 중 오류가 발생했습니다." });
   }
 };
 
@@ -294,9 +298,9 @@ module.exports = {
   googleLogin,
   kakaoLogin,
   naverLogin,
-  addUserProfile,
-  addUserVehicleHandler,
-  addUserIncome,
+  updateUserProfile,
+  updateUserVehicleHandler,
+  updateUserIncome,
   addFranchiseFee,
   fetchFranchiseFees,
   removeFranchiseFee,

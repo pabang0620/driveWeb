@@ -5,15 +5,15 @@ const {
   googleLogin,
   kakaoLogin,
   naverLogin,
-  addUserProfile,
-  addUserIncome,
   addFranchiseFee,
-  editFranchiseFee,
   removeFranchiseFee,
   fetchUserProfile,
   fetchUserVehiclesWithFees,
   fetchUserIncomeRecords,
   addUserVehicleHandler,
+  updateUserProfile,
+  updateUserIncome,
+  updateUserVehicleHandler,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -28,7 +28,7 @@ router.post("/naver-login", naverLogin);
 
 router.get("/profile", authMiddleware, fetchUserProfile);
 
-router.post("/profile", authMiddleware, addUserProfile);
+router.put("/profile", authMiddleware, updateUserProfile);
 
 router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
 
@@ -76,7 +76,7 @@ router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
  *       500:
  *         description: "회원 차량 정보를 추가하는 중 오류가 발생했습니다."
  */
-router.post("/vehicles", authMiddleware, addUserVehicleHandler);
+router.put("/vehicles", authMiddleware, updateUserVehicleHandler);
 
 router.get("/income", authMiddleware, fetchUserIncomeRecords);
 
@@ -127,7 +127,7 @@ router.get("/income", authMiddleware, fetchUserIncomeRecords);
  *       500:
  *         description: "회원 소득 정보를 추가하는 중 오류가 발생했습니다."
  */
-router.post("/income", authMiddleware, addUserIncome);
+router.put("/income", authMiddleware, updateUserIncome);
 
 /**
  * @swagger

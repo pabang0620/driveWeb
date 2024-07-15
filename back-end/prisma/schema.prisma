@@ -35,7 +35,7 @@ model comments {
 
 model my_car {
   id                      Int       @id @default(autoincrement())
-  userId                  Int
+  userId                  Int       @unique(map: "userId_2")
   vehicle_name            String?   @db.VarChar(255)
   fuel_type               String?   @db.VarChar(255)
   year                    Int?      @db.Year
@@ -75,7 +75,7 @@ model posts {
 
 model user_incomes {
   id                    Int       @id @default(autoincrement())
-  userId                Int
+  userId                Int       @unique(map: "userId_2")
   income_type           String?   @db.VarChar(255)
   start_date            DateTime? @db.Date
   region1               String?   @db.VarChar(255)
@@ -93,7 +93,7 @@ model user_incomes {
 
 model user_profiles {
   id         Int       @id @default(autoincrement())
-  userId     Int
+  userId     Int       @unique(map: "userId_2")
   name       String?   @db.VarChar(255)
   birth_date String?   @db.VarChar(15)
   phone      String?   @db.VarChar(20)
@@ -107,7 +107,7 @@ model user_profiles {
 
 model user_vehicles {
   id               Int              @id @default(autoincrement())
-  userId           Int
+  userId           Int              @unique(map: "userId")
   carType          String?          @db.VarChar(255)
   franchise_status String?          @db.VarChar(255)
   commission_rate  Decimal?         @db.Decimal(5, 2)
@@ -137,11 +137,11 @@ model users {
   comments       comments[]
   driving_logs   driving_logs[]
   franchise_fees franchise_fees[]
-  my_car         my_car[]
+  my_car         my_car?
   posts          posts[]
-  user_incomes   user_incomes[]
-  user_profiles  user_profiles[]
-  user_vehicles  user_vehicles[]
+  user_incomes   user_incomes?
+  user_profiles  user_profiles?
+  user_vehicles  user_vehicles?
 }
 
 model driving_logs {

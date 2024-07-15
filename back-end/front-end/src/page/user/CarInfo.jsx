@@ -55,7 +55,7 @@ const FranchiseFee = ({
       break;
   }
 
-  franchises.map((name) => {
+  franchises = franchises.map((name) => {
     const match = franchiseFree.find((item) => item.franchise_name === name);
     return {
       franchise_name: name,
@@ -136,8 +136,7 @@ const FranchiseFee = ({
 
 const CarInfo = () => {
   const [vehicleInfo, setVehicleInfo] = useState({
-    carType: "배달(배민)", //차량종류
-    franchise_status: "가맹", // 가맹상태
+    carType: "택시(고급)", //차량종류    franchise_status: "가맹", // 가맹상태
     vehicle_name: "토요타 프리우스", // 차량 이름
     year: 2020, // 연식
     fuel_type: "LPG", // 연료유형
@@ -149,7 +148,7 @@ const CarInfo = () => {
     { franchise_name: "우버", fee: 3 },
   ]);
 
-  const [jobtype, setJobtype] = useState("2"); // 잡타입 상태
+  const [jobtype, setJobtype] = useState("1"); // 잡타입 상태
 
   // 시작 연도와 끝 연도 정의
   const startYear = 2014; // 연도 범위의 시작 연도
@@ -164,13 +163,19 @@ const CarInfo = () => {
   );
   // 차량 종류 옵션 설정
   const getCarTypeOptions = () => {
+    const defaultOptions = [
+      "택시(중형)",
+      "택시(대형)",
+      "택시(고급)",
+      "택시(승합)",
+    ];
     switch (jobtype) {
       case "1": // 택시 관련
-        return ["택시(중형)", "택시(대형)", "택시(고급)", "택시(승합)"];
+        return defaultOptions;
       case "2": // 배달 관련
         return ["배달(배민)", "배달(쿠팡)", "배달(퀵)", "배달(화물택배)"];
       default:
-        return [];
+        return defaultOptions; // 기본 옵션 설정
     }
   };
   //회원정보 불러오기
@@ -208,6 +213,7 @@ const CarInfo = () => {
       [field]: value,
     }));
   };
+  console.log(jobtype);
 
   return (
     <div className="container userInfo">

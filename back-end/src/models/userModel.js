@@ -84,60 +84,77 @@ const findUserByNaverId = async (naverId) => {
   });
 };
 
-// 회원정보등록 관련
-const createUserProfile = async (userId, profileData) => {
+const updateUserProfileData = async (userId, profileData) => {
   try {
-    const userProfile = await prisma.user_profiles.create({
+    const userProfile = await prisma.user_profiles.update({
+      where: { userId: userId },
       data: {
-        userId,
         ...profileData,
       },
     });
-    return userProfile; // 프로필 생성 성공 시 반환
+    return userProfile; // 프로필 업데이트 성공 시 반환
   } catch (error) {
-    console.error("프로필 생성 중 오류 발생:", error); // 오류 로깅
+    console.error("프로필 업데이트 중 오류 발생:", error); // 오류 로깅
     throw error; // 오류를 다시 던져 호출한 곳에서 처리할 수 있도록 함
   }
 };
 // 자동차등록 관련
-const addUserVehicle = async (userId, vehicleData) => {
-  const vehicle = await prisma.user_vehicles.create({
-    data: {
-      userId,
-      ...vehicleData,
-    },
-  });
+const updateUserVehicle = async (userId, vehicleData) => {
+  try {
+    const existingVehicle = await prisma.user_vehicles.findUnique({
+      where: { userId },
+    });
 
-  // my_car 테이블에 동일한 데이터를 저장
-  await prisma.my_car.create({
-    data: {
-      userId,
-      vehicle_name: vehicleData.vehicle_name,
-      fuel_type: vehicleData.fuel_type,
-      year: vehicleData.year,
-      mileage: vehicleData.mileage,
-    },
-  });
+    if (!existingVehicle) {
+      throw new Error("해당 사용자의 차량 정보를 찾을 수 없습니다.");
+    }
 
-  return vehicle;
+    const updatedVehicle = await prisma.user_vehicles.update({
+      where: { userId },
+      data: vehicleData,
+    });
+
+    // my_car 테이블 업데이트
+    await prisma.my_car.update({
+      where: { userId },
+      data: {
+        vehicle_name: vehicleData.vehicle_name,
+        fuel_type: vehicleData.fuel_type,
+        year: vehicleData.year,
+        mileage: vehicleData.mileage,
+      },
+    });
+
+    return updatedVehicle;
+  } catch (error) {
+    console.error("차량 정보 업데이트 중 오류 발생:", error);
+    throw new Error("차량 정보 업데이트에 실패했습니다.");
+  }
 };
 
 // 지출정보등록 관련
-const createUserIncome = async (userId, incomeData) => {
+const updateUserIncomeData = async (userId, incomeData) => {
   try {
-    // 데이터베이스에 지출 정보 등록
-    const newIncome = await prisma.user_incomes.create({
+    const existingIncome = await prisma.user_incomes.findUnique({
+      where: { userId },
+    });
+
+    if (!existingIncome) {
+      throw new Error("해당 사용자의 소득 정보를 찾을 수 없습니다.");
+    }
+
+    const updatedIncome = await prisma.user_incomes.update({
+      where: { userId },
       data: {
-        userId,
         ...incomeData,
       },
     });
 
-    console.log("지출 정보 등록 성공:", newIncome);
-    return newIncome;
+    console.log("소득 정보 업데이트 성공:", updatedIncome);
+    return updatedIncome;
   } catch (error) {
-    console.error("지출 정보 등록 중 오류 발생:", error);
-    throw new Error("지출 정보 등록에 실패했습니다.");
+    console.error("소득 정보 업데이트 중 오류 발생:", error);
+    throw new Error("소득 정보 업데이트에 실패했습니다.");
   }
 };
 
@@ -236,9 +253,9 @@ module.exports = {
   findUserByGoogleId,
   findUserByKakaoId,
   findUserByNaverId,
-  createUserProfile,
-  addUserVehicle,
-  createUserIncome,
+  updateUserProfileData,
+  updateUserVehicle,
+  updateUserIncomeData,
   createFranchiseFee,
   getFranchiseFees,
   deleteFranchiseFee,
