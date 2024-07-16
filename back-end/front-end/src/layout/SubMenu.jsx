@@ -31,7 +31,9 @@ function SubMenu() {
         <li className="listOption">
           <Link to="/mycar">차량정보</Link>
         </li>
-        <li className="listOption">정비항목</li>
+        <li className="listOption">
+          <Link to="/mycar/maintenance">정비항목</Link>
+        </li>
         <li className="listOption">정비이력</li>
       </ul>
       <ul className="width-4-3 widthBoard">
@@ -50,7 +52,6 @@ function SubMenu() {
       </ul>
       <ul className="width-3-2">
         <li className="listOption">
-          {" "}
           <Link to="/ranking">랭킹</Link>
         </li>
       </ul>

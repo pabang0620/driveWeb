@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const { createDefaultMaintenanceItems } = require("./mycarModel");
 const prisma = new PrismaClient();
 
 const createUser = async (
@@ -10,54 +11,80 @@ const createUser = async (
   kakaoId = null,
   naverId = null
 ) => {
-  const user = await prisma.users.create({
-    data: {
-      nickname,
-      username,
-      password, // 비밀번호는 해시처리된 상태로 저장
-      jobtype,
-      googleId,
-      kakaoId,
-      naverId,
-      user_profiles: {
-        create: {
-          name: "", // 이름 초기화
-          birth_date: null, // 생년월일 초기화
-          phone: "", // 전화번호 초기화
-          email: "", // 이메일 초기화
+  try {
+    const user = await prisma.users.create({
+      data: {
+        nickname,
+        username,
+        password, // 비밀번호는 해시처리된 상태로 저장
+        jobtype,
+        googleId,
+        kakaoId,
+        naverId,
+        user_profiles: {
+          create: {
+            name: "", // 이름 초기화
+            birth_date: null, // 생년월일 초기화
+            phone: "", // 전화번호 초기화
+            email: "", // 이메일 초기화
+          },
+        },
+        user_vehicles: {
+          create: {
+            carType: "", // 차량 구분 초기화
+            franchise_status: "", // 프랜차이즈 상태 초기화
+            vehicle_name: "", // 차량명 초기화
+            year: null, // 연식 초기화
+            fuel_type: "", // 연료 타입 초기화
+            mileage: null, // 주행 거리 초기화
+            commission_rate: null, // 수수료율 초기화
+          },
+        },
+        user_incomes: {
+          create: {
+            income_type: "", // 소득 유형 초기화
+            start_date: null, // 시작 날짜 초기화
+            region1: "", // 지역 초기화
+            region2: "", // 지역 초기화
+            monthly_payment: null, // 월 지급액 초기화
+            fuel_allowance: null, // 연료 수당 초기화
+            investment: null, // 투자 초기화
+            standard_expense_rate: null, // 표준 경비율 초기화
+          },
         },
       },
-      user_vehicles: {
-        create: {
-          taxi_type: "", // 택시 유형 초기화
-          franchise_status: "", // 프랜차이즈 상태 초기화
-          vehicle_name: "", // 차량명 초기화
-          year: null, // 연식 초기화
-          fuel_type: "", // 연료 타입 초기화
-          mileage: null, // 주행 거리 초기화
-          commission_rate: null, // 수수료율 초기화
-        },
+      include: {
+        user_profiles: true,
+        user_vehicles: true,
+        user_incomes: true,
       },
-      user_incomes: {
-        create: {
-          carType: "", // 차량구분 초기화
-          franchise_status: "", // 가맹여부 초기화
-          commission_rate: null, // 카드수수료 초기화
-          vehicle_name: "", // 차량명 초기화
-          year: null, // 연식 초기화
-          fuel_type: "", // 연료 타입 초기화
-          mileage: null, // 누적 주행거리 초기화
-        },
-      },
-    },
-    include: {
-      user_profiles: true,
-      user_vehicles: true,
-      user_incomes: true,
-    },
-  });
+    });
 
-  return user;
+    const myCar = await prisma.my_car.create({
+      data: {
+        userId: user.id,
+        vehicle_name: "",
+        fuel_type: "",
+        year: null,
+        mileage: null,
+        license_plate: "",
+        first_registration_date: null,
+        insurance_company: "",
+        insurance_period: null,
+        insurance_fee: null,
+        insurance_period_start: null,
+        insurance_period_end: null,
+        imageUrl: "",
+      },
+    });
+
+    await createDefaultMaintenanceItems(myCar.id, user.id);
+
+    return user;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw new Error("Error creating user");
+  }
 };
 
 const findUserByUsername = async (username) => {

@@ -1,18 +1,18 @@
 const express = require("express");
 const {
-  getItems,
   addItem,
-  addRecord,
-  updateItem,
-  updateRecord,
+  addMaintenanceRecord,
+  getItemsWithRecords,
+  updateMaintenanceData,
 } = require("../controllers/maintenanceController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.get("/items", getItems);
-router.post("/items", addItem);
-router.post("/records", addRecord);
-router.put("/items", updateItem);
-router.put("/records", updateRecord);
+router.get("/items", authMiddleware, getItemsWithRecords);
+router.post("/items", authMiddleware, addItem);
+
+router.post("/records", authMiddleware, addMaintenanceRecord);
+router.put("/update", authMiddleware, updateMaintenanceData);
 
 module.exports = router;

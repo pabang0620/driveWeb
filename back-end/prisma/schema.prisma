@@ -153,29 +153,37 @@ model likes {
 model maintenance_items {
   id                  Int                   @id @default(autoincrement())
   name                String                @db.VarChar(255)
-  description         String?               @db.Text
+  my_carId            Int
+  userId              Int?
+  unit                String                @default("km") @db.VarChar(15)
+  my_car              my_car                @relation(fields: [my_carId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_maintenance_items_my_car")
+  users               users?                @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userId")
   maintenance_records maintenance_records[]
+
+  @@index([my_carId], map: "fk_maintenance_items_my_car")
+  @@index([userId], map: "idx_userId")
 }
 
 model maintenance_records {
-  id                 Int                @id @default(autoincrement())
-  userId             Int?
-  carId              Int?
-  maintenanceItemId  Int?
-  maintenanceDate    DateTime?          @db.Date
-  maintenanceMileage Int?
-  currentMileage     Int?
-  cost               Decimal?           @db.Decimal(15, 2)
-  createdAt          DateTime?          @default(now()) @db.Timestamp(0)
-  updatedAt          DateTime?          @default(now()) @db.Timestamp(0)
-  maintenanceMethod  String?            @db.VarChar(255)
-  users              users?             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_1")
-  my_car             my_car?            @relation(fields: [carId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_2")
-  maintenance_items  maintenance_items? @relation(fields: [maintenanceItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_3")
+  id                   Int                @id @default(autoincrement())
+  userId               Int?
+  carId                Int?
+  maintenanceItemId    Int?
+  maintenanceDate      DateTime?          @db.Date
+  createdAt            DateTime?          @default(now()) @db.Timestamp(0)
+  updatedAt            DateTime?          @default(now()) @db.Timestamp(0)
+  maintenanceMethod    String?            @db.VarChar(255)
+  maintenanceInterval  Int?
+  maintenanceDistance  Int?
+  mileageAtMaintenance Int?
+  maintenanceCost      Decimal?           @db.Decimal(10, 2)
+  my_car               my_car?            @relation(fields: [carId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_2")
+  maintenance_items    maintenance_items? @relation(fields: [maintenanceItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_3")
+  users                users?             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "maintenance_records_ibfk_1")
 
-  @@index([carId], map: "carId")
-  @@index([maintenanceItemId], map: "maintenanceItemId")
-  @@index([userId], map: "userId")
+  @@index([carId], map: "fk_maintenance_records_carId")
+  @@index([maintenanceItemId], map: "fk_maintenance_records_maintenanceItemId")
+  @@index([userId], map: "fk_maintenance_records_userId")
 }
 
 model my_car {
@@ -195,6 +203,7 @@ model my_car {
   insurance_period_start  DateTime?             @db.Date
   insurance_period_end    DateTime?             @db.Date
   imageUrl                String?               @db.VarChar(255)
+  maintenance_items       maintenance_items[]
   maintenance_records     maintenance_records[]
   users                   users                 @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "my_car_ibfk_1")
 
@@ -298,6 +307,7 @@ model users {
   expense_records     expense_records[]
   franchise_fees      franchise_fees[]
   income_records      income_records[]
+  maintenance_items   maintenance_items[]
   maintenance_records maintenance_records[]
   my_car              my_car?
   posts               posts[]

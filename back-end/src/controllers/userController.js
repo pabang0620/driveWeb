@@ -23,8 +23,6 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 
 const registerUser = async (req, res) => {
-  console.log(req.body);
-
   const { nickname, username, password, jobtype } = req.body;
   if (!nickname || !username || !password || !jobtype) {
     return res.status(400).json({ error: "모든 필드를 입력해주세요." });
