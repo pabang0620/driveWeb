@@ -186,7 +186,7 @@ const MaintenanceRecordModal = ({
           </div>
         </div>
         <div className="section">
-          <label>정비 당시 주행거리</label>
+          <label>현재 주행 거리</label>
           <div className="input-container">
             <input
               type="text"

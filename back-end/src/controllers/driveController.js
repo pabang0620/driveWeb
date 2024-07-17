@@ -2,13 +2,12 @@ const {
   createDrivingRecord,
   updateDrivingRecord,
   deleteDrivingRecord,
-  createIncomeRecord,
   updateIncomeRecord,
   deleteIncomeRecord,
-  createExpenseRecord,
   updateExpenseRecord,
   deleteExpenseRecord,
   getTopUsersByDrivingTime,
+  updateUserMileages,
 } = require("../models/driveModel");
 
 // 운행 일지 - 운행
@@ -41,8 +40,17 @@ const addDrivingRecord = async (req, res) => {
       totalDrivingCases
     );
 
-    res.status(201).json({ drivingLogId: newDrivingLog.id, record });
+    const updateMileages = await updateUserMileages(
+      userId,
+      record.drivingDistance,
+      record.businessDistance
+    );
+
+    res
+      .status(201)
+      .json({ drivingLogId: newDrivingLog.id, record, updateMileages });
   } catch (error) {
+    console.error("Error while creating driving record:", error);
     res.status(500).json({
       error: "운행 기록 생성 중 오류가 발생했습니다: " + error.message,
     });

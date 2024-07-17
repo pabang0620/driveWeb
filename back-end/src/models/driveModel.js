@@ -65,7 +65,7 @@ const createDrivingRecord = async (
     data: { mileage: cumulativeKm },
   });
 
-  return await prisma.driving_records.create({
+  const newRecord = await prisma.driving_records.create({
     data: {
       drivingLogId,
       startTime: startTimeObj,
@@ -81,9 +81,61 @@ const createDrivingRecord = async (
       totalDrivingCases,
     },
   });
+
+  console.log("New driving record created:", newRecord);
+
+  return newRecord;
 };
 
-// ------
+const updateUserMileages = async (
+  userId,
+  drivingDistance,
+  businessDistance
+) => {
+  const totalDistance = drivingDistance + businessDistance;
+
+  // my_car 테이블의 mileage 업데이트
+  await prisma.my_car.updateMany({
+    where: { userId },
+    data: {
+      mileage: {
+        set: prisma.raw(`IFNULL(mileage, 0) + ${totalDistance}`),
+      },
+    },
+  });
+
+  // user_vehicles 테이블의 mileage 업데이트
+  await prisma.user_vehicles.updateMany({
+    where: { userId },
+    data: {
+      mileage: {
+        set: prisma.raw(`IFNULL(mileage, 0) + ${totalDistance}`),
+      },
+    },
+  });
+
+  // maintenance_records 테이블에서 가장 최근의 mileageAtMaintenance 업데이트
+  const latestMaintenanceRecord = await prisma.maintenance_records.findFirst({
+    where: { userId },
+    orderBy: { id: "desc" },
+  });
+
+  if (latestMaintenanceRecord) {
+    await prisma.maintenance_records.update({
+      where: { id: latestMaintenanceRecord.id },
+      data: {
+        mileageAtMaintenance: {
+          set: prisma.raw(`IFNULL(mileageAtMaintenance, 0) + ${totalDistance}`),
+        },
+      },
+    });
+  }
+
+  return {
+    message: "Mileage updated successfully",
+  };
+};
+
 const updateDrivingRecord = async (id, data) => {
   return await prisma.driving_records.update({
     where: { id },
@@ -433,6 +485,7 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
 module.exports = {
   createDrivingLog,
   createDrivingRecord,
+  updateUserMileages,
   updateDrivingRecord,
   deleteDrivingRecord,
   // -----------------------
