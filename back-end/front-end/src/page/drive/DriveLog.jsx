@@ -2,14 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import drivingData from "../../components/dummy";
 import DriveWrite from "./DriveWrite";
-const Drive = () => {
-  const [data, setData] = useState(drivingData);
-  const [filteredData, setFilteredData] = useState(drivingData);
+import { getDrive } from "../../components/ApiGet";
+const DriveLog = () => {
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12); // 페이지당 항목 수
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
   const [showModal, setShowModal] = useState(false);
+
   const toggleModal = () => {
     console.log(showModal);
     setShowModal((prev) => !prev);
@@ -45,17 +47,36 @@ const Drive = () => {
 
   //운행일지-조회 불러오기
   useEffect(() => {
-    const fetchData = async () => {
+    const getDriveData = async () => {
       try {
-        // const response = await axios.get("drivingData");
-        //setData(response.data);
+        const data = await getDrive();
+        setData(data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
-    fetchData();
+    getDriveData();
   }, []);
 
+  // 페이지 수 계산
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+
+  // 페이지 번호 버튼 렌더링
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.min(pageCount, 5); i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => paginate(i)}
+          className={currentPage === i ? "activePage" : ""}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pageNumbers;
+  };
   return (
     <div className="container driving">
       <h2>
@@ -100,17 +121,7 @@ const Drive = () => {
         >
           {"<"}
         </button>
-        {[...Array(Math.ceil(data.length / itemsPerPage)).keys()].map(
-          (number) => (
-            <button
-              key={number + 1}
-              onClick={() => paginate(number + 1)}
-              className={currentPage === number + 1 ? "activePage" : ""}
-            >
-              {number + 1}
-            </button>
-          )
-        )}
+        {renderPageNumbers()}
         <button
           onClick={() =>
             currentPage < itemsPerPage && setCurrentPage(currentPage + 1)
@@ -235,9 +246,39 @@ const Drive = () => {
               padding: 10px;
             }
           }
+           {
+            /*  */
+          }
+          .drive {
+            .dynamicInput {
+              width: 100%;
+              border-bottom: 1px solid #d9d9d9;
+              label {
+                display: inline-block;
+                width: 25%;
+                color: #c1c1c1;
+                padding: 3% 1%;
+              }
+              input {
+                border: none;
+                background: none;
+                color: #c1c1c1;
+                &:focus {
+                  color: #222;
+                }
+              }
+            }
+            button {
+              margin: 30px 0;
+              float: right;
+            }
+          }
+           {
+            /*  */
+          }
         `}
       </style>
     </div>
   );
 };
-export default Drive;
+export default DriveLog;

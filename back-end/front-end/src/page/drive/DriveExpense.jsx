@@ -54,51 +54,46 @@ const DriveExpense = ({ showModal, toggleModal }) => {
 
   const driveInputBox = () => {
     return (
-      <div>
+      <div className="drive">
         <DynamicInput
           labelName={"주유비"}
           inputType={"number"}
           value={dirveExpenseData.fuelCost}
-          fieldName="cardIncome"
+          fieldName="fuelCost"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"통행료"}
           inputType={"number"}
           value={dirveExpenseData.tollCost}
-          fieldName="cashIncome"
+          fieldName="fuelCost"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"식대"}
           inputType={"number"}
           value={dirveExpenseData.mealCost}
-          fieldName="kakaoIncome"
+          fieldName="mealCost"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"과태료"}
           inputType={"number"}
           value={dirveExpenseData.fineCost}
-          fieldName="uberIncome"
+          fieldName="fineCost"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"기타지출"}
           inputType={"number"}
           value={dirveExpenseData.otherExpense}
-          fieldName="ondaIncome"
+          fieldName="otherExpense"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"지출예비1"}
@@ -107,7 +102,6 @@ const DriveExpense = ({ showModal, toggleModal }) => {
           fieldName="expenseSpare1"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"지출예비2"}
@@ -116,7 +110,6 @@ const DriveExpense = ({ showModal, toggleModal }) => {
           fieldName="expenseSpare2"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"지출예비3"}
@@ -125,7 +118,6 @@ const DriveExpense = ({ showModal, toggleModal }) => {
           fieldName="expenseSpare3"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"지출예비4"}
@@ -134,7 +126,6 @@ const DriveExpense = ({ showModal, toggleModal }) => {
           fieldName="expenseSpare4"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <button onClick={toggleModal}>저장</button>
       </div>

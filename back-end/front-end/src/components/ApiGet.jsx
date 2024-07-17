@@ -43,6 +43,7 @@ export const getProfilefranchise = async () => {
 export const getProfileIncome = async () => {
   return getData("/api/user/income");
 };
+
 //운행일지
 export const getDrive = async () => {
   return getData("/api/drive");

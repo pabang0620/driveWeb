@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
-import { getDrive } from "../../components/ApiGet";
 import { postDrive } from "../../components/ApiPost";
 import DriveIncome from "./DriveIncome";
 
@@ -9,7 +8,7 @@ const DriveWrite = ({ showModal, toggleModal }) => {
   const [showDriveIncome, setShowDriveIncome] = useState(false); // DriveIncome 보이기 여부 상태 추가
 
   const [dirveData, setDriveData] = useState({
-    drivingLogId: 0,
+    memo: "string",
     startTime: "2024-07-14T11:23:44.658Z",
     endTime: "2024-07-14T11:23:44.658Z",
     cumulativeKm: 20, //누적 주행 거리.
@@ -17,19 +16,32 @@ const DriveWrite = ({ showModal, toggleModal }) => {
     fuelAmount: 10, //주유량
     totalDrivingCases: 30, //총운행건수
   });
-
+  // const getData = async (url) => {
+  //   const token = getToken();
+  //   try {
+  //     const response = await axios.get(url, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     throw new Error(`회원 정보 조회 실패: ${error.message}`);
+  //   }
+  // };
   const handleNext = () => {
+    const postDriveData = async () => {
+      try {
+        const response = await postDrive(dirveData);
+        // 로그인 성공 후 토큰을 로컬 스토리지에 저장
+        localStorage.setItem("drivingLogId", response.data.drivingLogId);
+        console.log(response.data.drivingLogId);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    postDriveData(); //운행일지생성
     setShowDriveIncome(true); // 다음 버튼 클릭 시 DriveExpense 보이기
-  };
-  //운행일지-운행 보내기
-  const handleSaveUserInfo = async () => {
-    try {
-      setShowDriveIncome(true); // 다음 버튼 클릭 시 DriveExpense 보이기
-      // await postDrive(dirveData);
-      console.log("운행일지-운행 보내기 성공!");
-    } catch (error) {
-      console.error("운행일지-운행 보내기 실패:", error.message);
-    }
   };
 
   // Input 값 변경 함수
@@ -41,24 +53,24 @@ const DriveWrite = ({ showModal, toggleModal }) => {
     }));
   };
 
-  //운행일지-운행 가져오기
-  useEffect(() => {
-    try {
-      const fetchData = async () => {
-        try {
-          //const response = await getDrive();
-          //setData(response.data);
-        } catch (error) {
-          console.error("Error fetching data: ", error);
-        }
-      };
-      fetchData();
-    } catch {}
-  });
+  // //운행일지-운행 가져오기
+  // useEffect(() => {
+  //   try {
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await getDrive();
+  //         setDirveData(response.data);
+  //       } catch (error) {
+  //         console.error("Error fetching data: ", error);
+  //       }
+  //     };
+  //     fetchData();
+  //   } catch {}
+  // });
 
   const driveInputBox = () => {
     return (
-      <div>
+      <div className="drive">
         <DynamicInput
           labelName={"시작시간"}
           inputType={"date"}
@@ -104,6 +116,14 @@ const DriveWrite = ({ showModal, toggleModal }) => {
           fieldName="totalDrivingCases"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
+        />
+        <DynamicInput
+          labelName={"메모"}
+          inputType={"text"}
+          value={dirveData.memo}
+          fieldName="memo"
+          onChange={handleInputChange}
+          placeholder={"메모를 입력해주세요."}
         />
         <button onClick={handleNext}>다음</button>
       </div>

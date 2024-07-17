@@ -36,26 +36,12 @@ export const postProfileIncome = async (field, value) => {
   return putData("/api/user/income", data);
 };
 
-const postData = async (url, data) => {
-  const token = getToken();
-  try {
-    const response = await axios.post(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    throw new Error(`회원 정보 보내기 실패: ${error.message}`);
-  }
-};
-
 // 회원정보-차량정보-가맹수수료
 export const postProfilefranchise = async (data) => {
-  return postData("/api/user/franchise-fee", data);
+  return putData("/api/user/franchise-fee", data);
 };
 
-// 운행일지-운행
+// 운행일지-일지생성
 export const postDrive = async (data) => {
-  return postData("/api/user/income", data);
+  return putData("/api/drive/log", data);
 };

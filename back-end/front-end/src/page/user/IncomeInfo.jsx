@@ -3,10 +3,11 @@ import { DynamicInput } from "../../components/InputBox";
 import { getProfileIncome } from "../../components/ApiGet";
 import { postProfileIncome } from "../../components/ApiPost";
 import locationData from "../../utils/locations.json"; // location.json 파일 import
+import { validateDate } from "../../components/Validators";
 const IncomeInfo = () => {
   const [userInfo, setUserInfo] = useState({
     income_type: "소득구분",
-    start_date: "2024-07-14T12:27:33.758Z",
+    start_date: "2024-07-14",
     region1: "서울특별시",
     region2: "강남구",
     monthly_payment: 3000000,
@@ -30,6 +31,11 @@ const IncomeInfo = () => {
 
   //회원정보 보내기
   const handleSaveUserInfo = async (field, value) => {
+    if (field === "start_date" && !validateDate(value)) {
+      alert("유효한 날짜 형식이 아닙니다.");
+      return;
+    }
+
     try {
       await postProfileIncome(field, value);
       console.log("회원 정보 저장 성공!");
@@ -74,12 +80,13 @@ const IncomeInfo = () => {
           />
           <DynamicInput
             labelName={"개업일/취업일"}
-            inputType={"date"}
+            inputType={"number"}
             value={userInfo.start_date}
             fieldName="start_date"
             onChange={handleInputChange}
             onSave={handleSaveUserInfo}
             showEditButton={true}
+            maxLength={8}
           />
         </div>
         <div className="inputWrap">

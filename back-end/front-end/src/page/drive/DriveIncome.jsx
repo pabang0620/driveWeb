@@ -27,6 +27,7 @@ const DriveIncome = ({ showModal, toggleModal }) => {
   const hadleNext = () => {
     setShowDriveExpense(true); // 다음 버튼 클릭 시 DriveExpense 보이기
   };
+
   //운행일지-수입 보내기
   const handleSaveUserInfo = async () => {
     try {
@@ -41,7 +42,7 @@ const DriveIncome = ({ showModal, toggleModal }) => {
   // Input 값 변경 함수
   const handleInputChange = (field, value) => {
     console.log(value);
-    dirveIncomeData((prevState) => ({
+    setDriveIncomeData((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -64,7 +65,7 @@ const DriveIncome = ({ showModal, toggleModal }) => {
 
   const driveInputBox = () => {
     return (
-      <div>
+      <div className="drive">
         <DynamicInput
           labelName={"카드"}
           inputType={"number"}
@@ -72,7 +73,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="cardIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"현금"}
@@ -81,7 +81,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="cashIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"카카오"}
@@ -90,7 +89,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="kakaoIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"우버"}
@@ -99,7 +97,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="uberIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"온다"}
@@ -108,7 +105,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="ondaIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"타다"}
@@ -117,7 +113,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="tadaIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"잡수입"}
@@ -126,7 +121,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="otherIncome"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"수입예비1"}
@@ -135,7 +129,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="fuelAmount"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"수입예비2"}
@@ -144,7 +137,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="totalDrivingCases"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"수입예비3"}
@@ -153,7 +145,6 @@ const DriveIncome = ({ showModal, toggleModal }) => {
           fieldName="fuelAmount"
           onChange={handleInputChange}
           placeholder={"숫자로 입력해주세요."}
-          onSave={handleSaveUserInfo}
         />
         <DynamicInput
           labelName={"수입예비4"}
