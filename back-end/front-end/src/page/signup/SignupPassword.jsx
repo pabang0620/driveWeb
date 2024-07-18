@@ -53,7 +53,7 @@ function SignupPassword() {
         <div className="input-container">
           <label htmlFor="passwordCheck">비밀번호 확인</label>
           <input
-            type="passwordCheck"
+            type="password"
             id="passwordCheck"
             name="passwordCheck"
             placeholder="비밀번호를 입력해주세요."
