@@ -1,5 +1,5 @@
 import React from "react";
-
+import RankingList from "../ranking/RankingList";
 function Home() {
   return (
     <div className="home-container">
@@ -11,6 +11,25 @@ function Home() {
             <br />
             기록하자
           </h2>
+        </div>
+      </div>
+      <div className="contents_inner">
+        <div className="rankingList">
+          <RankingList
+            title={"연비"}
+            rankType={"jobType"}
+            options={["전체", "LPG", "전기", "휘발유", "기타"]}
+          />
+          <RankingList
+            title={"운행시간"}
+            rankType={"carType"}
+            options={["전체직종", "택시", "배달", "기타"]}
+          />
+          <RankingList
+            title={"총 운송수입금"}
+            rankType={"fuelType"}
+            options={[]}
+          />
         </div>
       </div>
       <style jsx>{`
@@ -39,6 +58,18 @@ function Home() {
                 font-size: 40px;
                 color: white;
               }
+            }
+          }
+          .contents_inner {
+            width: 70%;
+            margin: 0 auto;
+            .rankingList {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: flex-start;
             }
           }
         }
