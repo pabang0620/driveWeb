@@ -26,7 +26,6 @@ import MyPage from "./page/mypage/MyPage";
 import MyCar from "./page/mycar/MyCar";
 import MyCarMaintenance from "./page/mycar/MyCarMaintenance";
 import DriveLog from "./page/drive/DriveLog";
-
 function RouterApp() {
   return (
     <Router>
@@ -51,7 +50,7 @@ function RouterApp() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mycar" element={<MyCar />} />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
-          <Route path="/driving_log" element={<DriveLog />} />
+          <Route path="/drive" element={<DriveLog />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

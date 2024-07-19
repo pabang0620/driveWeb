@@ -6,7 +6,8 @@ const {
 } = require("../models/commentModel");
 
 const addComment = async (req, res) => {
-  const { content, postId, userId, parentId } = req.body; // parentId 추가
+  const { content, postId, parentId } = req.body; // parentId 추가
+  const { userId } = req;
   try {
     const comment = await createComment(content, postId, userId, parentId); // parentId 전달
     res.status(201).json(comment);

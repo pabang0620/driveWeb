@@ -2,19 +2,27 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import drivingData from "../../components/dummy";
 import DriveWrite from "./DriveWrite";
+import DriveIncome from "./DriveIncome";
+import DriveExpense from "./DriveExpense";
 import { getDrive } from "../../components/ApiGet";
 const DriveLog = () => {
-  const [data, setData] = useState([]);
+  const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12); // 페이지당 항목 수
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
-  const [showModal, setShowModal] = useState(false);
 
-  const toggleModal = () => {
-    console.log(showModal);
-    setShowModal((prev) => !prev);
+  const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
+
+  // 모달 열기 함수
+  const openModal = (modalType) => {
+    setCurrentModal(modalType);
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setCurrentModal(null);
   };
   // 현재 페이지의 데이터 계산
   const indexOfLastItem = currentPage * itemsPerPage; //현재 페이지에서 마지막 항목의 다음 인덱스
@@ -37,7 +45,7 @@ const DriveLog = () => {
   // 검색어에 따라 데이터 필터링
   const handleSearchClick = () => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const filtered = data.filter((item) => {
+    const filtered = driveLog.filter((item) => {
       const fieldValue = String(item[searchField]).toLowerCase();
       return fieldValue.includes(lowerCaseSearchTerm);
     });
@@ -50,7 +58,7 @@ const DriveLog = () => {
     const getDriveData = async () => {
       try {
         const data = await getDrive();
-        setData(data);
+        setDriveLog(data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -82,14 +90,40 @@ const DriveLog = () => {
       <h2>
         운행일지 <span>조회</span>
       </h2>
-      <button className="writeBtn" onClick={toggleModal}>
-        글쓰기
+
+      <button className="writeBtn" onClick={() => openModal("driveWrite")}>
+        운행일지 작성
       </button>
-      <DriveWrite
-        className="write"
-        showModal={showModal}
-        toggleModal={toggleModal}
-      />
+
+      {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveWrite" && (
+        <DriveWrite
+          showModal={true}
+          toggleModal={() => {
+            closeModal();
+            openModal("driveIncome");
+          }}
+        />
+      )}
+
+      {/* DriveIncome에서 다음 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveIncome" && (
+        <DriveIncome
+          showModal={true}
+          toggleModal={() => {
+            closeModal();
+            openModal("driveExpense");
+          }}
+        />
+      )}
+
+      {/* DriveExpense에서 저장 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveExpense" && (
+        <DriveExpense
+          showModal={true}
+          toggleModal={() => closeModal()} // 저장 후 모달 닫기
+        />
+      )}
       <table className="drivingTable">
         <thead>
           <tr>
@@ -131,7 +165,9 @@ const DriveLog = () => {
         </button>
 
         <button
-          onClick={() => setCurrentPage(Math.ceil(data.length / itemsPerPage))}
+          onClick={() =>
+            setCurrentPage(Math.ceil(driveLog.length / itemsPerPage))
+          }
         >
           {">>"}
         </button>

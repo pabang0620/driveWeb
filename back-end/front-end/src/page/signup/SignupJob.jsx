@@ -7,14 +7,18 @@ const SignupJob = () => {
   const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
   // 초기 상태 설정
-  const [jobtype, setJobType] = useState(null);
+  const [jobtype, setJobtype] = useState(null);
 
   // 직종 선택 핸들러
   const handleJobSelection = (job) => {
-    setJobType(job);
+    setJobtype(job);
   };
 
   const handleSignup = async () => {
+    console.log("d", {
+      ...location.state,
+      jobType: jobtype,
+    });
     try {
       const response = await axios.post("/api/user/register", {
         ...location.state,
