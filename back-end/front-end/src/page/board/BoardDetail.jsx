@@ -88,7 +88,7 @@ const BoardDetail = () => {
   const handleCommentSubmit = async () => {
     setIsCommenting(true);
     try {
-      const comment = await createComment(newComment, Number(postId), 1); // 사용자의 ID를 지정해야 합니다.
+      const comment = await createComment(newComment, Number(postId)); // 사용자의 ID를 지정해야 합니다.
       setPost({
         ...post,
         comments: [...post.comments, comment],
@@ -141,7 +141,6 @@ const BoardDetail = () => {
       const newReply = await createReply(
         replyContent[commentId],
         post.id,
-        1,
         commentId
       ); // userId를 1로 가정
       setPost({

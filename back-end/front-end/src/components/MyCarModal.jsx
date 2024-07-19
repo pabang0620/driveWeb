@@ -8,7 +8,7 @@ const MyCarModal = ({ isOpen, onClose, token, onItemAdded, myCarId }) => {
     try {
       const response = await axios.post(
         "/api/maintenance/items",
-        { name: newItemName, unit: "km", my_carId: myCarId }, // my_carId 포함
+        { name: newItemName, unit: "km", my_carId: myCarId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -53,47 +53,73 @@ const MyCarModal = ({ isOpen, onClose, token, onItemAdded, myCarId }) => {
           top: 0;
           width: 100%;
           height: 100%;
-          overflow: auto;
-          background-color: rgba(0, 0, 0, 0.4);
+          background-color: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(5px);
         }
         .modal-content {
-          background-color: #fff;
-          padding: 20px;
-          border: 1px solid #888;
+          background-color: #ffffff;
+          padding: 30px;
+          border-radius: 12px;
           width: 400px;
-          border-radius: 8px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+          animation: fadeIn 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           position: relative;
         }
         .close {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
+          color: #333;
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          font-size: 24px;
           font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-          color: black;
-          text-decoration: none;
           cursor: pointer;
+        }
+        .close:hover {
+          color: #000;
+        }
+        h2 {
+          margin: 0 0 20px;
+          font-size: 24px;
+          text-align: center;
+          color: #333;
         }
         .modal-content input {
           width: 100%;
-          padding: 10px;
-          margin-bottom: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
+          padding: 15px;
+          margin-bottom: 20px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 16px;
+          transition: border-color 0.3s ease;
+        }
+        .modal-content input:focus {
+          border-color: #3c5997;
+          outline: none;
         }
         .modal-content button {
           width: 100%;
-          padding: 10px;
-          background-color: #0070f3;
+          padding: 15px;
+          background-color: #3c5997;
           color: #fff;
           border: none;
-          border-radius: 4px;
+          border-radius: 8px;
           cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s ease;
         }
         .modal-content button:hover {
-          background-color: #005bb5;
+          background-color: #2b4b79;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
       `}</style>
     </div>

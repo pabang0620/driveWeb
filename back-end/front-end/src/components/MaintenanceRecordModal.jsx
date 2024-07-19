@@ -8,7 +8,10 @@ const MaintenanceRecordModal = ({
   maintenanceItemId,
   onRecordAdded,
   maintenanceItems,
-  records,
+  lastMaintenanceRecord,
+  maintenancePercent,
+  progressBarColor,
+  formatDate,
 }) => {
   const [newRecord, setNewRecord] = useState({
     maintenanceDate: "",
@@ -86,21 +89,30 @@ const MaintenanceRecordModal = ({
 
   const handleAddRecordClick = async () => {
     try {
+      const maintenanceDistance =
+        typeof newRecord.maintenanceDistance === "string"
+          ? parseInt(newRecord.maintenanceDistance.replace("km", ""))
+          : newRecord.maintenanceDistance;
+
+      const mileageAtMaintenance =
+        typeof newRecord.mileageAtMaintenance === "string"
+          ? parseInt(newRecord.mileageAtMaintenance.replace("km", ""))
+          : newRecord.mileageAtMaintenance;
+
+      const maintenanceCost =
+        typeof newRecord.maintenanceCost === "string"
+          ? parseFloat(newRecord.maintenanceCost.replace("원", ""))
+          : newRecord.maintenanceCost;
+
       const response = await axios.post(
         "/api/maintenance/records",
         {
           maintenanceDate: newRecord.maintenanceDate,
           maintenanceInterval: parseInt(newRecord.maintenanceInterval),
-          maintenanceDistance: parseInt(
-            newRecord.maintenanceDistance.replace("km", "")
-          ),
+          maintenanceDistance,
           maintenanceMethod: newRecord.maintenanceMethod,
-          mileageAtMaintenance: parseInt(
-            newRecord.mileageAtMaintenance.replace("km", "")
-          ),
-          maintenanceCost: parseFloat(
-            newRecord.maintenanceCost.replace("원", "")
-          ),
+          mileageAtMaintenance,
+          maintenanceCost,
           maintenanceItemId,
         },
         {
@@ -111,6 +123,7 @@ const MaintenanceRecordModal = ({
       );
       onRecordAdded(response.data.record);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error adding maintenance record:", error);
     }
@@ -123,10 +136,46 @@ const MaintenanceRecordModal = ({
   return (
     <div className="myCarAddedmodal">
       <div className="modal-content">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
-        <h2>{selectedItemName}</h2>
+        <div className="myCarmodal-header">
+          <h2>{selectedItemName}</h2>
+          <span className="close" onClick={onClose}>
+            &times;
+          </span>
+        </div>
+        <div className="RecordModalHeader">
+          {/* {lastMaintenanceRecord && ( */}
+          <p className="recrodModalHeaderP">
+            최근 정비:{" "}
+            {lastMaintenanceRecord &&
+              formatDate(lastMaintenanceRecord.maintenanceDate)}{" "}
+            |{" "}
+            {lastMaintenanceRecord &&
+              lastMaintenanceRecord.mileageAtMaintenance}
+            km
+          </p>
+          {/* )} */}
+          {/* {lastMaintenanceRecord && ( */}
+          <>
+            <div className="maintenance-progress-bar">
+              <div
+                className="maintenance-progress"
+                style={{
+                  width: `${maintenancePercent}%`,
+                  backgroundColor: progressBarColor,
+                }}
+              />
+            </div>
+            <p className="nowSizeandFree">
+              {lastMaintenanceRecord &&
+                lastMaintenanceRecord.mileageAtMaintenance}
+              km /{" "}
+              {lastMaintenanceRecord &&
+                lastMaintenanceRecord.maintenanceDistance}
+              km마다
+            </p>
+          </>
+          {/* )} */}
+        </div>
         <div className="section">
           <label>정비기간 주기</label>
           <div className="input-container">
@@ -218,6 +267,25 @@ const MaintenanceRecordModal = ({
         </button>
       </div>
       <style jsx>{`
+        .nowSizeandFree {
+          font-size: 11px;
+        }
+        .recrodModalHeaderP {
+          color: #c1c1c1;
+          font-size: 14px;
+        }
+        .myCarmodal-header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .RecordModalHeader {
+          padding-bottom: 20px;
+          border-bottom: 1px solid #d9d9d9;
+          margin-bottom: 15px;
+        }
+
         .myCarAddedmodal {
           display: flex;
           justify-content: center;
@@ -253,8 +321,9 @@ const MaintenanceRecordModal = ({
             cursor: pointer;
           }
           h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 10px;
           }
           .section {
             margin-bottom: 20px;
@@ -306,25 +375,33 @@ const MaintenanceRecordModal = ({
             color: #3c5997;
           }
           #maintenanceInterval {
-            width: 132px;
+            width: 131px;
           }
           #maintenanceDistance {
-            width: 135px;
+            width: 134px;
           }
           #maintenanceDate {
-            width: 166px;
+            width: 165px;
+            padding-right: 30px;
+          }
+          #maintenanceDate::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 25px;
+            top: 51%;
+            transform: translateY(-50%);
+            cursor: pointer;
           }
           #mileageAtMaintenance {
-            width: 135px;
+            width: 134px;
           }
           #maintenanceCost {
-            width: 146px;
+            width: 144px;
           }
           .MaintenaceSaveBTN {
             width: 100%;
             background-color: #3c5997;
             color: white;
-            margin: 0 auto;
+            margin: 15px auto 10px;
             padding: 8.5px 0px;
             border-radius: 5px;
           }

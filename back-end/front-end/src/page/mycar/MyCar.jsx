@@ -410,7 +410,7 @@ const MyCar = () => {
           cursor: pointer;
           font-size: 16px;
           padding: 5px;
-          transform: scaleX(-1); /* Flip the pencil icon horizontally */
+          transform: scaleX(-1);
         }
         .date-separator {
           margin: 0 18px 0 10px;

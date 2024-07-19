@@ -4,13 +4,14 @@ const {
   editComment,
   removeComment,
 } = require("../controllers/commentController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.post("/", addComment);
+router.post("/", authMiddleware, addComment);
 
-router.put("/:id", editComment);
+router.put("/:id", authMiddleware, editComment);
 
-router.delete("/:id", removeComment);
+router.delete("/:id", authMiddleware, removeComment);
 
 module.exports = router;

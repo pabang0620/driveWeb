@@ -8,6 +8,7 @@ const {
 const addComment = async (req, res) => {
   const { content, postId, parentId } = req.body; // parentId 추가
   const { userId } = req;
+  console.log(userId);
   try {
     const comment = await createComment(content, postId, userId, parentId); // parentId 전달
     res.status(201).json(comment);
