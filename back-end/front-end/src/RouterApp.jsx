@@ -50,7 +50,7 @@ function RouterApp() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mycar" element={<MyCar />} />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
-          <Route path="/drive" element={<DriveLog />} />
+          <Route path="/drive_log" element={<DriveLog />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}
