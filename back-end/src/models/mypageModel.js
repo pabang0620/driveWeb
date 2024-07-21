@@ -40,11 +40,21 @@ const getTodayIncome = async (userId) => {
 };
 
 const getTotalMileage = async (userId, startDate, endDate) => {
-  const vehicle = await prisma.user_vehicles.findUnique({
-    where: { userId },
-    select: { mileage: true },
+  const result = await prisma.driving_records.aggregate({
+    _sum: {
+      driving_distance: true,
+    },
+    where: {
+      driving_logs: {
+        userId,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    },
   });
-  return vehicle ? vehicle.mileage : 0;
+  return result._sum.driving_distance || 0;
 };
 
 const getTodayDrivingDistance = async (userId) => {
