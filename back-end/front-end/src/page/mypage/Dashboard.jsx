@@ -52,7 +52,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
 
   return (
     <div className="dashboard_container">
-      <h3>나의 운형현황</h3>
+      <h3>나의 운행현황</h3>
       <div className="dashboard">
         {items.map((item, index) => (
           <div className="dashboard_item" key={index}>

@@ -8,7 +8,6 @@ const DriveWrite = ({ showModal, toggleModal }) => {
     userId: 1, // userId 추가
     date: new Date().toISOString().split("T")[0], // 현재 날짜 추가
     memo: "",
-    memo: "",
     startTime: "",
     endTime: "",
     cumulativeKm: 0,

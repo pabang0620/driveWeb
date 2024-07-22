@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Dashboard from "./Dashboard";
 import CircularChart from "./CircularChart";
+import MixChart from "./MixChart";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
@@ -66,6 +67,13 @@ const MyPage = () => {
           title={"지출차트"}
           url={"expenseSummary"}
         />
+        <MixChart
+          dateRange={dateRange}
+          getDate={getDate}
+          setLoading={setLoading}
+          setError={setError}
+          title={"혼합차트"}
+        />
       </div>
       <style jsx>{`
         .mypage-container {
@@ -73,7 +81,7 @@ const MyPage = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
-
+          height: auto;
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -100,9 +108,10 @@ const MyPage = () => {
 
           .dataBox {
             width: 100%;
+            height: auto;
             clear: both;
             background-color: #f0f0f0;
-            padding: 2%;
+            padding: 2% 2% 7% 2%;
             display: flex;
             flex-wrap: wrap;
             gap: 20px;

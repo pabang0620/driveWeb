@@ -4,7 +4,7 @@ import {
   getMypageExpenseSummary,
   getMypageIncomeSummary,
 } from "../../components/ApiGet";
-//useMemo : 주로 계산 비용이 큰 값이나 객체를 메모이제이션하는 데 사용
+//useMemo : 주로 계산 비용이 큰 값이나 객체에 사용
 const generateColors = (num) => {
   // 기본 색상 팔레트 (Material Design 색상)
   const baseColors = [
@@ -111,12 +111,12 @@ const CircularChart = ({
       height: "100%",
       type: "donut",
       toolbar: {
-        show: false,
+        show: true,
       },
     },
     plotOptions: {
       pie: {
-        offsetY: 20,
+        offsetY: 30,
         donut: {
           size: "50%", // 도넛띠 너비
         },
@@ -131,7 +131,7 @@ const CircularChart = ({
     },
     legend: {
       position: "top", // 범례의 위치를 설정합니다
-      offsetY: 10, // 범례의 Y축 오프셋을 설정\
+      offsetY: 20, // 범례의 Y축 오프셋을 설정\
       labels: {
         colors: "#333", // 폰트 색상
         style: {
@@ -206,6 +206,8 @@ const CircularChart = ({
             padding: 2%;
             border-radius: 5px;
             width: 100%;
+            height: 85%;
+            aspect-ratio: 1;
           }
         }
       `}</style>
