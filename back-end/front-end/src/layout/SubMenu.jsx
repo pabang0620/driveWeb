@@ -34,7 +34,10 @@ function SubMenu() {
         <li className="listOption">
           <Link to="/mycar/maintenance">정비항목</Link>
         </li>
-        <li className="listOption">정비이력</li>
+        <li className="listOption">
+          {" "}
+          <Link to="/mycar/log">정비이력</Link>
+        </li>
       </ul>
       <ul className="width-4-3 widthBoard">
         <li className="listOption">

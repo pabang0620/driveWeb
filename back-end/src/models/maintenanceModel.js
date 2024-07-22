@@ -125,10 +125,42 @@ const updateMaintenanceRecords = async (records) => {
     });
   }
 };
+// models/maintenanceModel.js
+
+const getMaintenanceRecordsWithItemsByUserId = async (
+  userId,
+  page = 1,
+  pageSize = 10
+) => {
+  try {
+    const records = await prisma.maintenance_records.findMany({
+      where: { userId },
+      include: {
+        maintenance_items: {
+          select: {
+            name: true,
+          },
+        },
+        my_car: true,
+      },
+      orderBy: {
+        maintenanceDate: "desc",
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+    return records;
+  } catch (error) {
+    console.error("정비 기록과 항목 가져오는 중 오류:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   getMaintenanceItemsWithRecords,
   createMaintenanceItem,
   createMaintenanceRecord,
   updateMaintenanceItems,
   updateMaintenanceRecords,
+  getMaintenanceRecordsWithItemsByUserId,
 };

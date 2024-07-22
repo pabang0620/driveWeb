@@ -4,6 +4,7 @@ const {
   addMaintenanceRecord,
   getItemsWithRecords,
   updateMaintenanceData,
+  getRecordsWithItems,
 } = require("../controllers/maintenanceController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -14,5 +15,7 @@ router.post("/items", authMiddleware, addItem);
 
 router.post("/records", authMiddleware, addMaintenanceRecord);
 router.put("/update", authMiddleware, updateMaintenanceData);
+
+router.get("/logAll", authMiddleware, getRecordsWithItems);
 
 module.exports = router;
