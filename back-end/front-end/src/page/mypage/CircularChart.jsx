@@ -1,9 +1,42 @@
 import ApexChart from "react-apexcharts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   getMypageExpenseSummary,
   getMypageIncomeSummary,
 } from "../../components/ApiGet";
+//useMemo : 주로 계산 비용이 큰 값이나 객체를 메모이제이션하는 데 사용
+const generateColors = (num) => {
+  // 기본 색상 팔레트 (Material Design 색상)
+  const baseColors = [
+    "#FFABAB", // Soft Pink
+    "#FFC3A0", // Light Peach
+    "#FDCB82", // Warm Yellow
+    "#C5E1A5", // Light Green
+    "#B9FBC0", // Light Mint
+    "#B3E5FC", // Light Blue
+    "#FF8A80", // Light Red
+    "#CFD8DC", // Light Grey
+    "#F8E9A1", // Pale Yellow
+    "#FFAB91", // Light Coral
+    "#FF6F61", // Coral
+    "#FFD3B6", // Light Apricot
+    "#D5AAFF", // Light Lavender
+    "#C5E1A5", // Mint Green
+    "#B9FBC0", // Pale Green
+  ];
+  // 색상 수가 baseColors 배열의 길이보다 작을 때
+  if (num <= baseColors.length) {
+    return baseColors.slice(0, num);
+  }
+
+  // 색상 수가 baseColors 배열의 길이보다 클 경우 반복하여 반환
+  const colors = [];
+  for (let i = 0; i < num; i++) {
+    colors.push(baseColors[i % baseColors.length]);
+  }
+
+  return colors;
+};
 
 const CircularChart = ({
   dateRange,
@@ -37,17 +70,82 @@ const CircularChart = ({
     toll_expense: 40, // 통행료 지출
     total_expense: 695, // 총 지출
   });
+  const getItems = (type) => {
+    const incomeData = [
+      { name: "카드 소득", data: data.card_income },
+      { name: "현금 소득", data: data.cash_income },
+      { name: "카카오 소득", data: data.kakao_income },
+      { name: "온다 소득", data: data.onda_income },
+      { name: "기타 소득", data: data.other_income },
+      { name: "타다 소득", data: data.tada_income },
+      { name: "우버 소득", data: data.uber_income },
+      { name: "예비 소득 항목 1", data: data.income_spare1 },
+      { name: "예비 소득 항목 2", data: data.income_spare2 },
+      { name: "예비 소득 항목 3", data: data.income_spare3 },
+      { name: "예비 소득 항목 4", data: data.income_spare4 },
+    ];
+
+    const expenseData = [
+      { name: "벌금 지출", data: data.fine_expense },
+      { name: "연료 지출", data: data.fuel_expense },
+      { name: "식사 지출", data: data.meal_expense },
+      { name: "기타 지출", data: data.other_expense },
+      { name: "통행료 지출", data: data.toll_expense },
+      { name: "예비 지출 항목 1", data: data.expense_spare1 },
+      { name: "예비 지출 항목 2", data: data.expense_spare2 },
+      { name: "예비 지출 항목 3", data: data.expense_spare3 },
+      { name: "예비 지출 항목 4", data: data.expense_spare4 },
+    ];
+
+    return type === "incomeSummary" ? incomeData : expenseData;
+  };
+
+  const items = useMemo(() => getItems(url), [data]);
+
+  const series = useMemo(() => items.map((item) => item.data), [items]);
+  const labels = useMemo(() => items.map((item) => item.name), [items]);
 
   const [options, setOptions] = useState({
+    chart: {
+      width: "100%",
+      height: "100%",
+      type: "donut",
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      pie: {
+        offsetY: 20,
+        donut: {
+          size: "50%", // 도넛띠 너비
+        },
+      },
+    },
+    stroke: {
+      width: 0,
+    },
+
     dataLabels: {
       enabled: false, // 그래프 안에 수치 표시 여부
     },
+    legend: {
+      position: "top", // 범례의 위치를 설정합니다
+      offsetY: 10, // 범례의 Y축 오프셋을 설정\
+      labels: {
+        colors: "#333", // 폰트 색상
+        style: {
+          fontSize: "16px", // 폰트 사이즈 조정
+          fontFamily: "Arial, sans-serif", // 폰트 패밀리 조정 (옵션)
+        },
+      },
+    },
     responsive: [
       {
-        //breakpoint: 500, // 반응형 디자인을 적용할 화면 크기 최대값을 설정
+        breakpoint: 500, // 반응형 디자인을 적용할 화면 크기 최대값을 설정
         options: {
           chart: {
-            //width: 500, // 반응형 디자인에서 차트의 너비를 설정
+            width: 500, // 반응형 디자인에서 차트의 너비를 설정
           },
           legend: {
             show: true, // 반응형 디자인에서 범례의 표시 여부
@@ -55,57 +153,26 @@ const CircularChart = ({
         },
       },
     ],
-    legend: {
-      position: "top", // 범례의 위치를 설정합니다
-      offsetY: 0, // 범례의 Y축 오프셋을 설정
-      // height: 230, // 범례의 높이를 설정
-    },
+    colors: generateColors(items.length), // 항목 수에 따라 색상 배열 생성
   });
 
-  const incomeItems = [
-    { name: "카드 소득", data: data.card_income },
-    { name: "현금 소득", data: data.cash_income },
-    { name: "예비 소득 항목 1", data: data.income_spare1 },
-    { name: "예비 소득 항목 2", data: data.income_spare2 },
-    { name: "예비 소득 항목 3", data: data.income_spare3 },
-    { name: "예비 소득 항목 4", data: data.income_spare4 },
-    { name: "카카오 소득", data: data.kakao_income },
-    { name: "온다 소득", data: data.onda_income },
-    { name: "기타 소득", data: data.other_income },
-    { name: "타다 소득", data: data.tada_income },
-    { name: "우버 소득", data: data.uber_income },
-  ];
-
-  const expenseItems = [
-    { name: "예비 지출 항목 1", data: data.expense_spare1 },
-    { name: "예비 지출 항목 2", data: data.expense_spare2 },
-    { name: "예비 지출 항목 3", data: data.expense_spare3 },
-    { name: "예비 지출 항목 4", data: data.expense_spare4 },
-    { name: "벌금 지출", data: data.fine_expense },
-    { name: "연료 지출", data: data.fuel_expense },
-    { name: "식사 지출", data: data.meal_expense },
-    { name: "기타 지출", data: data.other_expense },
-    { name: "통행료 지출", data: data.toll_expense },
-  ];
-
-  const [series, setSeries] = useState(incomeItems.map((item) => item.data));
-  const [chartOptions, setChartOption] = useState(
-    incomeItems.map((item) => item.name)
-  );
   //마이페이지 데이터 가져오기
   const fetchMyPageData = async () => {
     try {
       const startDate = getDate();
       const endDate = getDate();
+      let response;
+
       if (url === "incomeSummary") {
-        const response = await getMypageIncomeSummary(startDate, endDate); // getMypage 호출로 응답 받기
-        setData(response.data);
-        setSeries(incomeItems.map((item) => item.value || 0)); // 소득 데이터를 시리즈에 반영
+        response = await getMypageIncomeSummary(startDate, endDate); // getMypage 호출로 응답 받기
       } else if (url === "expenseSummary") {
-        const response = await getMypageExpenseSummary(startDate, endDate); // getMypage 호출로 응답 받기
-        setData(response.data); // 응답에서 데이터 추출 및 상태 업데이트
-        setSeries(expenseItems.map((item) => item.value || 0)); // 지출 데이터를 시리즈에 반영
+        response = await getMypageExpenseSummary(startDate, endDate); // getMypage 호출로 응답 받기
       }
+      // 데이터가 실제로 변경된 경우에만 상태 업데이트
+      if (response.data !== data) {
+        setData(response.data);
+      }
+
       setLoading(false);
     } catch (error) {
       setError(error);
@@ -124,11 +191,10 @@ const CircularChart = ({
         <ApexChart
           options={{
             ...options,
-            labels: chartOptions,
+            labels: labels,
           }}
           series={series}
           type="donut"
-          width={500}
         />
       </div>
       <style jsx>{`
@@ -139,6 +205,7 @@ const CircularChart = ({
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 2%;
             border-radius: 5px;
+            width: 100%;
           }
         }
       `}</style>

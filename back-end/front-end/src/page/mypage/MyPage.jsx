@@ -107,6 +107,9 @@ const MyPage = () => {
             flex-wrap: wrap;
             gap: 20px;
             justify-content: space-between;
+            h3 {
+              margin-bottom: 10px;
+            }
           }
         }
       `}</style>
