@@ -150,6 +150,7 @@ const MyCarMaintenance = () => {
           flex-wrap: wrap;
           margin-top: 30px;
           gap: 20px;
+          justify-content: center;
         }
         .no-items {
           width: 100%;

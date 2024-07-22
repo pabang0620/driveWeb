@@ -4,6 +4,7 @@ const {
   updateMaintenanceItem,
   updateMaintenanceRecord,
   getMaintenanceItemsWithRecords,
+  getMaintenanceRecordsWithItemsByUserId,
 } = require("../models/maintenanceModel");
 // 정비 기록 가져오기
 const getItemsWithRecords = async (req, res) => {
@@ -87,9 +88,39 @@ const updateMaintenanceData = async (req, res) => {
       .json({ error: "정비 항목 및 기록 업데이트 중 오류가 발생했습니다." });
   }
 };
+
+// 특정 사용자의 모든 정비 기록과 정비 항목 이름을 최신순으로 가져오는 API 핸들러
+// controllers/maintenanceController.js
+
+const getRecordsWithItems = async (req, res) => {
+  const { userId } = req;
+  const { page = 1, pageSize = 10 } = req.query;
+
+  try {
+    const records = await getMaintenanceRecordsWithItemsByUserId(
+      userId,
+      Number(page),
+      Number(pageSize)
+    );
+    res.json(records);
+  } catch (error) {
+    console.error("정비 기록과 항목 가져오는 중 오류:", error);
+    res.status(500).json({ error: "정비 기록 조회 중 오류가 발생했습니다." });
+  }
+};
+
 module.exports = {
   getItemsWithRecords,
   addItem,
   addMaintenanceRecord,
   updateMaintenanceData,
+  getRecordsWithItems, // 추가
+};
+
+module.exports = {
+  getItemsWithRecords,
+  addItem,
+  addMaintenanceRecord,
+  updateMaintenanceData,
+  getRecordsWithItems,
 };
