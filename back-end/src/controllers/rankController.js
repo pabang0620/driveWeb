@@ -2,8 +2,6 @@ const {
   getTopUsersByDrivingTime,
   getTopUsersByNetIncome,
   getTopUsersByFuelEfficiency,
-  getTopUsersByDrivingDistance,
-  getTopUsersByTotalIncome,
 } = require("../models/driveModel");
 const { getRecentPosts } = require("../models/postModel");
 
@@ -26,6 +24,8 @@ const getRecentPostsByBoard = async (req, res) => {
 // 랭킹
 // 랭킹
 // 랭킹
+
+// 랭킹
 const getTopUsers = async (req, res) => {
   try {
     const { jobtype } = req.body;
@@ -38,6 +38,7 @@ const getTopUsers = async (req, res) => {
     });
   }
 };
+
 // 순이익 탑
 const getTopNetIncomeUsers = async (req, res) => {
   try {
@@ -51,6 +52,7 @@ const getTopNetIncomeUsers = async (req, res) => {
     });
   }
 };
+
 // 연비 랭크
 const getTopFuelEfficiencyUsers = async (req, res) => {
   try {

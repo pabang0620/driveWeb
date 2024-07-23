@@ -4,6 +4,19 @@ const getToken = () => {
   return localStorage.getItem("token");
 };
 // 원호 수정
+const postData = async (url, data) => {
+  const token = getToken();
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`정보 보내기 실패: ${error.message}`);
+  }
+};
 const putData = async (url, data) => {
   const token = getToken();
   try {
@@ -53,13 +66,13 @@ export const postDriveExpense = async (data) => {
 // ------------------------랭킹-----------------------------
 //랭킹-운행시간
 export const postRankTopUsers = async (data) => {
-  return putData("/api/rank/top-users", data);
+  return postData("/api/rank/top-users", data);
 };
 //랭킹-손익
 export const postRankTopNetIncome = async (data) => {
-  return putData("/api/rank/top-net-income", data);
+  return postData("/api/rank/top-net-income", data);
 };
 //랭킹-연비
 export const postRankTopFuelEfficiency = async (data) => {
-  return putData("/api/rank/top-fuel-efficiency", data);
+  return postData("/api/rank/top-fuel-efficiency", data);
 };

@@ -297,8 +297,20 @@ const deleteExpenseRecord = async (id) => {
 const getTopUsersByDrivingTime = async (jobtype) => {
   try {
     console.log("Fetching top users by driving time...");
+
+    const jobTypeMap = {
+      전체직종: undefined,
+      택시: 1,
+      배달: 2,
+      기타: 3,
+    };
+
+    const jobTypeFilter = jobTypeMap[jobtype]
+      ? { jobtype: jobTypeMap[jobtype] }
+      : {};
+
     const users = await prisma.users.findMany({
-      where: jobtype ? { jobtype } : {},
+      where: jobTypeFilter,
       select: {
         id: true,
         nickname: true,
@@ -336,30 +348,32 @@ const getTopUsersByDrivingTime = async (jobtype) => {
       (a, b) => b.totalDrivingTime - a.totalDrivingTime
     );
 
-    console.log(
-      "Top 5 users by driving time fetched successfully:",
-      usersWithTotalDrivingTime.slice(0, 5)
-    );
+    // console.log(
+    //   "Top 5 users by driving time fetched successfully:",
+    //   usersWithTotalDrivingTime.slice(0, 5)
+    // );
     return usersWithTotalDrivingTime.slice(0, 5);
   } catch (error) {
     console.error("Error fetching top users by driving time:", error);
     throw error;
   }
 };
+
 // 총 순이익 랭크
 const getTopUsersByNetIncome = async (carType) => {
   try {
     console.log("Fetching top users by net income...");
     const users = await prisma.users.findMany({
-      where: carType
-        ? {
-            user_vehicles: {
-              some: {
-                carType,
+      where:
+        carType && carType !== "전체"
+          ? {
+              user_vehicles: {
+                some: {
+                  carType: carType,
+                },
               },
-            },
-          }
-        : {},
+            }
+          : {},
       select: {
         id: true,
         nickname: true,
@@ -378,15 +392,29 @@ const getTopUsersByNetIncome = async (carType) => {
 
     // 유저별 순수익 계산
     const usersWithNetIncome = users.map((user) => {
-      const totalIncome = user.income_records.reduce(
-        (acc, record) => acc + record.total_income,
-        0
-      );
-      const totalExpense = user.expense_records.reduce(
-        (acc, record) => acc + record.total_expense,
-        0
-      );
+      const totalIncome = user.income_records.reduce((acc, record) => {
+        const income = parseFloat(record.total_income) || 0;
+        if (isNaN(income) || income < 0) {
+          console.warn(`Invalid income for user ${user.id}: ${income}`);
+          return acc;
+        }
+        return acc + income;
+      }, 0);
+
+      const totalExpense = user.expense_records.reduce((acc, record) => {
+        const expense = parseFloat(record.total_expense) || 0;
+        if (isNaN(expense) || expense < 0) {
+          console.warn(`Invalid expense for user ${user.id}: ${expense}`);
+          return acc;
+        }
+        return acc + expense;
+      }, 0);
+
       const netIncome = totalIncome - totalExpense;
+
+      // console.log(
+      //   `User ${user.id} - Total Income: ${totalIncome}, Total Expense: ${totalExpense}, Net Income: ${netIncome}`
+      // );
 
       return {
         id: user.id,
@@ -408,20 +436,26 @@ const getTopUsersByNetIncome = async (carType) => {
     throw error;
   }
 };
+
 // 연비 랭크
 const getTopUsersByFuelEfficiency = async (fuelType) => {
   try {
     console.log("Fetching top users by fuel efficiency...");
+
+    const fuelTypeMap = {
+      전체: undefined,
+      LPG: "LPG",
+      전기: "전기",
+      휘발유: "휘발유",
+      기타: "기타",
+    };
+
+    const fuelTypeFilter = fuelTypeMap[fuelType]
+      ? { user_vehicles: { fuel_type: fuelTypeMap[fuelType] } }
+      : {};
+
     const users = await prisma.users.findMany({
-      where: fuelType
-        ? {
-            user_vehicles: {
-              some: {
-                fuel_type: fuelType,
-              },
-            },
-          }
-        : {},
+      where: fuelTypeFilter,
       select: {
         id: true,
         nickname: true,
@@ -438,7 +472,6 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
       },
     });
 
-    // 유저별 연비 계산
     const usersWithFuelEfficiency = users.map((user) => {
       const totalDistance = user.driving_logs.reduce((acc, log) => {
         return (
@@ -468,13 +501,12 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
       };
     });
 
-    // 연비가 좋은 순으로 상위 5명 가져오기
     usersWithFuelEfficiency.sort((a, b) => b.fuelEfficiency - a.fuelEfficiency);
 
-    console.log(
-      "Top 5 users by fuel efficiency fetched successfully:",
-      usersWithFuelEfficiency.slice(0, 5)
-    );
+    // console.log(
+    //   "Top 5 users by fuel efficiency fetched successfully:",
+    //   usersWithFuelEfficiency.slice(0, 5)
+    // );
     return usersWithFuelEfficiency.slice(0, 5);
   } catch (error) {
     console.error("Error fetching top users by fuel efficiency:", error);

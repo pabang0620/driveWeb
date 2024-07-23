@@ -5,35 +5,9 @@ import {
   postRankTopFuelEfficiency,
 } from "../../components/ApiPost";
 
-const Ranking = ({ title, options, rankType }) => {
-  const [selectedOption, setSelectedOption] = useState("1");
-  const [profiles, setProfiles] = useState([
-    {
-      id: "1",
-      nickname: "김운전자",
-      totalDrivingTime: 120, // 총 운전 시간(분)
-    },
-    {
-      id: "2",
-      nickname: "이운전자",
-      totalDrivingTime: 98,
-    },
-    {
-      id: "3",
-      nickname: "박운전자",
-      totalDrivingTime: 76,
-    },
-    {
-      id: "4",
-      nickname: "최운전자",
-      totalDrivingTime: 54,
-    },
-    {
-      id: "5",
-      nickname: "정운전자",
-      totalDrivingTime: 32,
-    },
-  ]);
+const RankingList = ({ title, options, rankType }) => {
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -41,20 +15,20 @@ const Ranking = ({ title, options, rankType }) => {
         let response;
         switch (rankType) {
           case "jobType":
-            response = await postRankTopUsers(selectedOption);
-            setProfiles(response.data);
+            response = await postRankTopUsers({ jobtype: selectedOption });
             break;
           case "carType":
-            response = await postRankTopNetIncome(selectedOption);
-            setProfiles(response.data);
+            response = await postRankTopNetIncome({ carType: selectedOption });
             break;
           case "fuelType":
-            response = await postRankTopFuelEfficiency(selectedOption);
-            setProfiles(response.data);
+            response = await postRankTopFuelEfficiency({
+              fuelType: selectedOption,
+            });
             break;
           default:
             throw new Error("알 수 없는 API 타입입니다.");
         }
+        setProfiles(response);
       } catch (error) {
         console.error("데이터 요청 중 오류 발생:", error);
       }
@@ -161,4 +135,4 @@ const Ranking = ({ title, options, rankType }) => {
   );
 };
 
-export default Ranking;
+export default RankingList;

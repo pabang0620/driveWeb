@@ -7,18 +7,18 @@ const Ranking = () => {
       <div className="rankingInner">
         <RankingList
           title={"연비"}
-          rankType={"jobType"}
+          rankType={"fuelType"}
           options={["전체", "LPG", "전기", "휘발유", "기타"]}
         />
         <RankingList
           title={"운행시간"}
-          rankType={"carType"}
+          rankType={"jobType"}
           options={["전체직종", "택시", "배달", "기타"]}
         />
         <RankingList
           title={"총 운송수입금"}
-          rankType={"fuelType"}
-          options={[]}
+          rankType={"carType"}
+          options={["전체"]}
         />
       </div>
       <style jsx>{`
@@ -37,4 +37,5 @@ const Ranking = () => {
     </div>
   );
 };
+
 export default Ranking;
