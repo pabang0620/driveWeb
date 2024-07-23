@@ -16,6 +16,7 @@ function Login() {
       });
       // 로그인 성공 후 토큰을 로컬 스토리지에 저장
       localStorage.setItem("token", response.data);
+
       //홈으로 이동
       navigate("/");
     } catch (error) {

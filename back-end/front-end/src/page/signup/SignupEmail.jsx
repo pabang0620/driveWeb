@@ -41,7 +41,6 @@ function SignupEmail() {
   // 다음 버튼 클릭 시 처리 함수
   const handleNext = () => {
     if (canProceed()) {
-      alert("이메일, 닉네임, 약관동의 성공");
       // 모든 조건이 충족되면 다음 페이지로 이동
       navigate("/signup/password", {
         state: { username: username, nickname: nickname },

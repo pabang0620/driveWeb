@@ -9,9 +9,10 @@ export function DynamicInput({
   options,
   onChange,
   onSave,
+  maxLength,
   showEditButton, // 수정 버튼을 보일지 여부를 결정하는 프롭스 추가
 }) {
-  const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
+  const [isEditing, setIsEditing] = useState(onSave ? false : true); // 수정 상태 관리
   const [customValue, setCustomValue] = useState(""); // 직접 입력 값 상태 관리
 
   const handleChange = (e) => {
@@ -53,6 +54,7 @@ export function DynamicInput({
               placeholder={placeholder}
               value={value || ""}
               onChange={handleChange}
+              maxLength={maxLength}
               disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
             />
             {showEditButton && (
@@ -142,7 +144,7 @@ export function DynamicInput({
           }
         }
         return (
-          <div>
+          <>
             <input
               type="date"
               value={formattedDate}
@@ -157,7 +159,7 @@ export function DynamicInput({
                 {isEditing ? "저장" : "수정"}
               </button>
             )}
-          </div>
+          </>
         );
       default:
         return null;

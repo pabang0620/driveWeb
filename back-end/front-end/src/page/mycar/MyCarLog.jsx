@@ -65,10 +65,15 @@ const MyCarLog = () => {
           <div key={record.id} className="record-card">
             {record.edited === 1 ? (
               <div>
-                <div className="edited-notification">설정을 수정하셨습니다</div>
-                <div className="date-and-distance">
-                  {new Date(record.createdAt).toLocaleDateString()}
+                <div className="displayRow">
+                  <div className="date-and-distance">
+                    {new Date(record.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="edited-notification">
+                    설정을 수정하셨습니다
+                  </div>
                 </div>
+
                 <div className="logMaintenance-item">
                   {record.maintenance_items && record.maintenance_items.name
                     ? record.maintenance_items.name
@@ -142,17 +147,22 @@ const MyCarLog = () => {
             font-weight: 700;
             border-bottom: 1px solid #c1c1c1;
           }
+          .displayRow {
+            display: flex;
+            flex-direction: row;
+            font-size: 11px;
+          }
           .MyCarHeader span {
             color: #05aced;
           }
           .records-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 5px;
             margin-top: 20px;
           }
           .record-card {
-            padding: 20px;
+            padding: 10px 20px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
@@ -162,6 +172,7 @@ const MyCarLog = () => {
             font-size: 14px;
             color: #ff0000;
             font-weight: bold;
+            margin-left: 30px;
           }
           .record-detail {
             margin-bottom: 10px;
@@ -194,10 +205,7 @@ const MyCarLog = () => {
             background-color: #0288c7;
             font-weight: bold;
           }
-          .date-and-distance {
-            font-size: 11px;
-            color: #4c4c4c;
-          }
+
           .logMaintenance-item {
             margin-top: 10px;
             font-size: 16px;
@@ -224,6 +232,10 @@ const MyCarLog = () => {
           .myCarMoney {
             font-size: 12px;
             font-weight: 700;
+          }
+          .date-and-distance {
+            font-size: 11px;
+            color: #4c4c4c;
           }
         }
       `}</style>

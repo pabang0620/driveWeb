@@ -14,7 +14,6 @@ function SignupPassword() {
   const handleNext = () => {
     console.log("d", location.state, password);
     if (location.state && password === passwordCheck && password.length >= 4) {
-      alert("비밀번호 일치");
       // 모든 조건이 충족되면 다음 페이지로 이동
       navigate("/signup/job", {
         state: { ...location.state, password: password },
@@ -22,7 +21,7 @@ function SignupPassword() {
     } else if (password.length < 4) {
       alert("4자 이상 입력해 주세요.");
     } else {
-      alert("비밀번호가 일치하지 않아요.");
+      alert("비밀번호가 일치하지 않습니다.");
     }
   };
 
@@ -53,7 +52,7 @@ function SignupPassword() {
         <div className="input-container">
           <label htmlFor="passwordCheck">비밀번호 확인</label>
           <input
-            type="passwordCheck"
+            type="password"
             id="passwordCheck"
             name="passwordCheck"
             placeholder="비밀번호를 입력해주세요."

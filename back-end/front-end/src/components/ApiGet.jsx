@@ -23,7 +23,7 @@ const getData = async (url) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(`회원 정보 조회 실패: ${error.message}`);
+    throw new Error(`조회 실패: ${error.message}`);
   }
 };
 
@@ -43,7 +43,25 @@ export const getProfilefranchise = async () => {
 export const getProfileIncome = async () => {
   return getData("/api/user/income");
 };
-//운행일지
+
+//운행일지-운행
 export const getDrive = async () => {
   return getData("/api/drive");
+};
+
+//마이페이지 - 상단 데이터
+export const getMypage = async (startDate, endDate) => {
+  return getData(`/api/mypage/${startDate}/${endDate}`);
+};
+//마이페이지 - 원형데이터 - 지출
+export const getMypageIncomeSummary = async (startDate, endDate) => {
+  return getData(`/api/mypage/income-summary/${startDate}/${endDate}`);
+};
+//마이페이지 - 원형데이터 - 수입
+export const getMypageExpenseSummary = async (startDate, endDate) => {
+  return getData(`/api/mypage/expense-summary/${startDate}/${endDate}`);
+};
+//마이페이지 - 믹스데이터
+export const getMypageMix = async (startDate, endDate) => {
+  return getData(`/api/mypage/mix/${startDate}/${endDate}`);
 };
