@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveIncome } from "../../components/ApiPost";
 
-const DriveIncome = ({ showModal, toggleModal }) => {
+const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
   const [driveIncomeData, setDriveIncomeData] = useState({
     drivingLogId: parseInt(localStorage.getItem("drivingLogId")) || 0,
     cardIncome: 0,
@@ -39,6 +39,7 @@ const DriveIncome = ({ showModal, toggleModal }) => {
 
   return (
     <Modal
+      closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
       number={2}

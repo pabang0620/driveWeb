@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDrive } from "../../components/ApiPost";
 
-const DriveWrite = ({ showModal, toggleModal }) => {
+const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
   const [driveData, setDriveData] = useState({
     userId: 1, // userId 추가
     date: new Date().toISOString().split("T")[0], // 현재 날짜 추가
@@ -36,6 +36,7 @@ const DriveWrite = ({ showModal, toggleModal }) => {
 
   return (
     <Modal
+      closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
       number={1}

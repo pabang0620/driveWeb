@@ -1,4 +1,11 @@
-const Modal = ({ showModal, toggleModal, number, title, content }) => {
+const Modal = ({
+  showModal,
+  closeModal,
+  toggleModal,
+  number,
+  title,
+  content,
+}) => {
   return (
     <div className="modal">
       <div className="modal-inner">
@@ -7,7 +14,7 @@ const Modal = ({ showModal, toggleModal, number, title, content }) => {
             <span>{number}</span>
             {title}
           </h3>
-          <span className="close" onClick={toggleModal}>
+          <span className="close" onClick={closeModal}>
             &times;
           </span>
         </div>

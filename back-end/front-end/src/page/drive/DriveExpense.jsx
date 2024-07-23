@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveExpense } from "../../components/ApiPost";
 
-const DriveExpense = ({ showModal, toggleModal }) => {
+const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
   const [driveExpenseData, setDriveExpenseData] = useState({
     drivingLogId: parseInt(localStorage.getItem("drivingLogId"), 10) || 0,
     fuelCost: 0,
@@ -37,6 +37,7 @@ const DriveExpense = ({ showModal, toggleModal }) => {
 
   return (
     <Modal
+      closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
       number={3}

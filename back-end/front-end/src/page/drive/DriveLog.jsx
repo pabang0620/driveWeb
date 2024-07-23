@@ -21,7 +21,10 @@ const DriveLog = () => {
   };
 
   // 모달 닫기 함수
-  const closeModal = () => {
+  const closeModal = (showAlert) => {
+    if (showAlert) {
+      alert("일지가 저장됩니다.");
+    }
     setCurrentModal(null);
   };
   // 현재 페이지의 데이터 계산
@@ -103,6 +106,7 @@ const DriveLog = () => {
             closeModal();
             openModal("driveIncome");
           }}
+          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
         />
       )}
 
@@ -114,6 +118,7 @@ const DriveLog = () => {
             closeModal();
             openModal("driveExpense");
           }}
+          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
         />
       )}
 
@@ -122,8 +127,10 @@ const DriveLog = () => {
         <DriveExpense
           showModal={true}
           toggleModal={() => closeModal()} // 저장 후 모달 닫기
+          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
         />
       )}
+
       <table className="drivingTable">
         <thead>
           <tr>
