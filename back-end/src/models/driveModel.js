@@ -447,6 +447,12 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
       LPG: "LPG",
       전기: "전기",
       휘발유: "휘발유",
+      경유: "경유",
+      하이브리드: "하이브리드",
+      천연가스: "천연가스",
+      수소: "수소",
+      바이오디젤: "바이오디젤",
+      에탄올: "에탄올",
       기타: "기타",
     };
 
@@ -497,7 +503,7 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
       return {
         id: user.id,
         nickname: user.nickname,
-        fuelEfficiency,
+        fuelEfficiency: parseFloat(fuelEfficiency.toFixed(2)),
       };
     });
 

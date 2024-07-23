@@ -134,64 +134,64 @@ const BoardDetail = () => {
   };
 
   // 대댓글 작성
-  const handleReplySubmit = async (commentId) => {
-    if (replyContent[commentId]?.trim() === "") return;
+  // const handleReplySubmit = async (commentId) => {
+  //   if (replyContent[commentId]?.trim() === "") return;
 
-    try {
-      const newReply = await createReply(
-        replyContent[commentId],
-        post.id,
-        commentId
-      ); // userId를 1로 가정
-      setPost({
-        ...post,
-        comments: post.comments.map((comment) => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              replies: [...(comment.replies || []), newReply],
-            };
-          }
-          return comment;
-        }),
-      });
-      setReplyContent((prev) => ({ ...prev, [commentId]: "" }));
-    } catch (err) {
-      console.error("대댓글 작성 중 오류가 발생했습니다:", err);
-    }
-  };
+  //   try {
+  //     const newReply = await createReply(
+  //       replyContent[commentId],
+  //       post.id,
+  //       commentId
+  //     ); // userId를 1로 가정
+  //     setPost({
+  //       ...post,
+  //       comments: post.comments.map((comment) => {
+  //         if (comment.id === commentId) {
+  //           return {
+  //             ...comment,
+  //             replies: [...(comment.replies || []), newReply],
+  //           };
+  //         }
+  //         return comment;
+  //       }),
+  //     });
+  //     setReplyContent((prev) => ({ ...prev, [commentId]: "" }));
+  //   } catch (err) {
+  //     console.error("대댓글 작성 중 오류가 발생했습니다:", err);
+  //   }
+  // };
 
-  const handleReplyChange = (commentId, content) => {
-    setReplyContent((prev) => ({
-      ...prev,
-      [commentId]: content,
-    }));
-  };
+  // const handleReplyChange = (commentId, content) => {
+  //   setReplyContent((prev) => ({
+  //     ...prev,
+  //     [commentId]: content,
+  //   }));
+  // };
 
-  const handleReplyDelete = async (replyId, commentId) => {
-    const confirmed = window.confirm("대댓글을 삭제하시겠습니까?");
-    if (!confirmed) {
-      return;
-    }
+  // const handleReplyDelete = async (replyId, commentId) => {
+  //   const confirmed = window.confirm("대댓글을 삭제하시겠습니까?");
+  //   if (!confirmed) {
+  //     return;
+  //   }
 
-    try {
-      await deleteReply(replyId);
-      setPost({
-        ...post,
-        comments: post.comments.map((comment) => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              replies: comment.replies.filter((reply) => reply.id !== replyId),
-            };
-          }
-          return comment;
-        }),
-      });
-    } catch (err) {
-      console.error("대댓글 삭제 중 오류가 발생했습니다:", err);
-    }
-  };
+  //   try {
+  //     await deleteReply(replyId);
+  //     setPost({
+  //       ...post,
+  //       comments: post.comments.map((comment) => {
+  //         if (comment.id === commentId) {
+  //           return {
+  //             ...comment,
+  //             replies: comment.replies.filter((reply) => reply.id !== replyId),
+  //           };
+  //         }
+  //         return comment;
+  //       }),
+  //     });
+  //   } catch (err) {
+  //     console.error("대댓글 삭제 중 오류가 발생했습니다:", err);
+  //   }
+  // };
 
   if (error) {
     return <div>Error: {error}</div>;

@@ -171,23 +171,8 @@ const incrementViewCount = async (id) => {
 };
 
 const toggleLike = async (postId, userId, liked) => {
-  if (liked) {
-    await prisma.likes.create({
-      data: {
-        userId,
-        postId,
-      },
-    });
-    await prisma.posts.update({
-      where: { id: postId },
-      data: {
-        likeCount: {
-          increment: 1,
-        },
-      },
-    });
-  } else {
-    await prisma.likes.delete({
+  try {
+    const existingLike = await prisma.likes.findUnique({
       where: {
         userId_postId: {
           userId,
@@ -195,21 +180,52 @@ const toggleLike = async (postId, userId, liked) => {
         },
       },
     });
-    await prisma.posts.update({
-      where: { id: postId },
-      data: {
-        likeCount: {
-          decrement: 1,
+
+    if (existingLike) {
+      // 좋아요가 이미 존재하면 삭제
+      await prisma.likes.delete({
+        where: {
+          userId_postId: {
+            userId,
+            postId,
+          },
         },
-      },
+      });
+      await prisma.posts.update({
+        where: { id: postId },
+        data: {
+          likeCount: {
+            decrement: 1,
+          },
+        },
+      });
+    } else {
+      // 좋아요가 존재하지 않으면 추가
+      await prisma.likes.create({
+        data: {
+          userId,
+          postId,
+        },
+      });
+      await prisma.posts.update({
+        where: { id: postId },
+        data: {
+          likeCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+
+    const updatedPost = await prisma.posts.findUnique({
+      where: { id: postId },
     });
+
+    return updatedPost;
+  } catch (error) {
+    console.error("좋아요 토글 중 오류 발생:", error);
+    throw error;
   }
-
-  const updatedPost = await prisma.posts.findUnique({
-    where: { id: postId },
-  });
-
-  return updatedPost;
 };
 
 const updatePost = async (id, title, content) => {

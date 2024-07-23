@@ -77,8 +77,7 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
   const { id } = req.params;
   const { userId } = req;
-  console.log(userId);
-  console.log(userId);
+
   try {
     const post = await getPostById(Number(id), userId);
     if (!post) {
@@ -94,7 +93,7 @@ const getPost = async (req, res) => {
 
 const likePost = async (req, res) => {
   const { id } = req.params;
-  const userId = 1;
+  const { userId } = req;
   const { liked } = req.body;
   try {
     const post = await toggleLike(Number(id), userId, liked);

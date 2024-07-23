@@ -8,8 +8,21 @@ const Ranking = () => {
         <RankingList
           title={"연비"}
           rankType={"fuelType"}
-          options={["전체", "LPG", "전기", "휘발유", "기타"]}
+          options={[
+            "전체",
+            "LPG",
+            "전기",
+            "휘발유",
+            "경유",
+            "하이브리드",
+            "천연가스",
+            "수소",
+            "바이오디젤",
+            "에탄올",
+            "기타",
+          ]}
         />
+
         <RankingList
           title={"운행시간"}
           rankType={"jobType"}
@@ -24,7 +37,7 @@ const Ranking = () => {
       <style jsx>{`
         .ranking-container {
           width: 70%;
-          padding: 30px 0;
+          padding: 100px 0;
           margin: 0 auto;
           .rankingInner {
             width: 100%;
