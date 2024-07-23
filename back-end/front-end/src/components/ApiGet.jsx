@@ -12,7 +12,13 @@ export const getJobtype = () => {
   console.log(jobtype);
   return jobtype;
 };
-
+export const getUserId = () => {
+  const token = getToken();
+  const decodedToken = jwtDecode(token); // jwt-decode 라이브러리 사용
+  const userId = decodedToken.userId;
+  console.log(userId);
+  return userId;
+};
 const getData = async (url) => {
   const token = getToken();
   try {

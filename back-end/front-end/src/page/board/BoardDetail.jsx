@@ -12,9 +12,8 @@ import {
   createComment,
   deletePost,
   deleteComment,
-  createReply,
-  deleteReply,
 } from "../../utils/post/postapis";
+import { getUserId } from "../../components/ApiGet";
 
 const BoardDetail = () => {
   const location = useLocation();
@@ -29,9 +28,11 @@ const BoardDetail = () => {
   const [isCommenting, setIsCommenting] = useState(false);
   const [postOptionModalOpen, setPostOptionModalOpen] = useState(false);
   const [commentOptionModalOpen, setCommentOptionModalOpen] = useState({});
-  // 대댓글
-  const [replyOptionModalOpen, setReplyOptionModalOpen] = useState({});
-  const [replyContent, setReplyContent] = useState({});
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  // // 대댓글
+  // const [replyOptionModalOpen, setReplyOptionModalOpen] = useState({});
+  // const [replyContent, setReplyContent] = useState({});
 
   const togglePostOptionModal = () => {
     setPostOptionModalOpen(!postOptionModalOpen);
@@ -45,12 +46,12 @@ const BoardDetail = () => {
   };
 
   // 대댓글
-  const toggleReplyOptionModal = (replyId) => {
-    setReplyOptionModalOpen((prev) => ({
-      ...prev,
-      [replyId]: !prev[replyId],
-    }));
-  };
+  // const toggleReplyOptionModal = (replyId) => {
+  //   setReplyOptionModalOpen((prev) => ({
+  //     ...prev,
+  //     [replyId]: !prev[replyId],
+  //   }));
+  // };
 
   useEffect(() => {
     const loadPost = async () => {
@@ -102,6 +103,11 @@ const BoardDetail = () => {
   };
 
   const handlePostDelete = async () => {
+    if (currentUserId !== post.users.id) {
+      alert("삭제 권한이 없습니다.");
+      return;
+    }
+
     const confirmed = window.confirm("게시글을 삭제하시겠습니까?");
     if (!confirmed) {
       return;
@@ -117,6 +123,12 @@ const BoardDetail = () => {
   };
 
   const handleCommentDelete = async (commentId) => {
+    const comment = post.comments.find((comment) => comment.id === commentId);
+
+    if (currentUserId !== comment.userId) {
+      alert("삭제 권한이 없습니다.");
+      return;
+    }
     const confirmed = window.confirm("덧글을 삭제하시겠습니까?");
     if (!confirmed) {
       return;
@@ -192,6 +204,19 @@ const BoardDetail = () => {
   //     console.error("대댓글 삭제 중 오류가 발생했습니다:", err);
   //   }
   // };
+  // 마운트시 현재 유저아이디 가져오기
+  useEffect(() => {
+    const fetchCurrentUserId = async () => {
+      try {
+        const userId = getUserId(); // getUserId 함수를 호출하여 사용자 ID를 가져옵니다.
+        setCurrentUserId(userId);
+      } catch (err) {
+        console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", err);
+      }
+    };
+
+    fetchCurrentUserId();
+  }, []);
 
   if (error) {
     return <div>Error: {error}</div>;
