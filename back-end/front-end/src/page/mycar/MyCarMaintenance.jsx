@@ -38,6 +38,21 @@ const MyCarMaintenance = () => {
 
   useEffect(() => {
     const sorted = [...maintenanceItems].sort((a, b) => {
+      // maintenance_records 데이터의 유무에 따른 우선순위 처리
+      if (
+        a.maintenance_records.length > 0 &&
+        b.maintenance_records.length === 0
+      ) {
+        return -1; // a에 데이터가 있고, b에 데이터가 없으면 a를 앞으로
+      }
+      if (
+        a.maintenance_records.length === 0 &&
+        b.maintenance_records.length > 0
+      ) {
+        return 1; // a에 데이터가 없고, b에 데이터가 있으면 b를 앞으로
+      }
+
+      // 남은 일수에 따른 우선순위
       const aWarning = a.maintenance_records.some((record) => {
         const maintenanceIntervalMonths = record.maintenanceInterval;
         const maintenanceDate = new Date(record.maintenanceDate);
@@ -69,6 +84,7 @@ const MyCarMaintenance = () => {
       if (aWarning && !bWarning) return -1;
       if (!aWarning && bWarning) return 1;
 
+      // 주행 거리 비율에 따른 우선순위
       const aPercent =
         a.maintenance_records.length > 0
           ? (a.maintenance_records[a.maintenance_records.length - 1]
@@ -77,7 +93,6 @@ const MyCarMaintenance = () => {
                 .maintenanceDistance) *
             100
           : 0;
-
       const bPercent =
         b.maintenance_records.length > 0
           ? (b.maintenance_records[b.maintenance_records.length - 1]

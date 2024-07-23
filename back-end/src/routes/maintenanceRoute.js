@@ -14,7 +14,7 @@ router.get("/items", authMiddleware, getItemsWithRecords);
 router.post("/items", authMiddleware, addItem);
 
 router.post("/records", authMiddleware, addMaintenanceRecord);
-router.put("/update", authMiddleware, updateMaintenanceData);
+router.put("/records/:id", authMiddleware, updateMaintenanceData);
 
 router.get("/logAll", authMiddleware, getRecordsWithItems);
 

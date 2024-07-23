@@ -1,10 +1,11 @@
 const {
   createMaintenanceItem,
   createMaintenanceRecord,
-  updateMaintenanceItem,
   updateMaintenanceRecord,
   getMaintenanceItemsWithRecords,
   getMaintenanceRecordsWithItemsByUserId,
+  getLastMaintenanceRecord,
+  findMaintenanceRecordById,
 } = require("../models/maintenanceModel");
 // 정비 기록 가져오기
 const getItemsWithRecords = async (req, res) => {
@@ -47,7 +48,17 @@ const addMaintenanceRecord = async (req, res) => {
   const { userId } = req;
 
   try {
-    const record = await createMaintenanceRecord({
+    const lastRecord = await getLastMaintenanceRecord(carId, userId);
+    let edited = 0;
+    if (
+      lastRecord &&
+      (lastRecord.maintenanceInterval !== maintenanceInterval ||
+        lastRecord.maintenanceDistance !== maintenanceDistance)
+    ) {
+      edited = 1;
+    }
+
+    const data = {
       maintenanceItemId,
       maintenanceDate,
       maintenanceInterval,
@@ -57,7 +68,10 @@ const addMaintenanceRecord = async (req, res) => {
       maintenanceCost,
       carId,
       userId,
-    });
+      edited,
+    };
+
+    const record = await createMaintenanceRecord(data);
 
     res.json({ record });
   } catch (error) {
@@ -68,24 +82,37 @@ const addMaintenanceRecord = async (req, res) => {
 // -----------------------------------------
 // 정비 항목 수정
 const updateMaintenanceData = async (req, res) => {
-  const { items, records } = req.body;
-  const { userId } = req;
-
   try {
-    if (items) {
-      await updateMaintenanceItems(items);
+    const { id } = req.params;
+    const {
+      maintenanceDate,
+      maintenanceDistance,
+      maintenanceMethod,
+      mileageAtMaintenance,
+      maintenanceCost,
+    } = req.body;
+
+    const maintenanceRecord = await findMaintenanceRecordById(id);
+
+    if (!maintenanceRecord) {
+      return res.status(404).json({ message: "Maintenance record not found" });
     }
 
-    if (records) {
-      await updateMaintenanceRecords(records);
-    }
+    const updatedRecord = await updateMaintenanceRecord(id, {
+      maintenanceDate,
+      maintenanceDistance,
+      maintenanceMethod,
+      mileageAtMaintenance,
+      maintenanceCost,
+    });
 
-    res.json({ message: "정비 항목 및 기록이 성공적으로 업데이트되었습니다." });
+    res.status(200).json({
+      message: "Maintenance record updated successfully",
+      maintenanceRecord: updatedRecord,
+    });
   } catch (error) {
-    console.error("업데이트 중 오류 발생:", error);
-    res
-      .status(500)
-      .json({ error: "정비 항목 및 기록 업데이트 중 오류가 발생했습니다." });
+    console.error("Error updating maintenance record:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -97,24 +124,22 @@ const getRecordsWithItems = async (req, res) => {
   const { page = 1, pageSize = 10 } = req.query;
 
   try {
-    const records = await getMaintenanceRecordsWithItemsByUserId(
-      userId,
-      Number(page),
-      Number(pageSize)
-    );
-    res.json(records);
+    const { records, totalCount } =
+      await getMaintenanceRecordsWithItemsByUserId(
+        userId,
+        Number(page),
+        Number(pageSize)
+      );
+    res.json({
+      records,
+      totalCount,
+      currentPage: Number(page),
+      totalPages: Math.ceil(totalCount / Number(pageSize)),
+    });
   } catch (error) {
     console.error("정비 기록과 항목 가져오는 중 오류:", error);
     res.status(500).json({ error: "정비 기록 조회 중 오류가 발생했습니다." });
   }
-};
-
-module.exports = {
-  getItemsWithRecords,
-  addItem,
-  addMaintenanceRecord,
-  updateMaintenanceData,
-  getRecordsWithItems, // 추가
 };
 
 module.exports = {
