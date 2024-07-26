@@ -5,18 +5,15 @@ const {
   findUserByKakaoId,
   findUserByNaverId,
   deleteFranchiseFee,
-  updateFranchiseFee,
   createFranchiseFee,
   getUserProfile,
-  createUserProfile,
   getUserIncomeRecords,
   getUserVehiclesWithFees,
-  createUserIncome,
-  addUserVehicle,
-  getFranchiseFees,
   updateUserProfileData,
   updateUserIncomeData,
   updateUserVehicle,
+  getFranchiseFeesByUserId,
+  updateFranchiseFee,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -206,20 +203,51 @@ const updateUserIncome = async (req, res) => {
 
 // 수수료 등록 수정 삭제 컨트롤러
 const addFranchiseFee = async (req, res) => {
-  const { id: userId } = req;
-  const { franchise_name, fee } = req.body;
-  console.log(id);
+  const { userId } = req;
+  const { franchise_info } = req.body;
 
   try {
-    const franchiseFee = await createFranchiseFee(userId, franchise_name, fee);
-    res.status(201).json(franchiseFee);
+    if (!Array.isArray(franchise_info)) {
+      return res.status(400).json({ error: "Invalid franchise_info format" });
+    }
+
+    const processedFranchiseFees = [];
+    for (const info of franchise_info) {
+      const { id, franchise_name, fee } = info;
+
+      let franchiseFee;
+      if (id) {
+        franchiseFee = await updateFranchiseFee(id, franchise_name, fee);
+      } else {
+        franchiseFee = await createFranchiseFee(userId, franchise_name, fee);
+      }
+
+      processedFranchiseFees.push(franchiseFee);
+    }
+
+    res.status(201).json(processedFranchiseFees);
   } catch (error) {
+    console.error("Error processing franchise fees:", error);
     res
       .status(500)
-      .json({ error: "가맹점 수수료 생성 중 오류가 발생했습니다." });
+      .json({ error: "가맹점 수수료 처리 중 오류가 발생했습니다." });
   }
 };
+// 수수료 get
+const getFranchiseFees = async (req, res) => {
+  const { id: userId } = req;
 
+  try {
+    const franchiseFees = await getFranchiseFeesByUserId(userId);
+
+    res.status(200).json(franchiseFees);
+  } catch (error) {
+    console.error("Error fetching franchise fees:", error);
+    res
+      .status(500)
+      .json({ error: "가맹점 수수료 조회 중 오류가 발생했습니다." });
+  }
+};
 const fetchFranchiseFees = async (req, res) => {
   const { id: userId } = req;
 
@@ -307,6 +335,7 @@ module.exports = {
   updateUserIncome,
   addFranchiseFee,
   fetchFranchiseFees,
+  getFranchiseFees,
   removeFranchiseFee,
   fetchUserProfile,
   fetchUserVehiclesWithFees,

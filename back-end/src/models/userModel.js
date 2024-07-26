@@ -190,23 +190,33 @@ const updateUserIncomeData = async (userId, incomeData) => {
 
 // 수수료 입력 및 삭제 수정
 const createFranchiseFee = async (userId, franchise_name, fee) => {
+  console.log(userId, franchise_name, fee);
+
   return await prisma.franchise_fees.create({
     data: {
       userId,
       franchise_name,
-      fee,
+      fee: parseFloat(fee), // fee가 문자열로 전달될 경우 숫자로 변환
     },
   });
 };
 
-// 수수료 조회
-const getFranchiseFees = async (userId) => {
-  return await prisma.franchise_fees.findMany({
-    where: {
-      userId,
+const updateFranchiseFee = async (id, franchise_name, fee) => {
+  return await prisma.franchise_fees.update({
+    where: { id },
+    data: {
+      franchise_name,
+      fee: parseFloat(fee), // fee가 문자열로 전달될 경우 숫자로 변환
     },
   });
 };
+// 수수료 조회
+const getFranchiseFeesByUserId = async (userId) => {
+  return await prisma.franchise_fees.findMany({
+    where: { userId },
+  });
+};
+
 // 수수료율 삭제
 const deleteFranchiseFee = async (id) => {
   return await prisma.franchiseFee.delete({
@@ -287,7 +297,8 @@ module.exports = {
   updateUserVehicle,
   updateUserIncomeData,
   createFranchiseFee,
-  getFranchiseFees,
+  updateFranchiseFee,
+  getFranchiseFeesByUserId,
   deleteFranchiseFee,
   getUserProfile,
   getUserVehiclesWithFees,

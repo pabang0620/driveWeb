@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import Spinner from "../../components/Spinner";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import {
   fetchPost,
   likePost,
@@ -208,7 +208,7 @@ const BoardDetail = () => {
   useEffect(() => {
     const fetchCurrentUserId = async () => {
       try {
-        const userId = getUserId(); // getUserId 함수를 호출하여 사용자 ID를 가져옵니다.
+        const userId = getUserId();
         setCurrentUserId(userId);
       } catch (err) {
         console.error("사용자 정보를 가져오는 중 오류가 발생했습니다:", err);
@@ -248,7 +248,15 @@ const BoardDetail = () => {
         <div className="detailHeaderSet">
           <div className="detailUser DetailTopFlex">
             <div className="dlatl">
-              <img src="" alt="" />
+              {post.user.imageUrl ? (
+                <img src={post.user.imageUrl} alt="프로필 이미지" />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faUserCircle}
+                  color="#c1c1c1"
+                  size="3x"
+                />
+              )}
             </div>
             <div className="detailUserdetail detailUserdetailAdd">
               <p className="detailName"> {post.users.nickname}</p>
@@ -296,7 +304,18 @@ const BoardDetail = () => {
             <div className="commentSetting" key={comment.id}>
               <div className="detailUser">
                 <div className="dlatldlatl">
-                  <img src="" alt="" />
+                  {comment.user.imageUrl ? (
+                    <img
+                      src={comment.user.imageUrl}
+                      alt="댓글 작성자 프로필 이미지"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faUserCircle}
+                      color="#c1c1c1"
+                      size="3x"
+                    />
+                  )}{" "}
                 </div>
                 <div className="detailUserdetail">
                   <p className="detailName">
@@ -497,14 +516,20 @@ const BoardDetail = () => {
             }
           }
           .dlatldlatl {
-            background-color: black;
             width: 70px;
             height: 70px;
             border-radius: 50%;
             margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+              width: 70px;
+              height: 70px;
+              border-radius: 50%;
+            }
           }
           .dlatl {
-            background-color: black;
             width: 50px;
             height: 50px;
             border-radius: 50%;

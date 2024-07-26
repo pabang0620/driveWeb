@@ -136,12 +136,37 @@ const getPostById = async (id, userId) => {
     where: { id },
     include: {
       comments: {
-        include: {
-          users: true, // 댓글 작성자의 정보를 포함
+        select: {
+          id: true,
+          postId: true,
+          content: true,
+          userId: true,
+          createdAt: true,
+          users: {
+            select: {
+              id: true,
+              nickname: true,
+              user_profiles: {
+                select: {
+                  imageUrl: true,
+                },
+              },
+            },
+          },
         },
       },
       postImages: true,
-      users: true,
+      users: {
+        select: {
+          id: true,
+          nickname: true,
+          user_profiles: {
+            select: {
+              imageUrl: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -156,7 +181,27 @@ const getPostById = async (id, userId) => {
     },
   });
 
-  return { ...post, isLiked: !!userLike };
+  return {
+    ...post,
+    isLiked: !!userLike,
+    user: {
+      id: post.users.id,
+      nickname: post.users.nickname,
+      imageUrl: post.users.user_profiles.imageUrl,
+    },
+    comments: post.comments.map((comment) => ({
+      id: comment.id,
+      postId: comment.postId,
+      content: comment.content,
+      userId: comment.userId,
+      createdAt: comment.createdAt,
+      user: {
+        id: comment.users.id,
+        nickname: comment.users.nickname,
+        imageUrl: comment.users.user_profiles.imageUrl,
+      },
+    })),
+  };
 };
 
 const incrementViewCount = async (id) => {

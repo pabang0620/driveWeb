@@ -53,7 +53,7 @@ export const postProfileIncome = async (field, value) => {
 };
 // 회원정보-차량정보-가맹수수료
 export const postProfilefranchise = async (data) => {
-  return putData("/api/user/franchise-fee", data);
+  return postData("/api/user/franchise-fee", data);
 };
 // ------------------------운행일지-----------------------------
 // 운행일지-일지생성
