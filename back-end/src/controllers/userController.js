@@ -140,8 +140,17 @@ const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const updateUserProfile = async (req, res) => {
   const { userId } = req;
-  const profileData = req.body;
-  console.log(profileData);
+  const { name, birth_date, phone, username } = req.body;
+  let imageUrl = req.file ? req.file.location : req.body.imageUrl || null;
+
+  const profileData = {
+    name,
+    birth_date,
+    phone,
+    username,
+    imageUrl, // 이미지 URL을 항상 포함
+  };
+
   try {
     const profile = await updateUserProfileData(userId, profileData);
     res.status(200).json(profile);

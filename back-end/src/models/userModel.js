@@ -115,16 +115,15 @@ const updateUserProfileData = async (userId, profileData) => {
   try {
     const userProfile = await prisma.user_profiles.update({
       where: { userId: userId },
-      data: {
-        ...profileData,
-      },
+      data: profileData,
     });
-    return userProfile; // 프로필 업데이트 성공 시 반환
+    return userProfile;
   } catch (error) {
-    console.error("프로필 업데이트 중 오류 발생:", error); // 오류 로깅
-    throw error; // 오류를 다시 던져 호출한 곳에서 처리할 수 있도록 함
+    console.error("프로필 업데이트 중 오류 발생:", error);
+    throw error;
   }
 };
+
 // 자동차등록 관련
 const updateUserVehicle = async (userId, vehicleData) => {
   try {
