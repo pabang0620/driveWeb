@@ -10,7 +10,7 @@ export function DynamicInput({
   onChange,
   onSave,
   maxLength,
-  showEditButton, // 수정 버튼을 보일지 여부를 결정하는 프롭스 추가
+  showEditButton,
 }) {
   const [isEditing, setIsEditing] = useState(onSave ? false : true); // 수정 상태 관리
   const [customValue, setCustomValue] = useState(""); // 직접 입력 값 상태 관리

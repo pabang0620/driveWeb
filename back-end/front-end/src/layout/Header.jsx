@@ -254,7 +254,7 @@ function Header() {
               display: flex;
               justify-content: center;
               align-items: center;
-
+              z-index: 2;
               .modal_content {
                 background: white;
                 padding: 30px 10px;
@@ -264,6 +264,8 @@ function Header() {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 10px;
+                z-index: 3;
+
                 p {
                   width: 100%;
                   margin-bottom: 30px;

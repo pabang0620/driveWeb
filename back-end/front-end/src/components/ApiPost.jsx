@@ -17,13 +17,19 @@ const postData = async (url, data) => {
     throw new Error(`정보 보내기 실패: ${error.message}`);
   }
 };
-const putData = async (url, data) => {
+const putData = async (url, data, isFormData = false) => {
   const token = getToken();
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  if (isFormData) {
+    headers["Content-Type"] = "multipart/form-data";
+  }
+
   try {
     const response = await axios.put(url, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     });
     return response.data;
   } catch (error) {
@@ -32,9 +38,8 @@ const putData = async (url, data) => {
 };
 // ------------------------회원정보-----------------------------
 // 회원정보-개인정보
-export const postUserProfile = async (field, value) => {
-  const data = { [field]: value };
-  return putData("/api/user/profile", data);
+export const postUserProfile = async (formData) => {
+  return putData("/api/user/profile", formData, true);
 };
 // 회원정보-차량정보
 export const postProfileVehicle = async (field, value) => {
@@ -48,7 +53,7 @@ export const postProfileIncome = async (field, value) => {
 };
 // 회원정보-차량정보-가맹수수료
 export const postProfilefranchise = async (data) => {
-  return putData("/api/user/franchise-fee", data);
+  return postData("/api/user/franchise-fee", data);
 };
 // ------------------------운행일지-----------------------------
 // 운행일지-일지생성

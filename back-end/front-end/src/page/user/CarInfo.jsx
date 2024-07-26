@@ -1,154 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { DynamicInput } from "../../components/InputBox";
-import {
-  getJobtype,
-  getProfileVehicle,
-  getProfilefranchise,
-} from "../../components/ApiGet";
-import {
-  postProfileVehicle,
-  postProfilefranchise,
-} from "../../components/ApiPost";
+import { getJobtype, getProfileVehicle } from "../../components/ApiGet";
+import { postProfileVehicle } from "../../components/ApiPost";
 import carsData from "../../utils/cars.json";
-
-const FranchiseFee = ({
-  carType,
-  franchiseFree,
-  setFranchiseFree,
-  jobtype,
-}) => {
-  // 차량 종류에 따라 가맹 항목 변경
-  let franchises = [];
-
-  // jobtype에 따라 보여질 가맹 항목 설정
-  switch (jobtype) {
-    case "1": // 택시 관련
-      switch (carType) {
-        case "택시(중형)":
-        case "택시(대형)":
-        case "택시(고급)":
-          franchises = ["카카오", "우버", "비가맹"];
-          break;
-        case "택시(승합)":
-          franchises = ["카카오벤티", "아이엠", "기타"];
-          break;
-        default:
-          franchises = [];
-          break;
-      }
-      break;
-    case "2": // 배달 관련
-      switch (carType) {
-        case "배달(배민)":
-        case "배달(쿠팡)":
-        case "배달(퀵)":
-        case "배달(화물택배)":
-          franchises = [];
-          break;
-        default:
-          franchises = [];
-          break;
-      }
-      break;
-    default:
-      franchises = [];
-      break;
-  }
-
-  franchises = franchises.map((name) => {
-    const match = franchiseFree.find((item) => item.franchise_name === name);
-    return {
-      franchise_name: name,
-      fee: match ? match.fee : 0,
-      checked: match ? true : false,
-    };
-  });
-
-  const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing); // 수정 버튼 클릭 시 상태 토글
-    if (isEditing) {
-      handleSaveFranchiseInfo();
-    }
-  };
-
-  const handleFranchiseChange = (index, field, value) => {
-    const updatedFranchiseFree = [...franchiseFree];
-    updatedFranchiseFree[index] = {
-      ...updatedFranchiseFree[index],
-      [field]: value,
-    };
-    setFranchiseFree(updatedFranchiseFree);
-  };
-
-  const handleSaveFranchiseInfo = async () => {
-    try {
-      // 선택된 가맹 정보만 필터링해서 저장
-      const selectedFranchises = franchiseFree.filter(
-        (item) => item.checked === true
-      );
-      await postProfilefranchise("franchise_info", selectedFranchises);
-      console.log("가맹 정보 저장 성공!");
-    } catch (error) {
-      console.error("가맹 정보 저장 실패:", error.message);
-    }
-  };
-
-  return (
-    franchises.length > 0 && (
-      <div className="checkboxes">
-        <label>가맹 항목</label>
-        <div>
-          {franchises.map((item, index) => (
-            <div key={index} className="franchise-item">
-              <input
-                type="checkbox"
-                checked={item.checked}
-                disabled={!isEditing}
-                value={item.franchise_name}
-                onChange={(e) =>
-                  handleFranchiseChange(index, "franchise_name", e.target.value)
-                }
-              />
-              <p>{item.franchise_name}</p>
-              <input
-                type="number"
-                value={item.fee}
-                onChange={(e) =>
-                  handleFranchiseChange(index, "fee", e.target.value)
-                }
-                disabled={!isEditing}
-              />
-            </div>
-          ))}
-        </div>
-        <button
-          onClick={handleEditToggle}
-          className={isEditing ? "savebtn" : "editBtn"}
-        >
-          {isEditing ? "저장" : "수정"}
-        </button>
-      </div>
-    )
-  );
-};
+import FranchiseFee from "./FranchiseFee";
+import Spinner from "../../components/Spinner"; // 스피너 컴포넌트 가져오기
 
 const CarInfo = () => {
   const [vehicleInfo, setVehicleInfo] = useState({
-    carType: "택시(고급)", //차량종류    franchise_status: "가맹", // 가맹상태
-    vehicle_name: "토요타 프리우스", // 차량 이름
-    year: 2020, // 연식
-    fuel_type: "LPG", // 연료유형
+    carType: "", // 차량종류
+    franchise_status: "", // 가맹상태
+    vehicle_name: "", // 차량 이름
+    year: 0, // 연식
+    fuel_type: "", // 연료유형
     mileage: 0, // 누적거리
   });
 
-  const [franchiseFree, setFranchiseFree] = useState([
-    { franchise_name: "카카오", fee: 5 },
-    { franchise_name: "우버", fee: 3 },
-  ]);
-
-  const [jobtype, setJobtype] = useState("1"); // 잡타입 상태
+  const [jobtype, setJobtype] = useState(""); // 잡타입 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태 관리
 
   // 시작 연도와 끝 연도 정의
   const startYear = 2014; // 연도 범위의 시작 연도
@@ -161,6 +30,7 @@ const CarInfo = () => {
     // 각 요소를 시작 연도부터 현재 연도까지의 연도로 초기화
     (_, index) => startYear + index
   );
+
   // 차량 종류 옵션 설정
   const getCarTypeOptions = () => {
     const defaultOptions = [
@@ -178,24 +48,27 @@ const CarInfo = () => {
         return defaultOptions; // 기본 옵션 설정
     }
   };
-  //회원정보 불러오기
+
+  // 회원정보 불러오기
   useEffect(() => {
     const getUserData = async () => {
       try {
         const vehicleData = await getProfileVehicle();
+        console.log("Vehicle Data:", vehicleData);
         setVehicleInfo(vehicleData);
-        const franchiseData = await getProfilefranchise();
-        setFranchiseFree(franchiseData);
         const jobtypeData = await getJobtype();
+        console.log("Job Type Data:", jobtypeData);
         setJobtype(jobtypeData);
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setLoading(false); // 로딩 상태 해제
       }
     };
     getUserData();
   }, []);
 
-  //회원정보 보내기
+  // 회원정보 보내기
   const handleSaveUserInfo = async (field, value) => {
     try {
       await postProfileVehicle(field, value);
@@ -213,7 +86,10 @@ const CarInfo = () => {
       [field]: value,
     }));
   };
-  console.log(jobtype);
+
+  if (loading) {
+    return <Spinner />; // 로딩 중일 때 스피너 표시
+  }
 
   return (
     <div className="container userInfo">
@@ -244,12 +120,9 @@ const CarInfo = () => {
             onSave={handleSaveUserInfo}
             showEditButton={true}
           />
-          <FranchiseFee
-            carType={vehicleInfo.carType}
-            franchiseFree={franchiseFree}
-            jobtype={jobtype}
-            setFranchiseFree={setFranchiseFree}
-          />
+          {vehicleInfo.franchise_status === "가맹" && (
+            <FranchiseFee carType={vehicleInfo.carType} jobtype={jobtype} />
+          )}
         </div>
         <div className="inputWrap">
           <h3>차량 정보</h3>
@@ -277,8 +150,8 @@ const CarInfo = () => {
             labelName={"연료"}
             inputType={"select"}
             options={["LPG", "전기", "직접입력"]}
-            value={vehicleInfo.franchise_status}
-            fieldName="franchise_status"
+            value={vehicleInfo.fuel_type}
+            fieldName="fuel_type"
             onChange={handleInputChange}
             onSave={handleSaveUserInfo}
             showEditButton={true}
@@ -301,6 +174,7 @@ const CarInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -340,8 +214,7 @@ const CarInfo = () => {
               width: 80%;
               height: 100%;
               display: flex;
-              flex-wrap: wrap;
-              flex-direction: column;
+              flex-direction: row;
               align-items: flex-start;
               .franchise-item {
                 width: 100%;
@@ -352,12 +225,11 @@ const CarInfo = () => {
                 gap: 5px;
                 height: 50px;
                 p {
-                  width: 15%;
                 }
                 label:first-child {
                   display: none;
                 }
-                input[type="number"] {
+                input[type="text"] {
                   border-radius: 5px;
                   border: 1px solid #d9d9d9;
                   padding: 5px;
@@ -402,7 +274,7 @@ const CarInfo = () => {
               border: none;
               width: 75%;
               height: 100%;
-              text-algin: left;
+              text-align: left;
               background: none;
               &:focus {
                 border: none;
@@ -445,4 +317,5 @@ const CarInfo = () => {
     </div>
   );
 };
+
 export default CarInfo;
