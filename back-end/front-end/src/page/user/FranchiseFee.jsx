@@ -70,10 +70,17 @@ const FranchiseFee = ({ carType, jobtype }) => {
     const updatedFranchiseFree = [...franchiseFree];
     updatedFranchiseFree[index] = {
       ...updatedFranchiseFree[index],
-      [field]: field === "checked" ? value : value,
+      [field]: value,
     };
     console.log("Updated Franchise Free:", updatedFranchiseFree); // 콘솔에 업데이트된 상태 출력
     setFranchiseFree(updatedFranchiseFree);
+  };
+
+  const handleFeeChange = (index, value) => {
+    // 유효성 검사: 숫자만 입력되도록 필터링
+    if (/^\d*$/.test(value)) {
+      handleFranchiseChange(index, "fee", value);
+    }
   };
 
   const handleSaveFranchiseInfo = async () => {
@@ -116,11 +123,9 @@ const FranchiseFee = ({ carType, jobtype }) => {
               />
               <p>{item.franchise_name}</p>
               <input
-                type="number"
+                type="text"
                 value={item.fee}
-                onChange={(e) =>
-                  handleFranchiseChange(index, "fee", e.target.value)
-                }
+                onChange={(e) => handleFeeChange(index, e.target.value)}
                 disabled={!isEditing}
                 style={{ width: "50px" }} // 숫자 입력창 크기 줄이기
               />

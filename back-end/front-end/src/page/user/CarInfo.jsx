@@ -229,7 +229,7 @@ const CarInfo = () => {
                 label:first-child {
                   display: none;
                 }
-                input[type="number"] {
+                input[type="text"] {
                   border-radius: 5px;
                   border: 1px solid #d9d9d9;
                   padding: 5px;
