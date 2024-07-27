@@ -58,7 +58,7 @@ export const postProfilefranchise = async (data) => {
 // ------------------------운행일지-----------------------------
 // 운행일지-일지생성
 export const postDrive = async (data) => {
-  return putData("/api/drive/log", data);
+  return postData("/api/drive/log", data);
 };
 // 운행일지-수입수정
 export const postDriveIncome = async (data) => {

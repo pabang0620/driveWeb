@@ -5,6 +5,7 @@ import DriveWrite from "./DriveWrite";
 import DriveIncome from "./DriveIncome";
 import DriveExpense from "./DriveExpense";
 import { getDrive } from "../../components/ApiGet";
+
 const DriveLog = () => {
   const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -21,12 +22,17 @@ const DriveLog = () => {
   };
 
   // 모달 닫기 함수
-  const closeModal = (showAlert) => {
-    if (showAlert) {
-      alert("일지가 저장됩니다.");
+  const closeModal = (showConfirm = true) => {
+    if (showConfirm) {
+      const response = window.confirm("작성을 취소하시겠습니까?");
+      if (response) {
+        setCurrentModal(null);
+      }
+    } else {
+      setCurrentModal(null);
     }
-    setCurrentModal(null);
   };
+
   // 현재 페이지의 데이터 계산
   const indexOfLastItem = currentPage * itemsPerPage; //현재 페이지에서 마지막 항목의 다음 인덱스
   const indexOfFirstItem = indexOfLastItem - itemsPerPage; // 현재 페이지에서 첫 번째 항목의 인덱스
@@ -102,11 +108,8 @@ const DriveLog = () => {
       {currentModal === "driveWrite" && (
         <DriveWrite
           showModal={true}
-          toggleModal={() => {
-            closeModal();
-            openModal("driveIncome");
-          }}
-          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
+          toggleModal={() => openModal("driveIncome")} // 다음 모달을 직접 열기
+          closeModal={closeModal}
         />
       )}
 
@@ -114,11 +117,8 @@ const DriveLog = () => {
       {currentModal === "driveIncome" && (
         <DriveIncome
           showModal={true}
-          toggleModal={() => {
-            closeModal();
-            openModal("driveExpense");
-          }}
-          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
+          toggleModal={() => openModal("driveExpense")} // 다음 모달을 직접 열기
+          closeModal={closeModal}
         />
       )}
 
@@ -126,8 +126,8 @@ const DriveLog = () => {
       {currentModal === "driveExpense" && (
         <DriveExpense
           showModal={true}
-          toggleModal={() => closeModal()} // 저장 후 모달 닫기
-          closeModal={() => closeModal(true)} // 경고 메시지 표시 후 닫기
+          toggleModal={() => closeModal(false)} // 마지막 모달은 닫기
+          closeModal={closeModal}
         />
       )}
 
@@ -324,4 +324,5 @@ const DriveLog = () => {
     </div>
   );
 };
+
 export default DriveLog;

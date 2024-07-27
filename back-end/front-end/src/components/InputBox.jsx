@@ -16,9 +16,16 @@ export function DynamicInput({
   const [customValue, setCustomValue] = useState(""); // 직접 입력 값 상태 관리
 
   const handleChange = (e) => {
-    const newValue =
-      inputType === "checkbox" ? e.target.checked : e.target.value;
-    onChange(fieldName, newValue); // 필드 이름과 값을 전달
+    let newValue = e.target.value;
+
+    // 시간 입력 필드에서만 실행
+    if (inputType === "time" && newValue && newValue.split(":").length === 2) {
+      newValue += ":00"; // 입력된 시간에 초를 추가
+    } else if (inputType === "checkbox") {
+      newValue = e.target.checked;
+    }
+
+    onChange(fieldName, newValue);
   };
 
   const handleCheckboxChange = (e, option) => {
@@ -55,7 +62,7 @@ export function DynamicInput({
               value={value || ""}
               onChange={handleChange}
               maxLength={maxLength}
-              disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
+              disabled={!isEditing}
             />
             {showEditButton && (
               <button
@@ -149,7 +156,26 @@ export function DynamicInput({
               type="date"
               value={formattedDate}
               onChange={handleChange}
-              disabled={!isEditing} // 수정 상태에 따라 활성화/비활성화
+              disabled={!isEditing}
+            />
+            {showEditButton && (
+              <button
+                onClick={handleEditToggle}
+                className={isEditing ? "savebtn" : "editBtn"}
+              >
+                {isEditing ? "저장" : "수정"}
+              </button>
+            )}
+          </>
+        );
+      case "time": // 시간 입력 유형 처리 추가
+        return (
+          <>
+            <input
+              type="time"
+              value={value || ""}
+              onChange={handleChange}
+              disabled={!isEditing}
             />
             {showEditButton && (
               <button

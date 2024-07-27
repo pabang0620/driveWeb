@@ -7,7 +7,7 @@ const Modal = ({
   content,
 }) => {
   return (
-    <div className="modal">
+    <div className="driveModal">
       <div className="modal-inner">
         <div className="modal-header">
           <h3>
@@ -21,7 +21,7 @@ const Modal = ({
         <div className="modal-content">{content}</div>
         <style jsx>
           {`
-            .modal {
+            .driveModal {
               display: ${showModal ? "block" : "none"};
               position: fixed;
               z-index: 1;
@@ -32,6 +32,7 @@ const Modal = ({
               overflow: auto;
               background-color: rgba(0, 0, 0, 0.4);
               .modal-inner {
+                top: -20%;
                 background-color: #fefefe;
                 margin: 15% auto;
                 border: 1px solid #888;

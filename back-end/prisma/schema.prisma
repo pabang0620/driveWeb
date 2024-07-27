@@ -90,6 +90,11 @@ model expense_records {
   kakaoFee       Float?        @db.Float
   uberFee        Float?        @db.Float
   userId         Int?
+  ondaFee        Decimal?      @default(0.00) @db.Decimal(10, 2)
+  tadaFee        Decimal?      @default(0.00) @db.Decimal(10, 2)
+  kakaoventiFee  Decimal?      @default(0.00) @db.Decimal(10, 2)
+  iamFee         Decimal?      @default(0.00) @db.Decimal(10, 2)
+  etcFee         Decimal?      @default(0.00) @db.Decimal(10, 2)
   driving_logs   driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "expense_records_ibfk_1")
   users          users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_expense_records_user")
 
@@ -134,6 +139,9 @@ model income_records {
   updated_at             DateTime?     @default(now()) @db.Timestamp(0)
   totalTransportIncome   Float?        @db.Float
   userId                 Int?
+  iamFee                 Decimal?      @default(0.00) @db.Decimal(10, 2)
+  kakaoventiFee          Decimal?      @default(0.00) @db.Decimal(10, 2)
+  etcFee                 Decimal?      @default(0.00) @db.Decimal(10, 2)
   driving_logs           driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_income_driving_log")
   users                  users?        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_income_records_user")
 

@@ -2,293 +2,165 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // 운행일지 - 운행  // 운행일지 - 운행 // 운행일지 - 운행 // 운행일지 - 운행
-const createDrivingLog = async (userId, date, memo) => {
-  return await prisma.driving_logs.create({
-    data: {
-      userId,
-      date: new Date(date),
-      memo,
-    },
-  });
-};
-
-const createDrivingRecord = async (
-  drivingLogId,
-  startTime,
-  endTime,
-  cumulativeKm,
-  businessDistance,
-  fuelAmount,
-  totalDrivingCases
-) => {
-  const startTimeObj = new Date(startTime);
-  const endTimeObj = new Date(endTime);
-  const workingHours = (endTimeObj - startTimeObj) / (1000 * 60 * 60); // 시간 단위로 계산
-
-  // 요일 계산
-  const dayOfWeek = startTimeObj.toLocaleString("en-US", { weekday: "long" });
-
-  // 주행 거리 계산
-  const drivingLog = await prisma.driving_logs.findUnique({
-    where: { id: drivingLogId },
-    include: { users: true },
-  });
-
-  if (!drivingLog) {
-    throw new Error("Driving log not found");
-  }
-
-  const userVehicle = await prisma.user_vehicles.findFirst({
-    where: { userId: drivingLog.userId },
-  });
-
-  if (!userVehicle) {
-    throw new Error("User vehicle not found");
-  }
-
-  const drivingDistance = cumulativeKm - userVehicle.mileage;
-
-  // 연비 계산
-  const fuelEfficiency = (drivingDistance / fuelAmount).toFixed(2);
-
-  // 영업률 계산 (다른 로직 추가 예정)
-  const businessRate = ((businessDistance / drivingDistance) * 100).toFixed(2);
-
-  // 누적 KM 업데이트
-  await prisma.user_vehicles.update({
-    where: { id: userVehicle.id },
-    data: { mileage: cumulativeKm },
-  });
-
-  await prisma.my_car.updateMany({
-    where: { userId: drivingLog.userId },
-    data: { mileage: cumulativeKm },
-  });
-
-  const newRecord = await prisma.driving_records.create({
-    data: {
-      drivingLogId,
-      startTime: startTimeObj,
-      endTime: endTimeObj,
-      workingHours,
-      dayOfWeek,
-      cumulativeKm,
-      drivingDistance,
-      businessDistance,
-      businessRate,
-      fuelAmount,
-      fuelEfficiency,
-      totalDrivingCases,
-    },
-  });
-
-  console.log("New driving record created:", newRecord);
-
-  return newRecord;
-};
-
-const updateUserMileages = async (
+const createDrivingRecord = async ({
   userId,
-  drivingDistance,
-  businessDistance
-) => {
-  const totalDistance = drivingDistance + businessDistance;
-
-  // my_car 테이블의 mileage 업데이트
-  await prisma.my_car.updateMany({
-    where: { userId },
-    data: {
-      mileage: {
-        set: prisma.raw(`IFNULL(mileage, 0) + ${totalDistance}`),
-      },
-    },
-  });
-
-  // user_vehicles 테이블의 mileage 업데이트
-  await prisma.user_vehicles.updateMany({
-    where: { userId },
-    data: {
-      mileage: {
-        set: prisma.raw(`IFNULL(mileage, 0) + ${totalDistance}`),
-      },
-    },
-  });
-
-  // maintenance_records 테이블에서 가장 최근의 mileageAtMaintenance 업데이트
-  const latestMaintenanceRecord = await prisma.maintenance_records.findFirst({
-    where: { userId },
-    orderBy: { id: "desc" },
-  });
-
-  if (latestMaintenanceRecord) {
-    await prisma.maintenance_records.update({
-      where: { id: latestMaintenanceRecord.id },
+  date,
+  start_time,
+  end_time,
+  cumulative_km,
+  business_distance,
+  fuel_amount,
+  memo,
+}) => {
+  try {
+    // driving_log 생성
+    const drivingLog = await prisma.driving_logs.create({
       data: {
-        mileageAtMaintenance: {
-          set: prisma.raw(`IFNULL(mileageAtMaintenance, 0) + ${totalDistance}`),
+        userId,
+        date,
+        memo,
+      },
+    });
+
+    console.log("Driving log created:", drivingLog);
+
+    // working_hours 계산
+    const workingHours = (end_time - start_time) / (1000 * 60 * 60); // 시간 단위로 계산
+
+    // 요일 계산
+    const dayOfWeek = start_time.toLocaleString("en-US", { weekday: "long" });
+
+    // 연비 계산
+    const fuelEfficiency = cumulative_km / fuel_amount;
+
+    // 영업률 계산
+    const businessRate = (business_distance / cumulative_km) * 100;
+
+    // driving_record 생성
+    const drivingRecord = await prisma.driving_records.create({
+      data: {
+        driving_log_id: drivingLog.id,
+        start_time,
+        end_time,
+        working_hours: new Date(workingHours * 3600 * 1000), // 밀리초 단위로 변환
+        day_of_week: dayOfWeek,
+        cumulative_km: Number(cumulative_km),
+        driving_distance: Number(cumulative_km),
+        business_distance: Number(business_distance),
+        business_rate: Number(businessRate),
+        fuel_amount: Number(fuel_amount),
+        fuel_efficiency: Number(fuelEfficiency),
+        total_driving_cases: 1, // 예시 데이터
+      },
+    });
+
+    console.log("Driving record created:", drivingRecord);
+
+    // income_record 생성
+    const incomeRecord = await prisma.income_records.create({
+      data: {
+        driving_log_id: drivingLog.id,
+        userId,
+        // 나머지 필드는 기본값으로 생성
+      },
+    });
+
+    console.log("Income record created:", incomeRecord);
+
+    // expense_record 생성
+    const expenseRecord = await prisma.expense_records.create({
+      data: {
+        driving_log_id: drivingLog.id,
+        userId,
+        // 나머지 필드는 기본값으로 생성
+      },
+    });
+
+    console.log("Expense record created:", expenseRecord);
+
+    // user_vehicles 업데이트
+    const updatedVehicle = await prisma.user_vehicles.updateMany({
+      where: { userId: userId },
+      data: {
+        mileage: {
+          increment: Number(cumulative_km),
         },
       },
     });
+
+    console.log("User vehicles updated:", updatedVehicle);
+
+    // my_car 업데이트
+    const updatedCar = await prisma.my_car.updateMany({
+      where: { userId: userId },
+      data: {
+        mileage: {
+          increment: Number(cumulative_km),
+        },
+      },
+    });
+
+    console.log("My car updated:", updatedCar);
+
+    // maintenance_records 업데이트
+    const updatedMaintenanceRecords =
+      await prisma.maintenance_records.updateMany({
+        where: { userId: userId },
+        data: {
+          mileageAtMaintenance: {
+            increment: Number(cumulative_km),
+          },
+        },
+      });
+
+    console.log("Maintenance records updated:", updatedMaintenanceRecords);
+
+    // driving_log_id 반환
+    return { driving_log_id: drivingLog.id };
+  } catch (error) {
+    console.error("Error adding driving record in service:", error);
+    throw error;
   }
-
-  return {
-    message: "Mileage updated successfully",
-  };
 };
-
-const updateDrivingRecord = async (id, data) => {
-  return await prisma.driving_records.update({
-    where: { id },
-    data,
-  });
-};
-const deleteDrivingRecord = async (id) => {
-  return await prisma.driving_records.delete({
-    where: { id },
-  });
-};
-
 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입
+const getFranchiseFees = async (userId) => {
+  try {
+    const fees = await prisma.franchise_fees.findMany({
+      where: { userId },
+      select: {
+        franchise_name: true,
+        fee: true,
+      },
+    });
+    return fees;
+  } catch (error) {
+    throw new Error("프랜차이즈 수수료 가져오기 중 오류가 발생했습니다.");
+  }
+};
+
+const findIncomeRecordById = async (id) => {
+  try {
+    const incomeRecord = await prisma.income_records.findUnique({
+      where: { id: Number(id) },
+      select: { userId: true },
+    });
+    return incomeRecord;
+  } catch (error) {
+    throw new Error("수입 기록 조회 중 오류가 발생했습니다.");
+  }
+};
 
 const updateIncomeRecord = async (id, data) => {
-  const {
-    drivingLogId,
-    cardIncome,
-    cashIncome,
-    kakaoIncome,
-    uberIncome,
-    ondaIncome,
-    tadaIncome,
-    otherIncome,
-    incomeSpare1,
-    incomeSpare2,
-    incomeSpare3,
-    incomeSpare4,
-  } = data;
-
-  const drivingRecord = await prisma.driving_records.findUnique({
-    where: { drivingLogId },
-  });
-
-  if (!drivingRecord) {
-    throw new Error("Driving record not found");
+  try {
+    const updatedRecord = await prisma.income_records.update({
+      where: { id },
+      data,
+    });
+    return updatedRecord;
+  } catch (error) {
+    throw new Error("수입 기록 수정 중 오류가 발생했습니다.");
   }
-
-  const drivingDistance = drivingRecord.drivingDistance;
-  const workingHours = drivingRecord.workingHours;
-
-  const totalIncome =
-    (cardIncome || 0) +
-    (cashIncome || 0) +
-    (kakaoIncome || 0) +
-    (uberIncome || 0) +
-    (ondaIncome || 0) +
-    (tadaIncome || 0) +
-    (otherIncome || 0) +
-    (incomeSpare1 || 0) +
-    (incomeSpare2 || 0) +
-    (incomeSpare3 || 0) +
-    (incomeSpare4 || 0);
-
-  const incomePerKm = totalIncome / drivingDistance;
-  const incomePerHour = totalIncome / workingHours;
-
-  return await prisma.income_records.update({
-    where: { id },
-    data: {
-      cardIncome,
-      cashIncome,
-      kakaoIncome,
-      uberIncome,
-      ondaIncome,
-      tadaIncome,
-      otherIncome,
-      incomeSpare1,
-      incomeSpare2,
-      incomeSpare3,
-      incomeSpare4,
-      totalIncome,
-      incomePerKm,
-      incomePerHour,
-    },
-  });
 };
-const deleteIncomeRecord = async (id) => {
-  return await prisma.incomeRecord.delete({
-    where: { id },
-  });
-};
-// 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출 // 운행일지 - 지출
-const updateExpenseRecord = async (id, data) => {
-  const {
-    drivingLogId,
-    fuelCost,
-    tollCost,
-    mealCost,
-    fineCost,
-    otherExpense,
-    expenseSpare1,
-    expenseSpare2,
-    expenseSpare3,
-    expenseSpare4,
-  } = data;
-
-  // 가맹점 수수료 계산
-  const franchiseFees = await prisma.franchise_fees.findMany({
-    where: { userId: drivingLogId },
-  });
-
-  const totalFranchiseFee = franchiseFees.reduce(
-    (acc, fee) => acc + fee.fee,
-    0
-  );
-
-  const totalExpense =
-    totalFranchiseFee +
-    (fuelCost || 0) +
-    (tollCost || 0) +
-    (mealCost || 0) +
-    (fineCost || 0) +
-    (otherExpense || 0) +
-    (expenseSpare1 || 0) +
-    (expenseSpare2 || 0) +
-    (expenseSpare3 || 0) +
-    (expenseSpare4 || 0);
-
-  const incomeRecord = await prisma.income_records.findFirst({
-    where: { drivingLogId },
-  });
-
-  if (!incomeRecord) {
-    throw new Error("Income record not found");
-  }
-
-  const netIncome = (incomeRecord.total_income || 0) - totalExpense;
-
-  return await prisma.expense_records.update({
-    where: { id },
-    data: {
-      franchiseFee: totalFranchiseFee,
-      fuelCost,
-      tollCost,
-      mealCost,
-      fineCost,
-      otherExpense,
-      expenseSpare1,
-      expenseSpare2,
-      expenseSpare3,
-      expenseSpare4,
-      totalExpense,
-      netIncome,
-    },
-  });
-};
-const deleteExpenseRecord = async (id) => {
-  return await prisma.expense_records.delete({
-    where: { id },
-  });
-};
-
 // 랭킹
 // 랭킹
 // 랭킹
@@ -521,17 +393,13 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
 };
 
 module.exports = {
-  createDrivingLog,
   createDrivingRecord,
-  updateUserMileages,
-  updateDrivingRecord,
-  deleteDrivingRecord,
   // -----------------------
+  getFranchiseFees,
+  findIncomeRecordById,
   updateIncomeRecord,
-  deleteIncomeRecord,
   // ----------------------
-  updateExpenseRecord,
-  deleteExpenseRecord,
+
   // ----------------------
   getTopUsersByDrivingTime,
   getTopUsersByNetIncome,

@@ -5,25 +5,27 @@ import { postDrive } from "../../components/ApiPost";
 
 const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
   const [driveData, setDriveData] = useState({
-    userId: 1, // userId 추가
-    date: new Date().toISOString().split("T")[0], // 현재 날짜 추가
+    date: "",
     memo: "",
-    startTime: "",
-    endTime: "",
-    cumulativeKm: 0,
-    businessDistance: 0,
-    fuelAmount: 0,
-    totalDrivingCases: 0,
+    start_time: "",
+    end_time: "",
+    cumulative_km: 0,
+    business_distance: 0,
+    fuel_amount: 0,
+    total_driving_cases: 0,
   });
 
   const handleNext = async () => {
-    console.log(driveData);
-    try {
-      const response = await postDrive(driveData);
-      localStorage.setItems("drivingLogId", response.data.drivingLogId);
-      toggleModal();
-    } catch (error) {
-      console.error("Error fetching data: ", error);
+    if (validateForm()) {
+      try {
+        const response = await postDrive(driveData);
+        console.log("Response data:", response); // 응답 데이터 확인
+        localStorage.setItem("drivingLogId", response.driving_log_id);
+        closeModal(false); // 확인 메시지 없이 모달 닫기
+        toggleModal(); // 다음 모달 열기
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
     }
   };
 
@@ -32,6 +34,26 @@ const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
       ...prevState,
       [field]: value,
     }));
+  };
+
+  const validateForm = () => {
+    const requiredFields = {
+      date: "운행날짜",
+      start_time: "시작시간",
+      end_time: "종료시간",
+      cumulative_km: "누적거리",
+      business_distance: "영업거리",
+      fuel_amount: "주유량",
+      total_driving_cases: "총 운행 수",
+    };
+
+    for (let field in requiredFields) {
+      if (!driveData[field]) {
+        alert(`항목을 입력해주세요: ${requiredFields[field]}`);
+        return false;
+      }
+    }
+    return true;
   };
 
   return (
@@ -44,50 +66,57 @@ const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
       content={
         <div className="drive">
           <DynamicInput
-            labelName={"시작시간"}
-            inputType={"date"}
-            value={driveData.startTime}
-            fieldName="startTime"
+            labelName="운행날짜"
+            inputType="date"
+            value={driveData.date}
+            fieldName="date"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"종료시간"}
-            inputType={"date"}
-            value={driveData.endTime}
-            fieldName="endTime"
+            labelName="시작시간"
+            inputType="time"
+            value={driveData.start_time}
+            fieldName="start_time"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"누적거리(km)"}
-            inputType={"number"}
-            value={driveData.cumulativeKm}
-            fieldName="cumulativeKm"
+            labelName="종료시간"
+            inputType="time"
+            value={driveData.end_time}
+            fieldName="end_time"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"영업거리(km)"}
-            inputType={"number"}
-            value={driveData.businessDistance}
-            fieldName="businessDistance"
+            labelName="누적거리(km)"
+            inputType="number"
+            value={driveData.cumulative_km}
+            fieldName="cumulative_km"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"주유량(L)"}
-            inputType={"number"}
-            value={driveData.fuelAmount}
-            fieldName="fuelAmount"
+            labelName="영업거리(km)"
+            inputType="number"
+            value={driveData.business_distance}
+            fieldName="business_distance"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"총 운행 수(건)"}
-            inputType={"number"}
-            value={driveData.totalDrivingCases}
-            fieldName="totalDrivingCases"
+            labelName="주유량(L)"
+            inputType="number"
+            value={driveData.fuel_amount}
+            fieldName="fuel_amount"
             onChange={handleInputChange}
           />
           <DynamicInput
-            labelName={"메모"}
-            inputType={"text"}
+            labelName="총 운행 수(건)"
+            inputType="number"
+            value={driveData.total_driving_cases}
+            fieldName="total_driving_cases"
+            onChange={handleInputChange}
+          />
+          <DynamicInput
+            labelName="메모"
+            inputType="text"
             value={driveData.memo}
             fieldName="memo"
             onChange={handleInputChange}
