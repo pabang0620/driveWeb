@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import DriveWrite from "./DriveWrite";
 import DriveIncome from "./DriveIncome";
 import DriveExpense from "./DriveExpense";
+import DriveDetails from "./DriveDetails"; // 추가
 import { getDrive } from "../../components/ApiGet";
 
 const DriveLog = () => {
@@ -14,6 +15,7 @@ const DriveLog = () => {
   const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
 
   const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
+  const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
 
   // 모달 열기 함수
   const openModal = (modalType) => {
@@ -26,9 +28,11 @@ const DriveLog = () => {
       const response = window.confirm("작성을 취소하시겠습니까?");
       if (response) {
         setCurrentModal(null);
+        setSelectedLogId(null);
       }
     } else {
       setCurrentModal(null);
+      setSelectedLogId(null);
     }
   };
 
@@ -104,6 +108,12 @@ const DriveLog = () => {
     }
     return pageNumbers;
   };
+
+  const handleRowClick = (drivingLogId) => {
+    setSelectedLogId(drivingLogId);
+    openModal("driveDetails");
+  };
+
   return (
     <div className="container driving">
       <h2>
@@ -141,6 +151,15 @@ const DriveLog = () => {
         />
       )}
 
+      {/* DriveDetails 모달 */}
+      {currentModal === "driveDetails" && (
+        <DriveDetails
+          showModal={true}
+          closeModal={closeModal}
+          drivingLogId={selectedLogId}
+        />
+      )}
+
       <table className="drivingTable">
         <thead>
           <tr>
@@ -154,7 +173,10 @@ const DriveLog = () => {
         </thead>
         <tbody>
           {currentItems.map((item, index) => (
-            <tr key={item.driving_log_id}>
+            <tr
+              key={item.driving_log_id}
+              onClick={() => handleRowClick(item.driving_log_id)}
+            >
               <td>{indexOfFirstItem + index + 1}</td>
               <td>{item.date}</td>
               <td>{item.driving_distance} km</td>
@@ -216,122 +238,121 @@ const DriveLog = () => {
         <button onClick={handleSearchClick}>검색</button>
       </div>
 
-      <style jsx>
-        {`
-          .driving {
-            width: 70%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 0;
-            h2 {
-              font-size: 25px;
-              font-weight: 600;
-              margin-bottom: 30px;
-              float: left;
-              span {
-                font-size: 20px;
-                color: #4c4c4c;
-                margin-left: 10px;
-              }
+      <style jsx>{`
+        .driving {
+          width: 70%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 100px 0;
+          h2 {
+            font-size: 25px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            float: left;
+            span {
+              font-size: 20px;
+              color: #4c4c4c;
+              margin-left: 10px;
             }
-            .writeBtn {
-              float: right;
-            }
-            .drivingTable {
+          }
+          .writeBtn {
+            float: right;
+          }
+          .drivingTable {
+            width: 100%;
+            font-size: 15px;
+            border-top: 1px solid #4c4c4c;
+            text-align: center;
+            border-collapse: collapse;
+            min-height: ;
+            tr {
               width: 100%;
-              font-size: 15px;
-              border-top: 1px solid #4c4c4c;
-              text-align: center;
-              border-collapse: collapse;
-              min-height: ;
-              tr {
-                width: 100%;
-                line-height: 40px;
-                th {
-                  font-weight: normal;
-                }
-                td {
-                  border-top: 1px solid #d9d9d9;
-                }
+              line-height: 40px;
+              th {
+                font-weight: normal;
               }
-            }
-            .pagination {
-              width: 100%;
-              margin-top: 20px;
-              display: flex;
-              justify-content: center;
-              button {
-                width: 40px;
-                height: 40px;
-                margin: 0 5px;
-                background-color: white;
-                border: 1px solid rgba(0, 0, 0, 0.1);
+              td {
+                border-top: 1px solid #d9d9d9;
                 cursor: pointer;
-                color: #222;
-                &.activePage,
-                &:hover {
-                  color: white;
-                  background-color: #05aced;
-                }
               }
             }
-            .search {
-              width: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-              margin-top: 30px;
-              input,
-              select {
-                border-radius: 5px;
-                border: 1px solid #c1c1c1;
-                padding: 10px;
-              }
-              input[type="text"] {
-                width: 40%;
-              }
-            }
+          }
+          .pagination {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
             button {
-              background-color: #05aced;
-              color: white;
-              border-radius: 5px;
+              width: 40px;
+              height: 40px;
+              margin: 0 5px;
+              background-color: white;
+              border: 1px solid rgba(0, 0, 0, 0.1);
               cursor: pointer;
+              color: #222;
+              &.activePage,
+              &:hover {
+                color: white;
+                background-color: #05aced;
+              }
+            }
+          }
+          .search {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            input,
+            select {
+              border-radius: 5px;
+              border: 1px solid #c1c1c1;
               padding: 10px;
             }
-          }
-           {
-            /*  */
-          }
-          .drive {
-            .dynamicInput {
-              width: 100%;
-              border-bottom: 1px solid #d9d9d9;
-              label {
-                display: inline-block;
-                width: 25%;
-                color: #c1c1c1;
-                padding: 3% 1%;
-              }
-              input {
-                border: none;
-                background: none;
-                color: #c1c1c1;
-                &:focus {
-                  color: #222;
-                }
-              }
-            }
-            button {
-              margin: 30px 0;
-              float: right;
+            input[type="text"] {
+              width: 40%;
             }
           }
-           {
-            /*  */
+          button {
+            background-color: #05aced;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
           }
-        `}
-      </style>
+        }
+         {
+          /*  */
+        }
+        .drive {
+          .dynamicInput {
+            width: 100%;
+            border-bottom: 1px solid #d9d9d9;
+            label {
+              display: inline-block;
+              width: 25%;
+              color: #c1c1c1;
+              padding: 3% 1%;
+            }
+            input {
+              border: none;
+              background: none;
+              color: #c1c1c1;
+              &:focus {
+                color: #222;
+              }
+            }
+          }
+          button {
+            margin: 30px 0;
+            float: right;
+          }
+        }
+         {
+          /*  */
+        }
+      `}</style>
     </div>
   );
 };

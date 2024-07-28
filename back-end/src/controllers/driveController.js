@@ -9,6 +9,9 @@ const {
   updateExpenseRecordByDrivingLogId,
   calculateProfitLoss,
   getDrivingLogs,
+  getDriveDetailsById,
+  getDrivingLogDetails,
+  filterZeroValues,
 } = require("../models/driveModel");
 
 // 운행 일지 - 운행
@@ -216,6 +219,44 @@ const getDrivingLogsForUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const getDriveDetails = async (req, res) => {
+  const { driving_log_id } = req.params;
+
+  try {
+    const drivingLog = await getDrivingLogDetails(driving_log_id);
+
+    if (!drivingLog) {
+      return res.status(404).json({ error: "Driving log not found" });
+    }
+
+    const incomeRecord = drivingLog.income_records[0];
+    const expenseRecord = drivingLog.expense_records[0];
+
+    const result = {
+      id: drivingLog.id,
+      memo: drivingLog.memo,
+      date: drivingLog.date,
+      driving_records: drivingLog.driving_records.map((record) => ({
+        start_time: record.start_time,
+        end_time: record.end_time,
+        working_hours: record.working_hours,
+        driving_distance: record.driving_distance,
+        fuel_amount: record.fuel_amount,
+        total_driving_cases: record.total_driving_cases,
+        fuel_efficiency: record.fuel_efficiency,
+        business_rate: record.business_rate,
+        day_of_week: record.day_of_week,
+      })),
+      income_records: incomeRecord ? filterZeroValues(incomeRecord) : {},
+      expense_records: expenseRecord ? filterZeroValues(expenseRecord) : {},
+    };
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching drive details:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 module.exports = {
   addDrivingRecord,
   editDrivingRecord,
@@ -225,4 +266,5 @@ module.exports = {
   editExpenseRecord,
   // ---------------- get 시작
   getDrivingLogsForUser,
+  getDriveDetails,
 };

@@ -464,7 +464,38 @@ const getDrivingLogs = async (userId) => {
     throw error;
   }
 };
+const getDrivingLogDetails = async (driving_log_id) => {
+  try {
+    const drivingLog = await prisma.driving_logs.findUnique({
+      where: { id: Number(driving_log_id) },
+      include: {
+        driving_records: true,
+        income_records: true,
+        expense_records: true,
+      },
+    });
 
+    return drivingLog;
+  } catch (error) {
+    console.error("Error fetching driving log details:", error);
+    throw new Error("Error fetching driving log details");
+  }
+};
+
+const filterZeroValues = (obj) => {
+  const filtered = {};
+  for (const key in obj) {
+    if (
+      obj[key] !== 0 &&
+      obj[key] !== "0" &&
+      obj[key] !== null &&
+      obj[key] !== "null"
+    ) {
+      filtered[key] = obj[key];
+    }
+  }
+  return filtered;
+};
 // 랭킹
 // 랭킹
 // 랭킹
@@ -708,6 +739,8 @@ module.exports = {
   updateExpenseRecordByDrivingLogId,
   calculateProfitLoss,
   getDrivingLogs,
+  getDrivingLogDetails,
+  filterZeroValues,
   // ----------------------
   getTopUsersByDrivingTime,
   getTopUsersByNetIncome,

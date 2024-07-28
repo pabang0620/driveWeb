@@ -54,6 +54,9 @@ export const getProfileIncome = async () => {
 export const getDrive = async () => {
   return getData("/api/drive/driving-logs");
 };
+export const getDriveDetails = async (driving_log_id) => {
+  return getData(`/api/drive/driving-logs/${driving_log_id}`);
+};
 
 //마이페이지 - 상단 데이터
 export const getMypage = async (startDate, endDate) => {

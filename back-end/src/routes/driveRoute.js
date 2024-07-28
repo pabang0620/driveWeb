@@ -8,6 +8,7 @@ const {
   editExpenseRecord,
   removeExpenseRecord,
   getDrivingLogsForUser,
+  getDriveDetails,
 } = require("../controllers/driveController");
 
 const router = express.Router();
@@ -27,5 +28,7 @@ router.put("/income/:driving_log_id", authMiddleware, editIncomeRecord);
 router.put("/expense/:driving_log_id", authMiddleware, editExpenseRecord);
 
 router.get("/driving-logs", authMiddleware, getDrivingLogsForUser);
+
+router.get("/driving-logs/:driving_log_id", authMiddleware, getDriveDetails);
 
 module.exports = router;
