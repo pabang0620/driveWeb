@@ -84,15 +84,34 @@ const MaintenanceEditModal = ({ isOpen, onClose, recordData }) => {
           ? parseFloat(newRecord.maintenanceCost.replace("원", ""))
           : newRecord.maintenanceCost;
 
+      const updatedData = {};
+      const latestRecord = recordData[0];
+
+      if (newRecord.maintenanceDate !== latestRecord.maintenanceDate) {
+        updatedData.maintenanceDate = newRecord.maintenanceDate;
+      }
+      if (maintenanceDistance !== latestRecord.maintenanceDistance) {
+        updatedData.maintenanceDistance = maintenanceDistance;
+      }
+      if (newRecord.maintenanceMethod !== latestRecord.maintenanceMethod) {
+        updatedData.maintenanceMethod = newRecord.maintenanceMethod;
+      }
+      if (mileageAtMaintenance !== latestRecord.mileageAtMaintenance) {
+        updatedData.mileageAtMaintenance = mileageAtMaintenance;
+      }
+      if (maintenanceCost !== latestRecord.maintenanceCost) {
+        updatedData.maintenanceCost = maintenanceCost;
+      }
+      if (Object.keys(updatedData).length === 0) {
+        onClose();
+        return;
+      }
+
       await axios.put(
-        `/api/maintenance/records/${recordData[0].id}`,
+        `/api/maintenance/records/${latestRecord.id}`,
         {
-          maintenanceDate: newRecord.maintenanceDate,
-          maintenanceDistance,
-          maintenanceMethod: newRecord.maintenanceMethod,
-          mileageAtMaintenance,
-          maintenanceCost,
-          maintenanceItemId: recordData[0].maintenanceItemId,
+          ...updatedData,
+          maintenanceItemId: latestRecord.maintenanceItemId,
         },
         {
           headers: {

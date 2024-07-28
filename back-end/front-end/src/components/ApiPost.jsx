@@ -62,11 +62,11 @@ export const postDrive = async (data) => {
 };
 // 운행일지-수입수정
 export const postDriveIncome = async (data) => {
-  return putData(`/api/drive/income/${data.drivingLogId}`, data);
+  return putData(`/api/drive/income/${data.driving_log_id}`, data);
 };
 // 운행일지-지출수정
 export const postDriveExpense = async (data) => {
-  return putData(`/api/drive/expense/${data.drivingLogId}`, data);
+  return putData(`/api/drive/expense/${data.driving_log_id}`, data);
 };
 // ------------------------랭킹-----------------------------
 //랭킹-운행시간

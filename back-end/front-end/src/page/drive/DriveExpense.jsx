@@ -5,16 +5,16 @@ import { postDriveExpense } from "../../components/ApiPost";
 
 const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
   const [driveExpenseData, setDriveExpenseData] = useState({
-    drivingLogId: parseInt(localStorage.getItem("drivingLogId"), 10) || 0,
-    fuelCost: 0,
-    tollCost: 0,
-    mealCost: 0,
-    fineCost: 0,
-    otherExpense: 0,
-    expenseSpare1: 0,
-    expenseSpare2: 0,
-    expenseSpare3: 0,
-    expenseSpare4: 0,
+    driving_log_id: parseInt(localStorage.getItem("drivingLogId"), 10) || 0,
+    fuel_expense: 0,
+    toll_fee: 0,
+    meal_expense: 0,
+    fine_expense: 0,
+    other_expense: 0,
+    expense_spare_1: 0,
+    expense_spare_2: 0,
+    expense_spare_3: 0,
+    expense_spare_4: 0,
   });
 
   const handleSave = async () => {
@@ -25,7 +25,7 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
     } catch (error) {
       console.error("운행일지-지출 보내기 실패:", error.message);
     }
-    toggleModal(); // 모달 닫기
+    window.location.reload();
   };
 
   const handleInputChange = (field, value) => {
@@ -47,64 +47,64 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
           <DynamicInput
             labelName={"주유비"}
             inputType={"number"}
-            value={driveExpenseData.fuelCost}
-            fieldName="fuelCost"
+            value={driveExpenseData.fuel_expense}
+            fieldName="fuel_expense"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"통행료"}
             inputType={"number"}
-            value={driveExpenseData.tollCost}
-            fieldName="tollCost"
+            value={driveExpenseData.toll_fee}
+            fieldName="toll_fee"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"식대"}
             inputType={"number"}
-            value={driveExpenseData.mealCost}
-            fieldName="mealCost"
+            value={driveExpenseData.meal_expense}
+            fieldName="meal_expense"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"과태료"}
             inputType={"number"}
-            value={driveExpenseData.fineCost}
-            fieldName="fineCost"
+            value={driveExpenseData.fine_expense}
+            fieldName="fine_expense"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"기타지출"}
             inputType={"number"}
-            value={driveExpenseData.otherExpense}
-            fieldName="otherExpense"
+            value={driveExpenseData.other_expense}
+            fieldName="other_expense"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"지출예비1"}
             inputType={"number"}
-            value={driveExpenseData.expenseSpare1}
-            fieldName="expenseSpare1"
+            value={driveExpenseData.expense_spare_1}
+            fieldName="expense_spare_1"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"지출예비2"}
             inputType={"number"}
-            value={driveExpenseData.expenseSpare2}
-            fieldName="expenseSpare2"
+            value={driveExpenseData.expense_spare_2}
+            fieldName="expense_spare_2"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"지출예비3"}
             inputType={"number"}
-            value={driveExpenseData.expenseSpare3}
-            fieldName="expenseSpare3"
+            value={driveExpenseData.expense_spare_3}
+            fieldName="expense_spare_3"
             onChange={handleInputChange}
           />
           <DynamicInput
             labelName={"지출예비4"}
             inputType={"number"}
-            value={driveExpenseData.expenseSpare4}
-            fieldName="expenseSpare4"
+            value={driveExpenseData.expense_spare_4}
+            fieldName="expense_spare_4"
             onChange={handleInputChange}
           />
           <button onClick={handleSave}>저장</button>

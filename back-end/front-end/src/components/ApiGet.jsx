@@ -52,7 +52,7 @@ export const getProfileIncome = async () => {
 
 //운행일지-운행
 export const getDrive = async () => {
-  return getData("/api/drive");
+  return getData("/api/drive/driving-logs");
 };
 
 //마이페이지 - 상단 데이터

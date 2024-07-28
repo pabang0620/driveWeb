@@ -19,12 +19,20 @@ const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
     if (validateForm()) {
       try {
         const response = await postDrive(driveData);
+        if (response.error) {
+          alert("누적 거리를 확인해주세요.");
+          return;
+        }
         console.log("Response data:", response); // 응답 데이터 확인
         localStorage.setItem("drivingLogId", response.driving_log_id);
+        localStorage.setItem("workingHours", response.working_hours);
+        localStorage.setItem("businessDistance", response.business_distance); // business_distance 저장
+
         closeModal(false); // 확인 메시지 없이 모달 닫기
         toggleModal(); // 다음 모달 열기
       } catch (error) {
         console.error("Error fetching data: ", error);
+        alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };

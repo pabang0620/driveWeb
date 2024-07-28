@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import drivingData from "../../components/dummy";
 import DriveWrite from "./DriveWrite";
 import DriveIncome from "./DriveIncome";
 import DriveExpense from "./DriveExpense";
@@ -62,12 +61,23 @@ const DriveLog = () => {
     setCurrentPage(1); // 검색 후 첫 페이지로 이동
   };
 
-  //운행일지-조회 불러오기
+  // 운행일지 데이터를 가져와서 포맷팅하는 함수
+  const formatDriveData = (data) => {
+    return data.map((item) => ({
+      ...item,
+      date: item.date.split("T")[0],
+      working_hours: `${new Date(item.working_hours).getUTCHours()}시간`,
+    }));
+  };
+
+  // 운행일지-조회 불러오기
   useEffect(() => {
     const getDriveData = async () => {
       try {
         const data = await getDrive();
-        setDriveLog(data);
+        const formattedData = formatDriveData(data);
+        setDriveLog(formattedData);
+        setFilteredData(formattedData); // 필터링 데이터 초기화
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -144,13 +154,13 @@ const DriveLog = () => {
         </thead>
         <tbody>
           {currentItems.map((item, index) => (
-            <tr key={item.drivingLogId}>
+            <tr key={item.driving_log_id}>
               <td>{indexOfFirstItem + index + 1}</td>
               <td>{item.date}</td>
-              <td>{item.cumulativeKm} km</td>
-              <td>{item.businessDistance} km</td>
-              <td>{item.fuelAmount} L</td>
-              <td>{item.totalDrivingCases} 회</td>
+              <td>{item.driving_distance} km</td>
+              <td>{item.total_income} 원</td>
+              <td>{item.total_expense} 원</td>
+              <td>{item.working_hours}</td>
             </tr>
           ))}
         </tbody>
@@ -182,21 +192,21 @@ const DriveLog = () => {
       <div className="search">
         <select value={searchField} onChange={handleFieldChange}>
           <option value="date">날짜</option>
-          <option value="cumulativeKm">주행거리</option>
-          <option value="businessDistance">운행수익합계</option>
-          <option value="fuelAmount">운행지출합계</option>
-          <option value="totalDrivingCases">근무시간</option>
+          <option value="driving_distance">주행거리</option>
+          <option value="total_income">운행수익합계</option>
+          <option value="total_expense">운행지출합계</option>
+          <option value="working_hours">근무시간</option>
         </select>
         <input
           type="text"
           placeholder={`${
             searchField === "date"
               ? "날짜로 검색"
-              : searchField === "cumulativeKm"
+              : searchField === "driving_distance"
               ? "주행거리로 검색"
-              : searchField === "businessDistance"
+              : searchField === "total_income"
               ? "운행수익합계로 검색"
-              : searchField === "fuelAmount"
+              : searchField === "total_expense"
               ? "운행지출합계로 검색"
               : "근무시간으로 검색"
           }`}
@@ -233,6 +243,7 @@ const DriveLog = () => {
               border-top: 1px solid #4c4c4c;
               text-align: center;
               border-collapse: collapse;
+              min-height: ;
               tr {
                 width: 100%;
                 line-height: 40px;

@@ -235,7 +235,7 @@ const addFranchiseFee = async (req, res) => {
 };
 // 수수료 get
 const getFranchiseFees = async (req, res) => {
-  const { id: userId } = req;
+  const { userId } = req;
 
   try {
     const franchiseFees = await getFranchiseFeesByUserId(userId);

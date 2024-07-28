@@ -13,11 +13,14 @@ const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
     onda_income: 0,
     tada_income: 0,
     other_income: 0,
+    iam_income: 0,
+    etc_income: 0,
     income_spare_1: 0,
     income_spare_2: 0,
     income_spare_3: 0,
     income_spare_4: 0,
-    working_hours: 0,
+    working_hours: localStorage.getItem("workingHours") || "",
+    business_distance: localStorage.getItem("businessDistance") || "",
   });
 
   const handleNext = async () => {
@@ -89,6 +92,20 @@ const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
             onChange={handleInputChange}
           />
           <DynamicInput
+            labelName={"아이엠"}
+            inputType={"number"}
+            value={driveIncomeData.iam_income}
+            fieldName="iam_income"
+            onChange={handleInputChange}
+          />
+          <DynamicInput
+            labelName={"기타가맹"}
+            inputType={"number"}
+            value={driveIncomeData.etc_income}
+            fieldName="etc_income"
+            onChange={handleInputChange}
+          />
+          <DynamicInput
             labelName={"잡수입"}
             inputType={"number"}
             value={driveIncomeData.other_income}
@@ -123,6 +140,7 @@ const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
             fieldName="income_spare_4"
             onChange={handleInputChange}
           />
+
           <button onClick={handleNext}>다음</button>
         </div>
       }
