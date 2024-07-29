@@ -36,7 +36,8 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
       const startDate = getDate();
       const endDate = getDate();
       const response = await getMypage(startDate, endDate); // getMypage 호출로 응답 받기
-      setData(response.data); // 응답에서 데이터 추출 및 상태 업데이트
+      console.log("들어오는 데이터 확인", response);
+      setData(response); // 응답에서 데이터 추출 및 상태 업데이트
       setLoadingState(false);
     } catch (error) {
       setErrorState(error);

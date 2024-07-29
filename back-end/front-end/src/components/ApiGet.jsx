@@ -72,5 +72,5 @@ export const getMypageExpenseSummary = async (startDate, endDate) => {
 };
 //마이페이지 - 믹스데이터
 export const getMypageMix = async (startDate, endDate) => {
-  return getData(`/api/mypage/mix/${startDate}/${endDate}`);
+  return getData(`/api/mypage/mixChart/${startDate}/${endDate}`);
 };

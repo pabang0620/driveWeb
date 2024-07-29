@@ -10,50 +10,7 @@ import {
 const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   // 꺾은선 - 주행거리, 근무시간
   //막대 - 총수입금
-  const [data, setData] = useState([
-    {
-      drivingDistance: 1230, // 주행거리
-      workingHours: 11, // 근무시간
-      totalIncome: 4350, // 총수입금
-      date: "2024-07-22",
-    },
-    {
-      drivingDistance: 1540, // 주행거리
-      workingHours: 24, // 근무시간
-      totalIncome: 4350, // 총수입금
-      date: "2024-07-21",
-    },
-    {
-      drivingDistance: 2000, // 주행거리
-      workingHours: 11, // 근무시간
-      totalIncome: 4350, // 총수입금
-      date: "2024-07-20",
-    },
-    {
-      drivingDistance: 1200, // 주행거리
-      workingHours: 40, // 근무시간
-      totalIncome: 3000, // 총수입금
-      date: "2024-07-19",
-    },
-    {
-      drivingDistance: 3000, // 주행거리
-      workingHours: 20, // 근무시간
-      totalIncome: 4350, // 총수입금
-      date: "2024-07-18",
-    },
-    {
-      drivingDistance: 4000, // 주행거리
-      workingHours: 15, // 근무시간
-      totalIncome: 4350, // 총수입금
-      date: "2024-07-17",
-    },
-    {
-      drivingDistance: 1200, // 주행거리
-      workingHours: 40, // 근무시간
-      totalIncome: 3000, // 총수입금
-      date: "2024-07-16",
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   // 데이터를 날짜순으로 정렬하고 각 항목을 별도의 배열로 반환하는 함수
   const processData = (data) => {
@@ -163,9 +120,10 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
       const endDate = getDate();
       const response = await getMypageMix(startDate, endDate); // getMypage 호출로 응답 받기
 
+      console.log("믹스차트", response.data);
       // 데이터가 실제로 변경된 경우에만 상태 업데이트
-      if (response.data !== data) {
-        setData(response.data);
+      if (response !== data) {
+        setData(response);
       }
 
       setLoading(false);
@@ -176,7 +134,7 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   };
 
   useEffect(() => {
-    //fetchMyPageData();
+    fetchMyPageData();
   }, [dateRange]); // dateRange가 변경될 때마다 호출
 
   return (

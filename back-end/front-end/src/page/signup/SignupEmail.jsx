@@ -11,9 +11,23 @@ function SignupEmail() {
 
   const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
-  // 이메일 유효성 검사 함수
-  const isValidEmail = (username) => {
-    return /\S+@\S+\.\S+/.test(username);
+  // 아이디 유효성 검사 함수
+  const isValidId = (username) => {
+    // 영문자와 숫자가 모두 포함되어 있는지 검사
+    const hasLetter = /[a-zA-Z]/.test(username);
+    const hasDigit = /\d/.test(username);
+
+    // 영문자와 숫자가 모두 포함되어 있는지 확인
+    if (!hasLetter || !hasDigit) {
+      return false;
+    }
+
+    // 3자 이상인지 검사
+    if (username.length < 3) {
+      return false;
+    }
+
+    return true;
   };
 
   // 전체 동의 체크
@@ -35,7 +49,7 @@ function SignupEmail() {
 
   // 모든 입력값과 동의 상태 체크 함수
   const canProceed = () => {
-    return isValidEmail(username) && nickname !== "" && agreeAll;
+    return isValidId(username) && nickname !== "" && agreeAll;
   };
 
   // 다음 버튼 클릭 시 처리 함수
@@ -45,8 +59,8 @@ function SignupEmail() {
       navigate("/signup/password", {
         state: { username: username, nickname: nickname },
       });
-    } else if (!isValidEmail(username)) {
-      alert("이메일 형식으로 입력해주세요. ex)abc@abc.com");
+    } else if (!isValidId(username)) {
+      alert("아이디를 영문과 숫자, 최소 3자 입력해주세요.");
     } else if (!agreeAll) {
       alert("약관에 동의해주세요");
     }
@@ -67,17 +81,17 @@ function SignupEmail() {
         <button className="goBack" onClick={() => navigate(-1)}>
           &lt;
         </button>
-        <h3>이메일로 시작하기</h3>
-        <p>로그인 시 아이디로 사용할 이메일을 입력해주세요.</p>
+        <h3>아이디 생성하기</h3>
+        <p>로그인 시 사용할 아이디를 입력해주세요.</p>
         <div className="input-container">
-          <label htmlFor="username">이메일</label>
+          <label htmlFor="username">아이디</label>
           <input
             type="username"
             id="username"
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="이메일을 입력해주세요."
+            placeholder="아이디를 입력하세요 (영문과 숫자, 최소 3자)"
           />
         </div>
         <div className="input-container">
