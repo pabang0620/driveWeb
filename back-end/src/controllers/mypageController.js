@@ -8,6 +8,7 @@ const {
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
   getDrivingRecordsByDateRange,
+  getDrivingRecordsByDate,
 } = require("../models/mypageModel");
 
 const formatDateToYYYYMMDD = (date) => {
@@ -154,10 +155,33 @@ const getIncomeSummary = async (req, res) => {
   }
 };
 
+// 혼합차트
+const getDatesForLastWeek = (endDate) => {
+  const dates = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(endDate);
+    date.setDate(date.getDate() - i);
+    dates.push(date);
+  }
+  return dates;
+};
+
+const getDatesInRange = (startDate, endDate) => {
+  const date = new Date(startDate.getTime());
+  const dates = [];
+
+  while (date <= endDate) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+
+  return dates;
+};
+
 const getDrivingSummary = async (req, res) => {
   try {
     const { userId } = req; // 로그인된 사용자의 ID를 가져옵니다.
-    const { startDate, endDate } = req.params;
+    let { startDate, endDate } = req.params;
 
     if (!startDate || !endDate) {
       return res
@@ -165,21 +189,34 @@ const getDrivingSummary = async (req, res) => {
         .json({ error: "Start date and end date are required" });
     }
 
+    // Convert to Date objects
     const start = new Date(startDate);
     const end = new Date(endDate);
     end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
 
-    const startDateString = formatDateToYYYYMMDD(start);
-    const endDateString = formatDateToYYYYMMDD(end);
+    let datesInRange;
 
-    const drivingSummary = await getDrivingRecordsByDateRange(
-      userId,
-      startDateString,
-      endDateString
+    // Check if startDate and endDate are the same
+    if (startDate === endDate) {
+      datesInRange = getDatesForLastWeek(end);
+    } else {
+      datesInRange = getDatesInRange(start, end);
+    }
+
+    const dateStrings = datesInRange.map((date) => formatDateToYYYYMMDD(date));
+
+    const drivingSummaries = await Promise.all(
+      dateStrings.map((dateString) =>
+        getDrivingRecordsByDate(userId, dateString)
+      )
     );
-    // console.log("Driving Summary:", drivingSummary);
 
-    res.status(200).json(drivingSummary);
+    const result = dateStrings.map((date, index) => ({
+      date: date,
+      ...drivingSummaries[index],
+    }));
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error fetching driving summary:", error);
     res.status(500).json({ error: "Error fetching driving summary" });

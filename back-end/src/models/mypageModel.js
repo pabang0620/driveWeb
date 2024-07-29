@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const getTotalIncome = async (userId, startDate, endDate) => {
-  console.log("getTotalIncome - Params:", { userId, startDate, endDate });
+  // console.log("getTotalIncome - Params:", { userId, startDate, endDate });
   const result = await prisma.income_records.aggregate({
     _sum: {
       total_income: true,
@@ -17,12 +17,12 @@ const getTotalIncome = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getTotalIncome - Result:", result);
+  // console.log("getTotalIncome - Result:", result);
   return result._sum.total_income || 0;
 };
 
 const getTodayIncome = async (userId, date) => {
-  console.log("getTodayIncome - Params:", { userId, date });
+  // console.log("getTodayIncome - Params:", { userId, date });
   const result = await prisma.income_records.aggregate({
     _sum: {
       total_income: true,
@@ -34,12 +34,12 @@ const getTodayIncome = async (userId, date) => {
       },
     },
   });
-  console.log("getTodayIncome - Result:", result);
+  // console.log("getTodayIncome - Result:", result);
   return result._sum.total_income || 0;
 };
 
 const getTotalMileage = async (userId, startDate, endDate) => {
-  console.log("getTotalMileage - Params:", { userId, startDate, endDate });
+  // console.log("getTotalMileage - Params:", { userId, startDate, endDate });
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
@@ -54,12 +54,12 @@ const getTotalMileage = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getTotalMileage - Result:", result);
+  // console.log("getTotalMileage - Result:", result);
   return result._sum.driving_distance || 0;
 };
 
 const getTodayDrivingDistance = async (userId, date) => {
-  console.log("getTodayDrivingDistance - Params:", { userId, date });
+  // console.log("getTodayDrivingDistance - Params:", { userId, date });
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
@@ -71,12 +71,12 @@ const getTodayDrivingDistance = async (userId, date) => {
       },
     },
   });
-  console.log("getTodayDrivingDistance - Result:", result);
+  // console.log("getTodayDrivingDistance - Result:", result);
   return result._sum.driving_distance || 0;
 };
 
 const getTotalExpense = async (userId, startDate, endDate) => {
-  console.log("getTotalExpense - Params:", { userId, startDate, endDate });
+  // console.log("getTotalExpense - Params:", { userId, startDate, endDate });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       total_expense: true,
@@ -91,12 +91,12 @@ const getTotalExpense = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getTotalExpense - Result:", result);
+  // console.log("getTotalExpense - Result:", result);
   return result._sum.total_expense || 0;
 };
 
 const getTodayExpense = async (userId, date) => {
-  console.log("getTodayExpense - Params:", { userId, date });
+  // console.log("getTodayExpense - Params:", { userId, date });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       total_expense: true,
@@ -113,11 +113,11 @@ const getTodayExpense = async (userId, date) => {
 };
 
 const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
-  console.log("getDrivingRecordsByDateRange - Params:", {
-    userId,
-    startDate,
-    endDate,
-  });
+  // console.log("getDrivingRecordsByDateRange - Params:", {
+  //   userId,
+  //   startDate,
+  //   endDate,
+  // });
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
@@ -134,16 +134,16 @@ const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getDrivingRecordsByDateRange - Result:", result);
+  // console.log("getDrivingRecordsByDateRange - Result:", result);
   return result._sum;
 };
 
 const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
-  console.log("getIncomeRecordsByDateRange - Params:", {
-    userId,
-    startDate,
-    endDate,
-  });
+  // console.log("getIncomeRecordsByDateRange - Params:", {
+  //   userId,
+  //   startDate,
+  //   endDate,
+  // });
   const result = await prisma.income_records.aggregate({
     _sum: {
       card_income: true,
@@ -169,16 +169,16 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getIncomeRecordsByDateRange - Result:", result);
+  // console.log("getIncomeRecordsByDateRange - Result:", result);
   return result._sum;
 };
 
 const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
-  console.log("getExpenseRecordsByDateRange - Params:", {
-    userId,
-    startDate,
-    endDate,
-  });
+  // console.log("getExpenseRecordsByDateRange - Params:", {
+  //   userId,
+  //   startDate,
+  //   endDate,
+  // });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       fuel_expense: true,
@@ -209,8 +209,53 @@ const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
       },
     },
   });
-  console.log("getExpenseRecordsByDateRange - Result:", result);
+  // console.log("getExpenseRecordsByDateRange - Result:", result);
   return result._sum;
+};
+
+const getDrivingRecordsByDate = async (userId, dateString) => {
+  const records = await prisma.driving_logs.findMany({
+    where: {
+      userId: userId,
+      date: dateString,
+    },
+    include: {
+      driving_records: true,
+      income_records: true,
+    },
+  });
+
+  const summary = records.reduce(
+    (acc, record) => {
+      record.driving_records.forEach((drivingRecord) => {
+        if (drivingRecord.working_hours) {
+          const hours = drivingRecord.working_hours
+            .getUTCHours()
+            .toString()
+            .padStart(2, "0");
+          const minutes = drivingRecord.working_hours
+            .getUTCMinutes()
+            .toString()
+            .padStart(2, "0");
+          const seconds = drivingRecord.working_hours
+            .getUTCSeconds()
+            .toString()
+            .padStart(2, "0");
+          acc.working_hours = `${hours}:${minutes}:${seconds}`;
+        }
+        acc.driving_distance += drivingRecord.driving_distance || 0;
+      });
+
+      record.income_records.forEach((incomeRecord) => {
+        acc.total_income += Number(incomeRecord.total_income) || 0;
+      });
+
+      return acc;
+    },
+    { working_hours: "00:00:00", driving_distance: 0, total_income: 0 }
+  );
+
+  return summary;
 };
 
 module.exports = {
@@ -223,4 +268,5 @@ module.exports = {
   getDrivingRecordsByDateRange,
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
+  getDrivingRecordsByDate,
 };
