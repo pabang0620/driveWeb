@@ -31,7 +31,6 @@ const addDrivingRecord = async (req, res) => {
       fuel_amount,
       memo,
       total_driving_cases,
-      userId,
     } = req.body;
 
     // 계산을 위해 시간 파싱
