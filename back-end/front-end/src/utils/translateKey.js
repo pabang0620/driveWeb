@@ -1,5 +1,6 @@
 const translateKey = (key) => {
   const translations = {
+    business_distance: "영업 거리",
     card_income: "카드 수입",
     cash_income: "현금 수입",
     kakao_income: "카카오 수입",

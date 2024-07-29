@@ -71,6 +71,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
         fuel_efficiency,
         business_rate,
         day_of_week,
+        business_distance,
       } = details.driving_records[0];
       return (
         <div className="tab-content">
@@ -93,6 +94,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
           </div>
           <div className="data-row">
             <strong>주행 거리:</strong> <span>{driving_distance} km</span>
+          </div>
+          <div className="data-row">
+            <strong>영업 거리:</strong> <span>{business_distance} km</span>
           </div>
           <div className="data-row">
             <strong>주유량:</strong> <span>{fuel_amount} L</span>
