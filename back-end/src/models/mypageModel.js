@@ -118,6 +118,29 @@ const getTodayExpense = async (userId) => {
   });
   return result._sum.total_expense || 0;
 };
+
+const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
+
+  const result = await prisma.driving_records.aggregate({
+    _sum: {
+      driving_distance: true,
+      working_hours: true,
+      total_income: true,
+    },
+    where: {
+      userId,
+      created_at: {
+        gte: start,
+        lt: end,
+      },
+    },
+  });
+
+  return result._sum;
+};
 const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -130,11 +153,18 @@ const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
       meal_expense: true,
       fine_expense: true,
       other_expense: true,
-      expense_spare1: true,
-      expense_spare2: true,
-      expense_spare3: true,
-      expense_spare4: true,
+      expense_spare_1: true,
+      expense_spare_2: true,
+      expense_spare_3: true,
+      expense_spare_4: true,
       total_expense: true,
+      kakao_fee: true,
+      tada_fee: true,
+      onda_fee: true,
+      uber_fee: true,
+      iam_fee: true,
+      card_fee: true,
+      etc_fee: true,
     },
     where: {
       userId,
@@ -162,10 +192,10 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
       onda_income: true,
       tada_income: true,
       other_income: true,
-      income_spare1: true,
-      income_spare2: true,
-      income_spare3: true,
-      income_spare4: true,
+      income_spare_1: true,
+      income_spare_2: true,
+      income_spare_3: true,
+      income_spare_4: true,
       total_income: true,
     },
     where: {
@@ -247,6 +277,7 @@ module.exports = {
   getTodayDrivingDistance,
   getTotalExpense,
   getTodayExpense,
+  getDrivingRecordsByDateRange,
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
   // --------------

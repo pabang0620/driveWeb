@@ -10,6 +10,7 @@ const {
   getWorkingHours,
   getDrivingDistance,
   getTotalIncomeForPeriod,
+  getDrivingRecordsByDateRange,
 } = require("../models/mypageModel");
 
 const getMyPageData = async (req, res) => {
@@ -97,36 +98,32 @@ const getIncomeSummary = async (req, res) => {
   }
 };
 
-const getSummaryData = async (req, res) => {
+const getDrivingSummary = async (req, res) => {
   try {
-    const { userId } = req;
+    const { userId } = req; // 로그인된 사용자의 ID를 가져옵니다.
     const { startDate, endDate } = req.params;
 
-    const drivingDistance = await getDrivingDistance(
-      userId,
-      startDate,
-      endDate
-    );
-    const workingHours = await getWorkingHours(userId, startDate, endDate);
-    const totalIncome = await getTotalIncomeForPeriod(
+    if (!startDate || !endDate) {
+      return res
+        .status(400)
+        .json({ error: "Start date and end date are required" });
+    }
+
+    const drivingSummary = await getDrivingRecordsByDateRange(
       userId,
       startDate,
       endDate
     );
 
-    res.status(200).json({
-      drivingDistance,
-      workingHours,
-      totalIncome,
-    });
+    res.status(200).json(drivingSummary);
   } catch (error) {
-    console.error("Error fetching summary data:", error);
-    res.status(500).json({ error: "Error fetching summary data" });
+    console.error("Error fetching driving summary:", error);
+    res.status(500).json({ error: "Error fetching driving summary" });
   }
 };
 module.exports = {
   getMyPageData,
   getExpenseSummary,
   getIncomeSummary,
-  getSummaryData,
+  getDrivingSummary,
 };

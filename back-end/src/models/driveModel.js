@@ -111,7 +111,7 @@ const createDrivingRecord = async ({
       await prisma.maintenance_records.updateMany({
         where: { userId: userId },
         data: {
-          maintenanceDistance: {
+          mileageAtMaintenance: {
             increment: Number(drivingDistance),
           },
         },
