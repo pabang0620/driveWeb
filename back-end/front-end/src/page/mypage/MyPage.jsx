@@ -11,7 +11,12 @@ const MyPage = () => {
   const getDateOffset = (offset) => {
     const date = new Date();
     date.setDate(date.getDate() + offset);
-    return date.toISOString().split("T")[0];
+
+    // UTC 시간에서 9시간을 더해 한국 시간으로 변경
+    const koreanTimeOffset = date.getTime() + 9 * 60 * 60 * 1000;
+    const koreanDate = new Date(koreanTimeOffset);
+
+    return koreanDate.toISOString().split("T")[0];
   };
 
   const dateOffsets = {
@@ -22,7 +27,9 @@ const MyPage = () => {
 
   const getDate = () => {
     const offset = dateOffsets[dateRange];
-    return getDateOffset(offset);
+    const date = getDateOffset(offset);
+    console.log(`Selected Date (Frontend): ${date}`);
+    return date;
   };
 
   const handleDateChange = (range) => {

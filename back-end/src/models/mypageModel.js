@@ -2,51 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const getTotalIncome = async (userId, startDate, endDate) => {
+  console.log("getTotalIncome - Params:", { userId, startDate, endDate });
   const result = await prisma.income_records.aggregate({
     _sum: {
       total_income: true,
     },
     where: {
       userId,
-      created_at: {
-        gte: startDate,
-        lte: endDate,
-      },
-    },
-  });
-  return result._sum.total_income || 0;
-};
-
-const getTodayIncome = async (userId) => {
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
-  const result = await prisma.income_records.aggregate({
-    _sum: {
-      total_income: true,
-    },
-    where: {
-      userId,
-      created_at: {
-        gte: startOfDay,
-        lt: endOfDay,
-      },
-    },
-  });
-  return result._sum.total_income || 0;
-};
-
-const getTotalMileage = async (userId, startDate, endDate) => {
-  const result = await prisma.driving_records.aggregate({
-    _sum: {
-      driving_distance: true,
-    },
-    where: {
       driving_logs: {
-        userId,
         date: {
           gte: startDate,
           lte: endDate,
@@ -54,76 +17,107 @@ const getTotalMileage = async (userId, startDate, endDate) => {
       },
     },
   });
-  return result._sum.driving_distance || 0;
+  console.log("getTotalIncome - Result:", result);
+  return result._sum.total_income || 0;
 };
 
-const getTodayDrivingDistance = async (userId) => {
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
+const getTodayIncome = async (userId, date) => {
+  console.log("getTodayIncome - Params:", { userId, date });
+  const result = await prisma.income_records.aggregate({
+    _sum: {
+      total_income: true,
+    },
+    where: {
+      userId,
+      driving_logs: {
+        date: date,
+      },
+    },
+  });
+  console.log("getTodayIncome - Result:", result);
+  return result._sum.total_income || 0;
+};
 
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
+const getTotalMileage = async (userId, startDate, endDate) => {
+  console.log("getTotalMileage - Params:", { userId, startDate, endDate });
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
     },
     where: {
       driving_logs: {
-        userId,
+        userId: userId,
         date: {
-          gte: startOfDay,
-          lt: endOfDay,
+          gte: startDate,
+          lte: endDate,
         },
       },
     },
   });
+  console.log("getTotalMileage - Result:", result);
+  return result._sum.driving_distance || 0;
+};
+
+const getTodayDrivingDistance = async (userId, date) => {
+  console.log("getTodayDrivingDistance - Params:", { userId, date });
+  const result = await prisma.driving_records.aggregate({
+    _sum: {
+      driving_distance: true,
+    },
+    where: {
+      driving_logs: {
+        userId: userId,
+        date: date,
+      },
+    },
+  });
+  console.log("getTodayDrivingDistance - Result:", result);
   return result._sum.driving_distance || 0;
 };
 
 const getTotalExpense = async (userId, startDate, endDate) => {
+  console.log("getTotalExpense - Params:", { userId, startDate, endDate });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       total_expense: true,
     },
     where: {
       userId,
-      created_at: {
-        gte: startDate,
-        lte: endDate,
+      driving_logs: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
       },
     },
   });
+  console.log("getTotalExpense - Result:", result);
   return result._sum.total_expense || 0;
 };
 
-const getTodayExpense = async (userId) => {
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
-
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
-
+const getTodayExpense = async (userId, date) => {
+  console.log("getTodayExpense - Params:", { userId, date });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       total_expense: true,
     },
     where: {
       userId,
-      created_at: {
-        gte: startOfDay,
-        lt: endOfDay,
+      driving_logs: {
+        date: date,
       },
     },
   });
+  console.log("getTodayExpense - Result:", result);
   return result._sum.total_expense || 0;
 };
 
 const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
-
+  console.log("getDrivingRecordsByDateRange - Params:", {
+    userId,
+    startDate,
+    endDate,
+  });
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
@@ -131,22 +125,25 @@ const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
       total_income: true, // 총 수입금 필드 추가
     },
     where: {
-      userId: userId, // Prisma 쿼리에서 userId 필드 사용
-      created_at: {
-        gte: start,
-        lt: end,
+      driving_logs: {
+        userId: userId, // Prisma 쿼리에서 userId 필드 사용
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
       },
     },
   });
-
+  console.log("getDrivingRecordsByDateRange - Result:", result);
   return result._sum;
 };
 
 const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
-
+  console.log("getIncomeRecordsByDateRange - Params:", {
+    userId,
+    startDate,
+    endDate,
+  });
   const result = await prisma.income_records.aggregate({
     _sum: {
       card_income: true,
@@ -164,21 +161,24 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
     },
     where: {
       userId,
-      created_at: {
-        gte: start,
-        lt: end,
+      driving_logs: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
       },
     },
   });
-
+  console.log("getIncomeRecordsByDateRange - Result:", result);
   return result._sum;
 };
 
 const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
-
+  console.log("getExpenseRecordsByDateRange - Params:", {
+    userId,
+    startDate,
+    endDate,
+  });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       fuel_expense: true,
@@ -201,77 +201,18 @@ const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
     },
     where: {
       userId,
-      created_at: {
-        gte: start,
-        lt: end,
+      driving_logs: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
       },
     },
   });
-
+  console.log("getExpenseRecordsByDateRange - Result:", result);
   return result._sum;
 };
 
-// 혼합 차트
-const getDrivingDistance = async (userId, startDate, endDate) => {
-  const result = await prisma.driving_records.aggregate({
-    _sum: {
-      driving_distance: true,
-    },
-    where: {
-      driving_logs: {
-        userId,
-        date: {
-          gte: new Date(startDate),
-          lt: new Date(endDate),
-        },
-      },
-    },
-  });
-  return result._sum.driving_distance || 0;
-};
-
-const getWorkingHours = async (userId, startDate, endDate) => {
-  const records = await prisma.driving_records.findMany({
-    where: {
-      driving_logs: {
-        userId,
-        date: {
-          gte: new Date(startDate),
-          lt: new Date(endDate),
-        },
-      },
-    },
-    select: {
-      working_hours: true,
-    },
-  });
-
-  // 시간 합산
-  const totalWorkingHours = records.reduce((acc, record) => {
-    const [hours, minutes, seconds] = record.working_hours
-      .split(":")
-      .map(Number);
-    return acc + (hours + minutes / 60 + seconds / 3600);
-  }, 0);
-
-  return totalWorkingHours;
-};
-
-const getTotalIncomeForPeriod = async (userId, startDate, endDate) => {
-  const result = await prisma.income_records.aggregate({
-    _sum: {
-      total_income: true,
-    },
-    where: {
-      userId,
-      created_at: {
-        gte: new Date(startDate),
-        lt: new Date(endDate),
-      },
-    },
-  });
-  return result._sum.total_income || 0;
-};
 module.exports = {
   getTotalIncome,
   getTodayIncome,
@@ -282,8 +223,4 @@ module.exports = {
   getDrivingRecordsByDateRange,
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
-  // --------------
-  getDrivingDistance,
-  getWorkingHours,
-  getTotalIncomeForPeriod,
 };
