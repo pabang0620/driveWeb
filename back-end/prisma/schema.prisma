@@ -51,9 +51,9 @@ model driving_logs {
 model driving_records {
   id                  Int           @id @default(autoincrement())
   driving_log_id      Int?
-  start_time          DateTime?     @db.DateTime
-  end_time            DateTime?     @db.DateTime
-  working_hours       DateTime?     @db.DateTime
+  start_time          DateTime?     @db.DateTime(0)
+  end_time            DateTime?     @db.DateTime(0)
+  working_hours       DateTime?     @db.DateTime(0)
   day_of_week         String?       @db.VarChar(10)
   cumulative_km       Int?
   driving_distance    Int?
@@ -65,13 +65,12 @@ model driving_records {
   created_at          DateTime?     @default(now()) @db.Timestamp(0)
   updated_at          DateTime?     @default(now()) @db.Timestamp(0)
   totalDrivingTime    Float?        @db.Float
-  total_income        Decimal?      @db.Decimal(10, 2) // 추가된 필드
-  driving_logs        driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "driving_records_ibfk_1")
   userId              Int?
+  total_income        Decimal?      @db.Decimal(10, 2)
+  driving_logs        driving_logs? @relation(fields: [driving_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "driving_records_ibfk_1")
 
   @@index([driving_log_id], map: "driving_log_id")
 }
-
 
 model expense_records {
   id              Int           @id @default(autoincrement())
