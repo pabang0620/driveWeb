@@ -127,47 +127,11 @@ const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
   const result = await prisma.driving_records.aggregate({
     _sum: {
       driving_distance: true,
-      working_hours: true,
-      total_income: true,
+      totalDrivingTime: true,
+      total_income: true, // 총 수입금 필드 추가
     },
     where: {
-      userId,
-      created_at: {
-        gte: start,
-        lt: end,
-      },
-    },
-  });
-
-  return result._sum;
-};
-const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
-
-  const result = await prisma.expense_records.aggregate({
-    _sum: {
-      fuel_expense: true,
-      toll_fee: true,
-      meal_expense: true,
-      fine_expense: true,
-      other_expense: true,
-      expense_spare_1: true,
-      expense_spare_2: true,
-      expense_spare_3: true,
-      expense_spare_4: true,
-      total_expense: true,
-      kakao_fee: true,
-      tada_fee: true,
-      onda_fee: true,
-      uber_fee: true,
-      iam_fee: true,
-      card_fee: true,
-      etc_fee: true,
-    },
-    where: {
-      userId,
+      userId: userId, // Prisma 쿼리에서 userId 필드 사용
       created_at: {
         gte: start,
         lt: end,
@@ -209,6 +173,44 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
 
   return result._sum;
 };
+
+const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
+
+  const result = await prisma.expense_records.aggregate({
+    _sum: {
+      fuel_expense: true,
+      toll_fee: true,
+      meal_expense: true,
+      fine_expense: true,
+      other_expense: true,
+      expense_spare_1: true,
+      expense_spare_2: true,
+      expense_spare_3: true,
+      expense_spare_4: true,
+      total_expense: true,
+      kakao_fee: true,
+      tada_fee: true,
+      onda_fee: true,
+      uber_fee: true,
+      iam_fee: true,
+      card_fee: true,
+      etc_fee: true,
+    },
+    where: {
+      userId,
+      created_at: {
+        gte: start,
+        lt: end,
+      },
+    },
+  });
+
+  return result._sum;
+};
+
 // 혼합 차트
 const getDrivingDistance = async (userId, startDate, endDate) => {
   const result = await prisma.driving_records.aggregate({
