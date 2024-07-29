@@ -15,7 +15,7 @@ function Signup() {
         </h2>
         <h3>운행일지 회원가입</h3>
         <button className="navyBox">
-          <Link to="/signup/email">이메일로 시작하기</Link>
+          <Link to="/signup/email">시작하기</Link>
         </button>
         <p className="smallText">
           <Link to="/login">로그인</Link>

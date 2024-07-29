@@ -56,10 +56,10 @@ const CircularChart = ({
       { name: "기타 소득", data: data.other_income },
       { name: "타다 소득", data: data.tada_income },
       { name: "우버 소득", data: data.uber_income },
-      { name: "예비 소득 항목 1", data: data.income_spare1 },
-      { name: "예비 소득 항목 2", data: data.income_spare2 },
-      { name: "예비 소득 항목 3", data: data.income_spare3 },
-      { name: "예비 소득 항목 4", data: data.income_spare4 },
+      { name: "예비 소득 항목 1", data: data.income_spare_1 },
+      { name: "예비 소득 항목 2", data: data.income_spare_2 },
+      { name: "예비 소득 항목 3", data: data.income_spare_3 },
+      { name: "예비 소득 항목 4", data: data.income_spare_4 },
     ];
 
     const expenseData = [
@@ -68,17 +68,19 @@ const CircularChart = ({
       { name: "식사 지출", data: data.meal_expense },
       { name: "기타 지출", data: data.other_expense },
       { name: "통행료 지출", data: data.toll_expense },
-      { name: "예비 지출 항목 1", data: data.expense_spare1 },
-      { name: "예비 지출 항목 2", data: data.expense_spare2 },
-      { name: "예비 지출 항목 3", data: data.expense_spare3 },
-      { name: "예비 지출 항목 4", data: data.expense_spare4 },
+      { name: "예비 지출 항목 1", data: data.expense_spare_1 },
+      { name: "예비 지출 항목 2", data: data.expense_spare_2 },
+      { name: "예비 지출 항목 3", data: data.expense_spare_3 },
+      { name: "예비 지출 항목 4", data: data.expense_spare_4 },
     ];
 
-    return type === "incomeSummary" ? incomeData : expenseData;
+    const itemsData = type === "incomeSummary" ? incomeData : expenseData;
+
+    // 0인 값을 제외한 항목만 반환
+    return itemsData.filter((item) => item.data > 0);
   };
 
-  const items = useMemo(() => getItems(url), [data]);
-
+  const items = useMemo(() => getItems(url), [data, url]);
   const series = useMemo(() => items.map((item) => item.data), [items]);
   const labels = useMemo(() => items.map((item) => item.name), [items]);
 
@@ -143,9 +145,9 @@ const CircularChart = ({
       } else if (url === "expenseSummary") {
         response = await getMypageExpenseSummary(startDate, endDate);
       }
-
-      if (response.data !== data) {
-        setData(response.data);
+      console.log(response);
+      if (response !== data) {
+        setData(response);
       }
 
       setLoadingState(false);
@@ -161,7 +163,6 @@ const CircularChart = ({
 
   if (loading) return <Spinner />;
   if (error) return <div>Error: {error.message}</div>;
-  if (!data) return <div></div>;
 
   return (
     <div className="circularChart_container">

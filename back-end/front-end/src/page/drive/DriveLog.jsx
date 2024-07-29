@@ -19,6 +19,7 @@ const DriveLog = () => {
 
   // 모달 열기 함수
   const openModal = (modalType) => {
+    console.log(`Opening modal: ${modalType}`); // 디버깅 로그 추가
     setCurrentModal(modalType);
   };
 
