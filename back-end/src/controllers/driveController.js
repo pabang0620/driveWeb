@@ -240,6 +240,7 @@ const getDriveDetails = async (req, res) => {
         start_time: record.start_time,
         end_time: record.end_time,
         working_hours: record.working_hours,
+        business_distance: record.business_distance,
         driving_distance: record.driving_distance,
         fuel_amount: record.fuel_amount,
         total_driving_cases: record.total_driving_cases,
