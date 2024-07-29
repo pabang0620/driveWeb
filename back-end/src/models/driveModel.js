@@ -11,9 +11,11 @@ const createDrivingRecord = async ({
   business_distance,
   fuel_amount,
   memo,
+  total_driving_cases,
+  parsedStartTime,
+  parsedEndTime,
 }) => {
   try {
-    // user_vehicles와 my_car의 기존 누적거리 가져오기
     const vehicle = await prisma.user_vehicles.findUnique({
       where: { userId: userId },
       select: { mileage: true },
@@ -26,15 +28,12 @@ const createDrivingRecord = async ({
 
     const previousMileage = Math.max(vehicle.mileage || 0, car.mileage || 0);
 
-    // 누적 주행거리가 기존 주행거리보다 작은 경우 에러 반환
     if (cumulative_km < previousMileage) {
       throw new Error("누적거리를 확인해주세요.");
     }
 
-    // 입력한 누적거리에서 기존 누적거리를 뺀 값을 driving_distance로 사용
     const drivingDistance = cumulative_km - previousMileage;
 
-    // driving_log 생성
     const drivingLog = await prisma.driving_logs.create({
       data: {
         userId,
@@ -44,10 +43,13 @@ const createDrivingRecord = async ({
     });
 
     // working_hours 계산
-    const workingHours = Math.abs((end_time - start_time) / (1000 * 60 * 60)); // 시간 단위로 계산, 음수인 경우 절대값
+    const workingHoursMilliseconds = Math.abs(parsedEndTime - parsedStartTime);
+    const workingHours = new Date(workingHoursMilliseconds);
 
     // 요일 계산
-    const dayOfWeek = start_time.toLocaleString("en-US", { weekday: "long" });
+    const dayOfWeek = parsedStartTime.toLocaleString("en-US", {
+      weekday: "long",
+    });
 
     // 연비 계산
     const fuelEfficiency = cumulative_km / fuel_amount;
@@ -55,13 +57,12 @@ const createDrivingRecord = async ({
     // 영업률 계산
     const businessRate = (business_distance / drivingDistance) * 100;
 
-    // driving_record 생성
     const drivingRecord = await prisma.driving_records.create({
       data: {
         driving_log_id: drivingLog.id,
         start_time,
         end_time,
-        working_hours: new Date(workingHours * 3600 * 1000), // 밀리초 단위로 변환
+        working_hours: workingHours,
         day_of_week: dayOfWeek,
         cumulative_km: Number(cumulative_km),
         driving_distance: Number(drivingDistance),
@@ -69,29 +70,25 @@ const createDrivingRecord = async ({
         business_rate: Number(businessRate),
         fuel_amount: Number(fuel_amount),
         fuel_efficiency: Number(fuelEfficiency),
-        total_driving_cases: 1, // 예시 데이터
+        total_driving_cases: Number(total_driving_cases),
+        userId: userId,
       },
     });
 
-    // income_record 생성
     const incomeRecord = await prisma.income_records.create({
       data: {
         driving_log_id: drivingLog.id,
         userId,
-        // 나머지 필드는 기본값으로 생성
       },
     });
 
-    // expense_record 생성
     const expenseRecord = await prisma.expense_records.create({
       data: {
         driving_log_id: drivingLog.id,
         userId,
-        // 나머지 필드는 기본값으로 생성
       },
     });
 
-    // user_vehicles 및 my_car의 mileage 업데이트
     const updatedVehicle = await prisma.user_vehicles.updateMany({
       where: { userId: userId },
       data: {
@@ -106,7 +103,6 @@ const createDrivingRecord = async ({
       },
     });
 
-    // maintenance_records 업데이트
     const updatedMaintenanceRecords =
       await prisma.maintenance_records.updateMany({
         where: { userId: userId },

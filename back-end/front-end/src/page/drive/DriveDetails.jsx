@@ -77,12 +77,10 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             <span>{details.date.split("T")[0]}</span>
           </div>
           <div className="data-row">
-            <strong>시작 시간:</strong>{" "}
-            <span>{start_time.split("T")[1].substring(0, 8)}</span>
+            <strong>시작 시간:</strong> <span>{start_time}</span>
           </div>
           <div className="data-row">
-            <strong>종료 시간:</strong>{" "}
-            <span>{end_time.split("T")[1].substring(0, 8)}</span>
+            <strong>종료 시간:</strong> <span>{end_time}</span>
           </div>
           <div className="data-row">
             <strong>근무 시간:</strong>{" "}

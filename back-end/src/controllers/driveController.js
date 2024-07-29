@@ -30,39 +30,33 @@ const addDrivingRecord = async (req, res) => {
       business_distance,
       fuel_amount,
       memo,
+      total_driving_cases,
+      userId,
     } = req.body;
 
-    console.log("Received date:", date);
-    console.log("Received start_time:", start_time);
-    console.log("Received end_time:", end_time);
-
-    // 날짜와 시간을 결합하여 변환 및 유효성 검사
-    const parsedDate = new Date(date);
+    // 계산을 위해 시간 파싱
     const parsedStartTime = new Date(`${date}T${start_time}`);
     const parsedEndTime = new Date(`${date}T${end_time}`);
 
-    console.log("Parsed date:", parsedDate);
-    console.log("Parsed start_time:", parsedStartTime);
-    console.log("Parsed end_time:", parsedEndTime);
-
-    if (
-      isNaN(parsedDate.getTime()) ||
-      isNaN(parsedStartTime.getTime()) ||
-      isNaN(parsedEndTime.getTime())
-    ) {
+    // DateTime 객체가 유효한지 확인
+    if (isNaN(parsedStartTime) || isNaN(parsedEndTime)) {
       return res.status(400).json({ error: "Invalid date or time format" });
     }
 
     const result = await createDrivingRecord({
       userId,
-      date: parsedDate,
-      start_time: parsedStartTime,
-      end_time: parsedEndTime,
+      date,
+      start_time,
+      end_time,
       cumulative_km,
       business_distance,
       fuel_amount,
       memo,
+      total_driving_cases,
+      parsedStartTime,
+      parsedEndTime,
     });
+
     res.status(201).json(result);
   } catch (error) {
     console.error("Error adding driving record:", error);
