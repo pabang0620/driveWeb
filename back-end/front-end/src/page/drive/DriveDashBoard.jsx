@@ -7,48 +7,45 @@ import Calendar from "../../components/Calendar";
 const DriveDashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  //const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
   });
 
-  const handleChange = (dates) => {
-    const [start, end] = dates;
-    setDateRange({ startDate: start, endDate: end });
+  const onDateChange = (update) => {
+    let startDate = update[0];
+    let endDate = update[1] || update[0]; // endDate가 없으면 startDate와 동일하게 설정
+    handleDateChange({ startDate, endDate });
   };
 
-  const formatDate = (date) => {
-    return date ? date.toISOString().split("T")[0] : "";
+  const getDateOffset = (offset) => {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+
+    // UTC 시간에서 9시간을 더해 한국 시간으로 변경
+    const koreanTimeOffset = date.getTime() + 9 * 60 * 60 * 1000;
+    const koreanDate = new Date(koreanTimeOffset);
+
+    return koreanDate.toISOString().split("T")[0];
   };
 
-  const getDateRange = () => {
-    return {
-      start: formatDate(dateRange.startDate),
-      end: formatDate(dateRange.endDate),
-    };
+  const handleDateChange = (range) => {
+    const { startDate, endDate } = range;
+    setDateRange({ startDate, endDate });
   };
 
-  // const getDateOffset = (offset) => {
-  //   const date = new Date();
-  //   date.setDate(date.getDate() + offset);
-  //   return date.toISOString().split("T")[0];
-  // };
+  const getDate = () => {
+    const startDate = getDateOffset(0, dateRange.startDate);
+    const endDate = getDateOffset(0, dateRange.endDate);
+    console.log(`Selected Date Range (Frontend): ${startDate} - ${endDate}`);
+    return { startDate, endDate };
+  };
 
-  // const dateOffsets = {
-  //   dayBeforeYesterday: -2,
-  //   yesterday: -1,
-  //   today: 0,
-  // };
-
-  // const getDate = () => {
-  //   const offset = dateOffsets[dateRange];
-  //   return getDateOffset(offset);
-  // };
-
-  // const handleDateChange = (range) => {
-  //   setDateRange(range);
-  // };
+  useEffect(() => {
+    const dates = getDate();
+    console.log("Date range updated:", dates);
+    // 여기에 API 호출 등을 추가할 수 있습니다.
+  }, [dateRange]);
 
   //if (loading) return <p>Loading...</p>;
   //if (error) return <p>Error loading data: {error.message}</p>;
@@ -60,33 +57,38 @@ const DriveDashBoard = () => {
       </h2>
 
       <div className="dataBox">
-        <Calendar dateRange={dateRange} handleChange={handleChange} />
         <div className="selectedDateRangeData">
           <h3>기간별 세부 데이터</h3>
-          <Dashboard
-            dateRange={getDateRange()}
-            setLoading={setLoading}
-            handleChange={handleChange}
-            setError={setError}
-          />
-          <div className="selectedData"></div>
+          <div>
+            <Calendar
+              dateRange={dateRange}
+              handleDateChange={handleDateChange}
+            />
+            <div className="selectedData">
+              <div className="dataBox">
+                <p>
+                  <span>title</span>value
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         <CircularChart
-          dateRange={getDateRange()}
+          dateRange={dateRange}
           setLoading={setLoading}
           setError={setError}
           title={"수입차트"}
           url={"incomeSummary"}
         />
         <CircularChart
-          dateRange={getDateRange()}
+          dateRange={dateRange}
           setLoading={setLoading}
           setError={setError}
           title={"지출차트"}
           url={"expenseSummary"}
         />
         <MixChart
-          dateRange={getDateRange()}
+          dateRange={dateRange}
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}
@@ -116,13 +118,28 @@ const DriveDashBoard = () => {
           }
           .selectedDateRangeData {
             width: 100%;
-            display: flex;
-            flex-direction: row;
-
-            .selectedData {
-              width: 50%;
-              background-color: #f0f0f0;
-              padding: 2% 2% 7% 2%;
+            > div {
+              width: 100%;
+              display: flex;
+              flex-direction: row;
+              flex-wrap: wrap;
+              justify-content: center;
+              align-items: flex-start;
+              .selectedData {
+                width: 45%;
+                aspect-ratio: 1 / 0.9;
+                .dataBox {
+                  width: 100%;
+                  height: 100%;
+                  background-color: white;
+                  padding: 5%;
+                  display: flex;
+                  flex-wrap: wrap;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  padding: 2%;
+                  border-radius: 5px;
+                }
+              }
             }
           }
           .dataBox {

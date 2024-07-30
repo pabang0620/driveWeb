@@ -6,7 +6,11 @@ import MixChart from "../../components/MixChart";
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
+  //const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   const getDateOffset = (offset) => {
     const date = new Date();
@@ -19,23 +23,40 @@ const MyPage = () => {
     return koreanDate.toISOString().split("T")[0];
   };
 
-  const dateOffsets = {
-    dayBeforeYesterday: -2,
-    yesterday: -1,
-    today: 0,
+  const handleDateChange = (range) => {
+    const today = new Date();
+    let newStartDate;
+    let newEndDate;
+
+    switch (range) {
+      case "today":
+        newStartDate = today;
+        newEndDate = today;
+        break;
+      case "yesterday":
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 1);
+        newEndDate = newStartDate;
+        break;
+      case "dayBeforeYesterday":
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 2);
+        newEndDate = newStartDate;
+        break;
+      default:
+        newStartDate = today;
+        newEndDate = today;
+    }
+
+    setDateRange({ startDate: newStartDate, endDate: newEndDate });
   };
 
   const getDate = () => {
-    const offset = dateOffsets[dateRange];
-    const date = getDateOffset(offset);
-    console.log(`Selected Date (Frontend): ${date}`);
-    return date;
+    const startDate = getDateOffset(0, dateRange.startDate);
+    const endDate = getDateOffset(0, dateRange.endDate);
+    console.log(`Selected Date Range (Frontend): ${startDate} - ${endDate}`);
+    return { startDate, endDate };
   };
-
-  const handleDateChange = (range) => {
-    setDateRange(range);
-  };
-
   //if (loading) return <p>Loading...</p>;
   //if (error) return <p>Error loading data: {error.message}</p>;
 
@@ -54,7 +75,6 @@ const MyPage = () => {
       <div className="dataBox">
         <Dashboard
           dateRange={dateRange}
-          getDate={getDate}
           setLoading={setLoading}
           setError={setError}
         />
@@ -68,7 +88,6 @@ const MyPage = () => {
         />
         <CircularChart
           dateRange={dateRange}
-          getDate={getDate}
           setLoading={setLoading}
           setError={setError}
           title={"지출차트"}
@@ -76,7 +95,6 @@ const MyPage = () => {
         />
         <MixChart
           dateRange={dateRange}
-          getDate={getDate}
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}

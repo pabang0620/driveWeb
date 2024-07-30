@@ -150,19 +150,23 @@ const CircularChart = ({
       ],
       colors: generateColors(items.length), // colors는 items.length에 따라 업데이트됨
     }),
-    [items.length]
+    [items.length, url]
   );
 
   const fetchMyPageData = async () => {
     try {
-      const startDate = getDate();
-      const endDate = getDate();
       let response;
 
       if (url === "incomeSummary") {
-        response = await getMypageIncomeSummary(startDate, endDate);
+        response = await getMypageIncomeSummary(
+          dateRange.startDate,
+          dateRange.endDate
+        );
       } else if (url === "expenseSummary") {
-        response = await getMypageExpenseSummary(startDate, endDate);
+        response = await getMypageExpenseSummary(
+          dateRange.startDate,
+          dateRange.endDate
+        );
       }
 
       // 데이터 변환 함수 호출

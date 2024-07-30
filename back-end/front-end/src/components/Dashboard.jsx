@@ -14,18 +14,21 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
           value: data.totalIncome,
           subTitle: "당일의 수입",
           subValue: data.todayIncome,
+          topPercentage: data.totalIncomePercentage,
         },
         {
           title: "총 주행거리",
           value: data.totalMileage,
           subTitle: "당일의 주행거리",
           subValue: data.todayDrivingDistance,
+          topPercentage: data.totalMileagePercentage,
         },
         {
           title: "총 손익(초과금)",
           value: data.netProfit,
           subTitle: "당일의 손익(초과금)",
           subValue: data.todayNetProfit,
+          topPercentage: data.netProfitPercentage,
         },
       ]
     : [];
@@ -33,9 +36,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
   // 마이페이지 데이터 가져오기
   const fetchMyPageData = async () => {
     try {
-      const startDate = getDate();
-      const endDate = getDate();
-      const response = await getMypage(startDate, endDate); // getMypage 호출로 응답 받기
+      const response = await getMypage(dateRange.startDate, dateRange.endDate); // getMypage 호출로 응답 받기
       console.log("들어오는 데이터 확인", response);
       setData(response); // 응답에서 데이터 추출 및 상태 업데이트
       setLoadingState(false);
@@ -85,7 +86,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                 <p>{item.subValue}원</p>
               </div>
             </div>
-            <p className="top_percent">상위 3%</p>
+            <p className="top_percent">상위 {items.topPercentage}%</p>
           </div>
         ))}
       </div>
