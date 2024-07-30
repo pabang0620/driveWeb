@@ -27,6 +27,7 @@ import MyCar from "./page/mycar/MyCar";
 import MyCarMaintenance from "./page/mycar/MyCarMaintenance";
 import DriveLog from "./page/drive/DriveLog";
 import MyCarLog from "./page/mycar/MyCarLog";
+import DriveDashBoard from "./page/drive/DriveDashBoard";
 
 function RouterApp() {
   return (
@@ -53,6 +54,7 @@ function RouterApp() {
           <Route path="/mycar" element={<MyCar />} />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
           <Route path="/driving_log" element={<DriveLog />} />
+          <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
           <Route path="/mycar/log" element={<MyCarLog />} />
         </Route>
 

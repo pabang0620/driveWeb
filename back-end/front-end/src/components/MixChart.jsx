@@ -4,7 +4,7 @@ import {
   getMypageExpenseSummary,
   getMypageIncomeSummary,
   getMypageMix,
-} from "../../components/ApiGet";
+} from "./ApiGet";
 //useMemo : 주로 계산 비용이 큰 값이나 객체에 사용
 
 const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {

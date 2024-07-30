@@ -3,7 +3,7 @@ import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
 
-const MyPage = () => {
+const DriveDashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
@@ -33,8 +33,10 @@ const MyPage = () => {
   //if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
-    <div className="container mypage-container">
-      <h2>마이페이지</h2>
+    <div className="container dashboard-container">
+      <h2>
+        운행일지 <span>대쉬보드</span>
+      </h2>
 
       <select
         className="dateSelector"
@@ -76,7 +78,7 @@ const MyPage = () => {
         />
       </div>
       <style jsx>{`
-        .mypage-container {
+        .dashboard-container {
           width: 70%;
           max-width: 1200px;
           margin: 0 auto;
@@ -126,4 +128,4 @@ const MyPage = () => {
   );
 };
 
-export default MyPage;
+export default DriveDashBoard;
