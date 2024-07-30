@@ -14,6 +14,7 @@ import {
   deleteComment,
 } from "../../utils/post/postapis";
 import { getUserId } from "../../components/ApiGet";
+import axios from "axios";
 
 const BoardDetail = () => {
   const location = useLocation();
@@ -56,7 +57,14 @@ const BoardDetail = () => {
   useEffect(() => {
     const loadPost = async () => {
       try {
-        const postData = await fetchPost(postId);
+        // 토큰 가져오기
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`/api/post/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const postData = response.data;
         // 댓글에 replies 속성이 없는 경우 빈 배열로 초기화
         const commentsWithReplies = postData.comments.map((comment) => ({
           ...comment,
