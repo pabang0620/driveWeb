@@ -51,8 +51,8 @@ model driving_logs {
 model driving_records {
   id                  Int           @id @default(autoincrement())
   driving_log_id      Int?
-  start_time          DateTime?     @db.DateTime(0)
-  end_time            DateTime?     @db.DateTime(0)
+  start_time          String?       @db.VarChar(255)
+  end_time            String?       @db.VarChar(255)
   working_hours       DateTime?     @db.DateTime(0)
   day_of_week         String?       @db.VarChar(10)
   cumulative_km       Int?
