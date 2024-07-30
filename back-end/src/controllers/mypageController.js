@@ -55,11 +55,6 @@ const getMyPageData = async (req, res) => {
     const incomeRecords = await getIncomeRecords(logIds);
     const expenseRecords = await getExpenseRecords(logIds);
 
-    console.log("Driving Logs:", drivingLogs);
-    console.log("Driving Records:", drivingRecords);
-    console.log("Income Records:", incomeRecords);
-    console.log("Expense Records:", expenseRecords);
-
     const userLogIds = drivingLogs
       .filter((log) => log.userId === userId)
       .map((log) => log.id);
@@ -104,11 +99,6 @@ const getMyPageData = async (req, res) => {
     const allNetProfits = allIncomes.map(
       (income, index) => income - allExpenses[index]
     );
-
-    console.log("All Mileages:", allMileages);
-    console.log("All Incomes:", allIncomes);
-    console.log("All Expenses:", allExpenses);
-    console.log("All Net Profits:", allNetProfits);
 
     const totalMileagePercentage = calculatePercentage(
       totalMileage,
