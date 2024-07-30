@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Dashboard from "./Dashboard";
-import CircularChart from "./CircularChart";
-import MixChart from "./MixChart";
+import Dashboard from "../../components/Dashboard";
+import CircularChart from "../../components/CircularChart";
+import MixChart from "../../components/MixChart";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);

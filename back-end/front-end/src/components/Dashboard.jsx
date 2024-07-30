@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getMypage } from "../../components/ApiGet";
-import Spinner from "../../components/Spinner"; // Spinner 컴포넌트 임포트
+import { getMypage } from "./ApiGet";
+import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 
 const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
   const [data, setData] = useState(null); // 초기값을 null로 설정
@@ -76,16 +76,20 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
         {items.map((item, index) => (
           <div className="dashboard_item" key={index}>
             <div>
-              <h4>{item.title}</h4>
-              <p>{item.value}원</p>
+              <div>
+                <h4>{item.title}</h4>
+                <p>{item.value}원</p>
+              </div>
+              <div>
+                <h5>{item.subTitle} : </h5>
+                <p>{item.subValue}원</p>
+              </div>
             </div>
-            <div>
-              <h5>{item.subTitle} : </h5>
-              <p>{item.subValue}원</p>
-            </div>
+            <p className="top_percent">상위 3%</p>
           </div>
         ))}
       </div>
+
       <style jsx>{`
         .dashboard_container {
           width: 100%;
@@ -99,26 +103,29 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
             justify-content: space-between;
             align-items: flex-start;
             .dashboard_item {
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
               width: 31%;
-              padding: 2%;
-              background-color: white;
-              border-radius: 5px;
-              div {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                &:nth-of-type(1) {
-                  border-bottom: 1px solid #d9d9d9;
-                  padding-bottom: 10px;
-                  margin-bottom: 10px;
-                  h4 {
-                    color: #666;
-                    font-size: 18px;
-                  }
-                  p {
-                    color: #05aced;
-                    font-size: 18px;
+
+              & > div {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                background-color: white;
+                padding: 5%;
+                border-radius: 5px;
+                div {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  &:nth-of-type(1) {
+                    border-bottom: 1px solid #d9d9d9;
+                    padding-bottom: 10px;
+                    margin-bottom: 10px;
+                    h4 {
+                      color: #666;
+                      font-size: 18px;
+                    }
+                    p {
+                      color: #05aced;
+                      font-size: 18px;
+                    }
                   }
                 }
                 &:not(:nth-of-type(1)) {
@@ -135,6 +142,14 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                     font-size: 16px;
                   }
                 }
+              }
+              .top_percent {
+                color: #05aced;
+                font-size: 18px;
+                font-weight: 700;
+                width: 100%;
+                text-align: right;
+                margin-top: 10px;
               }
             }
           }

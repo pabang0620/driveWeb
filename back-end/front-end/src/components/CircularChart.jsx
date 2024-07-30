@@ -1,10 +1,7 @@
 import ApexChart from "react-apexcharts";
 import { useEffect, useMemo, useState } from "react";
-import Spinner from "../../components/Spinner"; // Spinner 컴포넌트 임포트
-import {
-  getMypageExpenseSummary,
-  getMypageIncomeSummary,
-} from "../../components/ApiGet";
+import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
+import { getMypageExpenseSummary, getMypageIncomeSummary } from "./ApiGet";
 
 const generateColors = (num) => {
   const baseColors = [
@@ -64,6 +61,7 @@ const CircularChart = ({
 
     const expenseData = [
       { name: "벌금 지출", data: data.fine_expense },
+      { name: "톨비", data: data.toll_fee },
       { name: "연료 지출", data: data.fuel_expense },
       { name: "식사 지출", data: data.meal_expense },
       { name: "기타 지출", data: data.other_expense },
@@ -72,6 +70,13 @@ const CircularChart = ({
       { name: "예비 지출 항목 2", data: data.expense_spare_2 },
       { name: "예비 지출 항목 3", data: data.expense_spare_3 },
       { name: "예비 지출 항목 4", data: data.expense_spare_4 },
+      { name: "카카오 수수료", data: data.kakao_fee },
+      { name: "타다 수수료", data: data.tada_fee },
+      { name: "온다 수수료", data: data.onda_fee },
+      { name: "우버 수수료", data: data.uber_fee },
+      { name: "아이엠 수수료", data: data.iam_fee },
+      { name: "카드 수수료", data: data.card_fee },
+      { name: "기타 수수료", data: data.etc_fee },
     ];
 
     const itemsData = type === "incomeSummary" ? incomeData : expenseData;
@@ -84,55 +89,69 @@ const CircularChart = ({
   const series = useMemo(() => items.map((item) => item.data), [items]);
   const labels = useMemo(() => items.map((item) => item.name), [items]);
 
-  const [options, setOptions] = useState({
-    chart: {
-      width: "100%",
-      height: "100%",
-      type: "donut",
-      toolbar: {
-        show: true,
-      },
-    },
-    plotOptions: {
-      pie: {
-        offsetY: 30,
-        donut: {
-          size: "50%",
+  const options = useMemo(
+    () => ({
+      chart: {
+        width: "100%",
+        height: "100%",
+        type: "donut",
+        toolbar: {
+          show: true,
         },
       },
-    },
-    stroke: {
-      width: 0,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    legend: {
-      position: "top",
-      offsetY: 20,
-      labels: {
-        colors: "#333",
-        style: {
-          fontSize: "16px",
-          fontFamily: "Arial, sans-serif",
-        },
-      },
-    },
-    responsive: [
-      {
-        breakpoint: 500,
-        options: {
-          chart: {
-            width: 500,
-          },
-          legend: {
-            show: true,
+      plotOptions: {
+        pie: {
+          offsetY: 30,
+          donut: {
+            size: "50%",
+            labels: {
+              show: true,
+              total: {
+                label: url === "incomeSummary" ? "수익총합" : "지출총합",
+                showAlways: true,
+                show: true,
+                style: {
+                  fontWeight: "bold", // 폰트 굵게 설정
+                },
+              },
+            },
           },
         },
       },
-    ],
-    colors: generateColors(items.length),
-  });
+      stroke: {
+        width: 0,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        position: "top",
+        offsetY: 20,
+        labels: {
+          colors: "#333",
+          style: {
+            fontSize: "16px",
+            fontFamily: "Arial, sans-serif",
+          },
+        },
+      },
+      responsive: [
+        {
+          breakpoint: 500,
+          options: {
+            chart: {
+              width: 500,
+            },
+            legend: {
+              show: true,
+            },
+          },
+        },
+      ],
+      colors: generateColors(items.length), // colors는 items.length에 따라 업데이트됨
+    }),
+    [items.length]
+  );
 
   const fetchMyPageData = async () => {
     try {
@@ -145,9 +164,13 @@ const CircularChart = ({
       } else if (url === "expenseSummary") {
         response = await getMypageExpenseSummary(startDate, endDate);
       }
-      console.log(response);
-      if (response !== data) {
-        setData(response);
+
+      // 데이터 변환 함수 호출
+      const convertedResponse = convertToNumbers(response);
+
+      console.log(convertedResponse);
+      if (JSON.stringify(convertedResponse) !== JSON.stringify(data)) {
+        setData(convertedResponse);
       }
 
       setLoadingState(false);
@@ -155,6 +178,18 @@ const CircularChart = ({
       setErrorState(error);
       setLoadingState(false);
     }
+  };
+
+  // 모든 값을 숫자로 변환하는 함수
+  const convertToNumbers = (data) => {
+    const numberData = {};
+
+    for (const key in data) {
+      // 숫자 변환, 실패 시 0으로 설정
+      numberData[key] = parseFloat(data[key]) || 0;
+    }
+
+    return numberData;
   };
 
   useEffect(() => {
