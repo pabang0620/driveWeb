@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
+// 상단
 const getTotalIncome = async (userId, startDate, endDate) => {
   // console.log("getTotalIncome - Params:", { userId, startDate, endDate });
   const result = await prisma.income_records.aggregate({
@@ -112,32 +112,65 @@ const getTodayExpense = async (userId, date) => {
   return result._sum.total_expense || 0;
 };
 
-const getDrivingRecordsByDateRange = async (userId, startDate, endDate) => {
-  // console.log("getDrivingRecordsByDateRange - Params:", {
-  //   userId,
-  //   startDate,
-  //   endDate,
-  // });
-  const result = await prisma.driving_records.aggregate({
+// 순위
+
+const getDrivingLogs = async (startDate, endDate) => {
+  return await prisma.driving_logs.findMany({
+    where: {
+      date: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    select: {
+      id: true,
+      userId: true,
+    },
+  });
+};
+
+const getDrivingRecords = async (logIds) => {
+  return await prisma.driving_records.groupBy({
+    by: ["driving_log_id"],
     _sum: {
       driving_distance: true,
-      totalDrivingTime: true,
-      total_income: true, // 총 수입금 필드 추가
     },
     where: {
-      driving_logs: {
-        userId: userId, // Prisma 쿼리에서 userId 필드 사용
-        date: {
-          gte: startDate,
-          lte: endDate,
-        },
+      driving_log_id: {
+        in: logIds,
       },
     },
   });
-  // console.log("getDrivingRecordsByDateRange - Result:", result);
-  return result._sum;
 };
 
+const getIncomeRecords = async (logIds) => {
+  return await prisma.income_records.groupBy({
+    by: ["driving_log_id"],
+    _sum: {
+      total_income: true,
+    },
+    where: {
+      driving_log_id: {
+        in: logIds,
+      },
+    },
+  });
+};
+
+const getExpenseRecords = async (logIds) => {
+  return await prisma.expense_records.groupBy({
+    by: ["driving_log_id"],
+    _sum: {
+      total_expense: true,
+    },
+    where: {
+      driving_log_id: {
+        in: logIds,
+      },
+    },
+  });
+};
+// 수입
 const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
   // console.log("getIncomeRecordsByDateRange - Params:", {
   //   userId,
@@ -172,7 +205,7 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
   // console.log("getIncomeRecordsByDateRange - Result:", result);
   return result._sum;
 };
-
+// 지출
 const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
   // console.log("getExpenseRecordsByDateRange - Params:", {
   //   userId,
@@ -212,7 +245,7 @@ const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
   // console.log("getExpenseRecordsByDateRange - Result:", result);
   return result._sum;
 };
-
+// 혼합 차트
 const getDrivingRecordsByDate = async (userId, dateString) => {
   const records = await prisma.driving_logs.findMany({
     where: {
@@ -265,7 +298,12 @@ module.exports = {
   getTodayDrivingDistance,
   getTotalExpense,
   getTodayExpense,
-  getDrivingRecordsByDateRange,
+  // 순위
+  getDrivingLogs,
+  getDrivingRecords,
+  getIncomeRecords,
+  getExpenseRecords,
+  // 차트
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
   getDrivingRecordsByDate,

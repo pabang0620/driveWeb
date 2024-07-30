@@ -7,20 +7,29 @@ const {
   getTodayIncome,
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
-  getDrivingRecordsByDateRange,
   getDrivingRecordsByDate,
+  getDrivingLogs,
+  getDrivingRecords,
+  getIncomeRecords,
+  getExpenseRecords,
 } = require("../models/mypageModel");
 
+const calculatePercentage = (userValue, allValues) => {
+  const numericValues = allValues.map(Number).sort((a, b) => a - b);
+  const rank = numericValues.findIndex((value) => userValue <= value) + 1;
+  return ((numericValues.length - rank) / numericValues.length) * 100;
+};
+
 const formatDateToYYYYMMDD = (date) => {
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
 
 const getMyPageData = async (req, res) => {
   try {
-    const { userId } = req; // 로그인된 사용자의 ID를 가져옵니다.
+    const { userId } = req;
     const { startDate, endDate } = req.params;
 
     if (!startDate || !endDate) {
@@ -31,51 +40,69 @@ const getMyPageData = async (req, res) => {
 
     const start = new Date(startDate);
     const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999); // 하루의 끝 시간으로 설정
+    end.setHours(23, 59, 59, 999);
 
     const startDateString = formatDateToYYYYMMDD(start);
     const endDateString = formatDateToYYYYMMDD(end);
 
-    // console.log("Fetching data for period:", startDateString, endDateString);
+    const drivingLogs = await getDrivingLogs(startDateString, endDateString);
+    const logIds = drivingLogs.map((log) => log.id);
 
-    // 총 수입, 총 주행거리, 총 비용
-    const totalIncome = await getTotalIncome(
-      userId,
-      startDateString,
-      endDateString
+    const drivingRecords = await getDrivingRecords(logIds);
+    const incomeRecords = await getIncomeRecords(logIds);
+    const expenseRecords = await getExpenseRecords(logIds);
+
+    const userLogIds = drivingLogs
+      .filter((log) => log.userId === userId)
+      .map((log) => log.id);
+    const userDrivingRecord = drivingRecords.find((record) =>
+      userLogIds.includes(record.driving_log_id)
     );
-    // console.log("Total Income:", totalIncome);
-
-    const totalMileage = await getTotalMileage(
-      userId,
-      startDateString,
-      endDateString
+    const userIncomeRecord = incomeRecords.find((record) =>
+      userLogIds.includes(record.driving_log_id)
     );
-    // console.log("Total Mileage:", totalMileage);
-
-    const totalExpense = await getTotalExpense(
-      userId,
-      startDateString,
-      endDateString
+    const userExpenseRecord = expenseRecords.find((record) =>
+      userLogIds.includes(record.driving_log_id)
     );
-    // console.log("Total Expense:", totalExpense);
 
+    const totalMileage = userDrivingRecord
+      ? userDrivingRecord._sum.driving_distance
+      : 0;
+    const totalIncome = userIncomeRecord
+      ? userIncomeRecord._sum.total_income
+      : 0;
+    const totalExpense = userExpenseRecord
+      ? userExpenseRecord._sum.total_expense
+      : 0;
     const netProfit = totalIncome - totalExpense;
 
-    // endDate 기준 당일 수입, 주행거리, 비용
     const todayIncome = await getTodayIncome(userId, endDateString);
-    // console.log("Today Income:", todayIncome);
-
     const todayDrivingDistance = await getTodayDrivingDistance(
       userId,
       endDateString
     );
-    // console.log("Today Driving Distance:", todayDrivingDistance);
-
     const todayExpense = await getTodayExpense(userId, endDateString);
-    // console.log("Today Expense:", todayExpense);
-
     const todayNetProfit = todayIncome - todayExpense;
+
+    const allMileages = drivingRecords.map(
+      (record) => record._sum.driving_distance || 0
+    );
+    const allIncomes = incomeRecords.map(
+      (record) => record._sum.total_income || 0
+    );
+    const allExpenses = expenseRecords.map(
+      (record) => record._sum.total_expense || 0
+    );
+    const allNetProfits = allIncomes.map(
+      (income, index) => income - allExpenses[index]
+    );
+
+    const totalMileagePercentage = calculatePercentage(
+      totalMileage,
+      allMileages
+    );
+    const totalIncomePercentage = calculatePercentage(totalIncome, allIncomes);
+    const netProfitPercentage = calculatePercentage(netProfit, allNetProfits);
 
     res.status(200).json({
       totalIncome,
@@ -84,6 +111,9 @@ const getMyPageData = async (req, res) => {
       todayDrivingDistance,
       netProfit,
       todayNetProfit,
+      totalMileagePercentage,
+      totalIncomePercentage,
+      netProfitPercentage,
     });
   } catch (error) {
     console.error("Error fetching mypage data:", error);

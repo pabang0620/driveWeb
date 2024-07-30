@@ -44,7 +44,7 @@ const createDrivingRecord = async ({
 
     // working_hours 계산
     const workingHoursMilliseconds = Math.abs(parsedEndTime - parsedStartTime);
-    const workingHours = new Date(workingHoursMilliseconds);
+    const workingHoursSeconds = Math.floor(workingHoursMilliseconds / 1000); // 초 단위로 변환
 
     // 요일 계산
     const dayOfWeek = parsedStartTime.toLocaleString("en-US", {
@@ -52,7 +52,7 @@ const createDrivingRecord = async ({
     });
 
     // 연비 계산
-    const fuelEfficiency = cumulative_km / fuel_amount;
+    const fuelEfficiency = drivingDistance / fuel_amount;
 
     // 영업률 계산
     const businessRate = (business_distance / drivingDistance) * 100;
@@ -62,7 +62,8 @@ const createDrivingRecord = async ({
         driving_log_id: drivingLog.id,
         start_time,
         end_time,
-        working_hours: workingHours,
+        working_hours: new Date(workingHoursMilliseconds), // DateTime으로 저장
+        working_hours_seconds: workingHoursSeconds, // 초 단위로 저장
         day_of_week: dayOfWeek,
         cumulative_km: Number(cumulative_km),
         driving_distance: Number(drivingDistance),
@@ -113,10 +114,57 @@ const createDrivingRecord = async ({
         },
       });
 
-    return { driving_log_id: drivingLog.id, working_hours: workingHours };
+    return {
+      driving_log_id: drivingLog.id,
+      working_hours_seconds: workingHoursSeconds,
+    };
   } catch (error) {
     console.error("Error adding driving record in service:", error);
     throw error;
+  }
+};
+
+const addDrivingRecord = async (req, res) => {
+  const { userId } = req;
+  try {
+    const {
+      date,
+      start_time,
+      end_time,
+      cumulative_km,
+      business_distance,
+      fuel_amount,
+      memo,
+      total_driving_cases,
+    } = req.body;
+
+    // 계산을 위해 시간 파싱
+    const parsedStartTime = new Date(`${date}T${start_time}`);
+    const parsedEndTime = new Date(`${date}T${end_time}`);
+
+    // DateTime 객체가 유효한지 확인
+    if (isNaN(parsedStartTime) || isNaN(parsedEndTime)) {
+      return res.status(400).json({ error: "Invalid date or time format" });
+    }
+
+    const result = await createDrivingRecord({
+      userId,
+      date,
+      start_time,
+      end_time,
+      cumulative_km,
+      business_distance,
+      fuel_amount,
+      memo,
+      total_driving_cases,
+      parsedStartTime,
+      parsedEndTime,
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error("Error adding driving record:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -170,12 +218,15 @@ const updateTotalIncome = async (id, data) => {
       parseFloat(data.income_spare_4 || 0);
 
     // income_per_km와 income_per_hour 계산
-    const income_per_km = data.business_distance
-      ? total_income / parseFloat(data.business_distance)
+    const business_distance = parseFloat(data.business_distance || 0);
+    const working_hours_seconds = parseFloat(data.working_hours_seconds || 0);
+
+    const income_per_km = business_distance
+      ? total_income / business_distance
       : 0;
 
-    const income_per_hour = data.working_hours
-      ? total_income / parseFloat(data.working_hours)
+    const income_per_hour = working_hours_seconds
+      ? total_income / (working_hours_seconds / 3600) // seconds to hours
       : 0;
 
     const updatedRecord = await prisma.income_records.update({
@@ -186,6 +237,7 @@ const updateTotalIncome = async (id, data) => {
         income_per_hour: income_per_hour,
       },
     });
+
     return updatedRecord;
   } catch (error) {
     console.error("updateTotalIncome error:", error);

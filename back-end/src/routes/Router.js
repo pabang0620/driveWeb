@@ -11,6 +11,7 @@ const driveRoute = require("./driveRoute");
 const mypageRoute = require("./mypageRoute");
 const mycarRoute = require("./mycarRoute");
 const maintenanceRoute = require("./maintenanceRoute");
+const summaryRoute = require("./summaryRoute");
 
 router.use("/user", userRoute);
 router.use("/post", postRoute);
@@ -21,5 +22,6 @@ router.use("/drive", driveRoute);
 router.use("/mypage", mypageRoute);
 router.use("/mycar", mycarRoute);
 router.use("/maintenance", maintenanceRoute);
+router.use("/summary", summaryRoute);
 
 module.exports = router;

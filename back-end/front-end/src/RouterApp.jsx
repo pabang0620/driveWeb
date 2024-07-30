@@ -28,6 +28,7 @@ import MyCarMaintenance from "./page/mycar/MyCarMaintenance";
 import DriveLog from "./page/drive/DriveLog";
 import MyCarLog from "./page/mycar/MyCarLog";
 import DriveDashBoard from "./page/drive/DriveDashBoard";
+import SummaryComponent from "./page/SummaryComponent ";
 
 function RouterApp() {
   return (
@@ -56,6 +57,7 @@ function RouterApp() {
           <Route path="/driving_log" element={<DriveLog />} />
           <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
           <Route path="/mycar/log" element={<MyCarLog />} />
+          <Route path="/SummaryComponent" element={<SummaryComponent />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}
