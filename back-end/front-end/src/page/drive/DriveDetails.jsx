@@ -58,6 +58,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
 
   const renderTabContent = () => {
     if (activeTab === "drive") {
+      if (!details.driving_records || details.driving_records.length === 0) {
+        return <div className="tab-content">운행 기록이 없습니다.</div>;
+      }
       const {
         start_time,
         end_time,
@@ -68,6 +71,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
         fuel_efficiency,
         business_rate,
         day_of_week,
+        business_distance,
       } = details.driving_records[0];
       return (
         <div className="tab-content">
@@ -90,6 +94,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             <strong>주행 거리:</strong> <span>{driving_distance} km</span>
           </div>
           <div className="data-row">
+            <strong>영업 거리:</strong> <span>{business_distance} km</span>
+          </div>
+          <div className="data-row">
             <strong>주유량:</strong> <span>{fuel_amount} L</span>
           </div>
           <div className="data-row">
@@ -110,6 +117,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
 
     if (activeTab === "income") {
       const filteredIncome = filterZeroValues(details.income_records);
+      if (Object.keys(filteredIncome).length === 0) {
+        return <div className="tab-content">수입이 없습니다.</div>;
+      }
       return (
         <div className="tab-content">
           {filteredIncome &&
@@ -125,6 +135,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
 
     if (activeTab === "expense") {
       const filteredExpense = filterZeroValues(details.expense_records);
+      if (Object.keys(filteredExpense).length === 0) {
+        return <div className="tab-content">지출이 없습니다.</div>;
+      }
       return (
         <div className="tab-content">
           {filteredExpense &&
