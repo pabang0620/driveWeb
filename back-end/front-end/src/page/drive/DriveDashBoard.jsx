@@ -1,77 +1,92 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Component } from "react";
 import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
+import Calendar from "../../components/Calendar";
 
 const DriveDashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
+  //const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
-  const getDateOffset = (offset) => {
-    const date = new Date();
-    date.setDate(date.getDate() + offset);
-    return date.toISOString().split("T")[0];
+  const handleChange = (dates) => {
+    const [start, end] = dates;
+    setDateRange({ startDate: start, endDate: end });
   };
 
-  const dateOffsets = {
-    dayBeforeYesterday: -2,
-    yesterday: -1,
-    today: 0,
+  const formatDate = (date) => {
+    return date ? date.toISOString().split("T")[0] : "";
   };
 
-  const getDate = () => {
-    const offset = dateOffsets[dateRange];
-    return getDateOffset(offset);
+  const getDateRange = () => {
+    return {
+      start: formatDate(dateRange.startDate),
+      end: formatDate(dateRange.endDate),
+    };
   };
 
-  const handleDateChange = (range) => {
-    setDateRange(range);
-  };
+  // const getDateOffset = (offset) => {
+  //   const date = new Date();
+  //   date.setDate(date.getDate() + offset);
+  //   return date.toISOString().split("T")[0];
+  // };
+
+  // const dateOffsets = {
+  //   dayBeforeYesterday: -2,
+  //   yesterday: -1,
+  //   today: 0,
+  // };
+
+  // const getDate = () => {
+  //   const offset = dateOffsets[dateRange];
+  //   return getDateOffset(offset);
+  // };
+
+  // const handleDateChange = (range) => {
+  //   setDateRange(range);
+  // };
 
   //if (loading) return <p>Loading...</p>;
   //if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
     <div className="container dashboard-container">
-      <h2>
+      <h2 className="mainTitle">
         운행일지 <span>대쉬보드</span>
       </h2>
 
-      <select
-        className="dateSelector"
-        onChange={(e) => handleDateChange(e.target.value)}
-      >
-        <option value="today">오늘</option>
-        <option value="yesterday">어제</option>
-        <option value="dayBeforeYesterday">그제</option>
-      </select>
       <div className="dataBox">
-        <Dashboard
-          dateRange={dateRange}
-          getDate={getDate}
-          setLoading={setLoading}
-          setError={setError}
-        />
+        <Calendar dateRange={dateRange} handleChange={handleChange} />
+        <div className="selectedDateRangeData">
+          <h3>기간별 세부 데이터</h3>
+          <Dashboard
+            dateRange={getDateRange()}
+            setLoading={setLoading}
+            handleChange={handleChange}
+            setError={setError}
+          />
+          <div className="selectedData"></div>
+        </div>
         <CircularChart
-          dateRange={dateRange}
-          getDate={getDate}
+          dateRange={getDateRange()}
           setLoading={setLoading}
           setError={setError}
           title={"수입차트"}
           url={"incomeSummary"}
         />
         <CircularChart
-          dateRange={dateRange}
-          getDate={getDate}
+          dateRange={getDateRange()}
           setLoading={setLoading}
           setError={setError}
           title={"지출차트"}
           url={"expenseSummary"}
         />
         <MixChart
-          dateRange={dateRange}
-          getDate={getDate}
+          dateRange={getDateRange()}
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}
@@ -84,7 +99,7 @@ const DriveDashBoard = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
-          h2 {
+          h2.mainTitle {
             font-size: 25px;
             font-weight: 600;
             margin-bottom: 30px;
@@ -95,19 +110,21 @@ const DriveDashBoard = () => {
               margin-left: 10px;
             }
           }
-          .dateSelector {
-            float: right;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 5px;
-            width: 10vw;
-            border-radius: 5px;
-            option {
-              padding: 10px;
-              cursor: pointer;
+          h3 {
+            width: 100%;
+            text-align: left;
+          }
+          .selectedDateRangeData {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+
+            .selectedData {
+              width: 50%;
+              background-color: #f0f0f0;
+              padding: 2% 2% 7% 2%;
             }
           }
-
           .dataBox {
             width: 100%;
             height: auto;
