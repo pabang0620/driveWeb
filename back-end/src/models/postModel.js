@@ -303,22 +303,42 @@ const deletePost = async (id) => {
 };
 
 // 10개 최신 id 값에 따라 게시판별
-const getRecentPosts = async (boardId) => {
-  const recentPosts = await prisma.posts.findMany({
-    where: { boardId: boardId },
-    orderBy: { createdAt: "desc" }, // 생성일자를 기준으로 내림차순 정렬합니다.
-    take: 10, // 최근 10개 글을 가져옵니다.
+const getTopPostsByLikesAndViews = async () => {
+  const topViewedPosts = await prisma.posts.findMany({
+    where: { boardId: { not: 1 } },
+    orderBy: { viewCount: "desc" },
+    take: 10,
     select: {
       id: true,
       title: true,
+      createdAt: true,
+      viewCount: true,
       _count: {
         select: { comments: true },
       },
     },
   });
-  return recentPosts;
-};
 
+  const topLikedPosts = await prisma.posts.findMany({
+    where: { boardId: { not: 1 } },
+    orderBy: { likeCount: "desc" },
+    take: 10,
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      likeCount: true,
+      _count: {
+        select: { comments: true },
+      },
+    },
+  });
+
+  return {
+    topViewedPosts,
+    topLikedPosts,
+  };
+};
 // 보드별로 10위까지 가져오기 getBoards getLatestPostsByBoard getAllLatestPosts
 const getBoards = async () => {
   try {
@@ -406,7 +426,7 @@ module.exports = {
   getPostsByPage,
   getPostById,
   updatePost,
-  getRecentPosts,
+  getTopPostsByLikesAndViews,
   deletePost,
   incrementViewCount,
   toggleLike,

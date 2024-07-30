@@ -3,19 +3,19 @@ const {
   getTopUsersByNetIncome,
   getTopUsersByFuelEfficiency,
 } = require("../models/driveModel");
-const { getRecentPosts } = require("../models/postModel");
+const {
+  getRecentPosts,
+  getTopPostsByLikesAndViews,
+} = require("../models/postModel");
 
 // 게시글 랭킹
-const getRecentPostsByBoard = async (req, res) => {
+const getTopPosts = async (req, res) => {
   try {
-    const { boardId } = req.params; // URL parameter에서 boardId를 가져옵니다.
-    if (!boardId) {
-      return res.status(400).json({ error: "boardId가 필요합니다." });
-    }
-    const recentPosts = await getRecentPosts(parseInt(boardId, 10));
-    res.status(200).json(recentPosts);
+    const { topLikedPosts, topViewedPosts } =
+      await getTopPostsByLikesAndViews();
+    res.status(200).json({ topLikedPosts, topViewedPosts });
   } catch (error) {
-    res.status(500).json({ error: "게시글 조회 중 오류가 발생했습니다." });
+    res.status(500).json({ error: "인기 게시글 조회 중 오류가 발생했습니다." });
   }
 };
 
@@ -68,7 +68,7 @@ const getTopFuelEfficiencyUsers = async (req, res) => {
 };
 
 module.exports = {
-  getRecentPostsByBoard,
+  getTopPosts,
   getTopUsers,
   getTopNetIncomeUsers,
   getTopFuelEfficiencyUsers,
