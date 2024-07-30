@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 
 // 게시글 가져오기
 export const fetchPost = async (postId) => {
+  console.log(token);
   const response = await axiosInstance.get(`/api/post/${postId}`);
   return response.data;
 };

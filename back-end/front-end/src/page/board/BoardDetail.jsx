@@ -6,13 +6,7 @@ import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import Spinner from "../../components/Spinner";
 import { faUserCircle, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import {
-  fetchPost,
-  likePost,
-  createComment,
-  deletePost,
-  deleteComment,
-} from "../../utils/post/postapis";
+
 import { getUserId } from "../../components/ApiGet";
 import axios from "axios";
 
@@ -82,9 +76,20 @@ const BoardDetail = () => {
 
   const handleLikeClick = async () => {
     try {
-      const data = await likePost(postId, isLiked);
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `/api/post/${postId}/like`,
+        {
+          liked: !isLiked,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setIsLiked(!isLiked);
-      setPost({ ...post, likeCount: data.likeCount });
+      setPost({ ...post, likeCount: response.data.likeCount });
     } catch (err) {
       console.error("좋아요 처리 중 오류가 발생했습니다:", err);
     }
@@ -97,7 +102,21 @@ const BoardDetail = () => {
   const handleCommentSubmit = async () => {
     setIsCommenting(true);
     try {
-      const comment = await createComment(newComment, Number(postId)); // 사용자의 ID를 지정해야 합니다.
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `/api/comment`,
+        {
+          content: newComment,
+          postId: Number(postId),
+          userId: currentUserId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const comment = response.data;
       setPost({
         ...post,
         comments: [...post.comments, comment],
@@ -121,7 +140,12 @@ const BoardDetail = () => {
       return;
     }
     try {
-      await deletePost(postId);
+      const token = localStorage.getItem("token");
+      await axios.delete(`/api/post/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       alert("게시글이 성공적으로 삭제되었습니다.");
       navigate(`/board/list/${boardId}`);
     } catch (err) {
@@ -143,7 +167,12 @@ const BoardDetail = () => {
     }
 
     try {
-      await deleteComment(commentId);
+      const token = localStorage.getItem("token");
+      await axios.delete(`/api/comment/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPost({
         ...post,
         comments: post.comments.filter((comment) => comment.id !== commentId),

@@ -77,7 +77,6 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
   const { id } = req.params;
   const { userId } = req;
-
   try {
     const post = await getPostById(Number(id), userId);
     if (!post) {
