@@ -98,6 +98,7 @@ const MyPage = () => {
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}
+          url={"getMypageMix"}
         />
       </div>
       <style jsx>{`

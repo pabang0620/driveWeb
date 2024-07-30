@@ -44,11 +44,10 @@ const Calendar = ({
           flex-direction: row;
           align-items: flex-start;
           justify-content: center;
-          width: 50%;
-          aspect-ratio: 1 / 1.05;
+          width: 48.5%;
           /*------------- 상단 인풋 박스 -------------*/
           .react-datepicker-wrapper {
-            width: 80%;
+            width: 100%;
           }
 
           .datepicker {
@@ -67,9 +66,9 @@ const Calendar = ({
             width: 100%;
           }
           .react-datepicker-popper {
-            position: static;
-            transform: translate(0, 0);
-            width: 80%;
+            top: 0;
+            transform: translate(0%, 50px) !important;
+            width: 100%;
             .react-datepicker__month-container {
               width: 100%;
               /*------------- 달력헤더 -------------*/
@@ -93,10 +92,10 @@ const Calendar = ({
                 background-color: #69c2ef;
                 .react-datepicker__day-name {
                   color: white;
-                  width: 2.2rem;
+                  width: 4rem;
                   line-height: 2.2rem;
                   text-align: center;
-                  margin: 0.14rem;
+                  margin: 0.07rem;
                 }
               }
 
@@ -106,16 +105,16 @@ const Calendar = ({
                 margin: 0;
               }
               .react-datepicker__day {
-                border-radius: 20%; //선택된 날짜
+                border-radius: 5px; //선택된 날짜
               }
               .react-datepicker__day,
               .react-datepicker__day--030,
               .react-datepicker__day--weekend,
               .react-datepicker__day--outside-month {
-                width: 2.2rem;
+                width: 4rem;
                 line-height: 2.2rem;
                 text-align: center;
-                margin: 0.14rem;
+                margin: 0.07rem;
               }
               .react-datepicker__day:hover {
                 background-color: #e6f0ff; // 마우스 오버 시 밝은 파란색

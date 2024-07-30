@@ -57,6 +57,10 @@ export const getDrive = async () => {
 export const getDriveDetails = async (driving_log_id) => {
   return getData(`/api/drive/driving-logs/${driving_log_id}`);
 };
+//운행일지 - 대쉬보드
+export const getDriveDashBoard = async (startDate, endDate) => {
+  return getData(`/api/summary/${startDate}/${endDate}`);
+};
 
 //마이페이지 - 상단 데이터
 export const getMypage = async (startDate, endDate) => {

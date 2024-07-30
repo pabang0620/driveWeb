@@ -3,8 +3,11 @@ import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
 import Calendar from "../../components/Calendar";
+import SummaryComponent from "../SummaryComponent ";
+import DriveDateRangeDashBoard from "./DriveDateRangeDashBoard";
 
 const DriveDashBoard = () => {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({
@@ -57,22 +60,17 @@ const DriveDashBoard = () => {
       </h2>
 
       <div className="dataBox">
-        <div className="selectedDateRangeData">
+        <div className="selectedDateRangeDataBox">
           <h3>기간별 세부 데이터</h3>
           <div>
             <Calendar
               dateRange={dateRange}
               handleDateChange={handleDateChange}
             />
-            <div className="selectedData">
-              <div className="dataBox">
-                <p>
-                  <span>title</span>value
-                </p>
-              </div>
-            </div>
+            <DriveDateRangeDashBoard dateRange={dateRange} />
           </div>
         </div>
+
         <CircularChart
           dateRange={dateRange}
           setLoading={setLoading}
@@ -116,30 +114,15 @@ const DriveDashBoard = () => {
             width: 100%;
             text-align: left;
           }
-          .selectedDateRangeData {
+          .selectedDateRangeDataBox {
             width: 100%;
             > div {
               width: 100%;
               display: flex;
               flex-direction: row;
               flex-wrap: wrap;
-              justify-content: center;
+              justify-content: space-between;
               align-items: flex-start;
-              .selectedData {
-                width: 45%;
-                aspect-ratio: 1 / 0.9;
-                .dataBox {
-                  width: 100%;
-                  height: 100%;
-                  background-color: white;
-                  padding: 5%;
-                  display: flex;
-                  flex-wrap: wrap;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                  padding: 2%;
-                  border-radius: 5px;
-                }
-              }
             }
           }
           .dataBox {

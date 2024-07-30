@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getMypage } from "./ApiGet";
 import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 
@@ -7,31 +7,36 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);
 
-  const items = data
-    ? [
-        {
-          title: "총 수입",
-          value: data.totalIncome,
-          subTitle: "당일의 수입",
-          subValue: data.todayIncome,
-          topPercentage: data.totalIncomePercentage,
-        },
-        {
-          title: "총 주행거리",
-          value: data.totalMileage,
-          subTitle: "당일의 주행거리",
-          subValue: data.todayDrivingDistance,
-          topPercentage: data.totalMileagePercentage,
-        },
-        {
-          title: "총 손익(초과금)",
-          value: data.netProfit,
-          subTitle: "당일의 손익(초과금)",
-          subValue: data.todayNetProfit,
-          topPercentage: data.netProfitPercentage,
-        },
-      ]
-    : [];
+  const getItems = (data) => {
+    if (!data) return [];
+
+    const items = [
+      {
+        title: "총 수입",
+        value: data.totalIncome,
+        subTitle: "당일의 수입",
+        subValue: data.todayIncome,
+        topPercentage: data.totalIncomePercentage,
+      },
+      {
+        title: "총 주행거리",
+        value: data.totalMileage,
+        subTitle: "당일의 주행거리",
+        subValue: data.todayDrivingDistance,
+        topPercentage: data.totalMileagePercentage,
+      },
+      {
+        title: "총 손익(초과금)",
+        value: data.netProfit,
+        subTitle: "당일의 손익(초과금)",
+        subValue: data.todayNetProfit,
+        topPercentage: data.netProfitPercentage,
+      },
+    ];
+    return items;
+  };
+
+  const items = useMemo(() => getItems(data), [data]);
 
   // 마이페이지 데이터 가져오기
   const fetchMyPageData = async () => {
@@ -86,7 +91,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                 <p>{item.subValue}원</p>
               </div>
             </div>
-            <p className="top_percent">상위 {items.topPercentage}%</p>
+            <p className="top_percent">상위 {item.topPercentage}%</p>
           </div>
         ))}
       </div>
