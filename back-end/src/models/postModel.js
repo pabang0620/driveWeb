@@ -304,41 +304,94 @@ const deletePost = async (id) => {
 
 // 10개 최신 id 값에 따라 게시판별
 const getTopPostsByLikesAndViews = async () => {
-  const topViewedPosts = await prisma.posts.findMany({
-    where: { boardId: { not: 1 } },
-    orderBy: { viewCount: "desc" },
-    take: 10,
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      viewCount: true,
-      _count: {
-        select: { comments: true },
+  try {
+    const topViewedPosts = await prisma.posts.findMany({
+      where: { boardId: { not: 1 } },
+      orderBy: { viewCount: "desc" },
+      take: 10,
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        viewCount: true,
+        boards: {
+          // 관계 참조
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: { comments: true },
+        },
       },
-    },
-  });
+    });
 
-  const topLikedPosts = await prisma.posts.findMany({
-    where: { boardId: { not: 1 } },
-    orderBy: { likeCount: "desc" },
-    take: 10,
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      likeCount: true,
-      _count: {
-        select: { comments: true },
+    const topLikedPosts = await prisma.posts.findMany({
+      where: { boardId: { not: 1 } },
+      orderBy: { likeCount: "desc" },
+      take: 10,
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        likeCount: true,
+        boards: {
+          // 관계 참조
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: { comments: true },
+        },
       },
-    },
-  });
+    });
 
-  return {
-    topViewedPosts,
-    topLikedPosts,
-  };
+    return {
+      topViewedPosts,
+      topLikedPosts,
+    };
+  } catch (error) {
+    console.error("Error fetching top posts by likes and views:", error);
+    throw error;
+  }
 };
+
+const getTopPostsByBoards = async () => {
+  try {
+    const boardIds = [1, 2, 3]; // 공지사항, 자유게시판, 사진게시판의 boardId
+    const boardsWithPosts = await Promise.all(
+      boardIds.map(async (boardId) => {
+        const board = await prisma.boards.findUnique({
+          where: { id: boardId },
+          select: {
+            id: true,
+            name: true,
+            posts: {
+              orderBy: { createdAt: "desc" },
+              take: 10,
+              select: {
+                id: true,
+                title: true,
+                createdAt: true,
+                _count: {
+                  select: { comments: true },
+                },
+              },
+            },
+          },
+        });
+        return board;
+      })
+    );
+
+    return boardsWithPosts;
+  } catch (error) {
+    console.error("Error fetching top posts by boards:", error);
+    throw error;
+  }
+};
+
 // 보드별로 10위까지 가져오기 getBoards getLatestPostsByBoard getAllLatestPosts
 const getBoards = async () => {
   try {
@@ -426,7 +479,10 @@ module.exports = {
   getPostsByPage,
   getPostById,
   updatePost,
+  // 홈에서 쓰는 랭킹
   getTopPostsByLikesAndViews,
+  getTopPostsByBoards,
+  // -----
   deletePost,
   incrementViewCount,
   toggleLike,

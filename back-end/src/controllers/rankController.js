@@ -6,6 +6,7 @@ const {
 const {
   getRecentPosts,
   getTopPostsByLikesAndViews,
+  getTopPostsByBoards,
 } = require("../models/postModel");
 
 // 게시글 랭킹
@@ -13,9 +14,17 @@ const getTopPosts = async (req, res) => {
   try {
     const { topLikedPosts, topViewedPosts } =
       await getTopPostsByLikesAndViews();
-    res.status(200).json({ topLikedPosts, topViewedPosts });
+    const boardsWithPosts = await getTopPostsByBoards();
+
+    res.status(200).json({ topLikedPosts, topViewedPosts, boardsWithPosts });
   } catch (error) {
-    res.status(500).json({ error: "인기 게시글 조회 중 오류가 발생했습니다." });
+    console.error("Error fetching top posts:", error); // 오류 메시지를 콘솔에 기록
+    res
+      .status(500)
+      .json({
+        error: "인기 게시글 조회 중 오류가 발생했습니다.",
+        details: error.message,
+      }); // 상세 오류 메시지를 응답에 포함
   }
 };
 
