@@ -8,9 +8,6 @@ const {
   getExpenseRecordsByDateRange,
   getIncomeRecordsByDateRange,
   getDrivingRecordsByDate,
-  getAllUsersTotalExpense,
-  getAllUsersTotalIncome,
-  getAllUsersTotalMileage,
   getDrivingLogs,
   getDrivingRecords,
   getIncomeRecords,
@@ -18,9 +15,9 @@ const {
 } = require("../models/mypageModel");
 
 const calculatePercentage = (userValue, allValues) => {
-  const sortedValues = allValues.sort((a, b) => a - b);
-  const rank = sortedValues.findIndex((value) => value >= userValue) + 1;
-  return (rank / sortedValues.length) * 100;
+  const numericValues = allValues.map(Number).sort((a, b) => a - b);
+  const rank = numericValues.findIndex((value) => userValue <= value) + 1;
+  return ((numericValues.length - rank) / numericValues.length) * 100;
 };
 
 const formatDateToYYYYMMDD = (date) => {
