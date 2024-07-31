@@ -163,9 +163,18 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   };
 
   useEffect(() => {
-    fetchMyPageData();
-  }, [dateRange]); // dateRange가 변경될 때마다 호출
+    fetchMyPageData(); // 데이터를 불러옵니다
+  }, [dateRange]);
 
+  useEffect(() => {
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      xaxis: {
+        ...prevOptions.xaxis,
+        categories: dates, // 최신 날짜로 카테고리 업데이트
+      },
+    }));
+  }, [dates]); // dates가 변경될 때마다 옵션 업데이트
   return (
     <div className="barChart_container">
       <h3>{title}</h3>
