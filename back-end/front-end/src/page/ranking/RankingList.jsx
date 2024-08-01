@@ -5,9 +5,35 @@ import {
   postRankTopFuelEfficiency,
 } from "../../components/ApiPost";
 
-const RankingList = ({ title, options, rankType }) => {
+const RankingList = ({ title, rankType }) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [profiles, setProfiles] = useState([]);
+
+  const getOptions = (rankType) => {
+    switch (rankType) {
+      case "jobType":
+        return ["전체", "택시", "배달", "기타"];
+      case "carType":
+        return ["전체"];
+      case "fuelType":
+        return [
+          "전체",
+          "LPG",
+          "전기",
+          "휘발유",
+          "경유",
+          "하이브리드",
+          "천연가스",
+          "수소",
+          "바이오디젤",
+          "에탄올",
+          "기타",
+        ];
+      default:
+        return [];
+    }
+  };
+  const options = getOptions(rankType);
 
   useEffect(() => {
     const fetchProfiles = async () => {

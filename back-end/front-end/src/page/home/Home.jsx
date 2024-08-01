@@ -15,21 +15,9 @@ function Home() {
       </div>
       <div className="contents_inner">
         <div className="rankingList">
-          <RankingList
-            title={"연비"}
-            rankType={"jobType"}
-            options={["전체", "LPG", "전기", "휘발유", "기타"]}
-          />
-          <RankingList
-            title={"운행시간"}
-            rankType={"carType"}
-            options={["전체직종", "택시", "배달", "기타"]}
-          />
-          <RankingList
-            title={"총 운송수입금"}
-            rankType={"fuelType"}
-            options={[]}
-          />
+          <RankingList title={"연비"} rankType={"fuelType"} />
+          <RankingList title={"운행시간"} rankType={"jobType"} />
+          <RankingList title={"총 운송수입금"} rankType={"carType"} />
         </div>
       </div>
       <style jsx>{`
