@@ -31,14 +31,7 @@ const generateColors = (num) => {
   return colors;
 };
 
-const CircularChart = ({
-  dateRange,
-  getDate,
-  setLoading,
-  setError,
-  title,
-  url,
-}) => {
+const CircularChart = ({ dateRange, title, url }) => {
   const [data, setData] = useState(null);
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);

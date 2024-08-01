@@ -13,23 +13,30 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   const [data, setData] = useState([]);
 
   // 데이터를 날짜순으로 정렬하고 각 항목을 별도의 배열로 반환하는 함수
+
   const processData = (data) => {
-    //  // 날짜순으로 데이터 정렬
     const sortedData = [...data].sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(a.date) - new Date(b.date)
     );
-
-    // 각 항목을 배열로 추출
+    const parseTimeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+    const convertMinutesToDecimalHours = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const decimalMinutes = (minutes % 60) / 60;
+      return hours + decimalMinutes;
+    };
     const dates = sortedData.map((item) => item.date);
-    const drivingDistances = sortedData.map((item) => item.driving_distance);
-    const workingHours = sortedData.map((item) => item.working_hours);
-    const totalIncomes = sortedData.map((item) => item.total_income);
-    // 각 항목을 배열로 추출
+    const drivingDistances = sortedData.map((item) =>
+      Number(item.driving_distance)
+    );
+    const workingHours = sortedData.map((item) =>
+      convertMinutesToDecimalHours(parseTimeToMinutes(item.working_hours))
+    );
+    const totalIncomes = sortedData.map((item) => Number(item.total_income));
 
-    console.log("dates", dates);
-    console.log("drivingDistances", drivingDistances);
-    console.log("daworkingHourstes", workingHours);
-    console.log("totalIncomes", totalIncomes);
+    console.log(dates, drivingDistances, workingHours, totalIncomes);
     return { dates, drivingDistances, workingHours, totalIncomes };
   };
 
@@ -164,9 +171,6 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
 
   useEffect(() => {
     fetchMyPageData(); // 데이터를 불러옵니다
-  }, [dateRange]);
-
-  useEffect(() => {
     setOptions((prevOptions) => ({
       ...prevOptions,
       xaxis: {
@@ -174,7 +178,9 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
         categories: dates, // 최신 날짜로 카테고리 업데이트
       },
     }));
-  }, [dates]); // dates가 변경될 때마다 옵션 업데이트
+    console.log("dateRange", dateRange);
+  }, [dateRange]); // dates가 변경될 때마다 옵션 업데이트
+
   return (
     <div className="barChart_container">
       <h3>{title}</h3>

@@ -80,16 +80,12 @@ const MyPage = () => {
         />
         <CircularChart
           dateRange={dateRange}
-          getDate={getDate}
-          setLoading={setLoading}
           setError={setError}
           title={"수입차트"}
           url={"incomeSummary"}
         />
         <CircularChart
           dateRange={dateRange}
-          setLoading={setLoading}
-          setError={setError}
           title={"지출차트"}
           url={"expenseSummary"}
         />
