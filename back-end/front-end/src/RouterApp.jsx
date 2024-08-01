@@ -29,6 +29,7 @@ import DriveLog from "./page/drive/DriveLog";
 import MyCarLog from "./page/mycar/MyCarLog";
 import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
+import Payment from "./page/payment/Payment";
 
 function RouterApp() {
   return (
@@ -37,26 +38,46 @@ function RouterApp() {
         {/* Layout이 적용된 경로 */}
         <Route element={<LayoutWithOutlet />}>
           <Route path="/" element={<Home />} />
+          {/* 로그인 */}
           <Route path="/login" element={<Login />} />
+
+          {/* 회원가입 */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/signup/email" element={<SignupEmail />} />
           <Route path="/signup/password" element={<SignupPassword />} />
           <Route path="/signup/job" element={<SignupJob />} />
+
+          {/* 회원정보 */}
           <Route path="/user/personalinfo" element={<PersonalInfo />} />
           <Route path="/user/carinfo" element={<CarInfo />} />
           <Route path="/user/incomeinfo" element={<IncomeInfo />} />
+
+          {/* 게시판 */}
           <Route path="/board" element={<Board />} />
           <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
           <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
+
+          {/* 랭킹 */}
           <Route path="/ranking" element={<Ranking />} />
+
+          {/* 마이페이지 */}
           <Route path="/mypage" element={<MyPage />} />
+
+          {/* 차계부 */}
           <Route path="/mycar" element={<MyCar />} />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
+          <Route path="/mycar/log" element={<MyCarLog />} />
+
+          {/* 운행일지 */}
           <Route path="/driving_log" element={<DriveLog />} />
           <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
-          <Route path="/mycar/log" element={<MyCarLog />} />
+
+          {/* 결재 */}
+          <Route path="/payment" element={<Payment />} />
+
+          {/* 기타 */}
           <Route path="/SummaryComponent" element={<SummaryComponent />} />
         </Route>
 
