@@ -6,7 +6,6 @@ const Ranking = () => {
       <h2>랭킹</h2>
       <div className="rankingInner">
         <RankingList title={"연비"} rankType={"fuelType"} />
-
         <RankingList title={"운행시간"} rankType={"jobType"} />
         <RankingList title={"총 운송수입금"} rankType={"carType"} />
       </div>
