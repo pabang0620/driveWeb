@@ -1,5 +1,7 @@
 import React from "react";
 import RankingList from "../ranking/RankingList";
+import TopRank from "./TopRank";
+
 function Home() {
   return (
     <div className="home-container">
@@ -18,6 +20,9 @@ function Home() {
           <RankingList title={"연비"} rankType={"fuelType"} />
           <RankingList title={"운행시간"} rankType={"jobType"} />
           <RankingList title={"총 운송수입금"} rankType={"carType"} />
+        </div>
+        <div>
+          <TopRank />
         </div>
       </div>
       <style jsx>{`
