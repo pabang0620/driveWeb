@@ -29,6 +29,7 @@ import DriveLog from "./page/drive/DriveLog";
 import MyCarLog from "./page/mycar/MyCarLog";
 import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
+import TopRank from "./page/TopRank ";
 import Payment from "./page/payment/Payment";
 
 function RouterApp() {
@@ -79,6 +80,7 @@ function RouterApp() {
 
           {/* 기타 */}
           <Route path="/SummaryComponent" element={<SummaryComponent />} />
+          <Route path="/topRank" element={<TopRank />} />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

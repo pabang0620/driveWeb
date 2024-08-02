@@ -4,6 +4,7 @@ const {
   getTopNetIncomeUsers,
   getTopUsers,
   getTopFuelEfficiencyUsers,
+  getTopPosts,
 } = require("../controllers/rankController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -17,6 +18,6 @@ router.post("/top-net-income", authMiddleware, getTopNetIncomeUsers);
 router.post("/top-fuel-efficiency", authMiddleware, getTopFuelEfficiencyUsers);
 
 // 홈에서 쓰는 게시물 최신
-router.get("/top-views/:boardId", getRecentPostsByBoard);
+router.get("/topRank", getTopPosts);
 // 홈에서 쓰는 게시물 인기
 module.exports = router;
