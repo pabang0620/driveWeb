@@ -30,6 +30,8 @@ import MyCarLog from "./page/mycar/MyCarLog";
 import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
 import TopRank from "./page/TopRank ";
+import EstimatedIncomeTaxPage from "./page/mypage/EstimatedIncomeTaxPage";
+import ProfitLossStatementPage from "./page/mypage/ProfitLossStatementPage";
 
 function RouterApp() {
   return (
@@ -60,6 +62,14 @@ function RouterApp() {
           <Route path="/mycar/log" element={<MyCarLog />} />
           <Route path="/SummaryComponent" element={<SummaryComponent />} />
           <Route path="/topRank" element={<TopRank />} />
+          <Route
+            path="/estimated-income-tax"
+            element={<EstimatedIncomeTaxPage />}
+          />
+          <Route
+            path="/profit-loss-statement"
+            element={<ProfitLossStatementPage />}
+          />
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

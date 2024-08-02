@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
+import IncomeTaxComponent from "./IncomeTaxComponent";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,6 @@ const MyPage = () => {
   return (
     <div className="container mypage-container">
       <h2>마이페이지</h2>
-
       <select
         className="dateSelector"
         onChange={(e) => handleDateChange(e.target.value)}
@@ -82,6 +82,24 @@ const MyPage = () => {
           title={"혼합차트"}
         />
       </div>
+      <div>
+        <p className="note">- 프리미엄 기능입니다.</p>
+        <div className="subscribeADD">
+          <IncomeTaxComponent
+            title="예상종합소득세"
+            description="운행일지에 입력된 데이터를 바탕으로 예상 종합소득세를 산출하는 기능입니다."
+            icon="ℹ️"
+            route="/estimated-income-tax"
+          />
+          <IncomeTaxComponent
+            title="손익계산서 조회"
+            description="회계 데이터를 기반으로 손익계산서를 조회하는 서비스입니다."
+            icon="📊"
+            route="/profit-loss-statement"
+          />
+        </div>
+      </div>
+
       <style jsx>{`
         .mypage-container {
           width: 70%;
@@ -89,6 +107,13 @@ const MyPage = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
+          .note {
+            margin-top: 80px;
+          }
+          .subscribeADD {
+            display: flex;
+            flex-direction: row;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
