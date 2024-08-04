@@ -1,9 +1,10 @@
+import TitleBox from "../../components/TitleBox";
 import RankingList from "./RankingList";
 
 const Ranking = () => {
   return (
     <div className="container ranking-container">
-      <h2>랭킹</h2>
+      <TitleBox title="랭킹" />
       <div className="rankingInner">
         <RankingList title={"연비"} rankType={"fuelType"} />
         <RankingList title={"운행시간"} rankType={"jobType"} />

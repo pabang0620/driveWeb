@@ -273,12 +273,14 @@ const BoardDetail = () => {
 
   return (
     <div className="boardDetail">
-      <TitleBox title="게시판" subtitle="게시글" />
       <div className="boardPostHeader">
-        <button className="writeButton">목록</button>
-        <button className="writeButton" onClick={handleWriteButtonClick}>
-          글쓰기
-        </button>
+        <TitleBox title="게시판" subtitle="게시글" />
+        <div>
+          <button className="writeButton">목록</button>
+          <button className="writeButton" onClick={handleWriteButtonClick}>
+            글쓰기
+          </button>
+        </div>
       </div>
       <section>
         <h2>{post.title}</h2>
@@ -616,6 +618,9 @@ const BoardDetail = () => {
                 font-size: 25px;
                 margin: 8px 0px 18px;
               }
+              @media (max-width: 480px) {
+                font-size: 22px;
+              }
             }
             .detailHeaderSet {
               display: flex;
@@ -653,9 +658,9 @@ const BoardDetail = () => {
           }
           .boardPostHeader {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
-            padding: 10px 0px 10px 20px;
+            padding: 10px 0px 10px 0px;
           }
           .writeButton {
             padding: 8px 16px;
@@ -668,6 +673,9 @@ const BoardDetail = () => {
             font-size: 16px;
             font-weight: bold;
             outline: none;
+            @media (max-width: 768px) {
+              font-size: 13px;
+            }
           }
         }
       `}</style>

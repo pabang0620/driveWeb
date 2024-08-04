@@ -9,11 +9,11 @@ const BoardPost = () => {
   const navigate = useNavigate();
   const { boardId } = useParams();
 
-  const [posts, setPosts] = useState(dummyboardData.posts);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPosts, setTotalPosts] = useState(dummyboardData.totalPosts);
+  const [totalPosts, setTotalPosts] = useState(0);
   const [boardName, setBoardName] = useState("");
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
 
@@ -197,6 +197,9 @@ const BoardPost = () => {
             &:hover {
               background-color: #05aced;
             }
+            @media (max-width: 768px) {
+              font-size: 14px;
+            }
           }
         }
 
@@ -273,7 +276,7 @@ const BoardPost = () => {
               width: 15%;
             }
             @media (max-width: 768px) {
-              font-size: 12px;
+              font-size: 13px;
               &:nth-of-type(1) {
                 width: 10%;
               }
@@ -287,6 +290,9 @@ const BoardPost = () => {
                 width: 20%;
               }
             }
+            @media (max-width: 480px) {
+              font-size: 12px;
+            }
           }
           td {
             text-align: center;
@@ -296,6 +302,9 @@ const BoardPost = () => {
               text-align: left;
             }
             @media (max-width: 768px) {
+              font-size: 13px;
+            }
+            @media (max-width: 480px) {
               font-size: 11px;
               &:nth-of-type(3) {
                 font-size: 10px;

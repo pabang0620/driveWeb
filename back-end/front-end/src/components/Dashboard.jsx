@@ -3,7 +3,17 @@ import { getMypage } from "./ApiGet";
 import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 
 const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
-  const [data, setData] = useState(null); // 초기값을 null로 설정
+  const [data, setData] = useState({
+    totalIncome: "30000",
+    todayIncome: "30000",
+    totalMileage: 0,
+    todayDrivingDistance: 0,
+    netProfit: 20000,
+    todayNetProfit: 20000,
+    totalMileagePercentage: 0,
+    totalIncomePercentage: 0,
+    netProfitPercentage: 0,
+  }); // 초기값을 null로 설정
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);
 
@@ -51,12 +61,12 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
     }
   };
 
-  useEffect(() => {
-    fetchMyPageData();
-  }, [dateRange]); // dateRange가 변경될 때마다 호출
+  // useEffect(() => {
+  //   fetchMyPageData();
+  // }, [dateRange]); // dateRange가 변경될 때마다 호출
 
-  if (loading) return <Spinner />;
-  if (error) return <div>Error: {error.message}</div>;
+  //if (loading) return <Spinner />;
+  //if (error) return <div>Error: {error.message}</div>;
   if (!data)
     return (
       <div
@@ -106,11 +116,23 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
           .dashboard {
             width: 100%;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-start;
+            @media (max-width: 1024px) {
+              gap: 15px;
+            }
+            @media (max-width: 767px) {
+              gap: 10px;
+            }
             .dashboard_item {
               width: 31%;
-
+              @media (max-width: 1024px) {
+                width: 48%;
+              }
+              @media (max-width: 767px) {
+                width: 100%;
+              }
               & > div {
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 background-color: white;
@@ -127,10 +149,16 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                     h4 {
                       color: #666;
                       font-size: 18px;
+                      @media (max-width: 768px) {
+                        font-size: 15px;
+                      }
                     }
                     p {
                       color: #05aced;
                       font-size: 18px;
+                      @media (max-width: 768px) {
+                        font-size: 15px;
+                      }
                     }
                   }
                 }
@@ -142,10 +170,16 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                     font-weight: normal;
                     color: #666;
                     font-size: 15px;
+                    @media (max-width: 768px) {
+                      font-size: 12px;
+                    }
                   }
                   p {
                     color: #666;
                     font-size: 16px;
+                    @media (max-width: 768px) {
+                      font-size: 13px;
+                    }
                   }
                 }
               }
@@ -156,6 +190,11 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                 width: 100%;
                 text-align: right;
                 margin-top: 10px;
+
+                @media (max-width: 768px) {
+                  font-size: 15px;
+                  margin-top: 5px;
+                }
               }
             }
           }

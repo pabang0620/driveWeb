@@ -212,6 +212,9 @@ const CircularChart = ({ dateRange, title, url }) => {
       <style jsx>{`
         .circularChart_container {
           width: 48.5%;
+          @media (max-width: 768px) {
+            width: 100%;
+          }
           .circularChart {
             background-color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

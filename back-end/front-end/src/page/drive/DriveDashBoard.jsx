@@ -99,6 +99,10 @@ const DriveDashBoard = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2.mainTitle {
             font-size: 25px;
             font-weight: 600;

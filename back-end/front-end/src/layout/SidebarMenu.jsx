@@ -127,6 +127,8 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
           position: fixed;
           top: 0;
           left: 0;
+          width: 50vw;
+          height: 100vh;
           background-color: white;
           box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
           display: flex;
@@ -136,12 +138,8 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
           transform: translateX(-100%);
           transition: transform 0.3s ease-in-out;
           overflow-y: scroll;
-          @media (max-width: 768px) {
-            width: 50%;
-            height: 100vh;
-          }
           @media (max-width: 480px) {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
           }
           &.open {
@@ -171,10 +169,13 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
             }
           }
           p.loginText {
-            font-size: 12px;
+            font-size: 14px;
             color: rgb(157 164 174);
             margin: 10px 0;
             width: 100%;
+            @media (max-width: 480px) {
+              font-size: 12px;
+            }
           }
           ul.login {
             width: 100%;
@@ -193,6 +194,9 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
               line-height: 40px;
               font-weight: bold;
               padding: 0 15px;
+              @media (max-width: 480px) {
+                font-size: 16px;
+              }
               a {
                 width: 100%;
                 height: 100%;
@@ -215,13 +219,19 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
             list-style: none;
             margin-top: 20px;
             > li {
-              padding: 5% 0;
+              padding: 10% 0;
+              @media (max-width: 480px) {
+                padding: 5% 0;
+              }
               &:not(:last-of-type) {
                 border-bottom: 1px solid #ddd;
                 > a {
                   font-weight: bold;
                   color: #222;
                   font-size: 15px;
+                  @media (max-width: 480px) {
+                    font-size: 13px;
+                  }
                 }
               }
               ul {
@@ -237,6 +247,9 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
                   a {
                     color: #333;
                     font-size: 18px;
+                    @media (max-width: 480px) {
+                      font-size: 16px;
+                    }
                   }
                 }
               }

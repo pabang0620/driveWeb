@@ -4,6 +4,7 @@ import { getProfileIncome } from "../../components/ApiGet";
 import { postProfileIncome } from "../../components/ApiPost";
 import locationData from "../../utils/locations.json"; // location.json 파일 import
 import { validateDate } from "../../components/Validators";
+import TitleBox from "../../components/TitleBox";
 const IncomeInfo = () => {
   const [userInfo, setUserInfo] = useState({
     income_type: "소득구분",
@@ -61,9 +62,7 @@ const IncomeInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>소득정보</span>
-      </h2>
+      <TitleBox title="회원정보" subtitle="소득정보" />
 
       <div className="content">
         <div className="inputWrap">

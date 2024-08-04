@@ -5,6 +5,7 @@ import { postProfileVehicle } from "../../components/ApiPost";
 import carsData from "../../utils/cars.json";
 import FranchiseFee from "./FranchiseFee";
 import Spinner from "../../components/Spinner"; // 스피너 컴포넌트 가져오기
+import TitleBox from "../../components/TitleBox";
 
 const CarInfo = () => {
   const [vehicleInfo, setVehicleInfo] = useState({
@@ -93,10 +94,7 @@ const CarInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>차량정보</span>
-      </h2>
-
+      <TitleBox title="회원정보" subtitle="차량정보" />
       <div className="content">
         <div className="inputWrap">
           <h3>차량정보</h3>

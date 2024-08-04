@@ -105,6 +105,12 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
           padding: 2%;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           border-radius: 5px;
+          @media (max-width: 768px) {
+            width: 100%;
+            aspect-ratio: unset;
+            height: auto;
+            padding: 3% 5%;
+          }
           > div {
             width: 100%;
             height: 100%;
@@ -113,6 +119,10 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
             flex-wrap: nowrap;
             justify-content: space-between;
             gap: 1%;
+            @media (max-width: 768px) {
+              justify-content: center;
+              gap: 10%;
+            }
           }
           .selectedDateRangeData_item {
             width: 100%;
@@ -122,6 +132,10 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
             align-items: center;
             font-size: 14px;
             color: #222;
+            @media (max-width: 768px) {
+              font-size: 12px;
+              padding: 1.5% 0;
+            }
             > div {
               width: 60%;
               display: flex;
@@ -141,6 +155,9 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
               width: auto;
               padding: 1% 2%;
               text-align: center;
+              @media (max-width: 768px) {
+                font-size: 11px;
+              }
             }
           }
         }

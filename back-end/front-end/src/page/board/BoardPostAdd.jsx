@@ -211,6 +211,9 @@ const BoardPostAdd = () => {
             font-size: 16px;
             font-weight: bold;
             outline: none;
+            @media (max-width: 768px) {
+              font-size: 13px;
+            }
           }
         }
         .BoardPostSection {

@@ -6,6 +6,7 @@ import { validatePhone, validateEmail } from "../../components/Validators";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트 경로에 맞게 수정하세요
+import TitleBox from "../../components/TitleBox";
 
 const PersonalInfo = () => {
   const [userInfo, setUserInfo] = useState({
@@ -133,9 +134,7 @@ const PersonalInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>개인정보</span>
-      </h2>
+      <TitleBox title="회원정보" subtitle="개인정보" />
       <div className="userInfoImgBox">
         {imagePreview ? (
           <div className="imageWrapper">

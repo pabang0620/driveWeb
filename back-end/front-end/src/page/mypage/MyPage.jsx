@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
+import TitleBox from "../../components/TitleBox";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  //const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -62,8 +62,7 @@ const MyPage = () => {
 
   return (
     <div className="container mypage-container">
-      <h2>마이페이지</h2>
-
+      <TitleBox title="마이페이지" />
       <select
         className="dateSelector"
         onChange={(e) => handleDateChange(e.target.value)}
@@ -104,6 +103,10 @@ const MyPage = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -126,6 +129,9 @@ const MyPage = () => {
               padding: 10px;
               cursor: pointer;
             }
+            @media (max-width: 768px) {
+              width: 25%;
+            }
           }
 
           .dataBox {
@@ -140,6 +146,13 @@ const MyPage = () => {
             justify-content: space-between;
             h3 {
               margin-bottom: 10px;
+              font-size: 20px;
+              @media (max-width: 768px) {
+                font-size: 18px;
+              }
+            }
+            @media (max-width: 768px) {
+              padding: 5% 5% 20% 5%;
             }
           }
         }

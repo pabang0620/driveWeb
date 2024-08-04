@@ -68,6 +68,9 @@ function Login() {
         .login-container {
           background-color: rgb(244, 244, 244);
           padding: 100px 0;
+          @media (max-width: 768px) {
+            padding: 50px 0;
+          }
           .login-box {
             max-width: 350px;
             width: 70%;
@@ -92,6 +95,9 @@ function Login() {
               display: block;
               color: rgb(156, 165, 173);
               font-size: 12px;
+              @media (max-width: 768px) {
+                font-size: 11px;
+              }
             }
             input {
               width: 95%;
@@ -100,6 +106,9 @@ function Login() {
               border-bottom: 1px solid #d0d7de;
               font-size: 16px;
               color: rgb(156, 165, 173);
+              @media (max-width: 768px) {
+                font-size: 13px;
+              }
             }
             input:focus {
               border-color: #222;
@@ -112,7 +121,9 @@ function Login() {
             font-size: 12px;
             text-align: right;
             padding: 10px 0;
-
+            @media (max-width: 768px) {
+              font-size: 11px;
+            }
             a {
               color: rgb(132 141 148);
               font-weight: bold;
@@ -130,7 +141,9 @@ function Login() {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
-
+            @media (max-width: 768px) {
+              font-size: 14px;
+            }
             a {
               color: white;
             }

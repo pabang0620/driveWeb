@@ -45,6 +45,11 @@ const Calendar = ({
           align-items: flex-start;
           justify-content: center;
           width: 48.5%;
+          aspect-ratio: 1 / 01;
+          @media (max-width: 768px) {
+            width: 100%;
+            margin-bottom: 25px;
+          }
           /*------------- 상단 인풋 박스 -------------*/
           .react-datepicker-wrapper {
             width: 100%;
@@ -58,6 +63,7 @@ const Calendar = ({
             font-size: 14px;
             color: #333;
             width: 100%;
+            height: 100%;
             text-align: center;
           }
 
@@ -92,10 +98,13 @@ const Calendar = ({
                 background-color: #69c2ef;
                 .react-datepicker__day-name {
                   color: white;
-                  width: 4rem;
-                  line-height: 2.2rem;
+                  width: 13%;
+                  line-height: 2.2vw;
                   text-align: center;
-                  margin: 0.07rem;
+                  margin: 0.3%;
+                  @media (max-width: 768px) {
+                    line-height: 5vw;
+                  }
                 }
               }
 
@@ -111,10 +120,13 @@ const Calendar = ({
               .react-datepicker__day--030,
               .react-datepicker__day--weekend,
               .react-datepicker__day--outside-month {
-                width: 4rem;
+                width: 13%;
                 line-height: 2.2rem;
                 text-align: center;
-                margin: 0.07rem;
+                margin: 0.5%;
+                @media (max-width: 768px) {
+                  line-height: 7vw;
+                }
               }
               .react-datepicker__day:hover {
                 background-color: #e6f0ff; // 마우스 오버 시 밝은 파란색
