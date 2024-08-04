@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SubMenu from "./SubMenu";
+import SidebarMenu from "./SidebarMenu"; // 사이드바 메뉴 컴포넌트 추가
 
 function Header() {
   const location = useLocation();
@@ -9,13 +10,12 @@ function Header() {
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false); // 사이드바 상태 추가
 
-  // 로그인 및 회원가입 페이지에서는 네비게이션을 숨김
   const hideNav =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup");
 
-  // 스크롤에 따라 헤더가 위로 움직이도록 처리
   const handleScroll = () => {
     const header = document.querySelector("header");
     if (header) {
@@ -27,7 +27,6 @@ function Header() {
     }
   };
 
-  // 페이지가 로드될 때 스크롤 이벤트 리스너 등록
   React.useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -35,7 +34,6 @@ function Header() {
     };
   }, []);
 
-  // 현재 경로와 비교하여 선택된 클래스를 반환하는 함수
   const getSelectedClass = (pathPrefix) => {
     return currentPath.startsWith(pathPrefix) ? "selected" : "";
   };
@@ -52,6 +50,14 @@ function Header() {
     <header className={hideNav ? "hidden" : ""}>
       <div className="header_inner">
         <div className="header_one">
+          <button
+            className="hamburger-menu"
+            onClick={() => setShowSidebar(!showSidebar)}
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </button>
           <h1>
             <Link to="/">
               운행일지
@@ -61,6 +67,7 @@ function Header() {
               />
             </Link>
           </h1>
+
           <ul className="login">
             {!isLoggedIn && (
               <li>
@@ -144,13 +151,18 @@ function Header() {
             </li>
           </ul>
         </nav>
+        <SidebarMenu
+          showSidebar={showSidebar}
+          onClose={() => setShowSidebar(false)}
+        />
+        {/* 사이드바 메뉴 표시 */}
         <style jsx>{`
           header {
             width: 100%;
             background-color: white;
 
             &.scrolling {
-              top: -60px; /* 헤더를 숨기고 싶은 만큼의 높이 */
+              top: -60px;
             }
             .header_inner {
               width: 80%;
@@ -282,17 +294,44 @@ function Header() {
                   &:nth-of-type(1) {
                     background-color: #7388b6;
                     &:hover {
-                      background-color: #9ab1d6; /* 약간 밝게 */
+                      background-color: #9ab1d6;
                     }
                   }
                   &:nth-of-type(2) {
                     background-color: #3c5997;
                     &:hover {
-                      background-color: #2c4375; /* 약간 어둡게 */
+                      background-color: #2c4375;
                     }
                   }
                 }
               }
+            }
+          }
+          .hamburger-menu {
+            display: none; /* 기본적으로 숨기기 */
+            flex-direction: column;
+            align-items: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            .bar {
+              width: 25px;
+              height: 3px;
+              background: #333;
+              margin: 3px 0;
+              border-radius: 2px;
+            }
+          }
+          @media (max-width: 768px) {
+            /* 테블릿 및 모바일 사이즈 */
+            .hamburger-menu {
+              display: flex; /* 햄버거 메뉴 아이콘 표시 */
+            }
+            nav {
+              display: none; /* 기본 내비게이션 숨기기 */
+            }
+            .header_inner {
+              flex-direction: column;
             }
           }
         `}</style>
