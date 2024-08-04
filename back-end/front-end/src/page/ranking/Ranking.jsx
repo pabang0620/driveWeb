@@ -14,11 +14,19 @@ const Ranking = () => {
           width: 70%;
           padding: 100px 0;
           margin: 0 auto;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           .rankingInner {
             width: 100%;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            @media (max-width: 768px) {
+              margin-top: 15px;
+              gap: 10px;
+            }
           }
         }
       `}</style>
