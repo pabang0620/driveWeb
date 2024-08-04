@@ -103,7 +103,6 @@ const RankingList = ({ title, rankType }) => {
       <style jsx>{`
         .ranking {
           width: 30%;
-          margin-bottom: 50px;
           > div {
             display: flex;
             flex-wrap: wrap;

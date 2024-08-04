@@ -23,16 +23,19 @@ const TopRankList = ({ posts }) => {
 
   return (
     <div className="postListBox">
-      <div className="postList">
-        {posts.map((post) => (
-          <div key={post.id} className="postBox">
-            <h4>{post.title}</h4>
-            <p>{formatRelativeDate(post.createdAt)}</p>
-            <p>{post._count.comments}</p>
-          </div>
-        ))}
-      </div>
-
+      {posts.length === 0 ? (
+        <div className="noPostsMessage">작성된 글이 없습니다.</div>
+      ) : (
+        <div className="postList">
+          {posts.map((post) => (
+            <div key={post.id} className="postBox">
+              <h4>{post.title}</h4>
+              <p>{formatRelativeDate(post.createdAt)}</p>
+              <p>{post._count.comments}</p>
+            </div>
+          ))}
+        </div>
+      )}
       <style jsx>{`
         .postListBox {
           width: 100%;
