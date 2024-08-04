@@ -157,6 +157,9 @@ function SignupEmail() {
             width: 70%;
             margin: 0 auto;
             background-color: white;
+            @media (max-width: 768px) {
+              width: 85%;
+            }
           }
           button.goBack {
             font-weight: bold;
@@ -169,20 +172,33 @@ function SignupEmail() {
           h3 {
             font-size: 24px;
             margin: 50px 0;
+            @media (max-width: 768px) {
+              font-size: 8vw;
+              margin: 30px 0;
+            }
           }
           p {
             font-size: 14px;
             margin-bottom: 30px;
+            @media (max-width: 768px) {
+              font-size: 5vw;
+              white-space: nowrap;
+              margin: 15px 0;
+            }
           }
           .input-container {
             margin-bottom: 15px;
             text-align: left;
+
             label {
               display: block;
-
               color: rgb(156, 165, 173);
               font-size: 12px;
+              @media (max-width: 768px) {
+                font-size: 4.5vw;
+              }
             }
+
             input {
               width: 95%;
               padding: 10px 0;
@@ -190,6 +206,9 @@ function SignupEmail() {
               border-bottom: 1px solid #d0d7de;
               font-size: 16px;
               color: rgb(156, 165, 173);
+              @media (max-width: 768px) {
+                font-size: 5vw;
+              }
             }
             input:focus {
               border-color: #222;
@@ -199,16 +218,27 @@ function SignupEmail() {
           }
           .terms {
             margin-top: 100px;
+            @media (max-width: 768px) {
+              margin-top: 70px;
+            }
             p:not(:nth-of-type(1)) {
               font-size: 14px;
               padding: 0;
               margin-bottom: 10px;
+              @media (max-width: 768px) {
+                font-size: 4.5vw;
+                margin-bottom: 5px;
+              }
             }
             .agreeAll {
               font-size: 16px;
               font-weight: bold;
               border-bottom: 1px solid #d9d9d9;
               padding: 20px 0;
+              @media (max-width: 768px) {
+                font-size: 5vw;
+                padding: 10px 0;
+              }
             }
             label {
               margin-left: 10px;
@@ -229,6 +259,9 @@ function SignupEmail() {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
+            @media (max-width: 768px) {
+              font-size: 5vw;
+            }
             a {
               color: white;
               display: inline-block;

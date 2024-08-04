@@ -1,4 +1,4 @@
-const drivingData = [
+export const drivingData = [
   {
     drivingLogId: 1,
     date: "2024-01-01",
@@ -161,4 +161,512 @@ const drivingData = [
   },
 ];
 
-export default drivingData;
+// DummyData.js
+export const topLikedPosts = [
+  {
+    id: 26,
+    title: "다섯 번째 공지",
+    createdAt: "2024-07-30T04:32:31.000Z",
+    likeCount: 5,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 16,
+    title: "다섯 번째 자유 게시글",
+    createdAt: "2024-07-30T09:15:22.000Z",
+    likeCount: 5,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 30,
+    title: "아홉 번째 공지",
+    createdAt: "2024-07-30T15:05:12.000Z",
+    likeCount: 4,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 20,
+    title: "아홉 번째 자유 게시글",
+    createdAt: "2024-07-30T18:22:08.000Z",
+    likeCount: 4,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 28,
+    title: "일곱 번째 공지",
+    createdAt: "2024-07-30T11:45:36.000Z",
+    likeCount: 3,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 18,
+    title: "일곱 번째 자유 게시글",
+    createdAt: "2024-07-30T14:05:50.000Z",
+    likeCount: 3,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 24,
+    title: "세 번째 공지",
+    createdAt: "2024-07-30T06:30:23.000Z",
+    likeCount: 2,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 14,
+    title: "세 번째 자유 게시글",
+    createdAt: "2024-07-30T12:10:45.000Z",
+    likeCount: 2,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 31,
+    title: "열 번째 공지",
+    createdAt: "2024-07-30T08:20:16.000Z",
+    likeCount: 2,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 21,
+    title: "열 번째 자유 게시글",
+    createdAt: "2024-07-30T17:05:12.000Z",
+    likeCount: 2,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+];
+
+export const topViewedPosts = [
+  {
+    id: 16,
+    title: "다섯 번째 자유 게시글",
+    createdAt: "2024-07-30T09:15:22.000Z",
+    viewCount: 24,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 26,
+    title: "다섯 번째 공지",
+    createdAt: "2024-07-30T04:32:31.000Z",
+    viewCount: 22,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 1,
+    title: "자유 게시판 ",
+    createdAt: "2024-07-30T11:45:36.000Z",
+    viewCount: 17,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 2,
+    },
+  },
+  {
+    id: 13,
+    title: "두 번째 자유 게시글",
+    createdAt: "2024-07-30T14:05:50.000Z",
+    viewCount: 15,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 23,
+    title: "두 번째 공지",
+    createdAt: "2024-07-30T06:30:23.000Z",
+    viewCount: 15,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 20,
+    title: "아홉 번째 자유 게시글",
+    createdAt: "2024-07-30T18:22:08.000Z",
+    viewCount: 14,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 30,
+    title: "아홉 번째 공지",
+    createdAt: "2024-07-30T15:05:12.000Z",
+    viewCount: 14,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 12,
+    title: "첫 번째 자유 게시글",
+    createdAt: "2024-07-30T10:20:11.000Z",
+    viewCount: 12,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 22,
+    title: "첫 번째 공지",
+    createdAt: "2024-07-30T13:45:33.000Z",
+    viewCount: 12,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 18,
+    title: "일곱 번째 자유 게시글",
+    createdAt: "2024-07-30T08:20:16.000Z",
+    viewCount: 11,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+];
+
+export const boardsWithPosts = [
+  {
+    id: 1,
+    name: "공지사항",
+    posts: [],
+  },
+  {
+    id: 2,
+    name: "자유게시판",
+    posts: [
+      {
+        id: 21,
+        title: "열 번째 자유 게시글",
+        createdAt: "2024-07-30T17:05:12.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 1,
+        title: "자유 게시판 ",
+        createdAt: "2024-07-30T11:45:36.000Z",
+        _count: {
+          comments: 2,
+        },
+      },
+      {
+        id: 20,
+        title: "아홉 번째 자유 게시글",
+        createdAt: "2024-07-30T18:22:08.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 19,
+        title: "여덟 번째 자유 게시글",
+        createdAt: "2024-07-30T12:10:45.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 18,
+        title: "일곱 번째 자유 게시글",
+        createdAt: "2024-07-30T14:05:50.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 17,
+        title: "여섯 번째 자유 게시글",
+        createdAt: "2024-07-30T09:15:22.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 16,
+        title: "다섯 번째 자유 게시글",
+        createdAt: "2024-07-30T04:32:31.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 15,
+        title: "네 번째 자유 게시글",
+        createdAt: "2024-07-30T10:20:11.000Z",
+        _count: {
+          comments: 1,
+        },
+      },
+      {
+        id: 14,
+        title: "세 번째 자유 게시글",
+        createdAt: "2024-07-30T06:30:23.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 13,
+        title: "두 번째 자유 게시글",
+        createdAt: "2024-07-30T08:20:16.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "사진게시판",
+    posts: [
+      {
+        id: 31,
+        title: "열 번째 공지",
+        createdAt: "2024-07-30T08:20:16.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 30,
+        title: "아홉 번째 공지",
+        createdAt: "2024-07-30T15:05:12.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 29,
+        title: "여덟 번째 공지",
+        createdAt: "2024-07-30T12:10:45.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 28,
+        title: "일곱 번째 공지",
+        createdAt: "2024-07-30T11:45:36.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 27,
+        title: "여섯 번째 공지",
+        createdAt: "2024-07-30T09:15:22.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 26,
+        title: "다섯 번째 공지",
+        createdAt: "2024-07-30T04:32:31.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 25,
+        title: "네 번째 공지",
+        createdAt: "2024-07-30T10:20:11.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 24,
+        title: "세 번째 공지",
+        createdAt: "2024-07-30T06:30:23.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 23,
+        title: "두 번째 공지",
+        createdAt: "2024-07-30T14:05:50.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 22,
+        title: "첫 번째 공지",
+        createdAt: "2024-07-30T13:45:33.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+    ],
+  },
+];
+
+// ---------------------------------------
+export const fuelType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    fuelEfficiency: 15,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    fuelEfficiency: 12,
+  },
+  {
+    id: 3,
+    nickname: "빛나는 운전",
+    fuelEfficiency: 18,
+  },
+  {
+    id: 4,
+    nickname: "여행가",
+    fuelEfficiency: 9,
+  },
+  {
+    id: 5,
+    nickname: "스피드왕",
+    fuelEfficiency: 11,
+  },
+];
+export const jobType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    totalDrivingTime: 120,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    totalDrivingTime: 95,
+  },
+  {
+    id: 3,
+    nickname: "시간왕",
+    totalDrivingTime: 130,
+  },
+  {
+    id: 4,
+    nickname: "버스기사",
+    totalDrivingTime: 110,
+  },
+  {
+    id: 5,
+    nickname: "운전왕",
+    totalDrivingTime: 105,
+  },
+];
+export const carType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    netIncome: 500000,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    netIncome: 350000,
+  },
+  {
+    id: 3,
+    nickname: "성공적인 운전",
+    netIncome: 600000,
+  },
+  {
+    id: 4,
+    nickname: "금수저",
+    netIncome: 400000,
+  },
+  {
+    id: 5,
+    nickname: "우수한 운전",
+    netIncome: 450000,
+  },
+];

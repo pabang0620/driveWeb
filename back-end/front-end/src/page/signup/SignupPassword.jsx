@@ -75,6 +75,9 @@ function SignupPassword() {
             width: 70%;
             margin: 0 auto;
             background-color: white;
+            @media (max-width: 768px) {
+              width: 85%;
+            }
           }
           button.goBack {
             font-weight: bold;
@@ -87,6 +90,10 @@ function SignupPassword() {
           h3 {
             font-size: 24px;
             margin: 50px 0;
+            @media (max-width: 768px) {
+              font-size: 8vw;
+              margin: 30px 0;
+            }
           }
           .input-container {
             margin-bottom: 15px;
@@ -100,13 +107,18 @@ function SignupPassword() {
                 color: #555;
                 font-size: 14px;
                 line-height: 20px;
+                @media (max-width: 768px) {
+                  font-size: 4.5vw;
+                }
               }
             }
             label {
               display: block;
-
               color: rgb(156, 165, 173);
               font-size: 12px;
+              @media (max-width: 768px) {
+                font-size: 4.5vw;
+              }
             }
             input {
               width: 95%;
@@ -115,6 +127,9 @@ function SignupPassword() {
               border-bottom: 1px solid #d0d7de;
               font-size: 16px;
               color: rgb(156, 165, 173);
+              @media (max-width: 768px) {
+                font-size: 5vw;
+              }
             }
             input:focus {
               border-color: #222;
@@ -139,6 +154,9 @@ function SignupPassword() {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
+            @media (max-width: 768px) {
+              font-size: 5vw;
+            }
             a {
               color: white;
               display: inline-block;

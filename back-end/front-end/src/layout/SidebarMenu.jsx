@@ -16,20 +16,24 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
       </h1>
       {!isLoggedIn && (
         <p className="loginText">
-          로그인하면, 운행일지를 쉽게 보고 관리할 수 있어요.
+          로그인하면, 운행일지를 쉽게 보고 편리하게 관리할 수 있어요.
         </p>
       )}
       <ul className="login">
         {!isLoggedIn && (
           <li>
-            <Link to="/signup">회원가입</Link>
+            <Link to="/signup" onClick={onClose}>
+              회원가입
+            </Link>
           </li>
         )}
         {isLoggedIn ? (
           <li onClick={() => setShowLogoutModal(true)}>로그아웃</li>
         ) : (
           <li>
-            <Link to="/login">로그인</Link>
+            <Link to="/login" onClick={onClose}>
+              로그인
+            </Link>
           </li>
         )}
       </ul>

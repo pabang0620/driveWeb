@@ -72,6 +72,8 @@ const TopRankList = ({ posts }) => {
                 font-size: 14px;
                 font-weight: normal;
                 color: #222;
+                @media (max-width: 768px) {
+                }
               }
               p {
                 font-size: 12px;

@@ -56,30 +56,39 @@ const TabsContainer = ({
       <style jsx>{`
         .tabsContainer {
           display: flex;
+          flex-direction: row;
           justify-content: space-between;
-        }
-        .leftTabs,
-        .rightTabs {
-          width: 45%;
-          .tabList {
-            display: flex;
-            justify-content: center;
-            background-color: #f0f3f5;
-            border-radius: 5px;
-            overflow: hidden;
-            button:not(:last-of-type) {
-              border-right: 1px solid #ddd;
+
+          @media (max-width: 768px) {
+            flex-direction: column;
+            gap: 15px;
+          }
+          .leftTabs,
+          .rightTabs {
+            width: 45%;
+            @media (max-width: 768px) {
+              width: 100%;
             }
-            button {
-              padding: 10px 20px;
-              cursor: pointer;
-              flex: 1;
-              font-weight: bold;
-              &.active {
+            .tabList {
+              display: flex;
+              justify-content: center;
+              background-color: #f0f3f5;
+              border-radius: 5px;
+              overflow: hidden;
+              button:not(:last-of-type) {
+                border-right: 1px solid #ddd;
+              }
+              button {
+                padding: 10px 5px;
+                cursor: pointer;
+                flex: 1;
                 font-weight: bold;
-                background-color: #05aced;
-                color: white;
-                border: none;
+                &.active {
+                  font-weight: bold;
+                  background-color: #05aced;
+                  color: white;
+                  border: none;
+                }
               }
             }
           }

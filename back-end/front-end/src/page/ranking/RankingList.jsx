@@ -4,7 +4,7 @@ import {
   postRankTopNetIncome,
   postRankTopFuelEfficiency,
 } from "../../components/ApiPost";
-
+import { fuelType, carType, jobType } from "../../components/dummy";
 const RankingList = ({ title, rankType }) => {
   const [selectedOption, setSelectedOption] = useState("");
   const [profiles, setProfiles] = useState([]);
@@ -41,17 +41,30 @@ const RankingList = ({ title, rankType }) => {
     const fetchProfiles = async () => {
       try {
         let response;
+        // switch (rankType) {
+        //   case "jobType":
+        //     response = await postRankTopUsers({ jobtype: selectedOption });
+        //     break;
+        //   case "carType":
+        //     response = await postRankTopNetIncome({ carType: selectedOption });
+        //     break;
+        //   case "fuelType":
+        //     response = await postRankTopFuelEfficiency({
+        //       fuelType: selectedOption,
+        //     });
+        //     break;
+        //   default:
+        //     throw new Error("알 수 없는 API 타입입니다.");
+        // }
         switch (rankType) {
           case "jobType":
-            response = await postRankTopUsers({ jobtype: selectedOption });
+            response = jobType; // 더미 데이터로 교체
             break;
           case "carType":
-            response = await postRankTopNetIncome({ carType: selectedOption });
+            response = carType; // 더미 데이터로 교체
             break;
           case "fuelType":
-            response = await postRankTopFuelEfficiency({
-              fuelType: selectedOption,
-            });
+            response = fuelType; // 더미 데이터로 교체
             break;
           default:
             throw new Error("알 수 없는 API 타입입니다.");
@@ -103,12 +116,19 @@ const RankingList = ({ title, rankType }) => {
       <style jsx>{`
         .ranking {
           width: 30%;
+          @media (max-width: 768px) {
+            width: 100%;
+            margin-bottom: 15px;
+          }
           > div {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             width: 100%;
             margin-bottom: 20px;
+            @media (max-width: 768px) {
+              margin-bottom: 10px;
+            }
             h3 {
               color: #4c4c4c;
               font-size: 16px;
@@ -133,26 +153,35 @@ const RankingList = ({ title, rankType }) => {
             gap: 10px;
             background-color: #f0f3f5;
             border-radius: 5px;
+            @media (max-width: 768px) {
+              gap: 5px;
+              padding: 3%;
+            }
             li {
               background-color: white;
               border: 1px solid #d9d9d9;
               display: flex;
+              flex-wrap: wrap;
               justify-content: space-between;
               align-items: center;
+              gap: 5%;
               width: 100%;
               border-radius: 5px;
               padding: 10px;
+
               .profilePicture {
-                width: 40px;
-                height: 40px;
+                width: 35px;
+                aspect-ratio: 1/1;
                 background-color: gold;
                 border-radius: 50%;
               }
               .profileName {
                 font-size: 14px;
               }
+
               .profileValue {
                 font-size: 12px;
+                margin-left: auto;
               }
             }
           }

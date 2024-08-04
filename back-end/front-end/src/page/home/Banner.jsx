@@ -20,6 +20,10 @@ const Banner = () => {
           background-position: center;
           display: flex;
           align-items: center;
+          @media (max-width: 768px) {
+            height: 200px;
+            background-position: 80%;
+          }
           .banner_text {
             width: 80%;
             margin: 0 auto;
@@ -35,6 +39,14 @@ const Banner = () => {
               margin-top: 10px;
               font-size: 40px;
               color: white;
+            }
+            @media (max-width: 768px) {
+              h3 {
+                font-size: 6.5vw;
+              }
+              h2 {
+                font-size: 4.5vw;
+              }
             }
           }
         }

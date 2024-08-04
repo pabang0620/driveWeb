@@ -72,6 +72,9 @@ const SignupJob = () => {
             width: 70%;
             margin: 0 auto;
             background-color: white;
+            @media (max-width: 768px) {
+              width: 85%;
+            }
           }
           button.goBack {
             font-weight: bold;
@@ -88,6 +91,10 @@ const SignupJob = () => {
           p {
             font-size: 14px;
             margin-bottom: 30px;
+            @media (max-width: 768px) {
+              font-size: 5vw;
+              margin: 15px 0;
+            }
           }
           .jobBox {
             margin-bottom: 50px;
@@ -97,6 +104,9 @@ const SignupJob = () => {
               background-color: #ddd;
               border-radius: 5px;
               cursor: pointer;
+              @media (max-width: 768px) {
+                font-size: 5vw;
+              }
               &.selected {
                 background-color: #05aced;
                 color: white;
@@ -115,6 +125,9 @@ const SignupJob = () => {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
+            @media (max-width: 768px) {
+              font-size: 5vw;
+            }
             a {
               color: white;
               display: inline-block;

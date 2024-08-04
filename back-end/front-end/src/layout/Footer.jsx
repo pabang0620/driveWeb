@@ -30,20 +30,37 @@ function Footer() {
           display: flex;
           flex-direction: column;
           gap: 30px 0;
+          @media (max-width: 768px) {
+            height: 300px;
+            padding: 10% 8%;
+          }
           > div {
             width: 80%;
             margin: 0 auto;
             max-width: 1200px;
+            @media (max-width: 768px) {
+              width: 100%;
+            }
             h2 {
               font-weight: 600;
               font-size: 16px;
               margin: 30px 0 10px 0;
+              @media (max-width: 768px) {
+                font-weight: 600;
+                font-size: 7vw;
+                margin: 0 0 15px 0;
+              }
             }
             ul.help_area,
             ul.company_area {
               display: flex;
               justify-content: flex-start;
               gap: 0 10px;
+              @media (max-width: 768px) {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+              }
               li {
                 font-size: 12px;
                 line-height: 15px;

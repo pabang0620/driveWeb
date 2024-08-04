@@ -5,32 +5,36 @@ import NoticeZone from "./NoticeZone";
 import TopRankList from "./TopRankList";
 import Banner from "./Banner";
 import TabsContainer from "./TabsContainer";
-
+import {
+  boardsWithPosts,
+  topViewedPosts,
+  topLikedPosts,
+} from "../../components/dummy";
 function Home() {
-  const [boardsWithPosts, setBoardsWithPosts] = useState([]);
-  const [topViewedPosts, setTopViewedPosts] = useState([]);
-  const [topLikedPosts, setTopLikedPosts] = useState([]);
+  // const [boardsWithPosts, setBoardsWithPosts] = useState([]);
+  // const [topViewedPosts, setTopViewedPosts] = useState([]);
+  // const [topLikedPosts, setTopLikedPosts] = useState([]);
   const [activeLeftTab, setActiveLeftTab] = useState(0);
   const [activeRightTab, setActiveRightTab] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchTopRank = async () => {
-      try {
-        const response = await axios.get("/api/rank/topRank");
-        setBoardsWithPosts(response.data.boardsWithPosts);
-        setTopViewedPosts(response.data.topViewedPosts);
-        setTopLikedPosts(response.data.topLikedPosts);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchTopRank = async () => {
+  //     try {
+  //       const response = await axios.get("/api/rank/topRank");
+  //       setBoardsWithPosts(response.data.boardsWithPosts);
+  //       setTopViewedPosts(response.data.topViewedPosts);
+  //       setTopLikedPosts(response.data.topLikedPosts);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       setError(err.message);
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchTopRank();
-  }, []);
+  //   fetchTopRank();
+  // }, []);
 
   return (
     <div className="home-container">
@@ -69,6 +73,11 @@ function Home() {
             flex-wrap: wrap;
             flex-direction: column;
             gap: 50px;
+            @media (max-width: 768px) {
+              width: 90%;
+              margin: 30px auto;
+              gap: 30px;
+            }
             .rankingList {
               width: 100%;
               display: flex;

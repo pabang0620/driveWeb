@@ -168,6 +168,9 @@ function Header() {
               width: 80%;
               margin: 0 auto;
               max-width: 1200px;
+              @media (max-width: 768px) {
+                width: 90%;
+              }
             }
             .header_one {
               width: 100%;
@@ -175,10 +178,14 @@ function Header() {
               display: flex;
               justify-content: space-between;
               align-items: center;
+              @media (max-width: 768px) {
+                height: 50px;
+              }
               h1 {
                 font-size: 18px;
                 line-height: 50px;
                 font-weight: bold;
+
                 img {
                   height: 35px;
                   width: auto;
@@ -198,6 +205,9 @@ function Header() {
                 justify-content: flex-end;
                 align-items: center;
                 gap: 15px;
+                @media (max-width: 768px) {
+                  width: 45%;
+                }
                 li {
                   font-size: 14px;
                   cursor: pointer;
@@ -206,6 +216,12 @@ function Header() {
                   line-height: 40px;
                   font-weight: bold;
                   padding: 0 15px;
+                  @media (max-width: 768px) {
+                    font-size: 4vw;
+                    padding: 0 3vw;
+                    height: 30px;
+                    line-height: 30px;
+                  }
                   a {
                     width: 100%;
                     height: 100%;
@@ -214,6 +230,9 @@ function Header() {
                   }
                   &:nth-of-type(1) {
                     background-color: #f0f3f5;
+                    @media (max-width: 768px) {
+                      display: none;
+                    }
                   }
                   &:nth-of-type(2) {
                     background-color: #3c5997;
@@ -315,10 +334,10 @@ function Header() {
             border: none;
             cursor: pointer;
             .bar {
-              width: 25px;
-              height: 3px;
+              width: 24px;
+              height: 2.5px;
               background: #333;
-              margin: 3px 0;
+              margin: 2.5px 0;
               border-radius: 2px;
             }
           }
