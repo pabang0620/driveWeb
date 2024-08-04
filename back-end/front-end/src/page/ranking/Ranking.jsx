@@ -23,7 +23,7 @@ const Ranking = () => {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            @media (max-width: 768px) {
+            @media (max-width: 1024px) {
               margin-top: 15px;
               gap: 10px;
             }

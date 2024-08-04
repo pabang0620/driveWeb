@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import BoardBox from "./BoardBox";
-
+import { dummyboardData } from "../../components/dummy";
 const Board = () => {
   const [boardData, setBoardData] = useState([]);
 
@@ -64,6 +64,10 @@ const Board = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           .boardFlex {
             height: 821px;
             margin: 50px 0 0;

@@ -21,6 +21,9 @@ const Banner = () => {
           display: flex;
           align-items: center;
           @media (max-width: 768px) {
+            background-position: 85%;
+          }
+          @media (max-width: 480px) {
             height: 200px;
             background-position: 80%;
           }
@@ -30,7 +33,6 @@ const Banner = () => {
             max-width: 1200px;
             color: white;
             text-shadow: 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.5);
-
             h3 {
               font-size: 20px;
               color: white;

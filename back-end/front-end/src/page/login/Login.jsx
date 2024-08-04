@@ -77,9 +77,6 @@ function Login() {
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            @media (max-width: 768px) {
-              width: 85%;
-            }
           }
           h2 {
             img {
@@ -95,9 +92,6 @@ function Login() {
               display: block;
               color: rgb(156, 165, 173);
               font-size: 12px;
-              @media (max-width: 768px) {
-                font-size: 4vw;
-              }
             }
             input {
               width: 95%;
@@ -106,9 +100,6 @@ function Login() {
               border-bottom: 1px solid #d0d7de;
               font-size: 16px;
               color: rgb(156, 165, 173);
-              @media (max-width: 768px) {
-                font-size: 5vw;
-              }
             }
             input:focus {
               border-color: #222;
@@ -121,9 +112,7 @@ function Login() {
             font-size: 12px;
             text-align: right;
             padding: 10px 0;
-            @media (max-width: 768px) {
-              font-size: 4vw;
-            }
+
             a {
               color: rgb(132 141 148);
               font-weight: bold;
@@ -141,9 +130,7 @@ function Login() {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
-            @media (max-width: 768px) {
-              font-size: 5vw;
-            }
+
             a {
               color: white;
             }

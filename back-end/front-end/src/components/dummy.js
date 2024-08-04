@@ -670,3 +670,244 @@ export const carType = [
     netIncome: 450000,
   },
 ];
+
+// ---------------------------------------
+export const dummyboardData = {
+  board: {
+    name: "자유게시판",
+  },
+  posts: [
+    {
+      id: 1,
+      title: "자유 게시판 ",
+      createdAt: "2024-07-30T04:32:31.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 2,
+      title: "첫 번째 자유 게시글",
+      createdAt: "2024-07-30T04:32:31.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 3,
+      title: "두 번째 자유 게시글",
+      createdAt: "2024-07-31T05:33:32.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 4,
+      title: "세 번째 자유 게시글",
+      createdAt: "2024-08-01T06:34:33.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 4,
+      },
+    },
+    {
+      id: 5,
+      title: "네 번째 자유 게시글",
+      createdAt: "2024-08-02T07:35:34.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 6,
+      title: "다섯 번째 자유 게시글",
+      createdAt: "2024-08-03T08:36:35.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 7,
+      title: "여섯 번째 자유 게시글",
+      createdAt: "2024-08-04T09:37:36.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 8,
+      title: "일곱 번째 자유 게시글",
+      createdAt: "2024-08-05T10:38:37.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 5,
+      },
+    },
+    {
+      id: 9,
+      title: "여덟 번째 자유 게시글",
+      createdAt: "2024-08-06T11:39:38.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 10,
+      title: "아홉 번째 자유 게시글",
+      createdAt: "2024-08-07T12:40:39.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 11,
+      title: "열 번째 자유 게시글",
+      createdAt: "2024-08-08T13:41:40.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 12,
+      title: "열한 번째 자유 게시글",
+      createdAt: "2024-08-09T14:42:41.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 13,
+      title: "열두 번째 자유 게시글",
+      createdAt: "2024-08-10T15:43:42.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 14,
+      title: "열세 번째 자유 게시글",
+      createdAt: "2024-08-11T16:44:43.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 15,
+      title: "열네 번째 자유 게시글",
+      createdAt: "2024-08-12T17:45:44.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 16,
+      title: "열다섯 번째 자유 게시글",
+      createdAt: "2024-08-13T18:46:45.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 4,
+      },
+    },
+    {
+      id: 17,
+      title: "열여섯 번째 자유 게시글",
+      createdAt: "2024-08-14T19:47:46.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 18,
+      title: "열일곱 번째 자유 게시글",
+      createdAt: "2024-08-15T20:48:47.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 5,
+      },
+    },
+    {
+      id: 19,
+      title: "열여덟 번째 자유 게시글",
+      createdAt: "2024-08-16T21:49:48.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 20,
+      title: "열아홉 번째 자유 게시글",
+      createdAt: "2024-08-17T22:50:49.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 21,
+      title: "스무 번째 자유 게시글",
+      createdAt: "2024-08-18T23:51:50.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+  ],
+  totalPosts: 21,
+};

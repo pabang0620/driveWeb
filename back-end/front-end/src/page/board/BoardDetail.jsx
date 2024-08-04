@@ -471,6 +471,10 @@ const BoardDetail = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0 200px;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           .burgerRelate {
             position: relative;
             .postControllButtonBox {

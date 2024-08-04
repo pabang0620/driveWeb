@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import dummyboardData from "../../components/dummy";
 const BoardBox = ({ boardTitle, notices }) => {
   const navigate = useNavigate();
 

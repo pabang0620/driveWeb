@@ -179,18 +179,19 @@ function Header() {
               justify-content: space-between;
               align-items: center;
               @media (max-width: 768px) {
+                height: 60px;
+              }
+              @media (max-width: 480px) {
                 height: 50px;
               }
               h1 {
                 font-size: 18px;
                 line-height: 50px;
                 font-weight: bold;
-
                 img {
                   height: 35px;
                   width: auto;
                 }
-
                 a {
                   display: inline-block;
                   display: flex;
@@ -199,15 +200,12 @@ function Header() {
                 }
               }
               ul.login {
-                width: 80%;
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-end;
                 align-items: center;
                 gap: 15px;
-                @media (max-width: 768px) {
-                  width: 45%;
-                }
+                margin-left: auto;
                 li {
                   font-size: 14px;
                   cursor: pointer;
@@ -217,7 +215,7 @@ function Header() {
                   font-weight: bold;
                   padding: 0 15px;
                   @media (max-width: 768px) {
-                    font-size: 4vw;
+                    font-size: 14px;
                     padding: 0 3vw;
                     height: 30px;
                     line-height: 30px;
@@ -333,6 +331,7 @@ function Header() {
             background: transparent;
             border: none;
             cursor: pointer;
+            margin-right: 15px;
             .bar {
               width: 24px;
               height: 2.5px;

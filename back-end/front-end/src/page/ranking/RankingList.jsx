@@ -116,7 +116,11 @@ const RankingList = ({ title, rankType }) => {
       <style jsx>{`
         .ranking {
           width: 30%;
-          @media (max-width: 768px) {
+          @media (max-width: 1024px) {
+            width: 48%;
+            margin-bottom: 15px;
+          }
+          @media (max-width: 767px) {
             width: 100%;
             margin-bottom: 15px;
           }

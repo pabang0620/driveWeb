@@ -269,7 +269,7 @@ const MyCar = () => {
               </div>
             </div>
           ))}
-          <div className="myCarRow">
+          <div className="myCarRow policyDuration">
             <div className="myCarLabel">보험기간</div>
             <div className="myCarValue">
               <input
@@ -319,6 +319,10 @@ const MyCar = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
         }
         .car-info {
           display: flex;
@@ -353,6 +357,10 @@ const MyCar = () => {
         .upload-placeholder p {
           margin: 0;
           margin-bottom: 10px;
+          @media (max-width: 768px) {
+            margin-bottom: 0;
+            margin-left: -5px;
+          }
         }
         .section-title {
           align-self: flex-start;
@@ -370,6 +378,9 @@ const MyCar = () => {
           justify-content: flex-start;
           margin: 20px 0;
           gap: 1.5%;
+          @media (max-width: 768px) {
+            gap: 2%;
+          }
         }
         .myCarRow {
           display: flex;
@@ -378,6 +389,13 @@ const MyCar = () => {
           margin-bottom: 20px;
           margin-right: 10px;
           box-sizing: border-box;
+          @media (max-width: 768px) {
+            width: 32%;
+            margin-right: 0;
+            &.policyDuration {
+              width: 95%;
+            }
+          }
         }
         .myCarLabel {
           font-weight: bold;
@@ -385,11 +403,17 @@ const MyCar = () => {
           color: #c1c1c1;
           font-size: 14px;
           padding-left: 3px;
+          @media (max-width: 768px) {
+            padding-left: 0px;
+          }
         }
         .myCarValue {
           display: flex;
           align-items: center;
           position: relative;
+          @media (max-width: 768px) {
+            justify-content: space-between;
+          }
         }
         .myCarValue input,
         .myCarValue select {
@@ -397,12 +421,22 @@ const MyCar = () => {
           padding: 5px 5px 5px 0;
           box-sizing: border-box;
           border: none;
-          margin-right: 5px;
           border-bottom: none;
           color: #c1c1c1;
+          margin-right: 5px;
+          @media (max-width: 768px) {
+            margin: 0;
+            width: 70%;
+            font-size: 12px;
+          }
         }
+
         .myCarValue input[type="date"] {
           width: calc(45% - 5px);
+          @media (max-width: 768px) {
+            margin: 0;
+            width: 70%;
+          }
         }
         .edit-button {
           background: none;

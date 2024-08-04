@@ -281,7 +281,7 @@ const CarInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               border: none;
-              width: 60%;
+              width: 60ZZZZ%;
               height: 100%;
               text-align: left;
               background: none;

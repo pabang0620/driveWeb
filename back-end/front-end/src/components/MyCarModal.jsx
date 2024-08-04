@@ -67,6 +67,9 @@ const MyCarModal = ({ isOpen, onClose, token, onItemAdded, myCarId }) => {
           flex-direction: column;
           align-items: center;
           position: relative;
+          @media (max-width: 768px) {
+            width: 80%;
+          }
         }
         .close {
           color: #333;
