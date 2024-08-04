@@ -17,28 +17,28 @@ const BoardPost = () => {
   const [boardName, setBoardName] = useState("");
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
 
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `/api/post/board/${boardId}?page=${currentPage}&search=${searchTerm}`
-  //       );
-  //       //setPosts(response.data.posts);
-  //       setTotalPosts(response.data.totalPosts);
-  //       setBoardName(response.data.board.name);
-  //     } catch (error) {
-  //       console.error(
-  //         "게시글 데이터를 가져오는 중 오류가 발생했습니다.",
-  //         error
-  //       );
-  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get(
+          `/api/post/board/${boardId}?page=${currentPage}&search=${searchTerm}`
+        );
+        setPosts(response.data.posts);
+        setTotalPosts(response.data.totalPosts);
+        setBoardName(response.data.board.name);
+      } catch (error) {
+        console.error(
+          "게시글 데이터를 가져오는 중 오류가 발생했습니다.",
+          error
+        );
+        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchPosts();
-  // }, [boardId, currentPage]);
+    fetchPosts();
+  }, [boardId, currentPage]);
 
   const handleSearch = async () => {
     try {

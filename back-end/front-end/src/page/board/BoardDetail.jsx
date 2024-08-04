@@ -501,26 +501,38 @@ const BoardDetail = () => {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            @media (max-width: 768px) {
+              padding: 0;
+              width: 100%;
+            }
+            .commentInput {
+              width: 95%;
+              border-radius: 3px;
+              height: 59px;
+              border: 1px solid #d9d9d9;
+              padding: 10px 0 0 10px;
+              font-size: 14px;
+              outline: none;
+              resize: none; /* 사용자 크기 조정 비활성화 */
+              @media (max-width: 768px) {
+                height: 50px;
+                font-size: 12px;
+              }
+            }
+            .commentPost {
+              width: 60px;
+              margin-left: 10px;
+              border-radius: 3px;
+              background-color: black;
+              color: white;
+            }
           }
-          .commentPost {
-            width: 60px;
-            margin-left: 10px;
-            border-radius: 3px;
-            background-color: black;
-            color: white;
-          }
-          .commentInput {
-            width: 95%;
-            border-radius: 3px;
-            height: 59px;
-            border: 1px solid #d9d9d9;
-            padding: 10px 0 0 10px;
-            font-size: 14px;
-            outline: none;
-            resize: none; /* 사용자 크기 조정 비활성화 */
-          }
+
           .detailFooterSet {
             padding: 80px 20px 20px;
+            @media (max-width: 768px) {
+              padding: 30px 0;
+            }
           }
           .commentSetting {
             padding: 15px 0px;
@@ -538,10 +550,16 @@ const BoardDetail = () => {
           }
           .detailUserdetailAdd {
             width: 40%;
+            @media (max-width: 768px) {
+              width: 60%;
+            }
           }
           .detailName {
             font-size: 14px;
             margin: 0 7px;
+            @media (max-width: 768px) {
+              margin: 0px;
+            }
           }
           .commentDetail {
             font-size: 13px;
@@ -550,10 +568,16 @@ const BoardDetail = () => {
           .detailUserLast {
             display: flex;
             flex-direction: row;
+            @media (max-width: 768px) {
+              gap: 5px;
+            }
             p {
               margin: 5px 7px;
               color: #999;
               font-size: 11px;
+              @media (max-width: 768px) {
+                margin: 0;
+              }
             }
           }
           .dlatldlatl {
@@ -579,7 +603,7 @@ const BoardDetail = () => {
           section {
             border: 1px solid #999;
             border-radius: 10px;
-            padding: 30px;
+            padding: 15px 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -588,6 +612,10 @@ const BoardDetail = () => {
               font-size: 32px;
               font-weight: 400;
               margin: 8px 0px 24px;
+              @media (max-width: 768px) {
+                font-size: 25px;
+                margin: 8px 0px 18px;
+              }
             }
             .detailHeaderSet {
               display: flex;
@@ -595,16 +623,26 @@ const BoardDetail = () => {
               justify-content: space-between;
               padding-bottom: 20px;
               border-bottom: 1px solid #d9d9d9;
+              @media (max-width: 768px) {
+                padding-bottom: 10px;
+              }
             }
             .detailBodyDetail {
               min-height: 500px;
               padding: 20px;
+              @media (max-width: 768px) {
+                padding: 10px 5px;
+                font-size: 13px;
+              }
             }
             .detailFooterStart {
               display: flex;
               flex-direction: row;
               padding-bottom: 30px;
               border-bottom: 1px solid #d9d9d9;
+              @media (max-width: 768px) {
+                font-size: 12px;
+              }
               div {
                 margin: 0px 5px;
               }

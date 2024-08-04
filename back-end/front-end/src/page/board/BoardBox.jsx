@@ -29,20 +29,32 @@ const BoardBox = ({ boardTitle, notices }) => {
           border: 10px solid #e0e0e0;
           border-radius: 10px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          @media (max-width: 768px) {
+            width: 100%;
+          }
+          .boardBoxnotice:not(:last-of-type) {
+            border-bottom: 1px solid #e0e0e0;
+          }
         }
         .boardBoxheader {
           font-size: 20px;
           font-weight: bold;
           margin: 5px 0;
+          @media (max-width: 768px) {
+            font-size: 18px;
+          }
         }
         .boardBoxnotice {
           display: flex;
           justify-content: space-between;
           align-items: center;
           padding: 8px 10px;
-          border-bottom: 1px solid #e0e0e0;
           font-size: 15px;
           cursor: pointer;
+          @media (max-width: 768px) {
+            padding: 5px 0;
+            font-size: 14px;
+          }
         }
         .boardBoxnotice:last-child {
           border-bottom: none;

@@ -411,12 +411,12 @@ export const topViewedPosts = [
 export const boardsWithPosts = [
   {
     id: 1,
-    name: "공지사항",
+    boardName: "공지사항",
     posts: [],
   },
   {
     id: 2,
-    name: "자유게시판",
+    boardName: "자유게시판",
     posts: [
       {
         id: 21,
@@ -502,7 +502,7 @@ export const boardsWithPosts = [
   },
   {
     id: 3,
-    name: "사진게시판",
+    boardName: "사진게시판",
     posts: [
       {
         id: 31,
