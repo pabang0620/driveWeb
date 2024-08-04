@@ -236,6 +236,10 @@ const PersonalInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -250,6 +254,16 @@ const PersonalInfo = () => {
             flex-direction: column;
             align-items: center;
             margin-bottom: 30px;
+            @media (max-width: 768px) {
+              margin-top: 20px;
+              margin-bottom: 20px;
+            }
+            svg {
+              @media (max-width: 768px) {
+                width: 100px;
+                aspect-ratio: 1/1;
+              }
+            }
             .imageWrapper {
               position: relative;
               img {
@@ -260,6 +274,7 @@ const PersonalInfo = () => {
                 margin-bottom: 10px;
                 cursor: pointer;
               }
+
               .userIcon {
                 width: 150px;
                 height: 150px;
@@ -299,6 +314,9 @@ const PersonalInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
@@ -335,6 +353,9 @@ const PersonalInfo = () => {
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            @media (max-width: 768px) {
+              margin-top: 10px;
+            }
             button {
               cursor: pointer;
               font-size: 14px;

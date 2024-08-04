@@ -174,7 +174,10 @@ const CarInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
-
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -208,6 +211,9 @@ const CarInfo = () => {
               color: #c1c1c1;
               width: 15%;
               line-height: 50px;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
 
             > div {
@@ -267,12 +273,15 @@ const CarInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
               color: #c1c1c1;
               border: none;
-              width: 75%;
+              width: 60%;
               height: 100%;
               text-align: left;
               background: none;

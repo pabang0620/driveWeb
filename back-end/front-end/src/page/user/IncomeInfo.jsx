@@ -169,6 +169,10 @@ const IncomeInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -198,6 +202,9 @@ const IncomeInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
@@ -207,7 +214,9 @@ const IncomeInfo = () => {
               height: 100%;
               text-algin: left;
               background: none;
-
+              @media (max-width: 768px) {
+                width: 60%;
+              }
               &:focus {
                 border: none;
                 outline: none;
@@ -221,6 +230,9 @@ const IncomeInfo = () => {
               border: 1px solid #c1c1c1;
               border-radius: 3px;
               padding: 5px;
+              @media (max-width: 768px) {
+                width: 50%;
+              }
               &:focus {
                 outline: 1px solid #c1c1c1;
                 color: #222;
