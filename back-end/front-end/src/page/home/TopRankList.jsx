@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TopRankList = ({ posts }) => {
+  const navigate = useNavigate();
   const formatRelativeDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -21,6 +23,10 @@ const TopRankList = ({ posts }) => {
     }
   };
 
+  const handleNoticeClick = (id) => {
+    navigate(`/board/post/${id}`);
+  };
+
   return (
     <div className="postListBox">
       {posts.length === 0 ? (
@@ -28,7 +34,11 @@ const TopRankList = ({ posts }) => {
       ) : (
         <div className="postList">
           {posts.map((post) => (
-            <div key={post.id} className="postBox">
+            <div
+              key={post.id}
+              className="postBox"
+              onClick={() => handleNoticeClick(post.id)}
+            >
               <h4>{post.title}</h4>
               <p>{formatRelativeDate(post.createdAt)}</p>
               <p>{post._count.comments}</p>

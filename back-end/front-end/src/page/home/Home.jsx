@@ -3,6 +3,8 @@ import axios from "axios";
 import RankingList from "../ranking/RankingList";
 import NoticeZone from "./NoticeZone";
 import TopRankList from "./TopRankList";
+import Banner from "./Banner";
+import TabsContainer from "./TabsContainer";
 
 function Home() {
   const [boardsWithPosts, setBoardsWithPosts] = useState([]);
@@ -32,95 +34,34 @@ function Home() {
 
   return (
     <div className="home-container">
-      <div className="main_banner">
-        <div className="banner_text">
-          <h3>당신의 안전한 운행을 위한 최고의 기록 도구</h3>
-          <h2>
-            손쉽게, 더 효율적으로
-            <br />
-            기록하자
-          </h2>
-        </div>
-      </div>
+      <Banner />
       <div className="contents_inner">
-        <NoticeZone boardsWithPosts={boardsWithPosts} />
-        <div className="rankingList">
-          <RankingList title={"연비"} rankType={"fuelType"} />
-          <RankingList title={"운행시간"} rankType={"jobType"} />
-          <RankingList title={"총 운송수입금"} rankType={"carType"} />
-        </div>
-        <div className="topRank">
-          <div className="tabsContainer">
-            <div className="leftTabs">
-              <div className="tabList">
-                {boardsWithPosts.map((board, index) => (
-                  <button
-                    key={board.id}
-                    onClick={() => setActiveLeftTab(index)}
-                    className={activeLeftTab === index ? "active" : ""}
-                  >
-                    {board.name}
-                  </button>
-                ))}
-              </div>
-              <TopRankList
-                posts={
-                  boardsWithPosts[activeLeftTab]
-                    ? boardsWithPosts[activeLeftTab].posts
-                    : []
-                }
-              />
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          <>
+            <NoticeZone boardsWithPosts={boardsWithPosts} />
+            <div className="rankingList">
+              <RankingList title={"연비"} rankType={"fuelType"} />
+              <RankingList title={"운행시간"} rankType={"jobType"} />
+              <RankingList title={"총 운송수입금"} rankType={"carType"} />
             </div>
-            <div className="rightTabs">
-              <div className="tabList">
-                <button
-                  onClick={() => setActiveRightTab(0)}
-                  className={activeRightTab === 0 ? "active" : ""}
-                >
-                  Top Viewed Posts
-                </button>
-                <button
-                  onClick={() => setActiveRightTab(1)}
-                  className={activeRightTab === 1 ? "active" : ""}
-                >
-                  Top Liked Posts
-                </button>
-              </div>
-              <TopRankList
-                posts={activeRightTab === 0 ? topViewedPosts : topLikedPosts}
-              />
-            </div>
-          </div>
-        </div>
+            <TabsContainer
+              boardsWithPosts={boardsWithPosts}
+              topViewedPosts={topViewedPosts}
+              topLikedPosts={topLikedPosts}
+              activeLeftTab={activeLeftTab}
+              setActiveLeftTab={setActiveLeftTab}
+              activeRightTab={activeRightTab}
+              setActiveRightTab={setActiveRightTab}
+            />
+          </>
+        )}
       </div>
       <style jsx>{`
         .home-container {
-          .main_banner {
-            width: 100%;
-            height: 350px;
-            background-image: url("/images/home/banner1.png");
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            .banner_text {
-              width: 80%;
-              margin: 0 auto;
-              max-width: 1200px;
-              color: white;
-              text-shadow: 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.5);
-
-              h3 {
-                font-size: 20px;
-                color: white;
-              }
-              h2 {
-                margin-top: 10px;
-                font-size: 40px;
-                color: white;
-              }
-            }
-          }
           .contents_inner {
             width: 70%;
             margin: 50px auto;
@@ -135,39 +76,6 @@ function Home() {
               flex-direction: row;
               justify-content: space-between;
               align-items: flex-start;
-            }
-            .topRank {
-              width: 100%;
-              .tabsContainer {
-                display: flex;
-                justify-content: space-between;
-              }
-              .leftTabs,
-              .rightTabs {
-                width: 45%;
-                .tabList {
-                  display: flex;
-                  justify-content: center;
-                  background-color: #f0f3f5;
-                  border-radius: 5px;
-                  overflow: hidden;
-                  button:not(:last-of-type) {
-                    border-right: 1px solid #ddd;
-                  }
-                  button {
-                    padding: 10px 20px;
-                    cursor: pointer;
-                    flex: 1;
-                    font-weight: bold;
-                    &.active {
-                      font-weight: bold;
-                      background-color: #05aced;
-                      color: white;
-                      border: none;
-                    }
-                  }
-                }
-              }
             }
           }
         }

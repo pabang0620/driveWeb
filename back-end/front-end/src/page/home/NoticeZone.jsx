@@ -1,8 +1,10 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useNavigate } from "react-router-dom";
 
 const NoticeZone = ({ boardsWithPosts }) => {
+  const navigate = useNavigate();
   const settings = {
     dots: false,
     infinite: true,
@@ -15,12 +17,18 @@ const NoticeZone = ({ boardsWithPosts }) => {
     vertical: true, // 세로 방향 슬라이드 설정
     arrows: false, // 버튼 제거
   };
-
+  const handleNoticeClick = (id) => {
+    navigate(`/board/post/${id}`);
+  };
   return (
     <div className="noticeZone">
       <Slider {...settings}>
         {boardsWithPosts[1]?.posts.map((post, index) => (
-          <div key={index} className="notice">
+          <div
+            key={index}
+            className="notice"
+            onClick={() => handleNoticeClick(post.id)}
+          >
             <h3>{post.title}</h3>
             <p>{post.createdAt.split("T")[0]}</p>
           </div>
