@@ -14,11 +14,11 @@ function Footer() {
           </li>
         </ul>
         <ul className="company_area">
-          <li>대표 재청</li>
-          <li>사업자 등록번호 123-123-123</li>
+          <li>대표자 김재청</li>
+          <li>사업자 등록번호 298-88-01870</li>
           <li>서울특별시 영등포구 가나다12길 ab플라자 0층</li>
         </ul>
-        <p className="copyline">&copy; 2024 My Website. All rights reserved.</p>
+        <p className="copyline">&copy; 상호 국민대부 주식회사</p>
       </div>
 
       <style jsx>{`
