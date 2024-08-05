@@ -138,29 +138,31 @@ const editIncomeRecord = async (req, res) => {
       }
       const feeAmount = parseFloat(amount) * (fee / 100);
       totalFees[expenseField] += feeAmount;
-      return parseFloat(amount) * (1 - fee / 100);
+      // 수수료를 차감한 금액을 리턴하지 않음
+      return amount;
     };
 
+    // 수입에 대한 수수료만 계산하고, 원래 데이터를 유지합니다.
     if (data.card_income) {
-      data.card_income = applyFee(data.card_income, "카드", "card_fee");
+      applyFee(data.card_income, "카드", "card_fee");
     }
     if (data.kakao_income) {
-      data.kakao_income = applyFee(data.kakao_income, "카카오", "kakao_fee");
+      applyFee(data.kakao_income, "카카오", "kakao_fee");
     }
     if (data.uber_income) {
-      data.uber_income = applyFee(data.uber_income, "우버", "uber_fee");
+      applyFee(data.uber_income, "우버", "uber_fee");
     }
     if (data.onda_income) {
-      data.onda_income = applyFee(data.onda_income, "온다", "onda_fee");
+      applyFee(data.onda_income, "온다", "onda_fee");
     }
     if (data.tada_income) {
-      data.tada_income = applyFee(data.tada_income, "타다", "tada_fee");
+      applyFee(data.tada_income, "타다", "tada_fee");
     }
     if (data.iam_income) {
-      data.iam_income = applyFee(data.iam_income, "아이엠", "iam_fee");
+      applyFee(data.iam_income, "아이엠", "iam_fee");
     }
     if (data.etc_income) {
-      data.etc_income = applyFee(data.etc_income, "기타", "etc_fee");
+      applyFee(data.etc_income, "기타", "etc_fee");
     }
 
     // 수수료를 적용한 데이터를 업데이트합니다.

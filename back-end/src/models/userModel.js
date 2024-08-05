@@ -135,6 +135,11 @@ const updateUserVehicle = async (userId, vehicleData) => {
       throw new Error("해당 사용자의 차량 정보를 찾을 수 없습니다.");
     }
 
+    // mileage 값을 정수로 변환
+    if (vehicleData.mileage) {
+      vehicleData.mileage = parseInt(vehicleData.mileage, 10);
+    }
+
     const updatedVehicle = await prisma.user_vehicles.update({
       where: { userId },
       data: vehicleData,
