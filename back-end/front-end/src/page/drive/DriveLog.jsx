@@ -353,6 +353,7 @@ const DriveLog = () => {
               border: none;
               background: none;
               color: #c1c1c1;
+              width: 70%;
               &:focus {
                 color: #222;
               }

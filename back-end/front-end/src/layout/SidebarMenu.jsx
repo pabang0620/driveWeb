@@ -2,7 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
+function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
+  const isLoggedIn = !!localStorage.getItem("token");
   return (
     <div className={`sidebar-menu ${showSidebar ? "open" : ""}`}>
       <button className="close-btn" onClick={onClose}>
@@ -184,6 +185,7 @@ function SidebarMenu({ onClose, showSidebar, isLoggedIn, setShowLogoutModal }) {
             justify-content: flex-end;
             align-items: center;
             gap: 5px;
+            margin-top: 5px;
             li {
               width: 100%;
               text-align: center;

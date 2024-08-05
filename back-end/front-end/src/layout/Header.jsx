@@ -153,6 +153,7 @@ function Header() {
         </nav>
         <SidebarMenu
           showSidebar={showSidebar}
+          setShowLogoutModal={setShowLogoutModal}
           onClose={() => setShowSidebar(false)}
         />
         {/* 사이드바 메뉴 표시 */}
