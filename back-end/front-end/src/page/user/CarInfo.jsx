@@ -279,10 +279,13 @@ const CarInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               border: none;
-              width: 60ZZZZ%;
+              width: 60%;
               height: 100%;
               text-align: left;
               background: none;
+              @media (max-width: 768px) {
+                width: 60%;
+              }
               &:focus {
                 border: none;
                 outline: none;
@@ -297,6 +300,9 @@ const CarInfo = () => {
               border: 1px solid #c1c1c1;
               border-radius: 3px;
               padding: 5px;
+              @media (max-width: 768px) {
+                width: 50%;
+              }
               &:focus {
                 outline: 1px solid #c1c1c1;
                 color: #222;

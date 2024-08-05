@@ -157,7 +157,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
       <div className="modal-inner">
         <div className="modal-header">
           <h3>
-            <span>상세 운행일지</span>
+            <span>!</span>상세 운행일지
           </h3>
           <span className="close" onClick={() => closeModal(false)}>
             &times;
@@ -208,6 +208,11 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             border-radius: 10px;
             display: flex;
             flex-direction: column;
+            @media (max-width: 768px) {
+              width: 80%;
+              max-width: 600px;
+              max-height: 80vh;
+            }
           }
           .modal-header {
             display: flex;
@@ -216,20 +221,21 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             background-color: #f3f4fb;
             padding: 10px 20px;
             flex-shrink: 0;
+
             h3 {
-              text-align: center;
+              width: 100%;
+              text-align: left;
               color: #4c4c4c;
               font-size: 16px;
               span {
                 display: inline-block;
                 background-color: #05aced;
-                width: auto;
-                padding: 0 10px;
+                width: 25px;
                 height: 25px;
-                border-radius: 10px;
+                margin-right: 5px;
+                border-radius: 100%;
                 color: white;
                 text-align: center;
-                line-height: 25px;
               }
             }
             .close {
@@ -237,6 +243,9 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
               font-size: 28px;
               font-weight: bold;
               cursor: pointer;
+              @media (max-width: 768px) {
+                font-size: 25px;
+              }
             }
             .close:hover,
             .close:focus {
@@ -248,24 +257,38 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
           .tabs {
             display: flex;
             justify-content: space-around;
-            margin: 10px 20px;
+            width: 100%;
+            padding: 3% 7%;
+            gap: 10px;
             button {
               flex: 1;
               padding: 10px;
               cursor: pointer;
-              border: none;
-              background-color: #f1f1f1;
-              font-size: 16px;
-              margin-left: 5px;
+              border: 1px solid #ccc;
+              background-color: #e7e7e7;
+              color: #595959;
+              font-size: 14px;
+              font-weight: bold;
+              border-radius: 4px; /* 약간의 둥근 모서리 */
+              transition: background-color 0.2s, color 0.2s, border-color 0.2s; /* 부드러운 전환 효과 */
+              @media (max-width: 768px) {
+                font-size: 13px;
+              }
             }
+
             button.active {
               background-color: #05aced;
+              border: 1px solid #05aced;
               color: white;
+            }
+
+            button:focus {
+              outline: none; /* 포커스 상태에서 강조 표시 */
             }
           }
           .modal-content {
             width: 100%;
-            padding: 20px;
+            padding: 0% 8% 10% 8%;
             flex: 1;
             overflow-y: auto;
           }
@@ -274,6 +297,10 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            @media (max-width: 768px) {
+              font-size: 13px;
+              gap: 5px;
+            }
           }
           .data-row {
             display: flex;

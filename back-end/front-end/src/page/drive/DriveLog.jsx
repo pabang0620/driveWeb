@@ -11,7 +11,7 @@ const DriveLog = () => {
   const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12); // 페이지당 항목 수
+  const [itemsPerPage] = useState(10); // 페이지당 항목 수
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
 
@@ -337,11 +337,17 @@ const DriveLog = () => {
           .dynamicInput {
             width: 100%;
             border-bottom: 1px solid #d9d9d9;
+
             label {
               display: inline-block;
               width: 25%;
               color: #c1c1c1;
               padding: 3% 1%;
+              @media (max-width: 768px) {
+                width: 40%;
+                font-size: 13px;
+                padding: 3% 0%;
+              }
             }
             input {
               border: none;
@@ -349,6 +355,10 @@ const DriveLog = () => {
               color: #c1c1c1;
               &:focus {
                 color: #222;
+              }
+              @media (max-width: 768px) {
+                font-size: 13px;
+                width: 55%;
               }
             }
           }

@@ -32,13 +32,14 @@ const Modal = ({
               overflow: auto;
               background-color: rgba(0, 0, 0, 0.4);
               .modal-inner {
-                top: -20%;
-                background-color: #fefefe;
-                margin: 15% auto;
-                border: 1px solid #888;
                 width: 80%;
                 max-width: 600px;
                 position: relative;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #fefefe;
+                border: 1px solid #888;
                 border-radius: 10px;
                 overflow: hidden;
               }
@@ -69,6 +70,9 @@ const Modal = ({
                   font-size: 28px;
                   font-weight: bold;
                   cursor: pointer;
+                  @media (max-width: 768px) {
+                    font-size: 25px;
+                  }
                 }
 
                 .close:hover,
