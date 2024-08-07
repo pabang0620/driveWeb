@@ -55,11 +55,6 @@ async function getIncomeDetailsForYear(year, userId) {
   };
 }
 
-/**
- * 사용자 ID로 user_incomes 테이블의 standard_expense_rate를 가져오는 함수
- * @param {number} userId - 사용자 ID
- * @returns {Promise<number>} - standard_expense_rate 값
- */
 async function getStandardExpenseRate(userId) {
   const userIncome = await prisma.user_incomes.findUnique({
     where: {
@@ -99,6 +94,8 @@ async function taxUpdateUserIncome(
 }
 
 // 손익
+// 유지비수비용추가
+
 async function getIncomeRecords(userId, startDate, endDate) {
   return prisma.income_records.findMany({
     where: {
@@ -128,13 +125,6 @@ async function getIncomeRecords(userId, startDate, endDate) {
   });
 }
 
-/**
- * 특정 날짜 범위에 대한 지출 기록을 가져오는 함수
- * @param {number} userId - 사용자 ID
- * @param {string} startDate - 시작 날짜
- * @param {string} endDate - 종료 날짜
- * @returns {Promise<Array>} - 지출 레코드 배열
- */
 async function getExpenseRecords(userId, startDate, endDate) {
   return prisma.expense_records.findMany({
     where: {
@@ -166,11 +156,117 @@ async function getExpenseRecords(userId, startDate, endDate) {
     },
   });
 }
+async function getMaintenanceCost(userId, startDate, endDate) {
+  const maintenanceRecords = await prisma.maintenance_records.findMany({
+    where: {
+      userId: userId,
+      maintenanceDate: {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      },
+    },
+    select: {
+      maintenanceCost: true,
+    },
+  });
 
+  return maintenanceRecords.reduce(
+    (total, record) => total + (parseFloat(record.maintenanceCost) || 0),
+    0
+  );
+}
+async function getInsuranceFeeForYear(userId, year) {
+  const cars = await prisma.my_car.findMany({
+    where: {
+      userId: userId,
+      AND: [
+        {
+          OR: [
+            {
+              insurance_period_start: {
+                lte: new Date(`${year}-12-31`),
+              },
+            },
+            {
+              insurance_period_end: {
+                gte: new Date(`${year}-01-01`),
+              },
+            },
+          ],
+        },
+      ],
+    },
+    select: {
+      insurance_fee: true,
+      insurance_period_start: true,
+      insurance_period_end: true,
+    },
+  });
+
+  const insuranceTotal = cars.reduce((total, car) => {
+    const start = car.insurance_period_start;
+    const end = car.insurance_period_end;
+
+    // 전체 보험 기간 동안의 개월 수 계산
+    const totalMonths = calculateCoveredMonths(start, end, end.getFullYear());
+
+    // 월 보험료 계산
+    const monthlyFee = parseFloat(car.insurance_fee) / totalMonths;
+
+    // 주어진 연도에 해당하는 개월 수 계산
+    const monthsCovered = calculateCoveredMonths(start, end, year);
+
+    // 주어진 연도의 보험료 계산
+    const annualFeeForCoveredMonths = monthlyFee * 12;
+
+    return total + annualFeeForCoveredMonths;
+  }, 0);
+
+  console.log(`Total insurance fee for year ${year}: ${insuranceTotal}`);
+
+  return insuranceTotal;
+}
+
+// 주어진 연도 동안 보험 기간 내 포함된 개월 수 계산
+function calculateCoveredMonths(start, end, year) {
+  // 시작일과 종료일을 해당 연도로 제한
+  const startDate = new Date(
+    Math.max(start.getTime(), new Date(`${year}-01-01`).getTime())
+  );
+  const endDate = new Date(
+    Math.min(end.getTime(), new Date(`${year}-12-31`).getTime())
+  );
+
+  // 시작일이 종료일보다 늦을 경우 0개월 처리
+  if (startDate > endDate) return 0;
+
+  // 포함된 개월 수 계산
+  const months =
+    (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+    (endDate.getMonth() - startDate.getMonth()) +
+    1;
+
+  console.log(`Covered months for ${year}: ${months}`);
+
+  return months;
+}
+
+async function getEstimatedTotalTax(userId) {
+  const userIncome = await prisma.user_incomes.findUnique({
+    where: { userId },
+    select: {
+      estimated_total_tax: true,
+    },
+  });
+  return userIncome.estimated_total_tax || 0;
+}
 module.exports = {
   getIncomeDetailsForYear,
   getStandardExpenseRate,
   taxUpdateUserIncome,
   getIncomeRecords,
   getExpenseRecords,
+  getMaintenanceCost,
+  getInsuranceFeeForYear,
+  getEstimatedTotalTax,
 };

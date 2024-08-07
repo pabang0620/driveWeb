@@ -3,7 +3,9 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
   getEstimatedIncomeTaxPage,
   updateUserIncome,
-  getProfitLossStatementPage,
+  getYearlyProfitLoss,
+  getMonthlyProfitLoss,
+  getQuarterlyProfitLoss,
 } = require("../controllers/taxController");
 
 const router = express.Router();
@@ -19,9 +21,23 @@ router.put("/income", authMiddleware, updateUserIncome);
 
 // 손익 계산서
 router.get(
-  "/profitLossStatementPage/:year",
+  "/profitLossStatement/yearly/:year",
   authMiddleware,
-  getProfitLossStatementPage
+  getYearlyProfitLoss
+);
+
+// 월별 손익계산서 조회
+router.get(
+  "/profitLossStatement/monthly/:year/:month",
+  authMiddleware,
+  getMonthlyProfitLoss
+);
+
+// 분기별 손익계산서 조회
+router.get(
+  "/profitLossStatement/quarterly/:year/:quarter",
+  authMiddleware,
+  getQuarterlyProfitLoss
 );
 
 module.exports = router;

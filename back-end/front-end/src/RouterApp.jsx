@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Outlet,
 } from "react-router-dom";
+
 import Login from "./page/login/Login";
 import Signup from "./page/signup/Signup";
 import Home from "./page/home/Home";
@@ -31,11 +32,13 @@ import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
 import TopRank from "./page/TopRank ";
 import EstimatedIncomeTaxPage from "./page/mypage/EstimatedIncomeTaxPage";
-import ProfitLossStatementPage from "./page/mypage/ProfitLossStatementPage";
+import ProfitLossMainPage from "./page/mypage/ProfitLossMainPage";
+import PageTracker from "./PageTracker";
 
 function RouterApp() {
   return (
     <Router>
+      <PageTracker />
       <Routes>
         {/* Layout이 적용된 경로 */}
         <Route element={<LayoutWithOutlet />}>
@@ -68,7 +71,7 @@ function RouterApp() {
           />
           <Route
             path="/profit-loss-statement"
-            element={<ProfitLossStatementPage />}
+            element={<ProfitLossMainPage />}
           />
         </Route>
 
