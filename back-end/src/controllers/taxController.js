@@ -159,7 +159,7 @@ async function getMonthlyProfitLoss(req, res) {
   try {
     const { startYear, startMonth, endYear, endMonth } = req.query;
     const { userId } = req;
-
+    console.log("month받고있다");
     const incomeData = [];
     const expenseData = [];
 

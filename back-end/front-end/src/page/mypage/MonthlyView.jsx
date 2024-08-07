@@ -1,15 +1,45 @@
-// MonthlyView.js
-
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../../components/Spinner";
-import TitleBox from "../../components/TitleBox";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import ko from "date-fns/locale/ko";
+
+// 한국어 로케일 등록
+registerLocale("ko", ko);
+setDefaultLocale("ko");
 
 function MonthlyView() {
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [startMonth, setStartMonth] = useState("1");
-  const [endMonth, setEndMonth] = useState("12");
-  const [data, setData] = useState({ income: [], expense: [] });
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [monthlyData, setMonthlyData] = useState({
+    income: [],
+    expense: [],
+    totalIncome: {
+      card_income: 0,
+      cash_income: 0,
+      kakao_income: 0,
+      uber_income: 0,
+      onda_income: 0,
+      tada_income: 0,
+      iam_income: 0,
+      other_income: 0,
+    },
+    totalExpense: {
+      fuel_expense: 0,
+      toll_fee: 0,
+      meal_expense: 0,
+      fine_expense: 0,
+      expense_spare_1: 0,
+      expense_spare_2: 0,
+      card_fee: 0,
+      maintenanceCost: 0,
+      insuranceFee: 0,
+      other_expense: 0,
+      estimatedTotalTax: 0,
+    },
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -22,16 +52,52 @@ function MonthlyView() {
     },
   });
 
+  useEffect(() => {
+    if (monthlyData.income.length > 0) {
+      console.log("Updated monthly data:", monthlyData);
+    }
+  }, [monthlyData]);
+
   const fetchData = async () => {
     try {
       setLoading(true);
 
-      console.log("Fetching monthly data for:", year, startMonth, endMonth);
+      const startYear = startDate.getFullYear();
+      const startMonth = startDate.getMonth() + 1;
+      const endYear = endDate.getFullYear();
+      const endMonth = endDate.getMonth() + 1;
 
-      const response = await api.get(
-        `/tax/profitLossStatement/monthly/${year}?startMonth=${startMonth}&endMonth=${endMonth}`
+      console.log(
+        "Fetching monthly data for:",
+        startYear,
+        startMonth,
+        endYear,
+        endMonth
       );
-      setData(response.data);
+
+      const response = await api.get(`/tax/profitLossStatement/monthly`, {
+        params: {
+          startYear,
+          startMonth,
+          endYear,
+          endMonth,
+        },
+      });
+      const data = response.data;
+      setMonthlyData({
+        income: data.income || [],
+        expense: data.expense || [],
+        totalIncome: {
+          ...monthlyData.totalIncome,
+          ...data.totalIncome,
+        },
+        totalExpense: {
+          ...monthlyData.totalExpense,
+          ...data.totalExpense,
+          estimatedTotalTax:
+            parseFloat(data.totalExpense.estimatedTotalTax) || 0, // 타입 확인
+        },
+      });
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("데이터를 가져오는 중 오류가 발생했습니다.");
@@ -40,101 +106,444 @@ function MonthlyView() {
     }
   };
 
-  const handleYearChange = (event) => {
-    setYear(Number(event.target.value));
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
   };
 
-  const handleStartMonthChange = (event) => {
-    setStartMonth(event.target.value);
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
   };
 
-  const handleEndMonthChange = (event) => {
-    setEndMonth(event.target.value);
+  const handleFetchData = () => {
+    fetchData();
   };
 
   const formatCurrency = (value) => {
     return `${Math.round(value).toLocaleString()}원`;
   };
 
-  const monthNames = [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-  ];
+  // 한국어로 항목 이름 매핑
+  const incomeLabels = {
+    card_income: "카드 수입",
+    cash_income: "현금 수입",
+    kakao_income: "카카오 수입",
+    uber_income: "우버 수입",
+    onda_income: "온다 수입",
+    tada_income: "타다 수입",
+    iam_income: "아이엠 수입",
+  };
+
+  const expenseLabels = {
+    fuel_expense: "연료비",
+    toll_fee: "통행료",
+    meal_expense: "식비",
+    fine_expense: "벌금",
+    expense_spare_1: "예비 지출 1",
+    expense_spare_2: "예비 지출 2",
+    card_fee: "카드 수수료",
+    maintenanceCost: "유지보수 비용",
+    insuranceFee: "보험료",
+  };
+
+  if (loading) return <Spinner />;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="monthlyView">
-      <TitleBox title="프리미엄 기능" subtitle="월별 손익계산서" />
       <div className="filterGroup">
         <label>
-          <span>연도 선택</span>
-          <select value={year} onChange={handleYearChange}>
-            <option value={2018}>2018</option>
-            <option value={2019}>2019</option>
-            <option value={2020}>2020</option>
-            <option value={2021}>2021</option>
-            <option value={2022}>2022</option>
-            <option value={2023}>2023</option>
-            <option value={2024}>2024</option>
-          </select>
-        </label>
-        <label>
           <span>시작 월 선택</span>
-          <select value={startMonth} onChange={handleStartMonthChange}>
-            {monthNames.map((month, index) => (
-              <option key={index} value={index + 1}>
-                {month}
-              </option>
-            ))}
-          </select>
+          <DatePicker
+            selected={startDate}
+            onChange={handleStartDateChange}
+            dateFormat="yyyy년 MM월"
+            showMonthYearPicker
+            locale="ko"
+            className="datePicker"
+          />
         </label>
         <label>
           <span>종료 월 선택</span>
-          <select value={endMonth} onChange={handleEndMonthChange}>
-            {monthNames.map((month, index) => (
-              <option key={index} value={index + 1}>
-                {month}
-              </option>
-            ))}
-          </select>
+          <DatePicker
+            selected={endDate}
+            onChange={handleEndDateChange}
+            dateFormat="yyyy년 MM월"
+            showMonthYearPicker
+            locale="ko"
+            className="datePicker"
+          />
         </label>
-        <button onClick={fetchData}>조회</button>
+        <button onClick={handleFetchData} className="fetchButton">
+          조회
+        </button>
       </div>
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <div className="result">
-          <div className="section">
-            <h3>월별 수익 및 지출</h3>
-            <div className="row">
-              {data.income.map((income, index) => (
-                <div key={index} className="column">
-                  <h5>{monthNames[parseInt(startMonth, 10) - 1 + index]}</h5>
-                  <div>
-                    <span>수익:</span>{" "}
-                    <span>{formatCurrency(income.total)}</span>
+      <div className="result">
+        {monthlyData.income.length === 0 && (
+          <div className="noDataMessage">
+            기간을 설정하고 조회를 눌러주세요.
+          </div>
+        )}
+        {monthlyData.income.length > 0 && (
+          <>
+            <div className="section">
+              <h3>수익 및 지출 항목별 상세</h3>
+              <div className="row">
+                <div className="column">
+                  <h4>항목</h4>
+                  <div className="income">
+                    {Object.keys(incomeLabels).map((key) => (
+                      <div key={key}>
+                        <span>{incomeLabels[key]}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <span>지출:</span>{" "}
-                    <span>{formatCurrency(data.expense[index].total)}</span>
+                  <div className="expense">
+                    {Object.keys(expenseLabels).map((key) => (
+                      <div key={key}>
+                        <span>{expenseLabels[key]}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+                <div className="column">
+                  <h4>기간 내 합계</h4>
+                  <div className="income">
+                    {Object.keys(incomeLabels).map((key) => (
+                      <div key={key}>
+                        <span
+                          style={{
+                            color:
+                              monthlyData.totalIncome[key] > 0
+                                ? "red"
+                                : "inherit",
+                          }}
+                        >
+                          {formatCurrency(monthlyData.totalIncome[key] || 0)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="expense">
+                    {Object.keys(expenseLabels).map((key) => (
+                      <div key={key}>
+                        <span
+                          style={{
+                            color:
+                              monthlyData.totalExpense[key] > 0
+                                ? "blue"
+                                : "inherit",
+                          }}
+                        >
+                          {formatCurrency(monthlyData.totalExpense[key] || 0)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {monthlyData.income.map((income, index) => (
+                  <div className="column" key={index}>
+                    <h4>{`${startDate.getFullYear()}년 ${
+                      startDate.getMonth() + index + 1
+                    }월`}</h4>
+                    <div className="income">
+                      {Object.keys(incomeLabels).map((key) => (
+                        <div key={key}>
+                          <span
+                            style={{
+                              color: income[key] > 0 ? "red" : "inherit",
+                            }}
+                          >
+                            {formatCurrency(income[key] || 0)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="expense">
+                      {Object.keys(expenseLabels).map((key) => (
+                        <div key={key}>
+                          <span
+                            style={{
+                              color:
+                                monthlyData.expense[index][key] > 0
+                                  ? "blue"
+                                  : "inherit",
+                            }}
+                          >
+                            {formatCurrency(
+                              monthlyData.expense[index][key] || 0
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+            <hr style={{ borderColor: "black", margin: "20px 0" }} />
+            <div className="section">
+              <h3>수익 및 지출 계산</h3>
+              <div className="row">
+                <div className="column">
+                  <h4>항목</h4>
+                  <div>
+                    <span>영업이익</span>
+                  </div>
+                  <div>
+                    <span>영업외 수익</span>
+                  </div>
+                  <div>
+                    <span>영업외 지출</span>
+                  </div>
+                  <div>
+                    <span>세전 이익</span>
+                  </div>
+                  <div>
+                    <span>당기 순이익</span>
+                  </div>
+                </div>
+                <div className="column">
+                  <h4>기간 내 합계</h4>
+                  <div>
+                    <span
+                      style={{
+                        color:
+                          Object.values(monthlyData.totalIncome).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) -
+                            Object.values(monthlyData.totalExpense).reduce(
+                              (a, b) => a + b,
+                              0
+                            ) >
+                          0
+                            ? "red"
+                            : "blue",
+                      }}
+                    >
+                      {formatCurrency(
+                        Object.values(monthlyData.totalIncome).reduce(
+                          (a, b) => a + b,
+                          0
+                        ) -
+                          Object.values(monthlyData.totalExpense).reduce(
+                            (a, b) => a + b,
+                            0
+                          )
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        color:
+                          monthlyData.totalIncome.other_income > 0
+                            ? "red"
+                            : "inherit",
+                      }}
+                    >
+                      {formatCurrency(
+                        monthlyData.totalIncome.other_income || 0
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        color:
+                          monthlyData.totalExpense.other_expense > 0
+                            ? "blue"
+                            : "inherit",
+                      }}
+                    >
+                      {formatCurrency(
+                        monthlyData.totalExpense.other_expense || 0
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        color:
+                          Object.values(monthlyData.totalIncome).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) +
+                            (monthlyData.totalIncome.other_income || 0) -
+                            (monthlyData.totalExpense.other_expense || 0) -
+                            Object.values(monthlyData.totalExpense).reduce(
+                              (a, b) => a + b,
+                              0
+                            ) >
+                          0
+                            ? "red"
+                            : "blue",
+                      }}
+                    >
+                      {formatCurrency(
+                        Object.values(monthlyData.totalIncome).reduce(
+                          (a, b) => a + b,
+                          0
+                        ) +
+                          (monthlyData.totalIncome.other_income || 0) -
+                          (monthlyData.totalExpense.other_expense || 0) -
+                          Object.values(monthlyData.totalExpense).reduce(
+                            (a, b) => a + b,
+                            0
+                          )
+                      )}
+                    </span>
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        color:
+                          Object.values(monthlyData.totalIncome).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) +
+                            (monthlyData.totalIncome.other_income || 0) -
+                            (monthlyData.totalExpense.other_expense || 0) -
+                            Object.values(monthlyData.totalExpense).reduce(
+                              (a, b) => a + b,
+                              0
+                            ) -
+                            monthlyData.totalExpense.estimatedTotalTax >
+                          0
+                            ? "red"
+                            : "blue",
+                      }}
+                    >
+                      {formatCurrency(
+                        Object.values(monthlyData.totalIncome).reduce(
+                          (a, b) => a + b,
+                          0
+                        ) +
+                          (monthlyData.totalIncome.other_income || 0) -
+                          (monthlyData.totalExpense.other_expense || 0) -
+                          Object.values(monthlyData.totalExpense).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) -
+                          monthlyData.totalExpense.estimatedTotalTax
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {monthlyData.income.map((income, index) => (
+                  <div className="column" key={index}>
+                    <h4>{`${startDate.getFullYear()}년 ${
+                      startDate.getMonth() + index + 1
+                    }월`}</h4>
+                    <div>
+                      <span
+                        style={{
+                          color:
+                            Object.values(income).reduce((a, b) => a + b, 0) -
+                              Object.values(monthlyData.expense[index]).reduce(
+                                (a, b) => a + b,
+                                0
+                              ) >
+                            0
+                              ? "red"
+                              : "blue",
+                        }}
+                      >
+                        {formatCurrency(
+                          Object.values(income).reduce((a, b) => a + b, 0) -
+                            Object.values(monthlyData.expense[index]).reduce(
+                              (a, b) => a + b,
+                              0
+                            )
+                        )}
+                      </span>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          color: income.other_income > 0 ? "red" : "inherit",
+                        }}
+                      >
+                        {formatCurrency(income.other_income || 0)}
+                      </span>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          color:
+                            monthlyData.expense[index].other_expense > 0
+                              ? "blue"
+                              : "inherit",
+                        }}
+                      >
+                        {formatCurrency(
+                          monthlyData.expense[index].other_expense || 0
+                        )}
+                      </span>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          color:
+                            Object.values(income).reduce((a, b) => a + b, 0) +
+                              (income.other_income || 0) -
+                              (monthlyData.expense[index].other_expense || 0) -
+                              Object.values(monthlyData.expense[index]).reduce(
+                                (a, b) => a + b,
+                                0
+                              ) >
+                            0
+                              ? "red"
+                              : "blue",
+                        }}
+                      >
+                        {formatCurrency(
+                          Object.values(income).reduce((a, b) => a + b, 0) +
+                            (income.other_income || 0) -
+                            (monthlyData.expense[index].other_expense || 0) -
+                            Object.values(monthlyData.expense[index]).reduce(
+                              (a, b) => a + b,
+                              0
+                            )
+                        )}
+                      </span>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          color:
+                            Object.values(income).reduce((a, b) => a + b, 0) +
+                              (income.other_income || 0) -
+                              (monthlyData.expense[index].other_expense || 0) -
+                              Object.values(monthlyData.expense[index]).reduce(
+                                (a, b) => a + b,
+                                0
+                              ) -
+                              monthlyData.totalExpense.estimatedTotalTax >
+                            0
+                              ? "red"
+                              : "blue",
+                        }}
+                      >
+                        {formatCurrency(
+                          Object.values(income).reduce((a, b) => a + b, 0) +
+                            (income.other_income || 0) -
+                            (monthlyData.expense[index].other_expense || 0) -
+                            Object.values(monthlyData.expense[index]).reduce(
+                              (a, b) => a + b,
+                              0
+                            ) -
+                            monthlyData.totalExpense.estimatedTotalTax
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
       <style jsx>{`
         .monthlyView {
           padding: 30px;
@@ -155,59 +564,75 @@ function MonthlyView() {
           margin-right: 10px;
           font-weight: bold;
         }
-        select {
+        .datePicker {
           padding: 8px;
           border-radius: 4px;
           border: 1px solid #ccc;
           font-size: 16px;
           transition: border-color 0.3s;
         }
-        button {
-          padding: 10px 15px;
+        .fetchButton {
+          padding: 8px 16px;
+          border-radius: 4px;
+          border: none;
           background-color: #4caf50;
           color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
           font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s;
         }
-        button:hover {
+        .fetchButton:hover {
           background-color: #45a049;
         }
         .result {
           display: flex;
           flex-direction: column;
           margin-bottom: 30px;
+          overflow-x: auto; /* 좌우 스크롤 추가 */
         }
         .section {
           padding: 20px;
           border-radius: 4px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           background-color: #ffffff;
+          min-height: 150px; /* 최소 높이 추가 */
         }
         .row {
           display: flex;
           justify-content: space-between;
+          align-items: flex-start; /* 상단 정렬 */
         }
         .column {
-          width: calc(100% / 12 - 10px);
-          margin-right: 10px;
+          min-width: 120px;
+          flex-shrink: 0; /* 수축 방지 */
         }
-        .column:last-child {
-          margin-right: 0;
+        .income,
+        .expense {
+          display: flex;
+          flex-direction: column;
         }
-        h5 {
-          margin-bottom: 10px;
-        }
-        .column div {
+        .income div,
+        .expense div {
           margin-bottom: 10px;
           display: flex;
           justify-content: space-between;
           padding: 5px 0;
           border-bottom: 1px solid #eee;
         }
-        .column div:last-child {
-          border-bottom: none;
+        h3 {
+          margin: 10px 0px;
+        }
+        .divider {
+          width: 100%;
+          height: 2px;
+          background-color: black; /* 수익과 지출 사이에 검은색 선 추가 */
+          margin: 10px 0;
+        }
+        .noDataMessage {
+          color: #ff0000;
+          text-align: center;
+          font-weight: bold;
+          margin-top: 20px;
         }
       `}</style>
     </div>

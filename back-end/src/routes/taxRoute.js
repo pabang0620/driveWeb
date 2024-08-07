@@ -28,7 +28,7 @@ router.get(
 
 // 월별 손익계산서 조회
 router.get(
-  "/profitLossStatement/monthly/:year/:month",
+  "/profitLossStatement/monthly",
   authMiddleware,
   getMonthlyProfitLoss
 );
