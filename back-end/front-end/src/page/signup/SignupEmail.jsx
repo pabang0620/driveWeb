@@ -54,16 +54,29 @@ function SignupEmail() {
 
   // 다음 버튼 클릭 시 처리 함수
   const handleNext = () => {
-    if (canProceed()) {
-      // 모든 조건이 충족되면 다음 페이지로 이동
-      navigate("/signup/password", {
-        state: { username: username, nickname: nickname },
-      });
-    } else if (!isValidId(username)) {
-      alert("아이디를 영문과 숫자, 최소 3자 입력해주세요.");
+    // 유효성 검사 및 오류 메시지 변수 설정
+    let errorMessage = null;
+
+    // 조건 체크
+    if (!isValidId(username)) {
+      errorMessage = "아이디를 영문과 숫자, 최소 3자 입력해주세요.";
     } else if (!agreeAll) {
-      alert("약관에 동의해주세요");
+      errorMessage = "약관에 동의해주세요";
     }
+
+    // 오류 메시지가 있을 경우 경고창을 띄우고 함수 종료
+    if (errorMessage) {
+      alert(errorMessage);
+      return;
+    }
+
+    // 모든 조건이 충족되면 다음 페이지로 이동
+    navigate("/signup/password", {
+      state: {
+        username: username,
+        nickname: nickname,
+      },
+    });
   };
 
   // agreePrivacy 또는 agreeTerms가 변경될 때마다 실행
@@ -91,8 +104,12 @@ function SignupEmail() {
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="아이디를 입력하세요 (영문과 숫자, 최소 3자)"
+            placeholder="아이디를 입력하세요"
           />
+          <ul>
+            <li>영문과 숫자</li>
+            <li>최소 3자</li>
+          </ul>
         </div>
         <div className="input-container">
           <label htmlFor="nickname">닉네임</label>
@@ -105,6 +122,7 @@ function SignupEmail() {
             placeholder="닉네임을 입력해주세요."
           />
         </div>
+
         <div className="terms">
           <p className="agreeAll">
             <input
@@ -151,14 +169,16 @@ function SignupEmail() {
 
       <style jsx>{`
         .signup-container {
-          padding: 30px 0;
+          padding: 80px 0 150px 0;
           .signup-box {
             max-width: 350px;
             width: 70%;
             margin: 0 auto;
             background-color: white;
+
             @media (max-width: 768px) {
               width: 85%;
+              height: calc(100vh - 80px);
             }
           }
           button.goBack {
@@ -173,7 +193,7 @@ function SignupEmail() {
             font-size: 24px;
             margin: 50px 0;
             @media (max-width: 768px) {
-              font-size: 8vw;
+              font-size: 20px;
               margin: 30px 0;
             }
           }
@@ -181,7 +201,7 @@ function SignupEmail() {
             font-size: 14px;
             margin-bottom: 30px;
             @media (max-width: 768px) {
-              font-size: 5vw;
+              font-size: 12px;
               white-space: nowrap;
               margin: 15px 0;
             }
@@ -195,19 +215,19 @@ function SignupEmail() {
               color: rgb(156, 165, 173);
               font-size: 12px;
               @media (max-width: 768px) {
-                font-size: 4.5vw;
+                font-size: 12px;
               }
             }
 
             input {
               width: 95%;
-              padding: 10px 0;
+              padding: 10px 0 10px 5px;
               border: none;
               border-bottom: 1px solid #d0d7de;
               font-size: 16px;
               color: rgb(156, 165, 173);
               @media (max-width: 768px) {
-                font-size: 5vw;
+                font-size: 14px;
               }
             }
             input:focus {
@@ -226,7 +246,7 @@ function SignupEmail() {
               padding: 0;
               margin-bottom: 10px;
               @media (max-width: 768px) {
-                font-size: 4.5vw;
+                font-size: 12px;
                 margin-bottom: 5px;
               }
             }
@@ -236,7 +256,7 @@ function SignupEmail() {
               border-bottom: 1px solid #d9d9d9;
               padding: 20px 0;
               @media (max-width: 768px) {
-                font-size: 5vw;
+                font-size: 14px;
                 padding: 10px 0;
               }
             }
@@ -260,7 +280,7 @@ function SignupEmail() {
             margin-top: 30px;
             font-weight: bold;
             @media (max-width: 768px) {
-              font-size: 5vw;
+              font-size: 14px;
             }
             a {
               color: white;

@@ -35,14 +35,14 @@ function Login() {
           />{" "}
         </h2>
         <div className="input-container">
-          <label htmlFor="username">이메일</label>
+          <label htmlFor="username">아이디</label>
           <input
             type="username"
             id="username"
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="이메일을 입력해주세요."
+            placeholder="아이디를 입력해주세요."
           />
         </div>
         <div className="input-container">
@@ -60,6 +60,7 @@ function Login() {
           로그인
         </button>
         <p className="smallText">
+          <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
           <Link to="/signup">회원가입</Link>
         </p>
       </div>
@@ -69,7 +70,7 @@ function Login() {
           background-color: rgb(244, 244, 244);
           padding: 100px 0;
           @media (max-width: 768px) {
-            padding: 50px 0;
+            padding: 0;
           }
           .login-box {
             max-width: 350px;
@@ -80,6 +81,18 @@ function Login() {
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
+            @media (max-width: 768px) {
+              width: 100%;
+              max-width: 100%;
+              height: calc(100vh - 80px);
+              border-radius: 0px;
+              box-shadow: 0 0 0;
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
           }
           h2 {
             img {
@@ -87,16 +100,26 @@ function Login() {
               height: 35px;
             }
             margin-bottom: 20px;
+            @media (max-width: 768px) {
+              img {
+                width: 50px;
+                height: 50px;
+              }
+            }
           }
           .input-container {
             margin-bottom: 15px;
             text-align: left;
+            @media (max-width: 768px) {
+              width: 85%;
+              text-aglign: center;
+            }
             label {
               display: block;
               color: rgb(156, 165, 173);
               font-size: 12px;
               @media (max-width: 768px) {
-                font-size: 11px;
+                font-size: 12px;
               }
             }
             input {
@@ -107,7 +130,7 @@ function Login() {
               font-size: 16px;
               color: rgb(156, 165, 173);
               @media (max-width: 768px) {
-                font-size: 13px;
+                font-size: 14px;
               }
             }
             input:focus {
@@ -122,11 +145,13 @@ function Login() {
             text-align: right;
             padding: 10px 0;
             @media (max-width: 768px) {
-              font-size: 11px;
+              font-size: 14px;
             }
             a {
               color: rgb(132 141 148);
               font-weight: bold;
+              padding: 5px 10px;
+              display: block;
             }
           }
           button.navyBox {
@@ -142,7 +167,8 @@ function Login() {
             margin-top: 30px;
             font-weight: bold;
             @media (max-width: 768px) {
-              font-size: 14px;
+              width: 70%;
+              font-size: 16px;
             }
             a {
               color: white;

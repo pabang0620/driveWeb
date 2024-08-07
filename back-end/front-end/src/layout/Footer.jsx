@@ -4,19 +4,15 @@ function Footer() {
   return (
     <footer className="footer">
       <div>
-        <h2>(주)운행일지</h2>
+        <h2>국민대부 주식회사</h2>
         <ul className="help_area">
           <li>
-            <span>팩스</span>123-123-123
-          </li>
-          <li>
-            <span>대표메일</span>kr.taxi.master@gmail.com
+            <span>전화</span>010-3194-3603
           </li>
         </ul>
         <ul className="company_area">
-          <li>대표 재청</li>
-          <li>사업자 등록번호 123-123-123</li>
-          <li>서울특별시 영등포구 가나다12길 ab플라자 0층</li>
+          <li>대표 김재청</li>
+          <li>서울특별시 양천구 화곡로12길 23-22 202호</li>
         </ul>
         <p className="copyline">&copy; 2024 My Website. All rights reserved.</p>
       </div>

@@ -38,10 +38,11 @@ function Signup() {
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
+
             @media (max-width: 768px) {
               width: 100%;
               max-width: 100%;
-              height: calc(100vh - 100px);
+              height: calc(100vh - 80px);
               border-radius: 0px;
               box-shadow: 0 0 0;
               display: flex;
@@ -63,7 +64,7 @@ function Signup() {
           }
           h3 {
             @media (max-width: 768px) {
-              font-size: 7vw;
+              font-size: 20px;
             }
           }
           button.navyBox {
@@ -79,7 +80,8 @@ function Signup() {
             margin-top: 30px;
             font-weight: bold;
             @media (max-width: 768px) {
-              font-size: 5vw;
+              width: 70%;
+              font-size: 16px;
             }
             a {
               color: white;
@@ -96,7 +98,7 @@ function Signup() {
             text-align: right;
             padding: 10px 0;
             @media (max-width: 768px) {
-              font-size: 4vw;
+              font-size: 14px;
             }
             a {
               color: rgb(132 141 148);

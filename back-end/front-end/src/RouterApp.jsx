@@ -6,6 +6,8 @@ import {
   Outlet,
 } from "react-router-dom";
 import Login from "./page/login/Login";
+import ForgotPassword from "./page/login/ForgotPassword";
+import ResetPassword from "./page/login/ResetPassword";
 import Signup from "./page/signup/Signup";
 import Home from "./page/home/Home";
 import Layout from "./layout/Layout";
@@ -41,6 +43,10 @@ function RouterApp() {
           <Route path="/" element={<Home />} />
           {/* 로그인 */}
           <Route path="/login" element={<Login />} />
+
+          {/* 비밀번호 찾기 & 재설정 */}
+          <Route path="/login/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/login/resetpassword" element={<ResetPassword />} />
 
           {/* 회원가입 */}
           <Route path="/signup" element={<Signup />} />
