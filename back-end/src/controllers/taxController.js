@@ -253,13 +253,67 @@ async function getQuarterlyProfitLoss(req, res) {
     const { year, quarter } = req.params;
     const { userId } = req;
 
-    const { incomeTotal, expenseTotal } = await calculateQuarterlyTotals(
-      userId,
-      year,
-      quarter
+    // 분기의 시작 월과 종료 월을 계산합니다.
+    const startMonth = (quarter - 1) * 3 + 1;
+    const endMonth = startMonth + 2;
+
+    const quarterlyData = {
+      income: [],
+      expense: [],
+      totalIncome: {},
+      totalExpense: {
+        maintenanceCost: 0,
+        insuranceFee: 0,
+        estimatedTotalTax: 0,
+      },
+    };
+
+    for (let month = startMonth; month <= endMonth; month++) {
+      const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+      const endDate = new Date(year, month, 0).toISOString().split("T")[0];
+
+      const incomeRecords = await getIncomeRecords(userId, startDate, endDate);
+      const expenseRecords = await getExpenseRecords(
+        userId,
+        startDate,
+        endDate
+      );
+
+      const incomeTotal = calculateTotals(incomeRecords, "income");
+      const expenseTotal = calculateTotals(expenseRecords, "expense");
+
+      quarterlyData.income.push(incomeTotal);
+      quarterlyData.expense.push(expenseTotal);
+    }
+
+    // 각 월의 수익 및 지출 합계를 계산
+    quarterlyData.totalIncome = calculateTotals(
+      quarterlyData.income.flat(),
+      "income"
+    );
+    quarterlyData.totalExpense = calculateTotals(
+      quarterlyData.expense.flat(),
+      "expense"
     );
 
-    res.json({ income: incomeTotal, expense: expenseTotal });
+    // 유지보수 비용 및 보험료 합계를 추가
+    quarterlyData.totalExpense.maintenanceCost = await getMaintenanceCost(
+      userId,
+      `${year}-${String(startMonth).padStart(2, "0")}-01`,
+      `${year}-${String(endMonth).padStart(2, "0")}-31`
+    );
+
+    quarterlyData.totalExpense.insuranceFee = await getInsuranceFeeForYear(
+      userId,
+      year
+    );
+
+    // 추정 소득세 추가
+    quarterlyData.totalExpense.estimatedTotalTax = await getEstimatedTotalTax(
+      userId
+    );
+
+    res.json(quarterlyData);
   } catch (error) {
     console.error(error);
     res

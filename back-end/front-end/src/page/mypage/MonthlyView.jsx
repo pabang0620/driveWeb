@@ -533,7 +533,7 @@ function MonthlyView() {
                               (a, b) => a + b,
                               0
                             ) -
-                            monthlyData.totalExpense.estimatedTotalTax
+                            monthlyData.totalExpense.estimatedTotalTax / 12
                         )}
                       </span>
                     </div>
