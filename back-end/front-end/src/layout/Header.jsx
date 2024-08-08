@@ -9,7 +9,7 @@ function Header() {
   const currentPath = location.pathname;
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false); // 사이드바 상태 추가
 
   const hideNav =
@@ -100,57 +100,80 @@ function Header() {
             onMouseEnter={() => setShowSubMenu(true)}
             onMouseLeave={() => setShowSubMenu(false)}
           >
-            {showSubMenu && <SubMenu />}
-            <li
-              style={{ width: "24px", textAlign: "center" }}
-              className={currentPath === "/" ? "selected" : ""}
-            >
+            <li className={currentPath === "/" ? "selected" : ""}>
               <Link to="/">홈</Link>
             </li>
-            <li
-              style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/user")}
-            >
+            <li className={getSelectedClass("/user")}>
               <Link to="/user/personalInfo">회원정보</Link>
+              <ul>
+                <li>
+                  <Link to="/user/personalInfo">개인정보</Link>
+                </li>
+                <li>
+                  <Link to="/user/carInfo">차량정보</Link>
+                </li>
+                <li>
+                  <Link to="/user/incomeInfo">지출정보</Link>
+                </li>
+              </ul>
             </li>
-            <li
-              style={{ width: "84px", textAlign: "center" }}
-              className={getSelectedClass("/mypage")}
-            >
+            <li className={getSelectedClass("/mypage")}>
               <Link to="/mypage">마이페이지</Link>
             </li>
-            <li
-              style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/driving_log")}
-            >
+            <li className={getSelectedClass("/driving_log")}>
               <Link to="/driving_log">운행일지</Link>
+              <ul>
+                <li className="listOption">
+                  <Link to="/driving_log/dashboard">대쉬보드</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/driving_log">운행일지</Link>
+                </li>
+              </ul>
             </li>
-            <li
-              style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/mycar")}
-            >
+            <li className={getSelectedClass("/mycar")}>
               <Link to="/mycar">차계부</Link>
+              <ul>
+                <li className="listOption">
+                  <Link to="/mycar">차량정보</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/mycar/maintenance">정비항목</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/mycar/log">정비이력</Link>
+                </li>
+              </ul>
             </li>
-            <li
-              style={{ width: "78px", textAlign: "center" }}
-              className={getSelectedClass("/board")}
-            >
+            <li className={getSelectedClass("/board")}>
               <Link to="/board">게시판</Link>
+              <ul>
+                <li className="listOption">
+                  <Link to="/board">게시판</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/board/list/1">공지사항</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/board/list/2">자유게시판</Link>
+                </li>
+                <li className="listOption">
+                  <Link to="/board/post/add">글쓰기</Link>
+                </li>
+              </ul>
             </li>
-            <li
-              style={{ width: "42px", textAlign: "center" }}
-              className={getSelectedClass("/ranking")}
-            >
+            <li className={getSelectedClass("/ranking")}>
               <Link to="/ranking">랭킹</Link>
             </li>
-            <li
-              style={{ width: "82.81px", textAlign: "center" }}
-              className={getSelectedClass("/admin_page")}
-            >
+            <li className={getSelectedClass("/payment")}>
+              <Link to="/payment">프리미엄</Link>
+            </li>
+            <li className={getSelectedClass("/admin_page")}>
               <Link to="/admin_page">관리자페이지</Link>
             </li>
           </ul>
         </nav>
+
         <SidebarMenu
           showSidebar={showSidebar}
           setShowLogoutModal={setShowLogoutModal}
@@ -161,7 +184,6 @@ function Header() {
           header {
             width: 100%;
             background-color: white;
-
             &.scrolling {
               top: -60px;
             }
@@ -214,7 +236,7 @@ function Header() {
                   height: 40px;
                   line-height: 40px;
                   font-weight: bold;
-                  padding: 0 15px;
+
                   @media (max-width: 768px) {
                     font-size: 14px;
                     padding: 0 3vw;
@@ -222,10 +244,12 @@ function Header() {
                     line-height: 30px;
                   }
                   a {
+                    display: block;
                     width: 100%;
                     height: 100%;
-                    display: inline;
+                    line-height: inherit;
                     font-weight: 500;
+                    padding: 0 15px;
                   }
                   &:nth-of-type(1) {
                     background-color: #f0f3f5;
@@ -247,29 +271,92 @@ function Header() {
             nav {
               white-space: nowrap;
               width: 100%;
-              margin-top: 15px;
+              overflow: hidden;
               position: relative;
+              height: 27px;
+              ul.mainmenu {
+                height: auto;
+                position: absolute;
+                z-index: 10;
+                background-color: #ffffff;
+                border-bottom-left-radius: 7px;
+                border-bottom-right-radius: 7px;
+                overflow: hidden;
+                border-bottom: 1px solid #ddd;
+              }
             }
             nav:hover {
               cursor: pointer;
-              .submenu {
-                display: flex;
+              bottom: 0;
+              overflow: visible;
+              ul.mainmenu {
               }
             }
 
-            nav .mainmenu {
+            nav ul.mainmenu {
               display: flex;
+              width: auto;
               gap: 15px;
-              li {
+              > li {
                 cursor: pointer;
                 font-weight: 500;
-                padding: 5px;
-                margin: 0 3px;
                 font-size: 15px;
+                position: relative;
+                > a {
+                  padding: 0 10px 5px 10px;
+                  display: block;
+                  width: 100%;
+                  text-align: center;
+                }
                 &.selected {
-                  border-bottom: 3px solid #3c5997;
-                  a {
+                  > a {
                     color: #3c5997;
+                    position: relative;
+                    &::after {
+                      content: "";
+                      position: absolute;
+                      left: 0;
+                      bottom: 0px;
+                      width: 100%;
+                      border-bottom: 3px solid #3c5997;
+                    }
+                  }
+                }
+                &:hover {
+                  > a {
+                    color: #7388b6;
+                    position: relative;
+                    &::after {
+                      content: "";
+                      position: absolute;
+                      left: 0;
+                      bottom: 0px;
+                      width: 100%;
+                      border-bottom: 3px solid #7388b6;
+                    }
+                  }
+                }
+              }
+              > li ul {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                font-size: 13px;
+                padding: 5px 0 30px 0;
+                li {
+                  cursor: pointer;
+                  border-radius: 5px;
+                  transition: background-color 0.3s ease, color 0.3s ease;
+                  &:hover {
+                    background-color: #f0f3f5;
+                    color: #3c5997;
+                  }
+                  a {
+                    padding: 3px;
+                    display: block;
+                    text-align: center;
                   }
                 }
               }
