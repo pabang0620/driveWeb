@@ -235,6 +235,20 @@ function SignupEmail() {
               outline: none;
               color: #222;
             }
+            ul {
+              margin-left: 15px;
+              margin-top: 5px;
+              margin-bottom: 20px;
+              li {
+                list-style: disc;
+                color: #555;
+                font-size: 14px;
+                line-height: 20px;
+                @media (max-width: 768px) {
+                  font-size: 12px;
+                }
+              }
+            }
           }
           .terms {
             margin-top: 100px;

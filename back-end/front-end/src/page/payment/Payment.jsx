@@ -63,11 +63,6 @@ export default function Payment() {
             편리하게 관리해보세요!
           </h3>
           <p>
-            구독하면 더 자세하고 친절하게
-            <br className="mobile_br" />
-            운행일지 데이터를 볼 수 있습니다.
-          </p>
-          <p>
             정기 구독으로 고급 분석 기능과 <br className="mobile_br" />
             사용자 맞춤형 보고서를 제공받으세요.
           </p>

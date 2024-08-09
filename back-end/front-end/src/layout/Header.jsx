@@ -149,9 +149,6 @@ function Header() {
               <Link to="/board">게시판</Link>
               <ul>
                 <li className="listOption">
-                  <Link to="/board">게시판</Link>
-                </li>
-                <li className="listOption">
                   <Link to="/board/list/1">공지사항</Link>
                 </li>
                 <li className="listOption">
@@ -169,7 +166,21 @@ function Header() {
               <Link to="/payment">프리미엄</Link>
             </li>
             <li className={getSelectedClass("/admin_page")}>
-              <Link to="/admin_page">관리자페이지</Link>
+              <Link to="/admin/user">관리자페이지</Link>
+              <ul>
+                <li>
+                  <Link to="/admin/user">회원관리</Link>
+                </li>
+                <li>
+                  <Link to="/admin/ranking">랭킹관리</Link>
+                </li>
+                <li>
+                  <Link to="/admin/statistics">통계관리</Link>
+                </li>
+                <li>
+                  <Link to="/admin/board">게시판관리</Link>
+                </li>
+              </ul>
             </li>
           </ul>
         </nav>
@@ -271,25 +282,22 @@ function Header() {
             nav {
               white-space: nowrap;
               width: 100%;
-              overflow: hidden;
               position: relative;
               height: 27px;
+              z-index: 10;
               ul.mainmenu {
-                height: auto;
+                height: 27px;
                 position: absolute;
-                z-index: 10;
-                background-color: #ffffff;
-                border-bottom-left-radius: 7px;
-                border-bottom-right-radius: 7px;
                 overflow: hidden;
-                border-bottom: 1px solid #ddd;
-              }
-            }
-            nav:hover {
-              cursor: pointer;
-              bottom: 0;
-              overflow: visible;
-              ul.mainmenu {
+                transition: height 0.5s ease-in-out;
+                background-color: #ffffff;
+                &:hover {
+                  cursor: pointer;
+                  height: 170px;
+                  border-bottom-left-radius: 7px;
+                  border-bottom-right-radius: 7px;
+                  border-bottom: 1px solid #ddd;
+                }
               }
             }
 

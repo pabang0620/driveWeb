@@ -33,6 +33,10 @@ import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
 // import TopRank from "./page/TopRank";
 import Payment from "./page/payment/Payment";
+import BoardManagement from "./page/admin/BoardManagement";
+import UserManagement from "./page/admin/UserManagement";
+import RankingManagement from "./page/admin/RankingManagement";
+import StatisticsManagement from "./page/admin/StatisticsManagement";
 
 function RouterApp() {
   return (
@@ -83,6 +87,12 @@ function RouterApp() {
 
           {/* 결재 */}
           <Route path="/payment" element={<Payment />} />
+
+          {/* 관리자페이지 */}
+          <Route path="/admin/user" element={<UserManagement />} />
+          <Route path="/admin/board" element={<BoardManagement />} />
+          <Route path="/admin/ranking" element={<RankingManagement />} />
+          <Route path="/admin/statistics" element={<StatisticsManagement />} />
 
           {/* 기타 */}
           <Route path="/SummaryComponent" element={<SummaryComponent />} />
