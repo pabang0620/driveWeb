@@ -13,7 +13,15 @@ const StatisticsManagement = () => {
         <p>아래 버튼을 클릭하여 애널리틱스 대시보드로 이동하세요.</p>
       </div>
       <div className="button-wrapper">
-        <button className="navyBox">바로 확인하기</button>
+        <button
+          className="navyBox"
+          onClick={() =>
+            (window.location.href =
+              "https://analytics.google.com/analytics/web/#/p452556071/reports/intelligenthome")
+          }
+        >
+          바로 확인하기
+        </button>
       </div>
       <style jsx>{`
         .statisticsManagement_container {

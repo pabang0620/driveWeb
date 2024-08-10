@@ -103,19 +103,17 @@ const UserManagement = () => {
       <TitleBox title="관리자페이지" subtitle="회원관리" />
       <div className="searchBox">
         <div className="search_container">
-          <div>
-            <label htmlFor="search" className="search_label">
-              검색
-            </label>
-            <input
-              id="search"
-              type="text"
-              placeholder="검색어 입력"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="search_input"
-            />
-          </div>
+          <label htmlFor="search" className="search_label">
+            검색
+          </label>
+          <input
+            id="search"
+            type="text"
+            placeholder="검색어 입력"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="search_input"
+          />
         </div>
         <div className="filters">
           <div className="filter_container">
@@ -154,7 +152,7 @@ const UserManagement = () => {
               ))}
             </select>
           </div>
-          <div className="filter_container">
+          <div className="filter_container permissionfilter_contain">
             <label htmlFor="permissionFilter" className="filter_label">
               회원 권한 필터
             </label>
@@ -172,7 +170,7 @@ const UserManagement = () => {
               ))}
             </select>
           </div>
-          <div className="filter_container">
+          <div className="filter_container datefilter_container">
             <label htmlFor="startDateFilter" className="filter_label">
               가입일
             </label>
@@ -183,6 +181,7 @@ const UserManagement = () => {
               onChange={(e) => handleFilterChange(e, setStartDateFilter)}
               className="date_input"
             />
+            ~
             <input
               id="endDateFilter"
               type="date"
@@ -291,10 +290,10 @@ const UserManagement = () => {
       </div>
       <style jsx>{`
         .userManagement_container {
-          width: 85%;
+          width: 75%;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 20px;
+          padding: 100px 0;
           @media (max-width: 768px) {
             width: 85%;
             padding: 50px 0;
@@ -308,26 +307,38 @@ const UserManagement = () => {
             .filter_label {
               font-size: 14px;
               margin-right: 5px;
+              min-width: 65px;
             }
-            .filter_label {
-              width: 45%;
+            input,
+            select {
+              padding: 3px 5px;
             }
             .search_container {
               width: 100%;
               display: flex;
-              justify-content: space-between;
-              > div {
-                width: calc(100% - 80px);
+              input {
+                width: 100%;
               }
             }
+
             .filters {
               display: flex;
               margin-top: 10px;
-              gap: 10px;
+              gap: 10px 30px;
               flex-wrap: wrap;
+
               .filter_container {
                 display: flex;
-                width: 30%;
+
+                &.datefilter_containter {
+                  width: 100%;
+                  input:nth-of-type(1) {
+                    margin-right: 10px;
+                  }
+                  input:nth-of-type(2) {
+                    margin-left: 10px;
+                  }
+                }
               }
             }
 
@@ -345,11 +356,13 @@ const UserManagement = () => {
             } */
             }
 
-            .search_input:focus,
+             {
+              /* .search_input:focus,
             .filter_select:focus,
             .date_input:focus {
               border-color: #3c5997;
               outline: none;
+            } */
             }
 
             .filter_select {
