@@ -219,89 +219,90 @@ const MaintenanceEditModal = ({ isOpen, onClose, recordData }) => {
             flex-direction: row;
             justify-content: space-between;
           }
-        }
-        .modal-content {
-          background-color: #fff;
-          padding: 20px;
-          border: 1px solid #888;
-          width: 400px;
-          border-radius: 8px;
-          position: relative;
-          display: flex;
-          flex-direction: column;
-        }
-        .close {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-          color: black;
-          text-decoration: none;
-          cursor: pointer;
-        }
-        h2 {
-          font-size: 16px;
-          margin-top: 10px;
-          margin-bottom: 10px;
-        }
-        .section {
-          margin-bottom: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .section label {
-          font-weight: bold;
-          flex: 1;
-          font-size: 14px;
-        }
-        .section input {
-          padding: 8px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          text-align: right;
-          height: 30px;
-        }
-        .input-container {
-          width: 170px;
-          display: flex;
-          align-items: center;
-          justify-content: right;
-        }
-        .input-container .unit {
-          margin-left: 5px;
-          font-size: 16px;
-          font-weight: bold;
-        }
-        .button-group {
-          display: flex;
-          justify-content: space-between;
-        }
-        .button-group button {
-          flex: 1;
-          width: 75px;
-          height: 30px;
-          line-height: 30px;
-          margin: 0 5px;
-          border-radius: 4px;
-          cursor: pointer;
-          background-color: white;
-          border: 1px solid #ccc;
-        }
-        .button-group button.selected {
-          border: 1px solid #3c5997;
-          color: #3c5997;
-        }
-        .MaintenaceSaveBTN {
-          width: 100%;
-          background-color: #3c5997;
-          color: white;
-          margin: 15px auto 10px;
-          padding: 8.5px 0px;
-          border-radius: 5px;
+
+          .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+          }
+          .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+          }
+          .close:hover,
+          .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+          }
+          h2 {
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+          .section {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .section label {
+            font-weight: bold;
+            flex: 1;
+            font-size: 14px;
+          }
+          .section input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: right;
+            height: 30px;
+          }
+          .input-container {
+            width: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: right;
+          }
+          .input-container .unit {
+            margin-left: 5px;
+            font-size: 16px;
+            font-weight: bold;
+          }
+          .button-group {
+            display: flex;
+            justify-content: space-between;
+          }
+          .button-group button {
+            flex: 1;
+            width: 75px;
+            height: 30px;
+            line-height: 30px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid #ccc;
+          }
+          .button-group button.selected {
+            border: 1px solid #3c5997;
+            color: #3c5997;
+          }
+          .MaintenaceSaveBTN {
+            width: 100%;
+            background-color: #3c5997;
+            color: white;
+            margin: 15px auto 10px;
+            padding: 8.5px 0px;
+            border-radius: 5px;
+          }
         }
       `}</style>
     </div>

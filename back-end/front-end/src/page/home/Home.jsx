@@ -1,17 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import RankingList from "../ranking/RankingList";
+import NoticeZone from "./NoticeZone";
+import TopRankList from "./TopRankList";
+import Banner from "./Banner";
+import TabsContainer from "./TabsContainer";
+import {
+  boardsWithPosts,
+  topViewedPosts,
+  topLikedPosts,
+} from "../../components/dummy";
 function Home() {
+  // const [boardsWithPosts, setBoardsWithPosts] = useState([]);
+  // const [topViewedPosts, setTopViewedPosts] = useState([]);
+  // const [topLikedPosts, setTopLikedPosts] = useState([]);
+  const [activeLeftTab, setActiveLeftTab] = useState(0);
+  const [activeRightTab, setActiveRightTab] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchTopRank = async () => {
+  //     try {
+  //       const response = await axios.get("/api/rank/topRank");
+  //       setBoardsWithPosts(response.data.boardsWithPosts);
+  //       setTopViewedPosts(response.data.topViewedPosts);
+  //       setTopLikedPosts(response.data.topLikedPosts);
+  //       setLoading(false);
+  //     } catch (err) {
+  //       setError(err.message);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchTopRank();
+  // }, []);
+
   return (
     <div className="home-container">
-      <div className="main_banner">
-        <div className="banner_text">
-          <h3>당신의 안전한 운행을 위한 최고의 기록 도구</h3>
-          <h2>
-            손쉽게, 더 효율적으로
-            <br />
-            기록하자
-          </h2>
-        </div>
+      <Banner />
+      <div className="contents_inner">
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          <>
+            <NoticeZone boardsWithPosts={boardsWithPosts} />
+            <div className="rankingList">
+              <RankingList title={"연비"} rankType={"fuelType"} />
+              <RankingList title={"운행시간"} rankType={"jobType"} />
+              <RankingList title={"총 운송수입금"} rankType={"carType"} />
+            </div>
+            <TabsContainer
+              boardsWithPosts={boardsWithPosts}
+              topViewedPosts={topViewedPosts}
+              topLikedPosts={topLikedPosts}
+              activeLeftTab={activeLeftTab}
+              setActiveLeftTab={setActiveLeftTab}
+              activeRightTab={activeRightTab}
+              setActiveRightTab={setActiveRightTab}
+            />
+          </>
+        )}
       </div>
       <div className="contents_inner">
         <div className="rankingList">
@@ -34,30 +85,25 @@ function Home() {
       </div>
       <style jsx>{`
         .home-container {
-          .main_banner {
-            width: 100%;
-            height: 350px;
-            background-image: url("/images/home/banner1.png");
-            background-size: cover;
-            background-position: center;
+          .contents_inner {
+            width: 70%;
+            margin: 50px auto;
             display: flex;
-            align-items: center;
-            .banner_text {
-              width: 80%;
-              margin: 0 auto;
-              max-width: 1200px;
-              color: white;
-              text-shadow: 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.5);
-
-              h3 {
-                font-size: 20px;
-                color: white;
-              }
-              h2 {
-                margin-top: 10px;
-                font-size: 40px;
-                color: white;
-              }
+            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 50px;
+            @media (max-width: 768px) {
+              width: 90%;
+              margin: 30px auto;
+              gap: 30px;
+            }
+            .rankingList {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: flex-start;
             }
           }
           .contents_inner {

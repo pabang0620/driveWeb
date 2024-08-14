@@ -6,6 +6,7 @@ import { validatePhone, validateEmail } from "../../components/Validators";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트 경로에 맞게 수정하세요
+import TitleBox from "../../components/TitleBox";
 
 const PersonalInfo = () => {
   const [userInfo, setUserInfo] = useState({
@@ -133,9 +134,7 @@ const PersonalInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>개인정보</span>
-      </h2>
+      <TitleBox title="회원정보" subtitle="개인정보" />
       <div className="userInfoImgBox">
         {imagePreview ? (
           <div className="imageWrapper">
@@ -236,6 +235,10 @@ const PersonalInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -250,6 +253,16 @@ const PersonalInfo = () => {
             flex-direction: column;
             align-items: center;
             margin-bottom: 30px;
+            @media (max-width: 768px) {
+              margin-top: 20px;
+              margin-bottom: 20px;
+            }
+            svg {
+              @media (max-width: 768px) {
+                width: 100px;
+                aspect-ratio: 1/1;
+              }
+            }
             .imageWrapper {
               position: relative;
               img {
@@ -299,6 +312,9 @@ const PersonalInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
@@ -335,6 +351,9 @@ const PersonalInfo = () => {
             display: flex;
             justify-content: center;
             margin-top: 20px;
+            @media (max-width: 768px) {
+              margin-top: 10px;
+            }
             button {
               cursor: pointer;
               font-size: 14px;

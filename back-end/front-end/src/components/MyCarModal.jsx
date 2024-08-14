@@ -55,70 +55,71 @@ const MyCarModal = ({ isOpen, onClose, token, onItemAdded, myCarId }) => {
           height: 100%;
           background-color: rgba(0, 0, 0, 0.6);
           backdrop-filter: blur(5px);
-        }
-        .modal-content {
-          background-color: #ffffff;
-          padding: 30px;
-          border-radius: 12px;
-          width: 400px;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-          animation: fadeIn 0.3s ease;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-        }
-        .close {
-          color: #333;
-          position: absolute;
-          top: 15px;
-          right: 15px;
-          font-size: 24px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-        .close:hover {
-          color: #000;
-        }
-        h2 {
-          margin: 0 0 20px;
-          font-size: 24px;
-          text-align: center;
-          color: #333;
-        }
-        .modal-content input {
-          width: 100%;
-          padding: 15px;
-          margin-bottom: 20px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 16px;
-          transition: border-color 0.3s ease;
-        }
-        .modal-content input:focus {
-          border-color: #3c5997;
-          outline: none;
-        }
-        .modal-content button {
-          width: 100%;
-          padding: 15px;
-          background-color: #3c5997;
-          color: #fff;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: 16px;
-          transition: background-color 0.3s ease;
-        }
-        .modal-content button:hover {
-          background-color: #2b4b79;
-        }
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
+
+          .modal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
           }
-          to {
-            opacity: 1;
+          .close {
+            color: #333;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+          .close:hover {
+            color: #000;
+          }
+          h2 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            text-align: center;
+            color: #333;
+          }
+          .modal-content input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+          }
+          .modal-content input:focus {
+            border-color: #3c5997;
+            outline: none;
+          }
+          .modal-content button {
+            width: 100%;
+            padding: 15px;
+            background-color: #3c5997;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+          }
+          .modal-content button:hover {
+            background-color: #2b4b79;
+          }
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
           }
         }
       `}</style>

@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
-import IncomeTaxComponent from "./IncomeTaxComponent";
+import TitleBox from "../../components/TitleBox";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dateRange, setDateRange] = useState("today"); // "yesterday", "dayBeforeYesterday"
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   const getDateOffset = (offset) => {
     const date = new Date();
@@ -20,29 +23,46 @@ const MyPage = () => {
     return koreanDate.toISOString().split("T")[0];
   };
 
-  const dateOffsets = {
-    dayBeforeYesterday: -2,
-    yesterday: -1,
-    today: 0,
+  const handleDateChange = (range) => {
+    const today = new Date();
+    let newStartDate;
+    let newEndDate;
+
+    switch (range) {
+      case "today":
+        newStartDate = today;
+        newEndDate = today;
+        break;
+      case "yesterday":
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 1);
+        newEndDate = newStartDate;
+        break;
+      case "dayBeforeYesterday":
+        newStartDate = new Date(today);
+        newStartDate.setDate(today.getDate() - 2);
+        newEndDate = newStartDate;
+        break;
+      default:
+        newStartDate = today;
+        newEndDate = today;
+    }
+
+    setDateRange({ startDate: newStartDate, endDate: newEndDate });
   };
 
   const getDate = () => {
-    const offset = dateOffsets[dateRange];
-    const date = getDateOffset(offset);
-    console.log(`Selected Date (Frontend): ${date}`);
-    return date;
+    const startDate = getDateOffset(0, dateRange.startDate);
+    const endDate = getDateOffset(0, dateRange.endDate);
+    console.log(`Selected Date Range (Frontend): ${startDate} - ${endDate}`);
+    return { startDate, endDate };
   };
-
-  const handleDateChange = (range) => {
-    setDateRange(range);
-  };
-
   //if (loading) return <p>Loading...</p>;
   //if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
     <div className="container mypage-container">
-      <h2>마이페이지</h2>
+      <TitleBox title="마이페이지" />
       <select
         className="dateSelector"
         onChange={(e) => handleDateChange(e.target.value)}
@@ -54,52 +74,28 @@ const MyPage = () => {
       <div className="dataBox">
         <Dashboard
           dateRange={dateRange}
-          getDate={getDate}
           setLoading={setLoading}
           setError={setError}
         />
         <CircularChart
           dateRange={dateRange}
-          getDate={getDate}
-          setLoading={setLoading}
           setError={setError}
           title={"수입차트"}
           url={"incomeSummary"}
         />
         <CircularChart
           dateRange={dateRange}
-          getDate={getDate}
-          setLoading={setLoading}
-          setError={setError}
           title={"지출차트"}
           url={"expenseSummary"}
         />
         <MixChart
           dateRange={dateRange}
-          getDate={getDate}
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}
+          url={"getMypageMix"}
         />
       </div>
-      <div>
-        <p className="note">- 프리미엄 기능입니다.</p>
-        <div className="subscribeADD">
-          <IncomeTaxComponent
-            title="예상종합소득세"
-            description="운행일지에 입력된 데이터를 바탕으로 예상 종합소득세를 산출하는 기능입니다."
-            icon="ℹ️"
-            route="/estimated-income-tax"
-          />
-          <IncomeTaxComponent
-            title="손익계산서 조회"
-            description="회계 데이터를 기반으로 손익계산서를 조회하는 서비스입니다."
-            icon="📊"
-            route="/profit-loss-statement"
-          />
-        </div>
-      </div>
-
       <style jsx>{`
         .mypage-container {
           width: 70%;
@@ -107,12 +103,9 @@ const MyPage = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
-          .note {
-            margin-top: 80px;
-          }
-          .subscribeADD {
-            display: flex;
-            flex-direction: row;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
           }
           h2 {
             font-size: 25px;
@@ -136,6 +129,9 @@ const MyPage = () => {
               padding: 10px;
               cursor: pointer;
             }
+            @media (max-width: 768px) {
+              width: 25%;
+            }
           }
 
           .dataBox {
@@ -150,6 +146,13 @@ const MyPage = () => {
             justify-content: space-between;
             h3 {
               margin-bottom: 10px;
+              font-size: 20px;
+              @media (max-width: 768px) {
+                font-size: 18px;
+              }
+            }
+            @media (max-width: 768px) {
+              padding: 5% 5% 20% 5%;
             }
           }
         }

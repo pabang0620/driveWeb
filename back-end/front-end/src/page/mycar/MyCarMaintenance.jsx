@@ -6,7 +6,80 @@ import MaintenanceItemCard from "../../components/MaintenanceItemCard";
 
 const MyCarMaintenance = () => {
   const token = localStorage.getItem("token");
-  const [maintenanceItems, setMaintenanceItems] = useState([]);
+  const [maintenanceItems, setMaintenanceItems] = useState([
+    {
+      id: 1,
+      name: "에어클리너 필터",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [
+        {
+          id: 1,
+          userId: 1,
+          carId: null,
+          maintenanceItemId: 1,
+          maintenanceDate: "2024-08-07T00:00:00.000Z",
+          createdAt: "2024-08-04T18:15:23.000Z",
+          updatedAt: "2024-08-04T18:15:23.000Z",
+          maintenanceMethod: "",
+          maintenanceInterval: 1,
+          maintenanceDistance: 2,
+          mileageAtMaintenance: 522,
+          maintenanceCost: "123123",
+          edited: 0,
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "공조 장치용 에어필터",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+    {
+      id: 3,
+      name: "타이어 위치 교체",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+    {
+      id: 4,
+      name: "브레이크/클러치(사양 적용시)액",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+    {
+      id: 5,
+      name: "엔진 오일 및 오일필터",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+    {
+      id: 6,
+      name: "점화 플러그",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+    {
+      id: 7,
+      name: "냉각수량 점검 및 교체",
+      my_carId: 1,
+      userId: 1,
+      unit: "km",
+      maintenance_records: [],
+    },
+  ]);
   const [sortedItems, setSortedItems] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -121,7 +194,7 @@ const MyCarMaintenance = () => {
 
   return (
     <div className="MyCarMaintenance">
-      <TitleBox title="차계부" subtitle=" 차량정보" />
+      <TitleBox title="차계부" subtitle="정비항목" />
       <div className="maintenance-items">
         {sortedItems.length > 0 ? (
           sortedItems.map((item) => (
@@ -165,7 +238,7 @@ const MyCarMaintenance = () => {
           flex-wrap: wrap;
           margin-top: 30px;
           gap: 20px;
-          justify-content: center;
+          justify-content: space-between;
         }
         .no-items {
           width: 100%;

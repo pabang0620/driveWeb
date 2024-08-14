@@ -4,6 +4,7 @@ import { getProfileIncome } from "../../components/ApiGet";
 import { postProfileIncome } from "../../components/ApiPost";
 import locationData from "../../utils/locations.json"; // location.json 파일 import
 import { validateDate } from "../../components/Validators";
+import TitleBox from "../../components/TitleBox";
 const IncomeInfo = () => {
   const [userInfo, setUserInfo] = useState({
     income_type: "소득구분",
@@ -61,9 +62,7 @@ const IncomeInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>소득정보</span>
-      </h2>
+      <TitleBox title="회원정보" subtitle="소득정보" />
 
       <div className="content">
         <div className="inputWrap">
@@ -169,6 +168,10 @@ const IncomeInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -198,6 +201,9 @@ const IncomeInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
@@ -207,7 +213,9 @@ const IncomeInfo = () => {
               height: 100%;
               text-algin: left;
               background: none;
-
+              @media (max-width: 768px) {
+                width: 60%;
+              }
               &:focus {
                 border: none;
                 outline: none;
@@ -221,6 +229,9 @@ const IncomeInfo = () => {
               border: 1px solid #c1c1c1;
               border-radius: 3px;
               padding: 5px;
+              @media (max-width: 768px) {
+                width: 50%;
+              }
               &:focus {
                 outline: 1px solid #c1c1c1;
                 color: #222;

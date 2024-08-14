@@ -13,18 +13,30 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   const [data, setData] = useState([]);
 
   // 데이터를 날짜순으로 정렬하고 각 항목을 별도의 배열로 반환하는 함수
+
   const processData = (data) => {
-    // 날짜순으로 데이터 정렬
     const sortedData = [...data].sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(a.date) - new Date(b.date)
     );
-
-    // 각 항목을 배열로 추출
+    const parseTimeToMinutes = (timeStr) => {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    };
+    const convertMinutesToDecimalHours = (minutes) => {
+      const hours = Math.floor(minutes / 60);
+      const decimalMinutes = (minutes % 60) / 60;
+      return hours + decimalMinutes;
+    };
     const dates = sortedData.map((item) => item.date);
-    const drivingDistances = sortedData.map((item) => item.drivingDistance);
-    const workingHours = sortedData.map((item) => item.workingHours);
-    const totalIncomes = sortedData.map((item) => item.totalIncome);
+    const drivingDistances = sortedData.map((item) =>
+      Number(item.driving_distance)
+    );
+    const workingHours = sortedData.map((item) =>
+      convertMinutesToDecimalHours(parseTimeToMinutes(item.working_hours))
+    );
+    const totalIncomes = sortedData.map((item) => Number(item.total_income));
 
+    console.log(dates, drivingDistances, workingHours, totalIncomes);
     return { dates, drivingDistances, workingHours, totalIncomes };
   };
 
@@ -37,25 +49,26 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   const series = useMemo(
     () => [
       {
+        name: "총 수입금",
+        data: totalIncomes,
+        type: "column",
+        yAxisIndex: 0, // 왼쪽 Y축
+      },
+      {
         name: "주행거리",
         data: drivingDistances,
         type: "line",
+        yAxisIndex: 1, // 오른쪽 Y축
       },
       {
         name: "근무시간",
         data: workingHours,
         type: "line",
-      },
-      {
-        name: "총 수입금",
-        data: totalIncomes,
-        type: "column",
+        yAxisIndex: 1, // 오른쪽 Y축
       },
     ],
     [drivingDistances, workingHours, totalIncomes]
   );
-
-  const labels = useMemo(() => [dates]);
 
   const [options, setOptions] = useState({
     chart: {
@@ -72,7 +85,7 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
       "#FFABAB", // Soft Pink
     ], // 시리즈 색상 설정
     stroke: {
-      width: [4, 4, 0],
+      width: [0, 4, 4],
     },
     plotOptions: {
       bar: {
@@ -93,10 +106,37 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
         },
       },
     },
-    series: series,
     xaxis: {
-      categories: dates, // x축에 날짜 설정
+      title: {
+        text: "날짜",
+      },
+      type: "category",
+      categories: dates,
+      labels: {
+        rotate: -45,
+        style: { fontSize: "12px", colors: "#333" },
+      },
     },
+    yaxis: [
+      {
+        title: {
+          text: "총 수입금",
+        },
+        labels: {
+          formatter: (value) => value, // 숫자 포맷팅
+        },
+      },
+      {
+        opposite: true, // 오른쪽 Y축
+        title: {
+          text: "주행거리 / 근무시간",
+        },
+        labels: {
+          formatter: (value) => value, // 숫자 포맷팅
+        },
+      },
+    ],
+    series: series,
 
     // responsive: [
     //   {
@@ -116,16 +156,12 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   //마이페이지 데이터 가져오기
   const fetchMyPageData = async () => {
     try {
-      const startDate = getDate();
-      const endDate = getDate();
-      const response = await getMypageMix(startDate, endDate); // getMypage 호출로 응답 받기
+      let response;
 
-      console.log("믹스차트", response.data);
-      // 데이터가 실제로 변경된 경우에만 상태 업데이트
-      if (response !== data) {
-        setData(response);
-      }
+      response = await getMypageMix(dateRange.startDate, dateRange.endDate); // getMypage 호출로 응답 받기
+      console.log("믹스차트", response);
 
+      setData(response);
       setLoading(false);
     } catch (error) {
       setError(error);
@@ -134,14 +170,29 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   };
 
   useEffect(() => {
-    fetchMyPageData();
-  }, [dateRange]); // dateRange가 변경될 때마다 호출
+    fetchMyPageData(); // 데이터를 불러옵니다
+    setOptions((prevOptions) => ({
+      ...prevOptions,
+      xaxis: {
+        ...prevOptions.xaxis,
+        categories: dates, // 최신 날짜로 카테고리 업데이트
+      },
+    }));
+    console.log("dateRange", dateRange);
+  }, [dateRange]); // dates가 변경될 때마다 옵션 업데이트
 
   return (
     <div className="barChart_container">
       <h3>{title}</h3>
       <div className="barChart">
-        <ApexChart options={options} series={series} height={450} />
+        {dates.length > 0 &&
+        drivingDistances.length > 0 &&
+        workingHours.length > 0 &&
+        totalIncomes.length > 0 ? (
+          <ApexChart options={options} series={series} height={450} />
+        ) : (
+          <p>데이터가 없습니다.</p>
+        )}
       </div>
       <style jsx>{`
         .barChart_container {

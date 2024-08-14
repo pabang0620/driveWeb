@@ -26,6 +26,9 @@ function Signup() {
         .signup-container {
           background-color: rgb(244, 244, 244);
           padding: 100px 0;
+          @media (max-width: 768px) {
+            padding: 0;
+          }
           .signup-box {
             max-width: 350px;
             width: 70%;
@@ -35,6 +38,19 @@ function Signup() {
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
+
+            @media (max-width: 768px) {
+              width: 100%;
+              max-width: 100%;
+              height: calc(100vh - 80px);
+              border-radius: 0px;
+              box-shadow: 0 0 0;
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
           }
           h2 {
             img {
@@ -42,6 +58,14 @@ function Signup() {
               height: 35px;
             }
             margin-bottom: 20px;
+            @media (max-width: 768px) {
+              margin-bottom: 0;
+            }
+          }
+          h3 {
+            @media (max-width: 768px) {
+              font-size: 20px;
+            }
           }
           button.navyBox {
             width: 100%;
@@ -55,6 +79,10 @@ function Signup() {
             transition: background-color 0.3s;
             margin-top: 30px;
             font-weight: bold;
+            @media (max-width: 768px) {
+              width: 70%;
+              font-size: 16px;
+            }
             a {
               color: white;
               display: inline-block;
@@ -69,6 +97,9 @@ function Signup() {
             font-size: 12px;
             text-align: right;
             padding: 10px 0;
+            @media (max-width: 768px) {
+              font-size: 14px;
+            }
             a {
               color: rgb(132 141 148);
               font-weight: bold;

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import securityQuestions from "../../components/securityQuestions";
-function SignupPassword() {
+import axios from "axios";
+
+function ResetPassword() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
@@ -11,18 +13,22 @@ function SignupPassword() {
   const [isMatch, setIsMatch] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const location = useLocation();
-  const navigate = useNavigate(); // React Router의 navigate 함수 사용
+  const [error, setError] = useState("");
 
-  // 다음 버튼 클릭 시 처리 함수
-  const handleNext = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { username } = location.state || {}; // `username`은 이전 페이지에서 전달됨
+
+  const handleNext = async () => {
+    // 비밀번호 유효성 검사
     if (password.length < 4) {
-      alert("4자 이상 입력해 주세요.");
+      setError("비밀번호는 최소 4자 이상이어야 합니다.");
       return;
     }
 
     if (password !== passwordCheck) {
-      alert("비밀번호가 일치하지 않습니다.");
+      setError("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -43,15 +49,25 @@ function SignupPassword() {
       alert("보안 질문 답변에는 2자 이상 입력해주세요.");
       return;
     }
-    // 모든 조건이 충족된 경우
-    navigate("/signup/job", {
-      state: {
-        ...location.state,
-        password: password,
-        securityQuestion: securityQuestion,
-        securityAnswer: securityAnswer,
-      },
-    });
+
+    try {
+      const response = await axios.post("/api/user/resetpassword", {
+        password,
+        securityQuestion,
+        securityAnswer,
+      });
+
+      // 서버 응답 처리
+      const { data } = response;
+      if (data.success) {
+        navigate("/login"); // 비밀번호 재설정 성공 후 로그인 페이지로 이동
+      } else {
+        setError(data.message || "비밀번호 재설정 실패. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("비밀번호 재설정 중 오류 발생:", error);
+      setError("서버와의 통신 중 오류가 발생했습니다.");
+    }
   };
 
   useEffect(() => {
@@ -59,12 +75,11 @@ function SignupPassword() {
   }, [password, passwordCheck]);
 
   return (
-    <div className="container signup-container">
-      <div className="signup-box">
-        <button className="goBack" onClick={() => navigate(-1)}>
-          &lt;
-        </button>
-        <h3>비밀번호 설정</h3>
+    <div className="container resetpassword-container">
+      <div className="resetpassword-box">
+        <h3>비밀번호 재설정</h3>
+        <p>새 비밀번호를 입력하고 확인하세요.</p>
+
         <div className="input-container">
           <label htmlFor="password">비밀번호</label>
           <input
@@ -117,12 +132,11 @@ function SignupPassword() {
           다음
         </button>
       </div>
-
       <style jsx>{`
-        .signup-container {
+        .resetpassword-container {
           padding: 80px 0 150px 0;
 
-          .signup-box {
+          .resetpassword-box {
             max-width: 350px;
             width: 70%;
             margin: auto;
@@ -147,6 +161,15 @@ function SignupPassword() {
             @media (max-width: 768px) {
               font-size: 20px;
               margin: 30px 0;
+            }
+          }
+          p {
+            font-size: 14px;
+            margin-bottom: 30px;
+            @media (max-width: 768px) {
+              font-size: 12px;
+              white-space: nowrap;
+              margin: 15px 0;
             }
           }
           .input-container {
@@ -247,4 +270,4 @@ function SignupPassword() {
   );
 }
 
-export default SignupPassword;
+export default ResetPassword;

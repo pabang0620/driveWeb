@@ -5,12 +5,13 @@ import DriveIncome from "./DriveIncome";
 import DriveExpense from "./DriveExpense";
 import DriveDetails from "./DriveDetails"; // 추가
 import { getDrive } from "../../components/ApiGet";
+import TitleBox from "../../components/TitleBox";
 
 const DriveLog = () => {
   const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(12); // 페이지당 항목 수
+  const [itemsPerPage] = useState(10); // 페이지당 항목 수
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
 
@@ -117,10 +118,7 @@ const DriveLog = () => {
 
   return (
     <div className="container driving">
-      <h2>
-        운행일지 <span>조회</span>
-      </h2>
-
+      <TitleBox title="운행일지" subtitle="조회" />
       <button className="writeBtn" onClick={() => openModal("driveWrite")}>
         운행일지 작성
       </button>
@@ -245,6 +243,10 @@ const DriveLog = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -265,7 +267,12 @@ const DriveLog = () => {
             border-top: 1px solid #4c4c4c;
             text-align: center;
             border-collapse: collapse;
-            min-height: ;
+            @media (max-width: 768px) {
+              font-size: 13px;
+            }
+            @media (max-width: 480px) {
+              font-size: 11px;
+            }
             tr {
               width: 100%;
               line-height: 40px;
@@ -335,13 +342,23 @@ const DriveLog = () => {
               width: 25%;
               color: #c1c1c1;
               padding: 3% 1%;
+              @media (max-width: 768px) {
+                width: 40%;
+                font-size: 13px;
+                padding: 3% 0%;
+              }
             }
             input {
               border: none;
               background: none;
               color: #c1c1c1;
+              width: 70%;
               &:focus {
                 color: #222;
+              }
+              @media (max-width: 768px) {
+                font-size: 13px;
+                width: 55%;
               }
             }
           }

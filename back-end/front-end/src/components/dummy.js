@@ -1,4 +1,4 @@
-const drivingData = [
+export const drivingData = [
   {
     drivingLogId: 1,
     date: "2024-01-01",
@@ -161,4 +161,1119 @@ const drivingData = [
   },
 ];
 
-export default drivingData;
+// DummyData.js
+export const topLikedPosts = [
+  {
+    id: 26,
+    title: "다섯 번째 공지",
+    createdAt: "2024-07-30T04:32:31.000Z",
+    likeCount: 5,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 16,
+    title: "다섯 번째 자유 게시글",
+    createdAt: "2024-07-30T09:15:22.000Z",
+    likeCount: 5,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 30,
+    title: "아홉 번째 공지",
+    createdAt: "2024-07-30T15:05:12.000Z",
+    likeCount: 4,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 20,
+    title: "아홉 번째 자유 게시글",
+    createdAt: "2024-07-30T18:22:08.000Z",
+    likeCount: 4,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 28,
+    title: "일곱 번째 공지",
+    createdAt: "2024-07-30T11:45:36.000Z",
+    likeCount: 3,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 18,
+    title: "일곱 번째 자유 게시글",
+    createdAt: "2024-07-30T14:05:50.000Z",
+    likeCount: 3,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 24,
+    title: "세 번째 공지",
+    createdAt: "2024-07-30T06:30:23.000Z",
+    likeCount: 2,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 14,
+    title: "세 번째 자유 게시글",
+    createdAt: "2024-07-30T12:10:45.000Z",
+    likeCount: 2,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 31,
+    title: "열 번째 공지",
+    createdAt: "2024-07-30T08:20:16.000Z",
+    likeCount: 2,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 21,
+    title: "열 번째 자유 게시글",
+    createdAt: "2024-07-30T17:05:12.000Z",
+    likeCount: 2,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+];
+
+export const topViewedPosts = [
+  {
+    id: 16,
+    title: "다섯 번째 자유 게시글",
+    createdAt: "2024-07-30T09:15:22.000Z",
+    viewCount: 24,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 26,
+    title: "다섯 번째 공지",
+    createdAt: "2024-07-30T04:32:31.000Z",
+    viewCount: 22,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 1,
+    title: "자유 게시판 ",
+    createdAt: "2024-07-30T11:45:36.000Z",
+    viewCount: 17,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 2,
+    },
+  },
+  {
+    id: 13,
+    title: "두 번째 자유 게시글",
+    createdAt: "2024-07-30T14:05:50.000Z",
+    viewCount: 15,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 23,
+    title: "두 번째 공지",
+    createdAt: "2024-07-30T06:30:23.000Z",
+    viewCount: 15,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 20,
+    title: "아홉 번째 자유 게시글",
+    createdAt: "2024-07-30T18:22:08.000Z",
+    viewCount: 14,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 30,
+    title: "아홉 번째 공지",
+    createdAt: "2024-07-30T15:05:12.000Z",
+    viewCount: 14,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 12,
+    title: "첫 번째 자유 게시글",
+    createdAt: "2024-07-30T10:20:11.000Z",
+    viewCount: 12,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 22,
+    title: "첫 번째 공지",
+    createdAt: "2024-07-30T13:45:33.000Z",
+    viewCount: 12,
+    boards: {
+      name: "사진게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+  {
+    id: 18,
+    title: "일곱 번째 자유 게시글",
+    createdAt: "2024-07-30T08:20:16.000Z",
+    viewCount: 11,
+    boards: {
+      name: "자유게시판",
+    },
+    _count: {
+      comments: 0,
+    },
+  },
+];
+
+export const boardsWithPosts = [
+  {
+    id: 1,
+    boardName: "공지사항",
+    posts: [],
+  },
+  {
+    id: 2,
+    boardName: "자유게시판",
+    posts: [
+      {
+        id: 21,
+        title: "열 번째 자유 게시글",
+        createdAt: "2024-07-30T17:05:12.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 1,
+        title: "자유 게시판 ",
+        createdAt: "2024-07-30T11:45:36.000Z",
+        _count: {
+          comments: 2,
+        },
+      },
+      {
+        id: 20,
+        title: "아홉 번째 자유 게시글",
+        createdAt: "2024-07-30T18:22:08.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 19,
+        title: "여덟 번째 자유 게시글",
+        createdAt: "2024-07-30T12:10:45.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 18,
+        title: "일곱 번째 자유 게시글",
+        createdAt: "2024-07-30T14:05:50.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 17,
+        title: "여섯 번째 자유 게시글",
+        createdAt: "2024-07-30T09:15:22.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 16,
+        title: "다섯 번째 자유 게시글",
+        createdAt: "2024-07-30T04:32:31.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 15,
+        title: "네 번째 자유 게시글",
+        createdAt: "2024-07-30T10:20:11.000Z",
+        _count: {
+          comments: 1,
+        },
+      },
+      {
+        id: 14,
+        title: "세 번째 자유 게시글",
+        createdAt: "2024-07-30T06:30:23.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 13,
+        title: "두 번째 자유 게시글",
+        createdAt: "2024-07-30T08:20:16.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+    ],
+  },
+  {
+    id: 3,
+    boardName: "사진게시판",
+    posts: [
+      {
+        id: 31,
+        title: "열 번째 공지",
+        createdAt: "2024-07-30T08:20:16.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 30,
+        title: "아홉 번째 공지",
+        createdAt: "2024-07-30T15:05:12.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 29,
+        title: "여덟 번째 공지",
+        createdAt: "2024-07-30T12:10:45.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 28,
+        title: "일곱 번째 공지",
+        createdAt: "2024-07-30T11:45:36.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 27,
+        title: "여섯 번째 공지",
+        createdAt: "2024-07-30T09:15:22.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 26,
+        title: "다섯 번째 공지",
+        createdAt: "2024-07-30T04:32:31.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 25,
+        title: "네 번째 공지",
+        createdAt: "2024-07-30T10:20:11.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 24,
+        title: "세 번째 공지",
+        createdAt: "2024-07-30T06:30:23.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 23,
+        title: "두 번째 공지",
+        createdAt: "2024-07-30T14:05:50.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+      {
+        id: 22,
+        title: "첫 번째 공지",
+        createdAt: "2024-07-30T13:45:33.000Z",
+        _count: {
+          comments: 0,
+        },
+      },
+    ],
+  },
+];
+
+// ---------------------------------------
+export const fuelType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    fuelEfficiency: 15,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    fuelEfficiency: 12,
+  },
+  {
+    id: 3,
+    nickname: "빛나는 운전",
+    fuelEfficiency: 18,
+  },
+  {
+    id: 4,
+    nickname: "여행가",
+    fuelEfficiency: 9,
+  },
+  {
+    id: 5,
+    nickname: "스피드왕",
+    fuelEfficiency: 11,
+  },
+];
+export const jobType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    totalDrivingTime: 120,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    totalDrivingTime: 95,
+  },
+  {
+    id: 3,
+    nickname: "시간왕",
+    totalDrivingTime: 130,
+  },
+  {
+    id: 4,
+    nickname: "버스기사",
+    totalDrivingTime: 110,
+  },
+  {
+    id: 5,
+    nickname: "운전왕",
+    totalDrivingTime: 105,
+  },
+];
+export const carType = [
+  {
+    id: 1,
+    nickname: "용감한 재연",
+    netIncome: 500000,
+  },
+  {
+    id: 2,
+    nickname: "1234",
+    netIncome: 350000,
+  },
+  {
+    id: 3,
+    nickname: "성공적인 운전",
+    netIncome: 600000,
+  },
+  {
+    id: 4,
+    nickname: "금수저",
+    netIncome: 400000,
+  },
+  {
+    id: 5,
+    nickname: "우수한 운전",
+    netIncome: 450000,
+  },
+];
+
+// ---------------------------------------
+export const dummyboardData = {
+  board: {
+    name: "자유게시판",
+  },
+  posts: [
+    {
+      id: 1,
+      title: "자유 게시판 ",
+      createdAt: "2024-07-30T04:32:31.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 2,
+      title: "첫 번째 자유 게시글",
+      createdAt: "2024-07-30T04:32:31.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 3,
+      title: "두 번째 자유 게시글",
+      createdAt: "2024-07-31T05:33:32.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 4,
+      title: "세 번째 자유 게시글",
+      createdAt: "2024-08-01T06:34:33.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 4,
+      },
+    },
+    {
+      id: 5,
+      title: "네 번째 자유 게시글",
+      createdAt: "2024-08-02T07:35:34.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 6,
+      title: "다섯 번째 자유 게시글",
+      createdAt: "2024-08-03T08:36:35.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 7,
+      title: "여섯 번째 자유 게시글",
+      createdAt: "2024-08-04T09:37:36.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 8,
+      title: "일곱 번째 자유 게시글",
+      createdAt: "2024-08-05T10:38:37.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 5,
+      },
+    },
+    {
+      id: 9,
+      title: "여덟 번째 자유 게시글",
+      createdAt: "2024-08-06T11:39:38.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 10,
+      title: "아홉 번째 자유 게시글",
+      createdAt: "2024-08-07T12:40:39.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 11,
+      title: "열 번째 자유 게시글",
+      createdAt: "2024-08-08T13:41:40.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 12,
+      title: "열한 번째 자유 게시글",
+      createdAt: "2024-08-09T14:42:41.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 13,
+      title: "열두 번째 자유 게시글",
+      createdAt: "2024-08-10T15:43:42.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 14,
+      title: "열세 번째 자유 게시글",
+      createdAt: "2024-08-11T16:44:43.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 15,
+      title: "열네 번째 자유 게시글",
+      createdAt: "2024-08-12T17:45:44.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 1,
+      },
+    },
+    {
+      id: 16,
+      title: "열다섯 번째 자유 게시글",
+      createdAt: "2024-08-13T18:46:45.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 4,
+      },
+    },
+    {
+      id: 17,
+      title: "열여섯 번째 자유 게시글",
+      createdAt: "2024-08-14T19:47:46.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+    {
+      id: 18,
+      title: "열일곱 번째 자유 게시글",
+      createdAt: "2024-08-15T20:48:47.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 5,
+      },
+    },
+    {
+      id: 19,
+      title: "열여덟 번째 자유 게시글",
+      createdAt: "2024-08-16T21:49:48.000Z",
+      users: {
+        nickname: "5678",
+      },
+      _count: {
+        comments: 3,
+      },
+    },
+    {
+      id: 20,
+      title: "열아홉 번째 자유 게시글",
+      createdAt: "2024-08-17T22:50:49.000Z",
+      users: {
+        nickname: "용감한 재연",
+      },
+      _count: {
+        comments: 2,
+      },
+    },
+    {
+      id: 21,
+      title: "스무 번째 자유 게시글",
+      createdAt: "2024-08-18T23:51:50.000Z",
+      users: {
+        nickname: "1234",
+      },
+      _count: {
+        comments: 0,
+      },
+    },
+  ],
+  totalPosts: 21,
+};
+export const dummyusers = [
+  {
+    id: 1,
+    username: "john_doe_92",
+    nickname: "Johnny",
+    status: "Active",
+    boardLevel: "Newbie",
+    permission: "Member",
+    joinDate: "2023-01-15",
+  },
+  {
+    id: 2,
+    username: "jane_smith_88",
+    nickname: "Janey",
+    status: "Inactive",
+    boardLevel: "Regular",
+    permission: "Guest",
+    joinDate: "2023-03-22",
+  },
+  {
+    id: 3,
+    username: "alice_j_123",
+    nickname: "Aly",
+    status: "Active",
+    boardLevel: "Advanced",
+    permission: "Admin",
+    joinDate: "2022-11-30",
+  },
+  {
+    id: 4,
+    username: "bob_brown_77",
+    nickname: "Bobby",
+    status: "Active",
+    boardLevel: "Newbie",
+    permission: "Editor",
+    joinDate: "2023-05-10",
+  },
+  {
+    id: 5,
+    username: "charlie_d_99",
+    nickname: "Chuck",
+    status: "Inactive",
+    boardLevel: "Administrator",
+    permission: "Admin",
+    joinDate: "2022-07-21",
+  },
+  {
+    id: 6,
+    username: "diana_e_45",
+    nickname: "Didi",
+    status: "Active",
+    boardLevel: "Regular",
+    permission: "Guest",
+    joinDate: "2023-04-17",
+  },
+  {
+    id: 7,
+    username: "edward_w_202",
+    nickname: "Eddie",
+    status: "Active",
+    boardLevel: "Advanced",
+    permission: "Moderator",
+    joinDate: "2022-12-05",
+  },
+  {
+    id: 8,
+    username: "fiona_c_2023",
+    nickname: "Fifi",
+    status: "Inactive",
+    boardLevel: "Newbie",
+    permission: "Contributor",
+    joinDate: "2023-06-14",
+  },
+  {
+    id: 9,
+    username: "george_l_44",
+    nickname: "Geo",
+    status: "Active",
+    boardLevel: "Regular",
+    permission: "Admin",
+    joinDate: "2022-10-30",
+  },
+  {
+    id: 10,
+    username: "hannah_w_77",
+    nickname: "Hanny",
+    status: "Inactive",
+    boardLevel: "Advanced",
+    permission: "Member",
+    joinDate: "2023-02-18",
+  },
+  {
+    id: 11,
+    username: "ian_scott_21",
+    nickname: "Iggy",
+    status: "Active",
+    boardLevel: "Administrator",
+    permission: "Guest",
+    joinDate: "2023-01-25",
+  },
+  {
+    id: 12,
+    username: "julia_a_2022",
+    nickname: "Jules",
+    status: "Inactive",
+    boardLevel: "Regular",
+    permission: "Editor",
+    joinDate: "2022-09-12",
+  },
+  {
+    id: 13,
+    username: "kevin_m_1987",
+    nickname: "Kev",
+    status: "Active",
+    boardLevel: "Newbie",
+    permission: "Admin",
+    joinDate: "2023-07-09",
+  },
+  {
+    id: 14,
+    username: "laura_g_56",
+    nickname: "Laurie",
+    status: "Inactive",
+    boardLevel: "Advanced",
+    permission: "Member",
+    joinDate: "2023-08-01",
+  },
+  {
+    id: 15,
+    username: "michael_t_98",
+    nickname: "Mike",
+    status: "Active",
+    boardLevel: "Regular",
+    permission: "Editor",
+    joinDate: "2022-12-20",
+  },
+  {
+    id: 16,
+    username: "nina_m_2024",
+    nickname: "Nini",
+    status: "Inactive",
+    boardLevel: "Administrator",
+    permission: "Admin",
+    joinDate: "2023-03-05",
+  },
+  {
+    id: 17,
+    username: "oliver_c_87",
+    nickname: "Ollie",
+    status: "Active",
+    boardLevel: "Newbie",
+    permission: "Guest",
+    joinDate: "2023-05-25",
+  },
+  {
+    id: 18,
+    username: "paul_h_77",
+    nickname: "Paulie",
+    status: "Inactive",
+    boardLevel: "Advanced",
+    permission: "Admin",
+    joinDate: "2022-11-11",
+  },
+  {
+    id: 19,
+    username: "quinn_r_45",
+    nickname: "Quinny",
+    status: "Active",
+    boardLevel: "Regular",
+    permission: "Editor",
+    joinDate: "2023-04-05",
+  },
+  {
+    id: 20,
+    username: "rachel_p_2023",
+    nickname: "Rae",
+    status: "Inactive",
+    boardLevel: "Newbie",
+    permission: "Guest",
+    joinDate: "2023-08-10",
+  },
+];
+
+export const boardmanagementdummy = [
+  {
+    id: 1,
+    title: "첫 번째 게시물",
+    createdDate: "2024-08-01",
+    author: "관리자",
+    content: "첫 번째 게시물의 내용입니다.",
+    category: "전체",
+    boardLevel: "Administrator",
+  },
+  {
+    id: 2,
+    title: "공지사항",
+    createdDate: "2024-08-02",
+    author: "홍길동",
+    content: "공지사항 내용입니다. 중요 사항을 확인하세요.",
+    category: "공지사항",
+    boardLevel: "Moderator",
+  },
+  {
+    id: 3,
+    title: "자유게시판 소개",
+    createdDate: "2024-08-03",
+    author: "이순신",
+    content: "자유게시판에 대한 소개글입니다.",
+    category: "자유게시판",
+    boardLevel: "Advanced",
+  },
+  {
+    id: 4,
+    title: "갤러리 이용 안내",
+    createdDate: "2024-08-04",
+    author: "박찬호",
+    content: "갤러리 게시판 이용 방법에 대한 안내입니다.",
+    category: "갤러리게시판",
+    boardLevel: "Regular",
+  },
+  {
+    id: 5,
+    title: "새로운 기능 추가",
+    createdDate: "2024-08-05",
+    author: "김유신",
+    content: "새로운 기능이 추가되었습니다. 확인해보세요.",
+    category: "전체",
+    boardLevel: "Newbie",
+  },
+  {
+    id: 6,
+    title: "업데이트 예정 사항",
+    createdDate: "2024-08-06",
+    author: "관리자",
+    content: "곧 업데이트될 예정인 기능들에 대한 정보입니다.",
+    category: "공지사항",
+    boardLevel: "Administrator",
+  },
+  {
+    id: 7,
+    title: "자유게시판 규칙",
+    createdDate: "2024-08-07",
+    author: "이성계",
+    content: "자유게시판에서 지켜야 할 규칙들입니다.",
+    category: "자유게시판",
+    boardLevel: "Moderator",
+  },
+  {
+    id: 8,
+    title: "갤러리 업데이트",
+    createdDate: "2024-08-08",
+    author: "홍길동",
+    content: "갤러리 게시판에 새로운 기능이 추가되었습니다.",
+    category: "갤러리게시판",
+    boardLevel: "Advanced",
+  },
+  {
+    id: 9,
+    title: "새로운 공지사항",
+    createdDate: "2024-08-09",
+    author: "이순신",
+    content: "새로운 공지사항을 확인하세요.",
+    category: "공지사항",
+    boardLevel: "Regular",
+  },
+  {
+    id: 10,
+    title: "회원 등급 안내",
+    createdDate: "2024-08-10",
+    author: "박찬호",
+    content: "회원 등급에 대한 안내입니다.",
+    category: "전체",
+    boardLevel: "Newbie",
+  },
+  {
+    id: 11,
+    title: "보안 업데이트",
+    createdDate: "2024-08-11",
+    author: "김유신",
+    content: "보안 업데이트가 진행되었습니다. 안전하게 이용하세요.",
+    category: "공지사항",
+    boardLevel: "Administrator",
+  },
+  {
+    id: 12,
+    title: "자유게시판 인기 글",
+    createdDate: "2024-08-12",
+    author: "이성계",
+    content: "자유게시판에서 인기 있는 글들을 소개합니다.",
+    category: "자유게시판",
+    boardLevel: "Moderator",
+  },
+  {
+    id: 13,
+    title: "갤러리 베스트 작품",
+    createdDate: "2024-08-13",
+    author: "관리자",
+    content: "갤러리에서 베스트로 선정된 작품들을 확인하세요.",
+    category: "갤러리게시판",
+    boardLevel: "Advanced",
+  },
+  {
+    id: 14,
+    title: "이벤트 안내",
+    createdDate: "2024-08-14",
+    author: "홍길동",
+    content: "곧 있을 이벤트에 대한 안내입니다. 많은 참여 부탁드립니다.",
+    category: "전체",
+    boardLevel: "Regular",
+  },
+  {
+    id: 15,
+    title: "서비스 점검 예정",
+    createdDate: "2024-08-15",
+    author: "이순신",
+    content:
+      "서비스 점검이 예정되어 있습니다. 점검 시간 동안 서비스가 중단될 수 있습니다.",
+    category: "공지사항",
+    boardLevel: "Newbie",
+  },
+  {
+    id: 16,
+    title: "자유게시판 문의",
+    createdDate: "2024-08-16",
+    author: "박찬호",
+    content: "자유게시판에 대한 문의 사항은 여기에 남겨주세요.",
+    category: "자유게시판",
+    boardLevel: "Administrator",
+  },
+  {
+    id: 17,
+    title: "갤러리 규정",
+    createdDate: "2024-08-17",
+    author: "김유신",
+    content: "갤러리 게시판 이용 시 지켜야 할 규정들입니다.",
+    category: "갤러리게시판",
+    boardLevel: "Moderator",
+  },
+  {
+    id: 18,
+    title: "회원 가입 안내",
+    createdDate: "2024-08-18",
+    author: "이성계",
+    content: "회원 가입 절차에 대한 안내입니다.",
+    category: "전체",
+    boardLevel: "Advanced",
+  },
+  {
+    id: 19,
+    title: "새로운 디자인",
+    createdDate: "2024-08-19",
+    author: "관리자",
+    content: "사이트 디자인이 새롭게 변경되었습니다. 확인해보세요.",
+    category: "공지사항",
+    boardLevel: "Regular",
+  },
+  {
+    id: 20,
+    title: "이용자 피드백",
+    createdDate: "2024-08-20",
+    author: "홍길동",
+    content: "이용자들의 피드백을 반영한 업데이트가 이루어졌습니다.",
+    category: "자유게시판",
+    boardLevel: "Newbie",
+  },
+];

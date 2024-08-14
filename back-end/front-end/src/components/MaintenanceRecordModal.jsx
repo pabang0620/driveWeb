@@ -307,6 +307,9 @@ const MaintenanceRecordModal = ({
             position: relative;
             display: flex;
             flex-direction: column;
+            @media (max-width: 768px) {
+              width: 80%;
+            }
           }
           .close {
             color: #aaa;
@@ -330,11 +333,17 @@ const MaintenanceRecordModal = ({
             display: flex;
             justify-content: space-between;
             align-items: center;
+            @media (max-width: 768px) {
+              margin-bottom: 10px;
+            }
           }
           .section label {
             font-weight: bold;
             flex: 1;
             font-size: 14px;
+            @media (max-width: 768px) {
+              font-size: 12px;
+            }
           }
           .section input {
             padding: 8px;
@@ -342,6 +351,10 @@ const MaintenanceRecordModal = ({
             border-radius: 4px;
             text-align: right;
             height: 30px;
+            @media (max-width: 768px) {
+              font-size: 12px;
+              padding: 3px 8px;
+            }
           }
 
           .input-container {
@@ -354,6 +367,9 @@ const MaintenanceRecordModal = ({
             margin-left: 5px;
             font-size: 16px;
             font-weight: bold;
+            @media (max-width: 768px) {
+              font-size: 12px;
+            }
           }
           .button-group {
             display: flex;
@@ -387,8 +403,10 @@ const MaintenanceRecordModal = ({
           #maintenanceDate::-webkit-calendar-picker-indicator {
             position: absolute;
             right: 25px;
-            top: 51%;
-            transform: translateY(-50%);
+             {
+              /* top: 51%;
+            transform: translateY(-50%); */
+            }
             cursor: pointer;
           }
           #mileageAtMaintenance {

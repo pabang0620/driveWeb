@@ -12,6 +12,12 @@ const TitleBox = ({ title, subtitle }) => {
             color: #4c4c4c;
             margin-left: 10px;
           }
+          @media (max-width: 768px) {
+            font-size: 20px;
+            .subTitle {
+              font-size: 15px;
+            }
+          }
         }
       `}</style>
     </h2>

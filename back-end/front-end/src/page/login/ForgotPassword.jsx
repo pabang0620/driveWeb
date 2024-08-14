@@ -1,95 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import securityQuestions from "../../components/securityQuestions";
-function SignupPassword() {
-  const [password, setPassword] = useState("");
-  const [passwordCheck, setPasswordCheck] = useState("");
+
+function ForgotPassword() {
+  const [username, setUsername] = useState("");
 
   const [securityQuestion, setSecurityQuestion] = useState(""); // 보안 질문 상태
   const [securityAnswer, setSecurityAnswer] = useState(""); //보안 질문의 답변 상태
 
-  const [isMatch, setIsMatch] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
 
-  const location = useLocation();
-  const navigate = useNavigate(); // React Router의 navigate 함수 사용
+  const handleNext = async () => {
+    try {
+      const response = await axios.post("/api/user/forgotpassword", {
+        username,
+        securityQuestion,
+        securityAnswer,
+      });
 
-  // 다음 버튼 클릭 시 처리 함수
-  const handleNext = () => {
-    if (password.length < 4) {
-      alert("4자 이상 입력해 주세요.");
-      return;
-    }
+      // 서버에서 반환된 데이터
+      const { data } = response;
 
-    if (password !== passwordCheck) {
-      alert("비밀번호가 일치하지 않습니다.");
-      return;
+      // 성공적으로 응답을 받았을 경우
+      if (data.success) {
+        navigate("/login/resetpassword", { state: { username } });
+      } else {
+        alert(data.message || "비밀번호 찾기 실패. 정보를 확인해주세요.");
+      }
+    } catch (error) {
+      console.error("비밀번호 찾기 중 오류 발생:", error);
+      alert("서버와의 통신 중 오류가 발생했습니다.");
     }
-
-    if (
-      !securityQuestion ||
-      securityQuestion === "보안 질문을 선택하세요" ||
-      securityQuestion.length < 1
-    ) {
-      alert("보안 질문을 선택해주세요.");
-      return;
-    }
-
-    if (!/^[a-zA-Z0-9\s]+$/.test(securityAnswer)) {
-      alert("보안 질문 답변에는 숫자와 텍스트만 입력할 수 있습니다.");
-      return;
-    }
-    if (securityAnswer.length < 2) {
-      alert("보안 질문 답변에는 2자 이상 입력해주세요.");
-      return;
-    }
-    // 모든 조건이 충족된 경우
-    navigate("/signup/job", {
-      state: {
-        ...location.state,
-        password: password,
-        securityQuestion: securityQuestion,
-        securityAnswer: securityAnswer,
-      },
-    });
   };
 
-  useEffect(() => {
-    setIsMatch(password === passwordCheck && passwordCheck.length > 0);
-  }, [password, passwordCheck]);
-
   return (
-    <div className="container signup-container">
-      <div className="signup-box">
-        <button className="goBack" onClick={() => navigate(-1)}>
-          &lt;
-        </button>
-        <h3>비밀번호 설정</h3>
+    <div className="container forgotpassword-container">
+      <div className="forgotpassword-box">
+        <h3>비밀번호 찾기</h3>
+        <p>
+          비밀번호를 재설정하려면, 회원가입 시 설정한 사용자명과 보안 질문의
+          답변을 입력하세요.
+        </p>
+
         <div className="input-container">
-          <label htmlFor="password">비밀번호</label>
+          <label htmlFor="username">아이디</label>
           <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="비밀번호를 입력해주세요."
-            onChange={(e) => setPassword(e.target.value)}
+            type="username"
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="아이디를 입력하세요"
           />
           <ul>
-            <li>4자 이상</li>
+            <li>영문과 숫자</li>
+            <li>최소 3자</li>
           </ul>
-        </div>
-        <div className="input-container">
-          <label htmlFor="passwordCheck">비밀번호 확인</label>
-          <input
-            type="password"
-            id="passwordCheck"
-            name="passwordCheck"
-            placeholder="비밀번호를 입력해주세요."
-            onChange={(e) => setPasswordCheck(e.target.value)}
-          />
-          {isSubmitted && !isMatch && (
-            <p className="error">*비밀번호가 일치하지 않습니다.</p>
-          )}
         </div>
         <div className="input-container security">
           <label>보안 질문 (비밀번호 찾기를 위해 필요합니다):</label>
@@ -114,15 +81,14 @@ function SignupPassword() {
           />
         </div>
         <button className="navyBox" onClick={handleNext}>
-          다음
+          비밀번호 찾기
         </button>
       </div>
-
       <style jsx>{`
-        .signup-container {
+        .forgotpassword-container {
           padding: 80px 0 150px 0;
 
-          .signup-box {
+          .forgotpassword-box {
             max-width: 350px;
             width: 70%;
             margin: auto;
@@ -147,6 +113,15 @@ function SignupPassword() {
             @media (max-width: 768px) {
               font-size: 20px;
               margin: 30px 0;
+            }
+          }
+          p {
+            font-size: 14px;
+            margin-bottom: 30px;
+            @media (max-width: 768px) {
+              font-size: 12px;
+              white-space: nowrap;
+              margin: 15px 0;
             }
           }
           .input-container {
@@ -246,5 +221,4 @@ function SignupPassword() {
     </div>
   );
 }
-
-export default SignupPassword;
+export default ForgotPassword;

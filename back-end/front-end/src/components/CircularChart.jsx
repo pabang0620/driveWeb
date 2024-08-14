@@ -31,14 +31,7 @@ const generateColors = (num) => {
   return colors;
 };
 
-const CircularChart = ({
-  dateRange,
-  getDate,
-  setLoading,
-  setError,
-  title,
-  url,
-}) => {
+const CircularChart = ({ dateRange, title, url }) => {
   const [data, setData] = useState(null);
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);
@@ -150,19 +143,23 @@ const CircularChart = ({
       ],
       colors: generateColors(items.length), // colors는 items.length에 따라 업데이트됨
     }),
-    [items.length]
+    [items.length, url]
   );
 
   const fetchMyPageData = async () => {
     try {
-      const startDate = getDate();
-      const endDate = getDate();
       let response;
 
       if (url === "incomeSummary") {
-        response = await getMypageIncomeSummary(startDate, endDate);
+        response = await getMypageIncomeSummary(
+          dateRange.startDate,
+          dateRange.endDate
+        );
       } else if (url === "expenseSummary") {
-        response = await getMypageExpenseSummary(startDate, endDate);
+        response = await getMypageExpenseSummary(
+          dateRange.startDate,
+          dateRange.endDate
+        );
       }
 
       // 데이터 변환 함수 호출
@@ -215,6 +212,9 @@ const CircularChart = ({
       <style jsx>{`
         .circularChart_container {
           width: 48.5%;
+          @media (max-width: 768px) {
+            width: 100%;
+          }
           .circularChart {
             background-color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

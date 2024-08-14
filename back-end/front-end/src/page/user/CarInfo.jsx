@@ -5,6 +5,7 @@ import { postProfileVehicle } from "../../components/ApiPost";
 import carsData from "../../utils/cars.json";
 import FranchiseFee from "./FranchiseFee";
 import Spinner from "../../components/Spinner"; // 스피너 컴포넌트 가져오기
+import TitleBox from "../../components/TitleBox";
 
 const CarInfo = () => {
   const [vehicleInfo, setVehicleInfo] = useState({
@@ -93,10 +94,7 @@ const CarInfo = () => {
 
   return (
     <div className="container userInfo">
-      <h2>
-        회원정보 <span>차량정보</span>
-      </h2>
-
+      <TitleBox title="회원정보" subtitle="차량정보" />
       <div className="content">
         <div className="inputWrap">
           <h3>차량정보</h3>
@@ -174,7 +172,10 @@ const CarInfo = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
-
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -208,6 +209,9 @@ const CarInfo = () => {
               color: #c1c1c1;
               width: 15%;
               line-height: 50px;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
 
             > div {
@@ -267,15 +271,21 @@ const CarInfo = () => {
               font-size: 14px;
               color: #c1c1c1;
               width: 15%;
+              @media (max-width: 768px) {
+                width: 25%;
+              }
             }
             input {
               font-size: 14px;
               color: #c1c1c1;
               border: none;
-              width: 75%;
+              width: 60%;
               height: 100%;
               text-align: left;
               background: none;
+              @media (max-width: 768px) {
+                width: 60%;
+              }
               &:focus {
                 border: none;
                 outline: none;
@@ -290,6 +300,9 @@ const CarInfo = () => {
               border: 1px solid #c1c1c1;
               border-radius: 3px;
               padding: 5px;
+              @media (max-width: 768px) {
+                width: 50%;
+              }
               &:focus {
                 outline: 1px solid #c1c1c1;
                 color: #222;
