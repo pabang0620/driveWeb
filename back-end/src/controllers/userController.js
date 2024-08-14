@@ -17,7 +17,8 @@ const {
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const axios = require("axios");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const registerUser = async (req, res) => {
   const { nickname, username, password, jobtype } = req.body;
@@ -72,37 +73,45 @@ const socialLogin = async (req, res, provider) => {
 
   try {
     let userData;
+
     if (provider === "google") {
-      const response = await axios.get(
-        `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${token}`
-      );
+      // Google 토큰 검증
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
       userData = {
-        id: response.data.sub,
-        name: response.data.name,
-        username: response.data.username,
+        id: payload.sub,
+        name: payload.name,
+        email: payload.email, // username 대신 email 사용
       };
     } else if (provider === "kakao") {
+      // Kakao 토큰 검증
       const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
       userData = {
         id: response.data.id,
         name: response.data.properties.nickname,
-        username: response.data.kakao_account.username,
+        email: response.data.kakao_account.email, // username 대신 email 사용
       };
     } else if (provider === "naver") {
+      // Naver 토큰 검증
       const response = await axios.get("https://openapi.naver.com/v1/nid/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
       userData = {
         id: response.data.response.id,
         name: response.data.response.name,
-        username: response.data.response.username,
+        email: response.data.response.email, // username 대신 email 사용
       };
     }
 
-    const { id, name, username } = userData;
+    const { id, name, email } = userData;
     let user;
+
+    // 사용자 조회
     if (provider === "google") {
       user = await findUserByGoogleId(id);
     } else if (provider === "kakao") {
@@ -111,10 +120,11 @@ const socialLogin = async (req, res, provider) => {
       user = await findUserByNaverId(id);
     }
 
+    // 사용자가 없으면 새로 생성
     if (!user) {
       user = await createUser(
         name,
-        username,
+        email,
         null,
         provider === "google" ? id : null,
         provider === "kakao" ? id : null,
@@ -122,11 +132,15 @@ const socialLogin = async (req, res, provider) => {
       );
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-    res.status(200).json({ token });
+    // JWT 발급
+    const jwtToken = jwt.sign(
+      { userId: user.id, jobtype: user.jobtype },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res.status(200).json({ token: jwtToken });
   } catch (error) {
+    console.error("Error during social login:", error.message);
     res.status(500).json({ error: "로그인 중 오류가 발생했습니다." });
   }
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -24,53 +25,79 @@ function Login() {
     }
   };
 
-  return (
-    <div className="container login-container">
-      <div className="login-box">
-        <h2>
-          {" "}
-          <img
-            src={`${process.env.PUBLIC_URL}/images/mainlogo_1.png`}
-            alt=""
-          />{" "}
-        </h2>
-        <div className="input-container">
-          <label htmlFor="username">아이디</label>
-          <input
-            type="username"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="아이디를 입력해주세요."
-          />
-        </div>
-        <div className="input-container">
-          <label htmlFor="password">비밀번호</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호를 입력해주세요."
-          />
-        </div>
-        <button className="navyBox" onClick={handleLogin}>
-          로그인
-        </button>
-        <p className="smallText">
-          <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
-          <Link to="/signup">회원가입</Link>
-        </p>
-      </div>
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      console.log("Google login success:", credentialResponse); // 반환된 객체를 콘솔에 출력
 
-      <style jsx>{`
-        .login-container {
-          background-color: rgb(244, 244, 244);
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            padding: 0;
+      const response = await axios.post("/api/user/google-login", {
+        token: credentialResponse.credential,
+      });
+      localStorage.setItem("token", response.data);
+      navigate("/");
+    } catch (error) {
+      console.error(
+        "Google login error:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleGoogleLoginFailure = () => {
+    console.error("Google login failed");
+  };
+
+  return (
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <div className="container login-container">
+        <div className="login-box">
+          <h2>
+            <img
+              src={`${process.env.PUBLIC_URL}/images/mainlogo_1.png`}
+              alt=""
+            />
+          </h2>
+          <div className="input-container">
+            <label htmlFor="username">아이디</label>
+            <input
+              type="username"
+              id="username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="아이디를 입력해주세요."
+            />
+          </div>
+          <div className="input-container">
+            <label htmlFor="password">비밀번호</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력해주세요."
+            />
+          </div>
+          <button className="navyBox" onClick={handleLogin}>
+            로그인
+          </button>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginFailure}
+          />
+          <p className="smallText">
+            <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
+            <Link to="/signup">회원가입</Link>
+          </p>
+        </div>
+
+        <style jsx>{`
+          .login-container {
+            background-color: rgb(244, 244, 244);
+            padding: 100px 0;
+            @media (max-width: 768px) {
+              padding: 0;
+            }
           }
           .login-box {
             max-width: 350px;
@@ -112,7 +139,7 @@ function Login() {
             text-align: left;
             @media (max-width: 768px) {
               width: 85%;
-              text-aglign: center;
+              text-align: center;
             }
             label {
               display: block;
@@ -177,9 +204,9 @@ function Login() {
               background-color: #7388b6;
             }
           }
-        }
-      `}</style>
-    </div>
+        `}</style>
+      </div>
+    </GoogleOAuthProvider>
   );
 }
 
