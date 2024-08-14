@@ -315,6 +315,8 @@ model users {
   createdAt           DateTime?             @default(now()) @db.Timestamp(0)
   updatedAt           DateTime?             @default(now()) @db.Timestamp(0)
   jobtype             Int?
+  userQuestion        String?               @db.VarChar(50)
+  userAnswer          String?               @db.VarChar(50)
   comments            comments[]
   driving_logs        driving_logs[]
   expense_records     expense_records[]

@@ -5,36 +5,32 @@ import NoticeZone from "./NoticeZone";
 import TopRankList from "./TopRankList";
 import Banner from "./Banner";
 import TabsContainer from "./TabsContainer";
-import {
-  boardsWithPosts,
-  topViewedPosts,
-  topLikedPosts,
-} from "../../components/dummy";
+
 function Home() {
-  // const [boardsWithPosts, setBoardsWithPosts] = useState([]);
-  // const [topViewedPosts, setTopViewedPosts] = useState([]);
-  // const [topLikedPosts, setTopLikedPosts] = useState([]);
+  const [boardsWithPosts, setBoardsWithPosts] = useState([]);
+  const [topViewedPosts, setTopViewedPosts] = useState([]);
+  const [topLikedPosts, setTopLikedPosts] = useState([]);
   const [activeLeftTab, setActiveLeftTab] = useState(0);
   const [activeRightTab, setActiveRightTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchTopRank = async () => {
-  //     try {
-  //       const response = await axios.get("/api/rank/topRank");
-  //       setBoardsWithPosts(response.data.boardsWithPosts);
-  //       setTopViewedPosts(response.data.topViewedPosts);
-  //       setTopLikedPosts(response.data.topLikedPosts);
-  //       setLoading(false);
-  //     } catch (err) {
-  //       setError(err.message);
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchTopRank = async () => {
+      try {
+        const response = await axios.get("/api/rank/topRank");
+        setBoardsWithPosts(response.data.boardsWithPosts);
+        setTopViewedPosts(response.data.topViewedPosts);
+        setTopLikedPosts(response.data.topLikedPosts);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
-  //   fetchTopRank();
-  // }, []);
+    fetchTopRank();
+  }, []);
 
   return (
     <div className="home-container">
@@ -64,25 +60,7 @@ function Home() {
           </>
         )}
       </div>
-      <div className="contents_inner">
-        <div className="rankingList">
-          <RankingList
-            title={"연비"}
-            rankType={"jobType"}
-            options={["전체", "LPG", "전기", "휘발유", "기타"]}
-          />
-          <RankingList
-            title={"운행시간"}
-            rankType={"carType"}
-            options={["전체직종", "택시", "배달", "기타"]}
-          />
-          <RankingList
-            title={"총 운송수입금"}
-            rankType={"fuelType"}
-            options={[]}
-          />
-        </div>
-      </div>
+
       <style jsx>{`
         .home-container {
           .contents_inner {
@@ -108,7 +86,7 @@ function Home() {
           }
           .contents_inner {
             width: 70%;
-            margin: 0 auto;
+            margin: 50px auto;
             .rankingList {
               width: 100%;
               display: flex;

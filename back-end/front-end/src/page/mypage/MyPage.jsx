@@ -3,6 +3,7 @@ import Dashboard from "../../components/Dashboard";
 import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
 import TitleBox from "../../components/TitleBox";
+import IncomeTaxComponent from "./IncomeTaxComponent"; // 누락된 컴포넌트 임포트 추가
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
@@ -96,6 +97,23 @@ const MyPage = () => {
           url={"getMypageMix"}
         />
       </div>
+      <div>
+        <p className="note">- 프리미엄 기능입니다.</p>
+        <div className="subscribeADD">
+          <IncomeTaxComponent
+            title="예상종합소득세"
+            description="운행일지에 입력된 데이터를 바탕으로 예상 종합소득세를 산출하는 기능입니다."
+            icon="ℹ️"
+            route="/estimated-income-tax"
+          />
+          <IncomeTaxComponent
+            title="손익계산서 조회"
+            description="회계 데이터를 기반으로 손익계산서를 조회하는 서비스입니다."
+            icon="📊"
+            route="/profit-loss-statement"
+          />
+        </div>
+      </div>
       <style jsx>{`
         .mypage-container {
           width: 70%;
@@ -103,6 +121,13 @@ const MyPage = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
+          .note {
+            margin-top: 80px;
+          }
+          .subscribeADD {
+            display: flex;
+            flex-direction: row;
+          }
           @media (max-width: 768px) {
             width: 85%;
             padding: 50px 0;

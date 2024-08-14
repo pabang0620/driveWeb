@@ -6,7 +6,6 @@ import SidebarMenu from "./SidebarMenu"; // 사이드바 메뉴 컴포넌트 추
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
-  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -38,14 +37,6 @@ function Header() {
   const getSelectedClass = (pathPrefix) => {
     return currentPath.startsWith(pathPrefix) ? "selected" : "";
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-    setShowLogoutModal(false);
-  };
-
-  const isLoggedIn = !!localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -90,30 +81,7 @@ function Header() {
                 <Link to="/login">로그인</Link>
               </li>
             )}
-            {!isLoggedIn && (
-              <li>
-                <Link to="/signup">회원가입</Link>
-              </li>
-            )}
-            {isLoggedIn ? (
-              <li onClick={() => setShowLogoutModal(true)}>로그아웃</li>
-            ) : (
-              <li>
-                <Link to="/login">로그인</Link>
-              </li>
-            )}
           </ul>
-          {showLogoutModal && (
-            <div className="logout_modal">
-              <div className="modal_content">
-                <p>정말 로그아웃 하시겠습니까?</p>
-                <button onClick={handleLogout}>로그아웃</button>
-                <button onClick={() => setShowLogoutModal(false)}>
-                  로그인 유지
-                </button>
-              </div>
-            </div>
-          )}
           {showLogoutModal && (
             <div className="logout_modal">
               <div className="modal_content">
@@ -135,10 +103,7 @@ function Header() {
             <li className={currentPath === "/" ? "selected" : ""}>
               <Link to="/">홈</Link>
             </li>
-            <li
-              style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/user")}
-            >
+            <li className={getSelectedClass("/user")}>
               <Link to="/user/personalInfo">회원정보</Link>
               <ul>
                 <li>
@@ -152,16 +117,10 @@ function Header() {
                 </li>
               </ul>
             </li>
-            <li
-              style={{ width: "84px", textAlign: "center" }}
-              className={getSelectedClass("/mypage")}
-            >
+            <li className={getSelectedClass("/mypage")}>
               <Link to="/mypage">마이페이지</Link>
             </li>
-            <li
-              style={{ width: "66px", textAlign: "center" }}
-              className={getSelectedClass("/driving_log")}
-            >
+            <li className={getSelectedClass("/driving_log")}>
               <Link to="/driving_log">운행일지</Link>
               <ul>
                 <li className="listOption">
@@ -186,10 +145,7 @@ function Header() {
                 </li>
               </ul>
             </li>
-            <li
-              style={{ width: "78px", textAlign: "center" }}
-              className={getSelectedClass("/board")}
-            >
+            <li className={getSelectedClass("/board")}>
               <Link to="/board">게시판</Link>
               <ul>
                 <li className="listOption">
@@ -203,10 +159,7 @@ function Header() {
                 </li>
               </ul>
             </li>
-            <li
-              style={{ width: "42px", textAlign: "center" }}
-              className={getSelectedClass("/ranking")}
-            >
+            <li className={getSelectedClass("/ranking")}>
               <Link to="/ranking">랭킹</Link>
             </li>
             <li className={getSelectedClass("/payment")}>
@@ -318,7 +271,6 @@ function Header() {
                   &:nth-of-type(2) {
                     background-color: #3c5997;
                     color: white;
-                    color: white;
                     a {
                       color: white;
                     }
@@ -328,7 +280,6 @@ function Header() {
             }
 
             nav {
-              white-space: nowrap;
               white-space: nowrap;
               width: 100%;
               position: relative;
@@ -495,56 +446,6 @@ function Header() {
             }
             .header_inner {
               flex-direction: column;
-            }
-            .logout_modal {
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background: rgba(0, 0, 0, 0.5);
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              z-index: 2;
-              .modal_content {
-                background: white;
-                padding: 30px 10px;
-                border-radius: 5px;
-                text-align: center;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-                z-index: 3;
-
-                p {
-                  width: 100%;
-                  margin-bottom: 30px;
-                }
-                button {
-                  width: 30%;
-                  padding: 10px;
-                  border: none;
-                  border-radius: 5px;
-                  cursor: pointer;
-
-                  color: white;
-                  cursor: pointer;
-                  &:nth-of-type(1) {
-                    background-color: #7388b6;
-                    &:hover {
-                      background-color: #9ab1d6; /* 약간 밝게 */
-                    }
-                  }
-                  &:nth-of-type(2) {
-                    background-color: #3c5997;
-                    &:hover {
-                      background-color: #2c4375; /* 약간 어둡게 */
-                    }
-                  }
-                }
-              }
             }
           }
         `}</style>

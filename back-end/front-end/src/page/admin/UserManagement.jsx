@@ -18,18 +18,14 @@ const UserManagement = () => {
 
   const statusSetting = ["Active", "Inactive"];
   const permissionSetting = [
-    "Admin",
-    "Moderator",
-    "Contributor",
-    "Member",
-    "Guest",
-  ];
-  const boardLevelSetting = [
-    "Administrator",
-    "Moderator",
-    "Advanced",
-    "Regular",
-    "Newbie",
+    /*-------관리자페이지-----------------*/
+    "Admin", // 0 최고 권한
+    "Moderator", // 1 중간 권한, 콘텐츠 관리 및 사용자 관리
+    /*-------관리자페이지 : 운행일지, 랭킹, 게시글 관리(통계, 회원관리 제외)-----*/
+    "Contributor", // 2 콘텐츠 기여자, 게시물 작성 가능
+    /*-------회원-------------- */
+    "Premium", // 3 유로회원, 유로 콘텐츠 열람 가능
+    "Member", // 4 회원, 일반 사용자,
   ];
 
   const handleFilterChange = (e, filterSetter) => {
@@ -142,24 +138,7 @@ const UserManagement = () => {
             ))}
           </select>
         </div>
-        <div className="filter_container">
-          <label htmlFor="boardLevelFilter" className="filter_label">
-            게시글 권한
-          </label>
-          <select
-            id="boardLevelFilter"
-            value={boardLevelFilter}
-            onChange={(e) => handleFilterChange(e, setBoardLevelFilter)}
-            className="filter_select"
-          >
-            <option value="">선택하세요</option>
-            {boardLevelSetting.map((level) => (
-              <option key={level} value={level}>
-                {level}
-              </option>
-            ))}
-          </select>
-        </div>
+
         <div className="filter_container permissionfilter_container">
           <label htmlFor="permissionFilter" className="filter_label">
             회원 권한
@@ -215,7 +194,6 @@ const UserManagement = () => {
             <th>닉네임</th>
             <th>가입일</th>
             <th>상태</th>
-            <th>게시글 권한</th>
             <th>회원 권한</th>
             <th>작업</th>
           </tr>
@@ -241,20 +219,7 @@ const UserManagement = () => {
                   ))}
                 </select>
               </td>
-              <td className="boardlevels">
-                <select
-                  value={user.boardLevel} // 사용자의 현재 역할을 설정
-                  onChange={(e) =>
-                    handleChange(user.id, "boardLevel", e.target.value)
-                  } // 역할 변경 처리
-                >
-                  {boardLevelSetting.map((level) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </select>
-              </td>
+
               <td className="permission">
                 <select
                   value={user.permission}
