@@ -122,6 +122,7 @@ const BoardDetail = () => {
         comments: [...post.comments, comment],
       });
       setNewComment("");
+      window.location.reload();
     } catch (err) {
       console.error("덧글 작성 중 오류가 발생했습니다:", err);
     } finally {
@@ -601,6 +602,11 @@ const BoardDetail = () => {
             height: 50px;
             border-radius: 50%;
             margin-right: 10px;
+            img {
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+            }
           }
           section {
             border: 1px solid #999;
