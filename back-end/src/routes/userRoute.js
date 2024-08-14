@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require("express");
 const {
   registerUser,
@@ -331,3 +332,53 @@ router.put("/franchise-fee/:id", editFranchiseFee);
 router.delete("/franchise-fee/:id", removeFranchiseFee);
 // 회원정보 - 차량정보
 module.exports = router;
+=======
+const express = require("express");
+const {
+  registerUser,
+  loginUser,
+  googleLogin,
+  kakaoLogin,
+  naverLogin,
+  addFranchiseFee,
+  removeFranchiseFee,
+  fetchUserProfile,
+  fetchUserVehiclesWithFees,
+  fetchUserIncomeRecords,
+  updateUserProfile,
+  updateUserIncome,
+  updateUserVehicleHandler,
+  getFranchiseFees,
+} = require("../controllers/userController");
+const authMiddleware = require("../middleware/authMiddleware");
+const handleFileUpload = require("../middleware/handleFileUpload");
+
+const router = express.Router();
+
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+router.post("/google-login", googleLogin);
+router.post("/kakao-login", kakaoLogin);
+router.post("/naver-login", naverLogin);
+
+router.get("/profile", authMiddleware, fetchUserProfile);
+
+router.put("/profile", authMiddleware, handleFileUpload, updateUserProfile);
+
+router.get("/vehicles", authMiddleware, fetchUserVehiclesWithFees);
+
+router.put("/vehicles", authMiddleware, updateUserVehicleHandler);
+// 지출
+router.get("/income", authMiddleware, fetchUserIncomeRecords);
+
+router.put("/income", authMiddleware, updateUserIncome);
+// 수수료
+router.get("/franchise-fee", authMiddleware, getFranchiseFees);
+
+router.post("/franchise-fee", authMiddleware, addFranchiseFee);
+
+router.delete("/franchise-fee/:id", authMiddleware, removeFranchiseFee);
+
+module.exports = router;
+>>>>>>> 00f469d31a0ff91294adfd9fa0e9af19d0f5108f

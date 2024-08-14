@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
   const token = req.header("Authorization");
-
+  console.log(token);
   if (!token) {
     return res.status(401).json({ error: "인증 토큰이 없습니다." });
   }

@@ -1,8 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 400;
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+}
+* {
+  color: #222;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a {
+  color: #222;
+  text-decoration: none;
+}
+ul,
+li,
+ol {
+  list-style: none;
+}
+button {
+  background: none;
+  border: none;
+}
+.container {
+  width: 100%;
+}
+.main-font-color {
+  color: #3c5997;
+}
+.main-sub-font-color {
+  color: #7388b6;
+}
+.main2-font-color {
+  color: #05aced;
+}
+.main2-sub-font-color {
+  color: #69c2ef;
+}
+input {
+  outline: none;
 }

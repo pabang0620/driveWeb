@@ -1,24 +1,77 @@
 import React from "react";
-
+import RankingList from "../ranking/RankingList";
 function Home() {
   return (
     <div className="home-container">
-      <h1>Welcome to My Website</h1>
-      <p>
-        This is the home page. Here you can find various resources and links to
-        other sections of the website.
-      </p>
-
+      <div className="main_banner">
+        <div className="banner_text">
+          <h3>당신의 안전한 운행을 위한 최고의 기록 도구</h3>
+          <h2>
+            손쉽게, 더 효율적으로
+            <br />
+            기록하자
+          </h2>
+        </div>
+      </div>
+      <div className="contents_inner">
+        <div className="rankingList">
+          <RankingList
+            title={"연비"}
+            rankType={"jobType"}
+            options={["전체", "LPG", "전기", "휘발유", "기타"]}
+          />
+          <RankingList
+            title={"운행시간"}
+            rankType={"carType"}
+            options={["전체직종", "택시", "배달", "기타"]}
+          />
+          <RankingList
+            title={"총 운송수입금"}
+            rankType={"fuelType"}
+            options={[]}
+          />
+        </div>
+      </div>
       <style jsx>{`
         .home-container {
-          padding: 20px;
-          text-align: center;
-        }
-        h1 {
-          color: #3c5997;
-        }
-        p {
-          color: #7388b6;
+          .main_banner {
+            width: 100%;
+            height: 350px;
+            background-image: url("/images/home/banner1.png");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            .banner_text {
+              width: 80%;
+              margin: 0 auto;
+              max-width: 1200px;
+              color: white;
+              text-shadow: 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.5);
+
+              h3 {
+                font-size: 20px;
+                color: white;
+              }
+              h2 {
+                margin-top: 10px;
+                font-size: 40px;
+                color: white;
+              }
+            }
+          }
+          .contents_inner {
+            width: 70%;
+            margin: 0 auto;
+            .rankingList {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: flex-start;
+            }
+          }
         }
       `}</style>
     </div>

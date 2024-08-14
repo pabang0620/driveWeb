@@ -1,20 +1,23 @@
 const express = require("express");
-const { getTopViewedPosts } = require("../controllers/rankController");
+const {
+  getRecentPostsByBoard,
+  getTopNetIncomeUsers,
+  getTopUsers,
+  getTopFuelEfficiencyUsers,
+  getTopPosts,
+} = require("../controllers/rankController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
+// 운행시간 탑
 
-/**
- * @swagger
- * /api/rank/top-views:
- *   get:
- *     summary: Get top 10 posts by view count
- *     tags: [Ranking]
- *     responses:
- *       200:
- *         description: Successfully retrieved top posts
- *       500:
- *         description: Server error
- */
-router.get("/top-views", getTopViewedPosts);
+router.post("/top-users", authMiddleware, getTopUsers);
 
+router.post("/top-net-income", authMiddleware, getTopNetIncomeUsers);
+
+router.post("/top-fuel-efficiency", authMiddleware, getTopFuelEfficiencyUsers);
+
+// 홈에서 쓰는 게시물 최신
+router.get("/topRank", getTopPosts);
+// 홈에서 쓰는 게시물 인기
 module.exports = router;
