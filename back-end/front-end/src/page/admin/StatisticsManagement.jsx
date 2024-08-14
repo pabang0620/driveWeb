@@ -28,8 +28,8 @@ const StatisticsManagement = () => {
           width: 70%;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 100px 0;
-          height: calc(100vh - 90px);
+          padding: 100px 0 200px 0;
+
           @media (max-width: 768px) {
             width: 85%;
             padding: 50px 0;

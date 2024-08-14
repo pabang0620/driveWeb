@@ -14,6 +14,7 @@ const UserManagement = () => {
   const usersPerPage = 10;
 
   const [filteredUsers, setFilteredUsers] = useState(users);
+  const [editMode, setEditMode] = useState({});
 
   const statusSetting = ["Active", "Inactive"];
   const permissionSetting = [
@@ -74,6 +75,7 @@ const UserManagement = () => {
     setFilteredUsers(newFilteredUsers);
     setCurrentPage(1); // 검색 후 페이지를 1로 리셋
   };
+
   const handleResetFilters = () => {
     setSearchTerm("");
     setStatusFilter("");
@@ -98,12 +100,19 @@ const UserManagement = () => {
     );
   };
 
+  const toggleEditMode = (id) => {
+    setEditMode((prevEditMode) => ({
+      ...prevEditMode,
+      [id]: !prevEditMode[id],
+    }));
+  };
+
   return (
     <div className="userManagement_container">
       <TitleBox title="관리자페이지" subtitle="회원관리" />
       <div className="searchBox">
-        <div className="search_container">
-          <label htmlFor="search" className="search_label">
+        <div className="filter_container search_container">
+          <label htmlFor="search" className="filter_label">
             검색
           </label>
           <input
@@ -115,81 +124,79 @@ const UserManagement = () => {
             className="search_input"
           />
         </div>
-        <div className="filters">
-          <div className="filter_container">
-            <label htmlFor="statusFilter" className="filter_label">
-              상태 필터
-            </label>
-            <select
-              id="statusFilter"
-              value={statusFilter}
-              onChange={(e) => handleFilterChange(e, setStatusFilter)}
-              className="filter_select"
-            >
-              <option value="">선택하세요</option>
-              {statusSetting.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="filter_container">
-            <label htmlFor="boardLevelFilter" className="filter_label">
-              게시글 권한 필터
-            </label>
-            <select
-              id="boardLevelFilter"
-              value={boardLevelFilter}
-              onChange={(e) => handleFilterChange(e, setBoardLevelFilter)}
-              className="filter_select"
-            >
-              <option value="">선택하세요</option>
-              {boardLevelSetting.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="filter_container permissionfilter_contain">
-            <label htmlFor="permissionFilter" className="filter_label">
-              회원 권한 필터
-            </label>
-            <select
-              id="permissionFilter"
-              value={permissionFilter}
-              onChange={(e) => handleFilterChange(e, setPermissionFilter)}
-              className="filter_select"
-            >
-              <option value="">선택하세요</option>
-              {permissionSetting.map((permission) => (
-                <option key={permission} value={permission}>
-                  {permission}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="filter_container datefilter_container">
-            <label htmlFor="startDateFilter" className="filter_label">
-              가입일
-            </label>
-            <input
-              id="startDateFilter"
-              type="date"
-              value={startDateFilter}
-              onChange={(e) => handleFilterChange(e, setStartDateFilter)}
-              className="date_input"
-            />
-            ~
-            <input
-              id="endDateFilter"
-              type="date"
-              value={endDateFilter}
-              onChange={(e) => handleFilterChange(e, setEndDateFilter)}
-              className="date_input"
-            />
-          </div>
+        <div className="filter_container">
+          <label htmlFor="statusFilter" className="filter_label">
+            상태
+          </label>
+          <select
+            id="statusFilter"
+            value={statusFilter}
+            onChange={(e) => handleFilterChange(e, setStatusFilter)}
+            className="filter_select"
+          >
+            <option value="">선택하세요</option>
+            {statusSetting.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter_container">
+          <label htmlFor="boardLevelFilter" className="filter_label">
+            게시글 권한
+          </label>
+          <select
+            id="boardLevelFilter"
+            value={boardLevelFilter}
+            onChange={(e) => handleFilterChange(e, setBoardLevelFilter)}
+            className="filter_select"
+          >
+            <option value="">선택하세요</option>
+            {boardLevelSetting.map((level) => (
+              <option key={level} value={level}>
+                {level}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter_container permissionfilter_container">
+          <label htmlFor="permissionFilter" className="filter_label">
+            회원 권한
+          </label>
+          <select
+            id="permissionFilter"
+            value={permissionFilter}
+            onChange={(e) => handleFilterChange(e, setPermissionFilter)}
+            className="filter_select"
+          >
+            <option value="">선택하세요</option>
+            {permissionSetting.map((permission) => (
+              <option key={permission} value={permission}>
+                {permission}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter_container datefilter_container">
+          <label htmlFor="startDateFilter" className="filter_label">
+            가입일
+          </label>
+          <input
+            id="startDateFilter"
+            type="date"
+            value={startDateFilter}
+            onChange={(e) => handleFilterChange(e, setStartDateFilter)}
+            className="date_input"
+          />
+          ~
+          <input
+            id="endDateFilter"
+            type="date"
+            value={endDateFilter}
+            onChange={(e) => handleFilterChange(e, setEndDateFilter)}
+            className="date_input"
+          />
         </div>
       </div>
       <div className="searchBtnBox">
@@ -263,7 +270,9 @@ const UserManagement = () => {
                 </select>
               </td>
               <td>
-                <button>수정</button>
+                <button onClick={() => toggleEditMode(user.id)}>
+                  {editMode[user.id] ? "완료" : "수정"}
+                </button>
               </td>
             </tr>
           ))}
@@ -298,110 +307,7 @@ const UserManagement = () => {
             width: 85%;
             padding: 50px 0;
           }
-          /*------------------검색박스------------------*/
-          .searchBox {
-            border: 1px solid #ddd;
-            padding: 2%;
-            margin: 20px 0 5px 0;
-            .search_label,
-            .filter_label {
-              font-size: 14px;
-              margin-right: 5px;
-              min-width: 65px;
-            }
-            input,
-            select {
-              padding: 3px 5px;
-            }
-            .search_container {
-              width: 100%;
-              display: flex;
-              input {
-                width: 100%;
-              }
-            }
 
-            .filters {
-              display: flex;
-              margin-top: 10px;
-              gap: 10px 30px;
-              flex-wrap: wrap;
-
-              .filter_container {
-                display: flex;
-
-                &.datefilter_containter {
-                  width: 100%;
-                  input:nth-of-type(1) {
-                    margin-right: 10px;
-                  }
-                  input:nth-of-type(2) {
-                    margin-left: 10px;
-                  }
-                }
-              }
-            }
-
-             {
-              /* 
-            .search_input,
-            .filter_select,
-            .date_input {
-              width: 30%;
-              padding: 5px;
-              font-size: 14px;
-              border: 1px solid #ccc;
-              border-radius: 3px;
-              transition: border-color 0.3s;
-            } */
-            }
-
-             {
-              /* .search_input:focus,
-            .filter_select:focus,
-            .date_input:focus {
-              border-color: #3c5997;
-              outline: none;
-            } */
-            }
-
-            .filter_select {
-              background-color: #f9f9f9;
-            }
-
-            .date_input {
-              background-color: #fff;
-            }
-          }
-
-          .searchBtnBox {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            gap: 5px;
-            button {
-              padding: 5px 10px;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              font-size: 12px;
-              transition: background-color 0.3s;
-            }
-            .search_button {
-              color: white;
-              background-color: #3c5997;
-              &:hover {
-                background-color: #7388b6;
-              }
-            }
-            .reset_button {
-              background-color: #e0e0e0; /* 회색 계열 배경색 */
-              color: #333; /* 어두운 텍스트 색상 */
-              &:hover {
-                background-color: #b0b0b0; /* 호버 시 조금 어두운 회색 */
-              }
-            }
-          }
           /*------------------유저테이블------------------*/
           .user_table {
             width: 100%;
