@@ -170,7 +170,7 @@ const MaintenanceEditModal = ({ isOpen, onClose, recordData }) => {
           </div>
         </div>
         <div className="section">
-          <label>현재 주행 거리</label>
+          <label>정비 후 주행거리</label>
           <div className="input-container">
             <input
               type="text"

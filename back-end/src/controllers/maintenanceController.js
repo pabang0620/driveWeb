@@ -57,7 +57,9 @@ const addMaintenanceRecord = async (req, res) => {
     ) {
       edited = 1;
     }
-
+    if (maintenanceCost > 0 && maintenanceMethod.trim() !== "") {
+      edited = 2;
+    }
     const data = {
       maintenanceItemId,
       maintenanceDate,

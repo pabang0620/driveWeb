@@ -65,6 +65,8 @@ const addDrivingRecord = async (req, res) => {
       parsedEndTime,
     });
 
+    console.log(3);
+
     res.status(201).json(result);
   } catch (error) {
     console.error("Error adding driving record:", error);

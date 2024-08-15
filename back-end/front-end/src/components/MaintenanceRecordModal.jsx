@@ -32,44 +32,60 @@ const MaintenanceRecordModal = ({
 
     if (selectedItem) {
       setSelectedItemName(selectedItem.name);
-      const latestRecord = selectedItem.maintenance_records.sort(
-        (a, b) => b.id - a.id
-      )[0];
 
-      if (latestRecord) {
+      // lastMaintenanceRecord가 없을 경우 기본값 설정
+      if (!lastMaintenanceRecord) {
         setNewRecord({
-          maintenanceDate: latestRecord.maintenanceDate
-            ? new Date(latestRecord.maintenanceDate).toISOString().split("T")[0]
-            : "",
-          maintenanceInterval:
-            latestRecord.maintenanceInterval != null
-              ? latestRecord.maintenanceInterval
+          maintenanceDate: new Date().toISOString().split("T")[0], // 오늘 날짜
+          maintenanceInterval: "",
+          maintenanceDistance: "",
+          maintenanceMethod: "",
+          mileageAtMaintenance: 0, // 현재 주행 거리 0으로 설정
+          maintenanceCost: 0, // 정비 금액 0으로 설정
+        });
+        setSelectedMethod(""); // 기본적으로 선택되지 않은 상태
+      } else {
+        const latestRecord = selectedItem.maintenance_records.sort(
+          (a, b) => b.id - a.id
+        )[0];
+
+        if (latestRecord) {
+          setNewRecord({
+            maintenanceDate: latestRecord.maintenanceDate
+              ? new Date(latestRecord.maintenanceDate)
+                  .toISOString()
+                  .split("T")[0]
               : "",
-          maintenanceDistance:
-            latestRecord.maintenanceDistance != null
-              ? latestRecord.maintenanceDistance
-              : "",
-          maintenanceMethod:
+            maintenanceInterval:
+              latestRecord.maintenanceInterval != null
+                ? latestRecord.maintenanceInterval
+                : "",
+            maintenanceDistance:
+              latestRecord.maintenanceDistance != null
+                ? latestRecord.maintenanceDistance
+                : "",
+            maintenanceMethod:
+              latestRecord.maintenanceMethod != null
+                ? latestRecord.maintenanceMethod
+                : "",
+            mileageAtMaintenance:
+              latestRecord.mileageAtMaintenance != null
+                ? latestRecord.mileageAtMaintenance
+                : "",
+            maintenanceCost:
+              latestRecord.maintenanceCost != null
+                ? latestRecord.maintenanceCost
+                : "",
+          });
+          setSelectedMethod(
             latestRecord.maintenanceMethod != null
               ? latestRecord.maintenanceMethod
-              : "",
-          mileageAtMaintenance:
-            latestRecord.mileageAtMaintenance != null
-              ? latestRecord.mileageAtMaintenance
-              : "",
-          maintenanceCost:
-            latestRecord.maintenanceCost != null
-              ? latestRecord.maintenanceCost
-              : "",
-        });
-        setSelectedMethod(
-          latestRecord.maintenanceMethod != null
-            ? latestRecord.maintenanceMethod
-            : ""
-        );
+              : ""
+          );
+        }
       }
     }
-  }, [maintenanceItemId, maintenanceItems]);
+  }, [maintenanceItemId, maintenanceItems, lastMaintenanceRecord]);
 
   const handleRecordChange = (e) => {
     const { name, value } = e.target;
@@ -143,38 +159,27 @@ const MaintenanceRecordModal = ({
           </span>
         </div>
         <div className="RecordModalHeader">
-          {/* {lastMaintenanceRecord && ( */}
-          <p className="recrodModalHeaderP">
-            최근 정비:{" "}
-            {lastMaintenanceRecord &&
-              formatDate(lastMaintenanceRecord.maintenanceDate)}{" "}
-            |{" "}
-            {lastMaintenanceRecord &&
-              lastMaintenanceRecord.mileageAtMaintenance}
-            km
-          </p>
-          {/* )} */}
-          {/* {lastMaintenanceRecord && ( */}
-          <>
-            <div className="maintenance-progress-bar">
-              <div
-                className="maintenance-progress"
-                style={{
-                  width: `${maintenancePercent}%`,
-                  backgroundColor: progressBarColor,
-                }}
-              />
-            </div>
-            <p className="nowSizeandFree">
-              {lastMaintenanceRecord &&
-                lastMaintenanceRecord.mileageAtMaintenance}
-              km /{" "}
-              {lastMaintenanceRecord &&
-                lastMaintenanceRecord.maintenanceDistance}
-              km마다
-            </p>
-          </>
-          {/* )} */}
+          {lastMaintenanceRecord && (
+            <>
+              <p className="recrodModalHeaderP">
+                최근 정비: {formatDate(lastMaintenanceRecord.maintenanceDate)} |{" "}
+                {lastMaintenanceRecord.mileageAtMaintenance}km
+              </p>
+              <div className="maintenance-progress-bar">
+                <div
+                  className="maintenance-progress"
+                  style={{
+                    width: `${maintenancePercent}%`,
+                    backgroundColor: progressBarColor,
+                  }}
+                />
+              </div>
+              <p className="nowSizeandFree">
+                {lastMaintenanceRecord.mileageAtMaintenance}km /{" "}
+                {lastMaintenanceRecord.maintenanceDistance}km마다
+              </p>
+            </>
+          )}
         </div>
         <div className="section">
           <label>정비기간 주기</label>
@@ -235,7 +240,7 @@ const MaintenanceRecordModal = ({
           </div>
         </div>
         <div className="section">
-          <label>현재 주행 거리</label>
+          <label>정비 후 주행거리</label>
           <div className="input-container">
             <input
               type="text"
@@ -403,10 +408,6 @@ const MaintenanceRecordModal = ({
           #maintenanceDate::-webkit-calendar-picker-indicator {
             position: absolute;
             right: 25px;
-             {
-              /* top: 51%;
-            transform: translateY(-50%); */
-            }
             cursor: pointer;
           }
           #mileageAtMaintenance {

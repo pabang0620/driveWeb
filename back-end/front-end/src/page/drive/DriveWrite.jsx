@@ -80,14 +80,13 @@ const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
           return;
         }
 
-        console.log("Response data:", response.data);
-        localStorage.setItem("drivingLogId", response.data.driving_log_id);
+        console.log("Response data:", response);
+        localStorage.setItem("drivingLogId", response.driving_log_id);
         localStorage.setItem(
           "working_hours_seconds",
-          response.data.working_hours_seconds
+          response.working_hours_seconds
         );
         localStorage.setItem("businessDistance", driveData.business_distance);
-
         closeModal(false); // 모달 닫기
         toggleModal(); // 다음 모달 열기
       } catch (error) {
