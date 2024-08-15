@@ -6,6 +6,7 @@ const {
   getMaintenanceRecordsWithItemsByUserId,
   getLastMaintenanceRecord,
   findMaintenanceRecordById,
+  createAdditionalMaintenanceRecord,
 } = require("../models/maintenanceModel");
 // 정비 기록 가져오기
 const getItemsWithRecords = async (req, res) => {
@@ -48,18 +49,24 @@ const addMaintenanceRecord = async (req, res) => {
   const { userId } = req;
 
   try {
-    const lastRecord = await getLastMaintenanceRecord(carId, userId);
+    const lastRecord = await getLastMaintenanceRecord(
+      userId,
+      maintenanceItemId
+    );
     let edited = 0;
+
     if (
-      lastRecord &&
-      (lastRecord.maintenanceInterval !== maintenanceInterval ||
-        lastRecord.maintenanceDistance !== maintenanceDistance)
+      !lastRecord ||
+      lastRecord.maintenanceInterval !== maintenanceInterval ||
+      lastRecord.maintenanceDistance !== maintenanceDistance
     ) {
       edited = 1;
     }
+
     if (maintenanceCost > 0 && maintenanceMethod.trim() !== "") {
       edited = 2;
     }
+
     const data = {
       maintenanceItemId,
       maintenanceDate,
@@ -73,7 +80,25 @@ const addMaintenanceRecord = async (req, res) => {
       edited,
     };
 
+    // 첫 번째 기록 생성
     const record = await createMaintenanceRecord(data);
+
+    // edited가 2인 경우, mileageAtMaintenance를 0으로 설정한 새로운 기록 생성
+    if (edited === 2) {
+      const additionalData = {
+        userId,
+        maintenanceItemId,
+        maintenanceDate,
+        maintenanceInterval,
+        maintenanceDistance,
+        mileageAtMaintenance: 0, // mileageAtMaintenance를 0으로 설정
+        maintenanceCost: 0,
+        edited: 2, // edited 값을 명시적으로 2로 설정
+      };
+
+      // 두 번째 기록 생성
+      await createAdditionalMaintenanceRecord(additionalData);
+    }
 
     res.json({ record });
   } catch (error) {

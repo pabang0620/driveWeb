@@ -37,10 +37,11 @@ const createMaintenanceItem = async (data) => {
   }
 };
 
+// 정비 기록 생성 함수
 const createMaintenanceRecord = async (data) => {
   try {
     const fullDateTime = new Date(data.maintenanceDate).toISOString();
-
+    console.log(data);
     const result = await prisma.maintenance_records.create({
       data: {
         ...data,
@@ -54,11 +55,31 @@ const createMaintenanceRecord = async (data) => {
   }
 };
 
-const getLastMaintenanceRecord = async (carId, userId) => {
+// 추가적인 정비 기록 생성 함수
+const createAdditionalMaintenanceRecord = async (data) => {
+  try {
+    const fullDateTime = new Date(data.maintenanceDate).toISOString();
+
+    const result = await prisma.maintenance_records.create({
+      data: {
+        ...data,
+        maintenanceDate: fullDateTime,
+      },
+    });
+    return result;
+  } catch (error) {
+    console.error("추가 정비 기록 생성 중 오류:", error);
+    throw error;
+  }
+};
+
+// 마지막 정비 기록 조회 함수
+const getLastMaintenanceRecord = async (userId, maintenanceItemId) => {
+  console.log(userId, maintenanceItemId);
   return await prisma.maintenance_records.findFirst({
     where: {
-      carId: carId,
       userId: userId,
+      maintenanceItemId: maintenanceItemId,
     },
     orderBy: {
       createdAt: "desc",
@@ -139,4 +160,5 @@ module.exports = {
   updateMaintenanceRecord,
   findMaintenanceRecordById,
   getMaintenanceRecordsWithItemsByUserId,
+  createAdditionalMaintenanceRecord,
 };

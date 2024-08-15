@@ -28,9 +28,18 @@ const MyCarLog = () => {
             pageSize: 10,
           },
         });
-        setRecords(response.data.records);
+
+        // 데이터 필터링: edited가 2인 경우 maintenanceCost가 0보다 큰 데이터만 남김
+        const filteredRecords = response.data.records.filter((record) => {
+          if (record.edited === 2) {
+            return record.maintenanceCost > 0;
+          }
+          return true;
+        });
+
+        setRecords(filteredRecords);
         setTotalPages(response.data.totalPages);
-        setTotalCount(response.data.totalCount); // totalCount를 별도로 설정
+        setTotalCount(filteredRecords.length); // 필터링된 records의 길이로 totalCount 설정
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -69,9 +78,7 @@ const MyCarLog = () => {
                   <div className="date-and-distance">
                     {new Date(record.createdAt).toLocaleDateString()}
                   </div>
-                  <div className="edited-notification">
-                    설정을 수정하셨습니다
-                  </div>
+                  <div className="edited-notification">장비 설정 수정</div>
                 </div>
 
                 <div className="logMaintenance-item">

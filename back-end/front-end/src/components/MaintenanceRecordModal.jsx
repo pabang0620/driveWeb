@@ -39,7 +39,6 @@ const MaintenanceRecordModal = ({
           maintenanceDate: new Date().toISOString().split("T")[0], // 오늘 날짜
           maintenanceInterval: "",
           maintenanceDistance: "",
-          maintenanceMethod: "",
           mileageAtMaintenance: 0, // 현재 주행 거리 0으로 설정
           maintenanceCost: 0, // 정비 금액 0으로 설정
         });
@@ -64,10 +63,6 @@ const MaintenanceRecordModal = ({
               latestRecord.maintenanceDistance != null
                 ? latestRecord.maintenanceDistance
                 : "",
-            maintenanceMethod:
-              latestRecord.maintenanceMethod != null
-                ? latestRecord.maintenanceMethod
-                : "",
             mileageAtMaintenance:
               latestRecord.mileageAtMaintenance != null
                 ? latestRecord.mileageAtMaintenance
@@ -77,11 +72,7 @@ const MaintenanceRecordModal = ({
                 ? latestRecord.maintenanceCost
                 : "",
           });
-          setSelectedMethod(
-            latestRecord.maintenanceMethod != null
-              ? latestRecord.maintenanceMethod
-              : ""
-          );
+          setSelectedMethod(""); // 선택된 정비 방식은 초기화
         }
       }
     }
