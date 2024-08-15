@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveExpense } from "../../components/ApiPost";
@@ -16,6 +17,43 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
     expense_spare_3: 0,
     expense_spare_4: 0,
   });
+
+  useEffect(() => {
+    const fetchExpenseData = async () => {
+      try {
+        const drivingLogId = driveExpenseData.driving_log_id;
+        if (drivingLogId) {
+          const response = await axios.get(
+            `/api/drive/expensedetail/${drivingLogId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          const data = response.data;
+
+          setDriveExpenseData({
+            driving_log_id: data.driving_log_id,
+            fuel_expense: data.fuel_expense || 0,
+            toll_fee: data.toll_fee || 0,
+            meal_expense: data.meal_expense || 0,
+            fine_expense: data.fine_expense || 0,
+            other_expense: data.other_expense || 0,
+            expense_spare_1: data.expense_spare_1 || 0,
+            expense_spare_2: data.expense_spare_2 || 0,
+            expense_spare_3: data.expense_spare_3 || 0,
+            expense_spare_4: data.expense_spare_4 || 0,
+          });
+        }
+      } catch (error) {
+        console.error("운행일지 지출 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchExpenseData();
+  }, [driveExpenseData.driving_log_id]);
 
   const handleSave = async () => {
     try {

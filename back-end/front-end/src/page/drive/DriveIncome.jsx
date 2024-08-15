@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveIncome } from "../../components/ApiPost";
 
-const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
+const convertSecondsToTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  return `${hours}시간 ${minutes}분`;
+};
+
+const DriveIncome = ({
+  showModal,
+  toggleModal,
+  closeModal,
+  business_distance,
+}) => {
   const [driveIncomeData, setDriveIncomeData] = useState({
     driving_log_id: parseInt(localStorage.getItem("drivingLogId")) || 0,
     card_income: 0,
@@ -19,9 +31,55 @@ const DriveIncome = ({ showModal, toggleModal, closeModal }) => {
     income_spare_2: 0,
     income_spare_3: 0,
     income_spare_4: 0,
-    working_hours: localStorage.getItem("workingHours") || "",
+    working_hours:
+      convertSecondsToTime(localStorage.getItem("working_hours_seconds")) || "",
     business_distance: localStorage.getItem("businessDistance") || "",
   });
+
+  useEffect(() => {
+    const fetchIncomeData = async () => {
+      try {
+        const drivingLogId = driveIncomeData.driving_log_id;
+        if (drivingLogId) {
+          const response = await axios.get(
+            `/api/drive/incomedetail/${drivingLogId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          const data = response.data;
+
+          setDriveIncomeData({
+            driving_log_id: data.driving_log_id,
+            card_income: data.card_income || 0,
+            cash_income: data.cash_income || 0,
+            kakao_income: data.kakao_income || 0,
+            uber_income: data.uber_income || 0,
+            onda_income: data.onda_income || 0,
+            tada_income: data.tada_income || 0,
+            other_income: data.other_income || 0,
+            iam_income: data.iam_income || 0,
+            etc_income: data.etc_income || 0,
+            income_spare_1: data.income_spare_1 || 0,
+            income_spare_2: data.income_spare_2 || 0,
+            income_spare_3: data.income_spare_3 || 0,
+            income_spare_4: data.income_spare_4 || 0,
+            working_hours:
+              convertSecondsToTime(data.working_hours_seconds) ||
+              driveIncomeData.working_hours,
+            business_distance: data.business_distance || business_distance,
+          });
+        }
+      } catch (error) {
+        console.error("운행일지 수입 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchIncomeData();
+  }, [driveIncomeData.driving_log_id, business_distance]);
 
   const handleNext = async () => {
     try {

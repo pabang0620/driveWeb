@@ -4,14 +4,23 @@ const {
   getFranchiseFees,
   createOrUpdateExpenseRecord,
   findIncomeRecordByDrivingLogId,
-  updateTotalTransportIncome,
   updateTotalIncome,
   updateExpenseRecordByDrivingLogId,
   calculateProfitLoss,
   getDrivingLogs,
-  getDriveDetailsById,
   getDrivingLogDetails,
   filterZeroValues,
+  // 운행일지 수정을 위한 get
+  getDrivingLogWithRecords,
+  getIncomeRecordByDrivingLogId,
+  getExpenseRecordByDrivingLogId,
+  // 운행일지 수정
+  getDrivingRecordByLogId,
+  updateDrivingRecord,
+  updateDrivingLog,
+  adjustMaintenanceRecords,
+  isLatestDrivingLog,
+  updateCumulativeKmInRelatedTables,
 } = require("../models/driveModel");
 
 // 운행 일지 - 운행
@@ -64,14 +73,81 @@ const addDrivingRecord = async (req, res) => {
 };
 
 const editDrivingRecord = async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
+  const { drivingLogId } = req.params; // driving_log_id
+  const { userId } = req; // 인증 미들웨어에서 가져온 userId
+  const {
+    date,
+    start_time,
+    end_time,
+    // cumulative_km,
+    // business_distance,
+    fuel_amount,
+    memo,
+    total_driving_cases,
+  } = req.body;
 
   try {
-    const record = await updateDrivingRecord(Number(id), data);
-    res.status(200).json(record);
+    // 계산을 위해 시간 파싱
+    const parsedStartTime = new Date(`${date}T${start_time}`);
+    const parsedEndTime = new Date(`${date}T${end_time}`);
+
+    if (isNaN(parsedStartTime) || isNaN(parsedEndTime)) {
+      return res.status(400).json({ error: "Invalid date or time format" });
+    }
+
+    // 기존 운행 기록을 가져옴
+    const existingDrivingRecord = await getDrivingRecordByLogId(drivingLogId);
+
+    if (!existingDrivingRecord) {
+      return res.status(404).json({ error: "운행 기록을 찾을 수 없습니다." });
+    }
+
+    // const previousDrivingDistance = existingDrivingRecord.driving_distance;
+    // const newDrivingDistance = cumulative_km - previousDrivingDistance;
+
+    const workingHoursMilliseconds = Math.abs(parsedEndTime - parsedStartTime);
+    const workingHoursSeconds = Math.floor(workingHoursMilliseconds / 1000); // 초 단위로 변환
+
+    const dayOfWeek = parsedStartTime.toLocaleString("en-US", {
+      weekday: "long",
+    });
+
+    // const fuelEfficiency = newDrivingDistance / fuel_amount;
+    // const businessRate = (business_distance / newDrivingDistance) * 100;
+
+    // 운행 기록 업데이트
+    const updatedDrivingRecord = await updateDrivingRecord(drivingLogId, {
+      start_time,
+      end_time,
+      working_hours: new Date(workingHoursMilliseconds),
+      working_hours_seconds: workingHoursSeconds,
+      day_of_week: dayOfWeek,
+      // driving_distance: newDrivingDistance,
+      // business_distance: Number(business_distance),
+      // business_rate: Number(businessRate),
+      fuel_amount: Number(fuel_amount),
+      // fuel_efficiency: Number(fuelEfficiency),
+      total_driving_cases: Number(total_driving_cases),
+      // cumulative_km: Number(cumulative_km),
+    });
+
+    // 운행 일지 업데이트
+    const updatedDrivingLog = await updateDrivingLog(drivingLogId, {
+      date,
+      memo,
+    });
+
+    console.log(updatedDrivingRecord.working_hours);
+    // 성공적으로 처리된 결과 반환
+    res.status(200).json({
+      driving_log_id: updatedDrivingLog.id,
+      working_hours_seconds: workingHoursSeconds,
+    });
   } catch (error) {
-    res.status(500).json({ error: "운행 기록 수정 중 오류가 발생했습니다." });
+    console.error("Error updating driving record:", error);
+    console.error("Stack trace:", error.stack); // 에러 스택을 출력하여 자세한 위치 확인
+
+    res.status(500).json({ error: "내부 서버 오류가 발생했습니다." });
   }
 };
 
@@ -253,6 +329,60 @@ const getDriveDetails = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// 운행일지 수정을 위한
+const fetchDrivingLogWithRecords = async (req, res) => {
+  const { driving_log_id } = req.params;
+  try {
+    const drivingLog = await getDrivingLogWithRecords(driving_log_id);
+
+    if (!drivingLog) {
+      return res.status(404).json({ error: "운행 일지를 찾을 수 없습니다." });
+    }
+
+    res.status(200).json(drivingLog);
+  } catch (error) {
+    console.error("Error fetching driving log with records:", error);
+    res.status(500).json({ error: "내부 서버 오류가 발생했습니다." });
+  }
+};
+
+// 수입 기록 가져오기
+const fetchIncomeRecordByDrivingLogId = async (req, res) => {
+  const { driving_log_id } = req.params;
+
+  try {
+    const incomeRecord = await getIncomeRecordByDrivingLogId(driving_log_id);
+
+    if (!incomeRecord) {
+      return res.status(404).json({ error: "수입 기록을 찾을 수 없습니다." });
+    }
+
+    res.status(200).json(incomeRecord);
+  } catch (error) {
+    console.error("Error fetching income record:", error);
+    res.status(500).json({ error: "내부 서버 오류가 발생했습니다." });
+  }
+};
+
+// 지출 기록 가져오기
+const fetchExpenseRecordByDrivingLogId = async (req, res) => {
+  const { driving_log_id } = req.params;
+
+  try {
+    const expenseRecord = await getExpenseRecordByDrivingLogId(driving_log_id);
+
+    if (!expenseRecord) {
+      return res.status(404).json({ error: "지출 기록을 찾을 수 없습니다." });
+    }
+
+    res.status(200).json(expenseRecord);
+  } catch (error) {
+    console.error("Error fetching expense record:", error);
+    res.status(500).json({ error: "내부 서버 오류가 발생했습니다." });
+  }
+};
+
 module.exports = {
   addDrivingRecord,
   editDrivingRecord,
@@ -263,4 +393,8 @@ module.exports = {
   // ---------------- get 시작
   getDrivingLogsForUser,
   getDriveDetails,
+  // 운행일지 수정을 위한 get
+  fetchDrivingLogWithRecords,
+  fetchIncomeRecordByDrivingLogId,
+  fetchExpenseRecordByDrivingLogId,
 };

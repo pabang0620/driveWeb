@@ -76,7 +76,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
       return (
         <div className="tab-content">
           <div className="data-row">
-            <strong>작성 날짜:</strong>
+            <strong>운행 날짜:</strong>
             <span>{daysOfWeek[day_of_week]}</span>
             <span>{details.date.split("T")[0]}</span>
           </div>
@@ -138,15 +138,34 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
       if (Object.keys(filteredExpense).length === 0) {
         return <div className="tab-content">지출이 없습니다.</div>;
       }
+
+      // 'total_expense'와 'profit_loss'를 필터링해서 맨 마지막에 추가
+      const regularExpenses = Object.keys(filteredExpense).filter(
+        (key) => key !== "total_expense" && key !== "profit_loss"
+      );
+
       return (
         <div className="tab-content">
-          {filteredExpense &&
-            Object.keys(filteredExpense).map((key) => (
-              <div className="data-row" key={key}>
-                <strong>{translateKey(key)}:</strong>{" "}
-                <span>{filteredExpense[key]} 원</span>
-              </div>
-            ))}
+          {regularExpenses.map((key) => (
+            <div className="data-row" key={key}>
+              <strong>{translateKey(key)}:</strong>{" "}
+              <span>{filteredExpense[key]} 원</span>
+            </div>
+          ))}
+          {/* 총 지출 */}
+          {filteredExpense["total_expense"] && (
+            <div className="data-row">
+              <strong>{translateKey("total_expense")}:</strong>{" "}
+              <span>{filteredExpense["total_expense"]} 원</span>
+            </div>
+          )}
+          {/* 손익 */}
+          {filteredExpense["profit_loss"] && (
+            <div className="data-row">
+              <strong>{translateKey("profit_loss")}:</strong>{" "}
+              <span>{filteredExpense["profit_loss"]} 원</span>
+            </div>
+          )}
         </div>
       );
     }

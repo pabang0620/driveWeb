@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios"; // axios를 직접 임포트
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDrive } from "../../components/ApiPost";
 
-const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
+const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
   const [driveData, setDriveData] = useState({
     date: "",
     memo: "",
@@ -15,33 +16,103 @@ const DriveWrite = ({ showModal, toggleModal, closeModal }) => {
     total_driving_cases: 0,
   });
 
+  // 로컬 스토리지에서 토큰 가져오기
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchDriveData = async () => {
+      if (drivingLogId) {
+        try {
+          const response = await axios.get(
+            `/api/drive/detail/${drivingLogId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+              },
+            }
+          );
+
+          const data = response.data;
+          setDriveData({
+            date: data.date || "",
+            memo: data.memo || "",
+            start_time: data.driving_records[0]?.start_time || "",
+            end_time: data.driving_records[0]?.end_time || "",
+            cumulative_km: data.driving_records[0]?.cumulative_km || 0,
+            business_distance: data.driving_records[0]?.business_distance || 0,
+            fuel_amount: data.driving_records[0]?.fuel_amount || 0,
+            total_driving_cases:
+              data.driving_records[0]?.total_driving_cases || 0,
+          });
+        } catch (error) {
+          console.error("Error fetching driving log data:", error);
+          alert("데이터를 가져오는 중 오류가 발생했습니다.");
+        }
+      }
+    };
+
+    fetchDriveData(); // 비동기 함수 호출
+  }, [drivingLogId, token]); // token이 변경될 때도 effect가 실행되도록 설정
+
   const handleNext = async () => {
+    console.log(drivingLogId);
     if (validateForm()) {
       try {
-        const response = await postDrive(driveData);
+        let response;
+        if (drivingLogId) {
+          // drivingLogId가 있을 경우 PUT 요청 (수정)
+          response = await axios.put(
+            `/api/drive/detail/${drivingLogId}`,
+            driveData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } else {
+          // drivingLogId가 없을 경우 POST 요청 (새로운 데이터 생성)
+          response = await postDrive(driveData, token);
+        }
+
         if (response.error) {
           alert("누적 거리를 확인해주세요.");
           return;
         }
-        console.log("Response data:", response); // 응답 데이터 확인
-        localStorage.setItem("drivingLogId", response.driving_log_id);
-        localStorage.setItem("workingHours", response.working_hours);
-        localStorage.setItem("businessDistance", response.business_distance); // business_distance 저장
 
-        closeModal(false); // 확인 메시지 없이 모달 닫기
+        console.log("Response data:", response.data);
+        localStorage.setItem("drivingLogId", response.data.driving_log_id);
+        localStorage.setItem(
+          "working_hours_seconds",
+          response.data.working_hours_seconds
+        );
+        localStorage.setItem("businessDistance", driveData.business_distance);
+
+        closeModal(false); // 모달 닫기
         toggleModal(); // 다음 모달 열기
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error("Error saving drive data:", error);
         alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
 
   const handleInputChange = (field, value) => {
-    setDriveData((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+    // 누적거리나 영업거리 필드가 아닌 경우에만 상태 업데이트
+    if (field === "cumulative_km" || field === "business_distance") {
+      // drivingLogId가 없을 때만 수정 가능하도록 설정
+      if (!drivingLogId) {
+        setDriveData((prevState) => ({
+          ...prevState,
+          [field]: value,
+        }));
+      }
+    } else {
+      setDriveData((prevState) => ({
+        ...prevState,
+        [field]: value,
+      }));
+    }
   };
 
   const validateForm = () => {

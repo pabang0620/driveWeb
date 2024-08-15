@@ -4,11 +4,13 @@ const {
   editDrivingRecord,
   removeDrivingRecord,
   editIncomeRecord,
-  removeIncomeRecord,
   editExpenseRecord,
-  removeExpenseRecord,
   getDrivingLogsForUser,
   getDriveDetails,
+  // 운행일지 수정을 위한 get
+  fetchDrivingLogWithRecords,
+  fetchIncomeRecordByDrivingLogId,
+  fetchExpenseRecordByDrivingLogId,
 } = require("../controllers/driveController");
 
 const router = express.Router();
@@ -19,16 +21,33 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 router.post("/log", authMiddleware, addDrivingRecord);
 
-router.put("/log/:id", authMiddleware, editDrivingRecord);
-
 router.delete("/log/:id", authMiddleware, removeDrivingRecord);
-
-router.put("/income/:driving_log_id", authMiddleware, editIncomeRecord);
-
-router.put("/expense/:driving_log_id", authMiddleware, editExpenseRecord);
 
 router.get("/driving-logs", authMiddleware, getDrivingLogsForUser);
 
 router.get("/driving-logs/:driving_log_id", authMiddleware, getDriveDetails);
+
+// 운행일지 수정을 위한 get
+router.get(
+  "/detail/:driving_log_id",
+  authMiddleware,
+  fetchDrivingLogWithRecords
+);
+
+// 수입 기록 가져오기
+router.get(
+  "/incomedetail/:driving_log_id",
+  authMiddleware,
+  fetchIncomeRecordByDrivingLogId
+);
+
+// 지출 기록 가져오기
+router.get(
+  "/expensedetail/:driving_log_id",
+  authMiddleware,
+  fetchExpenseRecordByDrivingLogId
+);
+
+router.put("/detail/:drivingLogId", authMiddleware, editDrivingRecord);
 
 module.exports = router;

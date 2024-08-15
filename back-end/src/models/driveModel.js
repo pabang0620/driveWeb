@@ -124,49 +124,49 @@ const createDrivingRecord = async ({
   }
 };
 
-const addDrivingRecord = async (req, res) => {
-  const { userId } = req;
-  try {
-    const {
-      date,
-      start_time,
-      end_time,
-      cumulative_km,
-      business_distance,
-      fuel_amount,
-      memo,
-      total_driving_cases,
-    } = req.body;
+// const addDrivingRecord = async (req, res) => {
+//   const { userId } = req;
+//   try {
+//     const {
+//       date,
+//       start_time,
+//       end_time,
+//       cumulative_km,
+//       business_distance,
+//       fuel_amount,
+//       memo,
+//       total_driving_cases,
+//     } = req.body;
 
-    // 계산을 위해 시간 파싱
-    const parsedStartTime = new Date(`${date}T${start_time}`);
-    const parsedEndTime = new Date(`${date}T${end_time}`);
+//     // 계산을 위해 시간 파싱
+//     const parsedStartTime = new Date(`${date}T${start_time}`);
+//     const parsedEndTime = new Date(`${date}T${end_time}`);
 
-    // DateTime 객체가 유효한지 확인
-    if (isNaN(parsedStartTime) || isNaN(parsedEndTime)) {
-      return res.status(400).json({ error: "Invalid date or time format" });
-    }
+//     // DateTime 객체가 유효한지 확인
+//     if (isNaN(parsedStartTime) || isNaN(parsedEndTime)) {
+//       return res.status(400).json({ error: "Invalid date or time format" });
+//     }
 
-    const result = await createDrivingRecord({
-      userId,
-      date,
-      start_time,
-      end_time,
-      cumulative_km,
-      business_distance,
-      fuel_amount,
-      memo,
-      total_driving_cases,
-      parsedStartTime,
-      parsedEndTime,
-    });
+//     const result = await createDrivingRecord({
+//       userId,
+//       date,
+//       start_time,
+//       end_time,
+//       cumulative_km,
+//       business_distance,
+//       fuel_amount,
+//       memo,
+//       total_driving_cases,
+//       parsedStartTime,
+//       parsedEndTime,
+//     });
 
-    res.status(201).json(result);
-  } catch (error) {
-    console.error("Error adding driving record:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
+//     res.status(201).json(result);
+//   } catch (error) {
+//     console.error("Error adding driving record:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
 
 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입 // 운행일지 - 수입
 const updateIncomeRecord = async (id, data) => {
@@ -775,6 +775,84 @@ const getTopUsersByFuelEfficiency = async (fuelType) => {
   }
 };
 
+// 운행 일지와 기록 가져오기
+const getDrivingLogWithRecords = async (driving_log_id) => {
+  return await prisma.driving_logs.findUnique({
+    where: { id: Number(driving_log_id) },
+    include: {
+      driving_records: true,
+    },
+  });
+};
+
+// 수입 기록 가져오기
+const getIncomeRecordByDrivingLogId = async (driving_log_id) => {
+  return await prisma.income_records.findFirst({
+    where: { driving_log_id: Number(driving_log_id) },
+  });
+};
+
+// 지출 기록 가져오기
+const getExpenseRecordByDrivingLogId = async (driving_log_id) => {
+  return await prisma.expense_records.findFirst({
+    where: { driving_log_id: Number(driving_log_id) },
+  });
+};
+
+// 운행 수정
+const getDrivingRecordByLogId = async (driving_log_id) => {
+  try {
+    const record = await prisma.driving_records.findFirst({
+      where: { driving_log_id: Number(driving_log_id) },
+    });
+    return record;
+  } catch (error) {
+    console.error(`Error in getDrivingRecordByLogId: ${error.message}`);
+    throw error;
+  }
+};
+
+// 운행 기록 업데이트
+const updateDrivingRecord = async (driving_log_id, data) => {
+  try {
+    return await prisma.driving_records.updateMany({
+      where: { driving_log_id: Number(driving_log_id) },
+      data,
+    });
+  } catch (error) {
+    console.error(`Error in updateDrivingRecord: ${error.message}`);
+    throw error;
+  }
+};
+
+// 운행 일지 업데이트
+const updateDrivingLog = async (driving_log_id, data) => {
+  try {
+    return await prisma.driving_logs.update({
+      where: { id: Number(driving_log_id) },
+      data,
+    });
+  } catch (error) {
+    console.error(`Error in updateDrivingLog: ${error.message}`);
+    throw error;
+  }
+};
+
+// 최신 운행 일지인지 확인
+const isLatestDrivingLog = async (userId, driving_log_id) => {
+  try {
+    const latestLog = await prisma.driving_logs.findFirst({
+      where: { userId: userId },
+      orderBy: { date: "desc" },
+      select: { id: true },
+    });
+    return latestLog && latestLog.id === Number(driving_log_id);
+  } catch (error) {
+    console.error(`Error in isLatestDrivingLog: ${error.message}`);
+    throw error;
+  }
+};
+
 module.exports = {
   createDrivingRecord,
   // -----------------------
@@ -793,5 +871,13 @@ module.exports = {
   getTopUsersByDrivingTime,
   getTopUsersByNetIncome,
   getTopUsersByFuelEfficiency,
-  // 운행일지 get 부분
+  // 운행일지 수정을 위한 get
+  getDrivingLogWithRecords,
+  getIncomeRecordByDrivingLogId,
+  getExpenseRecordByDrivingLogId,
+  // 운행 수정
+  getDrivingRecordByLogId,
+  updateDrivingRecord,
+  updateDrivingLog,
+  isLatestDrivingLog,
 };

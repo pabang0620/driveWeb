@@ -19,9 +19,12 @@ const DriveLog = () => {
   const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
 
   // 모달 열기 함수
-  const openModal = (modalType) => {
-    console.log(`Opening modal: ${modalType}`); // 디버깅 로그 추가
+  const openModal = (modalType, logId = null) => {
+    console.log(`Opening modal: ${modalType}, driving_log_id: ${logId}`);
     setCurrentModal(modalType);
+    if (logId) {
+      setSelectedLogId(logId);
+    }
   };
 
   // 모달 닫기 함수
@@ -129,6 +132,7 @@ const DriveLog = () => {
           showModal={true}
           toggleModal={() => openModal("driveIncome")} // 다음 모달을 직접 열기
           closeModal={closeModal}
+          drivingLogId={selectedLogId}
         />
       )}
 
@@ -168,6 +172,7 @@ const DriveLog = () => {
             <th>운행수익합계</th>
             <th>운행지출합계</th>
             <th>근무시간</th>
+            <th>수정</th>
           </tr>
         </thead>
         <tbody>
@@ -182,6 +187,18 @@ const DriveLog = () => {
               <td>{item.total_income} 원</td>
               <td>{item.total_expense} 원</td>
               <td>{item.working_hours}</td>
+              <td>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // 다른 클릭 이벤트를 막기 위해 추가
+                    console.log("수정하기 버튼 클릭", item.driving_log_id);
+                    openModal("driveWrite", item.driving_log_id); // driving_log_id 함께 전달
+                  }}
+                  className="editButton"
+                >
+                  &#9998;
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -282,6 +299,8 @@ const DriveLog = () => {
               td {
                 border-top: 1px solid #d9d9d9;
                 cursor: pointer;
+                text-align: center; /* 텍스트 수평 가운데 정렬 */
+                vertical-align: middle; /* 텍스트 수직 가운데 정렬 */
               }
             }
           }
@@ -330,9 +349,6 @@ const DriveLog = () => {
             padding: 10px;
           }
         }
-         {
-          /*  */
-        }
         .drive {
           .dynamicInput {
             width: 100%;
@@ -367,8 +383,36 @@ const DriveLog = () => {
             float: right;
           }
         }
-         {
-          /*  */
+        .drivingTable .editButton {
+          background-color: transparent; /* 배경색 제거 */
+          color: #05aced;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+          display: flex;
+          justify-content: center; /* 아이콘을 flexbox로 수평 가운데 정렬 */
+          align-items: center; /* 아이콘을 flexbox로 수직 가운데 정렬 */
+          padding: 0;
+          transition: color 0.2s;
+          margin: 0 0 0 39%;
+          transform: scaleX(-1);
+        }
+
+        .drivingTable .editButton:hover {
+          color: #0398cb;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+          .drivingTable .editButton {
+            font-size: 14px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .drivingTable .editButton {
+            font-size: 12px;
+          }
         }
       `}</style>
     </div>
