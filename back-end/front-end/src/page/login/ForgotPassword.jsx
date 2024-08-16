@@ -106,6 +106,13 @@ function ForgotPassword() {
             width: 45px;
             height: 45px;
             text-align: left;
+            position: relative;
+            img {
+              width: 30%;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+            }
           }
           h3 {
             font-size: 24px;

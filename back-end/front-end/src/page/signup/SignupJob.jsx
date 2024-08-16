@@ -35,7 +35,7 @@ const SignupJob = () => {
     <div className="container signup-container">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
-          &lt;
+          <img src="/images/prevBtn.png" alt="이전" />
         </button>
         <h3>직종선택</h3>
         <p>현재 종사하고 있는 직종 하나를 선택해주세요.</p>
@@ -85,6 +85,13 @@ const SignupJob = () => {
             width: 45px;
             height: 45px;
             text-align: left;
+            position: relative;
+            img {
+              width: 30%;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+            }
           }
           h3 {
             font-size: 24px;

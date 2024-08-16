@@ -92,7 +92,7 @@ function SignupEmail() {
     <div className="container signup-container">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
-          &lt;
+          <img src="/images/prevBtn.png" alt="이전" />
         </button>
         <h3>아이디 생성하기</h3>
         <p>로그인 시 사용할 아이디를 입력해주세요.</p>
@@ -188,6 +188,13 @@ function SignupEmail() {
             width: 45px;
             height: 45px;
             text-align: left;
+            position: relative;
+            img {
+              width: 30%;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+            }
           }
           h3 {
             font-size: 24px;
