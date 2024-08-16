@@ -1,22 +1,60 @@
 import React, { useState } from "react";
 import { dummyusers } from "../../components/dummy";
 import TitleBox from "../../components/TitleBox";
+import SearchBox from "./SearchBox";
 
 const UserManagement = () => {
   const [users, setUsers] = useState(dummyusers);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [boardLevelFilter, setBoardLevelFilter] = useState("");
-  const [permissionFilter, setPermissionFilter] = useState("");
-  const [startDateFilter, setStartDateFilter] = useState("");
-  const [endDateFilter, setEndDateFilter] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState(users);
+
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
-  const [filteredUsers, setFilteredUsers] = useState(users);
   const [editMode, setEditMode] = useState({});
 
+  /*------------ */
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    userStatusFilter: "",
+    userPermissionFilter: "",
+    startDateFilter: "",
+    endDateFilter: "",
+  });
+  const filterFields = [
+    {
+      id: "searchTerm",
+      label: "검색어:",
+      type: "text",
+    },
+
+    {
+      id: "userStatusFilter",
+      label: "상태:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Active", label: "Active" },
+        { value: "Inactive", label: "Inactive" },
+      ],
+    },
+    {
+      id: "userPermissionFilter",
+      label: "권한:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Admin", label: "Admin" },
+        { value: "Moderator", label: "Moderator" },
+        { value: "Contributor", label: "Contributor" },
+        { value: "Premium", label: "Premium" },
+        { value: "Member", label: "Member" },
+      ],
+    },
+  ];
+  /*------------ */
+
   const statusSetting = ["Active", "Inactive"];
+
   const permissionSetting = [
     /*-------관리자페이지-----------------*/
     "Admin", // 0 최고 권한
@@ -28,15 +66,19 @@ const UserManagement = () => {
     "Member", // 4 회원, 일반 사용자,
   ];
 
-  const handleFilterChange = (e, filterSetter) => {
-    filterSetter(e.target.value);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleFilterChange = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSearchClick = () => {
+    const {
+      searchTerm,
+      userStatusFilter,
+      userPermissionFilter,
+      startDateFilter,
+      endDateFilter,
+    } = filters;
+
     const startDate = startDateFilter ? new Date(startDateFilter) : null;
     const endDate = endDateFilter ? new Date(endDateFilter) : null;
 
@@ -53,16 +95,14 @@ const UserManagement = () => {
         (user.nickname &&
           user.nickname.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      const matchesStatus = !statusFilter || user.status === statusFilter;
-      const matchesBoardLevel =
-        !boardLevelFilter || user.boardLevel === boardLevelFilter;
+      const matchesStatus =
+        !userStatusFilter || user.status === userStatusFilter;
       const matchesPermission =
-        !permissionFilter || user.permission === permissionFilter;
+        !userPermissionFilter || user.permission === userPermissionFilter;
 
       return (
         matchesSearchTerm &&
         matchesStatus &&
-        matchesBoardLevel &&
         matchesPermission &&
         isWithinDateRange
       );
@@ -73,12 +113,13 @@ const UserManagement = () => {
   };
 
   const handleResetFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("");
-    setBoardLevelFilter("");
-    setPermissionFilter("");
-    setStartDateFilter("");
-    setEndDateFilter("");
+    setFilters({
+      searchTerm: "",
+      userStatusFilter: "",
+      userPermissionFilter: "",
+      startDateFilter: "",
+      endDateFilter: "",
+    });
     setFilteredUsers(users);
     setCurrentPage(1); // 필터 초기화 후 페이지를 1로 리셋
   };
@@ -106,86 +147,14 @@ const UserManagement = () => {
   return (
     <div className="userManagement_container">
       <TitleBox title="관리자페이지" subtitle="회원관리" />
-      <div className="searchBox">
-        <div className="filter_container search_container">
-          <label htmlFor="search" className="filter_label">
-            검색
-          </label>
-          <input
-            id="search"
-            type="text"
-            placeholder="검색어 입력"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="search_input"
-          />
-        </div>
-        <div className="filter_container">
-          <label htmlFor="statusFilter" className="filter_label">
-            상태
-          </label>
-          <select
-            id="statusFilter"
-            value={statusFilter}
-            onChange={(e) => handleFilterChange(e, setStatusFilter)}
-            className="filter_select"
-          >
-            <option value="">선택하세요</option>
-            {statusSetting.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </div>
+      <SearchBox
+        filters={filters}
+        filterFields={filterFields}
+        handleFilterChange={handleFilterChange}
+        handleSearchClick={handleSearchClick}
+        handleResetFilters={handleResetFilters}
+      />
 
-        <div className="filter_container permissionfilter_container">
-          <label htmlFor="permissionFilter" className="filter_label">
-            회원 권한
-          </label>
-          <select
-            id="permissionFilter"
-            value={permissionFilter}
-            onChange={(e) => handleFilterChange(e, setPermissionFilter)}
-            className="filter_select"
-          >
-            <option value="">선택하세요</option>
-            {permissionSetting.map((permission) => (
-              <option key={permission} value={permission}>
-                {permission}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filter_container datefilter_container">
-          <label htmlFor="startDateFilter" className="filter_label">
-            가입일
-          </label>
-          <input
-            id="startDateFilter"
-            type="date"
-            value={startDateFilter}
-            onChange={(e) => handleFilterChange(e, setStartDateFilter)}
-            className="date_input"
-          />
-          ~
-          <input
-            id="endDateFilter"
-            type="date"
-            value={endDateFilter}
-            onChange={(e) => handleFilterChange(e, setEndDateFilter)}
-            className="date_input"
-          />
-        </div>
-      </div>
-      <div className="searchBtnBox">
-        <button onClick={handleSearchClick} className="search_button">
-          검색
-        </button>
-        <button onClick={handleResetFilters} className="reset_button">
-          초기화
-        </button>
-      </div>
       <table className="user_table">
         <thead>
           <tr>

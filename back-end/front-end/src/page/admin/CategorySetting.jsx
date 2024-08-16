@@ -21,10 +21,6 @@ const CategorySetting = ({ categories, setCategories }) => {
     );
   };
 
-  const removeCategory = (id) => {
-    setCategories(categories.filter((cat) => cat.id !== id));
-  };
-
   const updateCategory = (id, newName) => {
     setCategories(
       categories.map((cat) => (cat.id === id ? { ...cat, name: newName } : cat))
@@ -45,15 +41,14 @@ const CategorySetting = ({ categories, setCategories }) => {
     );
     setEditMode(null);
   };
-  const handleNameChange = (id, e) => {
-    updateCategory(id, e.target.textContent);
-  };
+
   const handleVisibilityChange = (e) => {
     setEditedCategory({
       ...editedCategory,
       visible: e.target.value === "visible",
     });
   };
+
   return (
     <div className="categorySettings">
       <h4>카테고리 관리 및 설정</h4>
@@ -69,20 +64,9 @@ const CategorySetting = ({ categories, setCategories }) => {
         </thead>
         <tbody>
           {categories.map((cat) => (
-            <tr key={cat.id}>
+            <tr key={cat.id} className={!cat.visible ? "hidden-category" : ""}>
               <td>{cat.id}</td>
-              <td>
-                {editMode === cat.id ? (
-                  <input
-                    type="text"
-                    value={editedCategory.name}
-                    onChange={handleNameChange}
-                    style={{ width: "100%" }}
-                  />
-                ) : (
-                  cat.name
-                )}
-              </td>
+              <td>{cat.name}</td>
               <td>
                 {editMode === cat.id ? (
                   <select
@@ -93,7 +77,7 @@ const CategorySetting = ({ categories, setCategories }) => {
                     <option value="hidden">숨김</option>
                   </select>
                 ) : (
-                  <span>{cat.visible ? "표시됨" : "숨김"}</span>
+                  <p>{cat.visible ? "표시됨" : "숨김"}</p>
                 )}
               </td>
               <td className="tdBtn">
@@ -109,21 +93,15 @@ const CategorySetting = ({ categories, setCategories }) => {
                       취소
                     </button>
                   </>
+                ) : cat.id === 1 && cat.name === "전체" ? (
+                  "-"
                 ) : (
-                  <>
-                    <button
-                      className="edit"
-                      onClick={() => enterEditMode(cat.id)}
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="remove"
-                      onClick={() => removeCategory(cat.id)}
-                    >
-                      삭제
-                    </button>
-                  </>
+                  <button
+                    className="edit"
+                    onClick={() => enterEditMode(cat.id)}
+                  >
+                    수정
+                  </button>
                 )}
               </td>
             </tr>
@@ -159,25 +137,23 @@ const CategorySetting = ({ categories, setCategories }) => {
               text-align: center;
               font-size: 14px;
               background-color: #fff;
+              line-height: 25px;
+              /* 숨김 상태인 카테고리에 대한 스타일 */
+              &.hidden-category {
+                background-color: #f0f0f0;
 
-              &:hover {
-                background-color: #f9f9f9;
+                td,
+                p {
+                  color: #888;
+                }
               }
               th,
               td {
                 border: 1px solid #ddd;
                 font-size: 14px;
-                input[type="text"] {
-                  border: none;
-                  text-align: center;
-                  font-size: 14px;
-                  display: inline;
-                  width: 100%;
-                  box-sizing: border-box;
-                }
                 select {
                   font-size: 14px;
-                  width: auto;
+                  padding: 3% 10%;
                   display: inline;
                 }
               }
@@ -227,15 +203,6 @@ const CategorySetting = ({ categories, setCategories }) => {
           }
 
           .category-table button.cancel:hover {
-            background-color: #d32f2f;
-          }
-
-          .category-table button.remove {
-            background-color: #f44336;
-            color: white;
-          }
-
-          .category-table button.remove:hover {
             background-color: #d32f2f;
           }
 
