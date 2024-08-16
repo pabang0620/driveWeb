@@ -13,6 +13,7 @@ const mycarRoute = require("./mycarRoute");
 const maintenanceRoute = require("./maintenanceRoute");
 const summaryRoute = require("./summaryRoute");
 const taxRoute = require("./taxRoute");
+const adminRoute = require("./adminRoute");
 
 router.use("/user", userRoute);
 router.use("/post", postRoute);
@@ -25,5 +26,6 @@ router.use("/mycar", mycarRoute);
 router.use("/maintenance", maintenanceRoute);
 router.use("/summary", summaryRoute);
 router.use("/tax", taxRoute);
+router.use("/admin", adminRoute);
 
 module.exports = router;

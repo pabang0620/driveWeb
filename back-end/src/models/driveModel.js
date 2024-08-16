@@ -477,6 +477,7 @@ const getDrivingLogs = async (userId) => {
       select: {
         id: true,
         date: true,
+        created_at: true,
         driving_records: {
           select: {
             driving_distance: true,
@@ -502,6 +503,7 @@ const getDrivingLogs = async (userId) => {
     return drivingLogs.map((log) => ({
       driving_log_id: log.id,
       date: log.date,
+      created_at: log.created_at,
       driving_distance: log.driving_records[0]?.driving_distance || 0,
       working_hours: log.driving_records[0]?.working_hours || 0,
       total_income: log.income_records[0]?.total_income || 0,

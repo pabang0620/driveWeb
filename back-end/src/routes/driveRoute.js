@@ -15,11 +15,12 @@ const {
 
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
 
 // 운행일지 - 운행
 // 운행 일지 생성
 
-router.post("/log", authMiddleware, addDrivingRecord);
+router.post("/log", adminMiddleware, addDrivingRecord);
 
 router.delete("/log/:id", authMiddleware, removeDrivingRecord);
 
@@ -49,5 +50,9 @@ router.get(
 );
 
 router.put("/detail/:drivingLogId", authMiddleware, editDrivingRecord);
+
+router.put("/income/:driving_log_id", authMiddleware, editIncomeRecord);
+
+router.put("/expense/:driving_log_id", authMiddleware, editExpenseRecord);
 
 module.exports = router;

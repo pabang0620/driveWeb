@@ -85,8 +85,14 @@ const DriveLog = () => {
       try {
         const data = await getDrive();
         const formattedData = formatDriveData(data);
-        setDriveLog(formattedData);
-        setFilteredData(formattedData); // 필터링 데이터 초기화
+
+        // created_at 기준으로 최신순 정렬
+        const sortedData = formattedData.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setDriveLog(sortedData);
+        setFilteredData(sortedData); // 필터링 데이터 초기화
       } catch (error) {
         console.error("Error fetching data: ", error);
       }

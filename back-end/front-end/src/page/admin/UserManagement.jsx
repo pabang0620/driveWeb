@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 
 const UserManagement = () => {
@@ -7,6 +8,7 @@ const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const usersPerPage = 10;
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -14,6 +16,8 @@ const UserManagement = () => {
   const [startDateFilter, setStartDateFilter] = useState("");
   const [endDateFilter, setEndDateFilter] = useState("");
   const [editMode, setEditMode] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async (page) => {
@@ -74,7 +78,6 @@ const UserManagement = () => {
     setUsers((prevUsers) =>
       prevUsers.map((user) => {
         if (user.id === id) {
-          // 필드가 `user_profiles` 내에 있는 경우
           if (field.startsWith("user_profiles.")) {
             const profileField = field.split(".")[1];
             return {
@@ -102,8 +105,6 @@ const UserManagement = () => {
 
   const handleSave = async (id) => {
     const userToSave = users.find((user) => user.id === id);
-
-    // jobtype을 정수로 변환
     const updatedUser = {
       ...userToSave,
       jobtype: parseInt(userToSave.jobtype, 10),
@@ -138,6 +139,10 @@ const UserManagement = () => {
     }
   };
 
+  const handleNavigate = (userId) => {
+    navigate(`/driving_log?userId=${userId}`);
+  };
+
   return (
     <div className="userManagement_container">
       <TitleBox title="관리자페이지" subtitle="회원관리" />
@@ -156,6 +161,7 @@ const UserManagement = () => {
             <th>질문</th>
             <th>직업</th>
             <th>작업</th>
+            <th>운행일지</th> {/* 새로운 항목 추가 */}
           </tr>
         </thead>
         <tbody>
@@ -299,6 +305,11 @@ const UserManagement = () => {
                     </button>
                   )}
                 </td>
+                <td>
+                  <button onClick={() => handleNavigate(user.id)}>
+                    이동하기
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
@@ -321,118 +332,117 @@ const UserManagement = () => {
       </div>
       <style jsx>
         {`
-    .userManagement_container {
-      width: 75%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 100px 0;
-      @media (max-width: 768px) {
-        width: 85%;
-        padding: 50px 0;
-      }
-
-      .user_table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        tr:nth-child(even) {
-          background-color: #f9f9f9;
-        }
-        th,
-        td {
-          border: 1px solid #ddd;
-        }
-
-        th {
-          background-color: #f4f4f4;
-          font-size: 14px;
-          padding: 10px 0;
-          white-space: nowrap;
-
-          @media (max-width: 768px) {
-            font-size: 12px;
-            padding: 5px;
-          }
-        }
-
-        td {
-          font-size: 14px;
-          padding: 3px 2px;
-          text-align: center;
-          white-space: nowrap;
-
-          @media (max-width: 768px) {
-            font-size: 12px;
-            padding: 2px;
-          }
-          
-          input {
-            width: 60%;
-            padding: 3px 0;
-            font-size: 14px;
+          .userManagement_container {
+            width: 75%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 0;
             @media (max-width: 768px) {
-              font-size: 12px;
+              width: 85%;
+              padding: 50px 0;
             }
-          }
-          select {
-            width: 100%;
-            padding: 3px 0;
-            font-size: 14px;
-            margin: 0 5px
-            @media (max-width: 768px) {
-              font-size: 12px;
-            }
-          }
-        }
 
-        button {
-          margin: 5px;
-          padding: 8px 16px;
-          border: none;
-          border-radius: 5px;
-          background-color: #3c5997;
-          color: white;
-          cursor: pointer;
-          font-size: 14px;
-          transition: background-color 0.3s;
-          white-space: nowrap;
-          &:hover {
-            background-color: #7388b6;
-          }
-          @media (max-width: 768px) {
-            font-size: 12px;
-            padding: 5px 10px;
-            white-space: nowrap;
-          }
-        }
-      }
-      .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-      .pagination button {
-        margin: 0 10px;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 5px;
-        background-color: #3c5997;
-        color: white;
-        cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s;
-      }
-      .pagination button:disabled {
-        background-color: #c0c0c0;
-        cursor: not-allowed;
-      }
-      .pagination button:hover:not(:disabled) {
-        background-color: #7388b6;
-      }
-      .pagination span {
-        align-self: center;
-      }
-    `}
+            .user_table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 20px 0;
+              tr:nth-child(even) {
+                background-color: #f9f9f9;
+              }
+              th,
+              td {
+                border: 1px solid #ddd;
+              }
+
+              th {
+                background-color: #f4f4f4;
+                font-size: 14px;
+                padding: 10px 0;
+                white-space: nowrap;
+
+                @media (max-width: 768px) {
+                  font-size: 12px;
+                  padding: 5px;
+                }
+              }
+
+              td {
+                font-size: 14px;
+                padding: 3px 2px;
+                text-align: center;
+                white-space: nowrap;
+
+                @media (max-width: 768px) {
+                  font-size: 12px;
+                  padding: 2px;
+                }
+
+                input {
+                  width: 60%;
+                  padding: 3px 0;
+                  font-size: 14px;
+                  @media (max-width: 768px) {
+                    font-size: 12px;
+                  }
+                }
+                select {
+                  width: 100%;
+                  padding: 3px 0;
+                  font-size: 14px;
+                  margin: 0 5px @media (max-width: 768px) {
+                    font-size: 12px;
+                  }
+                }
+              }
+
+              button {
+                margin: 5px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 5px;
+                background-color: #3c5997;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s;
+                white-space: nowrap;
+                &:hover {
+                  background-color: #7388b6;
+                }
+                @media (max-width: 768px) {
+                  font-size: 12px;
+                  padding: 5px 10px;
+                  white-space: nowrap;
+                }
+              }
+            }
+            .pagination {
+              display: flex;
+              justify-content: center;
+              margin-top: 20px;
+            }
+            .pagination button {
+              margin: 0 10px;
+              padding: 8px 16px;
+              border: none;
+              border-radius: 5px;
+              background-color: #3c5997;
+              color: white;
+              cursor: pointer;
+              font-size: 14px;
+              transition: background-color 0.3s;
+            }
+            .pagination button:disabled {
+              background-color: #c0c0c0;
+              cursor: not-allowed;
+            }
+            .pagination button:hover:not(:disabled) {
+              background-color: #7388b6;
+            }
+            .pagination span {
+              align-self: center;
+            }
+          `}
       </style>
     </div>
   );

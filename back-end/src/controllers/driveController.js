@@ -292,6 +292,7 @@ const getDrivingLogsForUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 const getDriveDetails = async (req, res) => {
   const { driving_log_id } = req.params;
 
@@ -304,11 +305,11 @@ const getDriveDetails = async (req, res) => {
 
     const incomeRecord = drivingLog.income_records[0];
     const expenseRecord = drivingLog.expense_records[0];
-
     const result = {
       id: drivingLog.id,
       memo: drivingLog.memo,
       date: drivingLog.date,
+      created_at: drivingLog.created_at,
       driving_records: drivingLog.driving_records.map((record) => ({
         start_time: record.start_time,
         end_time: record.end_time,
