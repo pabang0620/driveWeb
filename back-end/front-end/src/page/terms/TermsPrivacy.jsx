@@ -4,7 +4,7 @@ const TermsPrivacy = () => {
   return (
     <div>
       <div className="container termsPrivacy-container">
-        <div className="title">개인정보 수집∙이용 동의서</div>
+        <div className="title">개인정보 처리방침</div>
         <p className="title_sub">
           본인은 귀사가 아래의 내용과 같이 본인의 개인 정보를 수집·이용하는데
           동의합니다.
