@@ -14,6 +14,8 @@ const {
   updateUserIncome,
   updateUserVehicleHandler,
   getFranchiseFees,
+  verifySecurityAnswer,
+  resetPassword,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const handleFileUpload = require("../middleware/handleFileUpload");
@@ -22,6 +24,9 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.put("/resetpassword", resetPassword);
+
+router.post("/verifysecurity", verifySecurityAnswer);
 
 router.post("/google-login", googleLogin);
 router.post("/kakao-login", kakaoLogin);

@@ -35,7 +35,7 @@ function SignupPassword() {
       return;
     }
 
-    if (!/^[a-zA-Z0-9\s]+$/.test(securityAnswer)) {
+    if (!/^[a-zA-Z0-9\s가-힣]+$/.test(securityAnswer)) {
       alert("보안 질문 답변에는 숫자와 텍스트만 입력할 수 있습니다.");
       return;
     }

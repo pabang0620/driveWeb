@@ -6,6 +6,8 @@ const createUser = async (
   nickname,
   username,
   password,
+  securityQuestion,
+  securityAnswer,
   jobtype,
   googleId = null,
   kakaoId = null,
@@ -21,6 +23,8 @@ const createUser = async (
         googleId,
         kakaoId,
         naverId,
+        userQuestion: securityQuestion,
+        userAnswer: securityAnswer,
         user_profiles: {
           create: {
             name: "", // 이름 초기화
@@ -92,6 +96,17 @@ const findUserByUsername = async (username) => {
     where: { username },
   });
 };
+
+async function updateUserPassword(username, hashedPassword) {
+  return prisma.users.update({
+    where: {
+      username: username,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+}
 
 const findUserByGoogleId = async (googleId) => {
   return await prisma.users.findUnique({
@@ -295,6 +310,7 @@ const getUserIncomeRecords = async (userId) => {
 module.exports = {
   createUser,
   findUserByUsername,
+  updateUserPassword,
   findUserByGoogleId,
   findUserByKakaoId,
   findUserByNaverId,

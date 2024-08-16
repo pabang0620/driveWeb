@@ -2,35 +2,34 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import securityQuestions from "../../components/securityQuestions";
+import ResetPasswordModal from "./ResetPasswordModal"; // 모달 컴포넌트 가져오기
 
 function ForgotPassword() {
   const [username, setUsername] = useState("");
-
-  const [securityQuestion, setSecurityQuestion] = useState(""); // 보안 질문 상태
-  const [securityAnswer, setSecurityAnswer] = useState(""); //보안 질문의 답변 상태
+  const [securityQuestion, setSecurityQuestion] = useState("");
+  const [securityAnswer, setSecurityAnswer] = useState("");
+  const [showModal, setShowModal] = useState(false); // 모달 표시 여부 상태 추가
 
   const navigate = useNavigate();
 
   const handleNext = async () => {
     try {
-      const response = await axios.post("/api/user/forgotpassword", {
+      const response = await axios.post("/api/user/verifysecurity", {
         username,
         securityQuestion,
         securityAnswer,
       });
 
-      // 서버에서 반환된 데이터
       const { data } = response;
 
-      // 성공적으로 응답을 받았을 경우
       if (data.success) {
-        navigate("/login/resetpassword", { state: { username } });
+        setShowModal(true); // 보안 질문과 답변이 일치하면 모달 표시
       } else {
         alert(data.message || "비밀번호 찾기 실패. 정보를 확인해주세요.");
       }
     } catch (error) {
       console.error("비밀번호 찾기 중 오류 발생:", error);
-      alert("서버와의 통신 중 오류가 발생했습니다.");
+      alert("아이디를 다시 확인해주세요.");
     }
   };
 
@@ -83,6 +82,13 @@ function ForgotPassword() {
         <button className="navyBox" onClick={handleNext}>
           비밀번호 찾기
         </button>
+
+        {showModal && (
+          <ResetPasswordModal
+            username={username}
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </div>
       <style jsx>{`
         .forgotpassword-container {
@@ -206,12 +212,6 @@ function ForgotPassword() {
             @media (max-width: 768px) {
               font-size: 14px;
             }
-            a {
-              color: white;
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
             &:hover {
               background-color: #7388b6;
             }
@@ -221,4 +221,5 @@ function ForgotPassword() {
     </div>
   );
 }
+
 export default ForgotPassword;

@@ -14,6 +14,7 @@ const {
   updateUserVehicle,
   getFranchiseFeesByUserId,
   updateFranchiseFee,
+  updateUserPassword,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -21,19 +22,87 @@ const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const registerUser = async (req, res) => {
-  const { nickname, username, password, jobtype } = req.body;
-  if (!nickname || !username || !password || !jobtype) {
+  const {
+    username,
+    nickname,
+    password,
+    securityQuestion,
+    securityAnswer,
+    jobtype,
+  } = req.body;
+  if (
+    !username ||
+    !nickname ||
+    !password ||
+    !securityQuestion ||
+    !securityAnswer ||
+    !jobtype
+  ) {
     return res.status(400).json({ error: "모든 필드를 입력해주세요." });
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser(nickname, username, hashedPassword, jobtype);
+    const user = await createUser(
+      nickname,
+      username,
+      hashedPassword,
+      securityQuestion,
+      securityAnswer,
+      jobtype
+    );
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: "사용자 생성 중 오류가 발생했습니다." });
   }
 };
+
+async function verifySecurityAnswer(req, res) {
+  const { username, securityQuestion, securityAnswer } = req.body;
+
+  try {
+    const user = await findUserByUsername(username);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (
+      user.userQuestion === securityQuestion &&
+      user.userAnswer === securityAnswer
+    ) {
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
+  } catch (error) {
+    console.error("Error occurred:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+}
+
+async function resetPassword(req, res) {
+  const { username, newPassword } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await updateUserPassword(username, hashedPassword);
+
+    return res.json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+}
 
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
@@ -340,6 +409,8 @@ const fetchUserIncomeRecords = async (req, res) => {
 
 module.exports = {
   registerUser,
+  resetPassword,
+  verifySecurityAnswer,
   loginUser,
   googleLogin,
   kakaoLogin,
