@@ -140,7 +140,7 @@ const UserManagement = () => {
   };
 
   const handleNavigate = (userId) => {
-    navigate(`/driving_log?userId=${userId}`);
+    navigate(`/driving_log/${userId}`);
   };
 
   return (

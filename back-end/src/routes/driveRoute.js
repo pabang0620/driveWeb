@@ -20,13 +20,19 @@ const adminMiddleware = require("../middleware/adminMiddleware");
 // 운행일지 - 운행
 // 운행 일지 생성
 
-router.post("/log", adminMiddleware, addDrivingRecord);
+router.post("/log", authMiddleware, addDrivingRecord);
 
 router.delete("/log/:id", authMiddleware, removeDrivingRecord);
 
-router.get("/driving-logs", authMiddleware, getDrivingLogsForUser);
+router.get("/driving-logs/:userId", adminMiddleware, getDrivingLogsForUser);
+router.get("/driving-logs", adminMiddleware, getDrivingLogsForUser);
 
-router.get("/driving-logs/:driving_log_id", authMiddleware, getDriveDetails);
+// 상세
+router.get(
+  "/driving-logs-detail/:driving_log_id",
+  authMiddleware,
+  getDriveDetails
+);
 
 // 운행일지 수정을 위한 get
 router.get(

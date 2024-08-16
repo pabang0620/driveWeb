@@ -6,6 +6,7 @@ import DriveExpense from "./DriveExpense";
 import DriveDetails from "./DriveDetails"; // 추가
 import { getDrive } from "../../components/ApiGet";
 import TitleBox from "../../components/TitleBox";
+import { useParams } from "react-router-dom";
 
 const DriveLog = () => {
   const [driveLog, setDriveLog] = useState([]);
@@ -18,6 +19,8 @@ const DriveLog = () => {
   const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
   const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
 
+  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+  console.log(userId);
   // 모달 열기 함수
   const openModal = (modalType, logId = null) => {
     console.log(`Opening modal: ${modalType}, driving_log_id: ${logId}`);
@@ -83,7 +86,7 @@ const DriveLog = () => {
   useEffect(() => {
     const getDriveData = async () => {
       try {
-        const data = await getDrive();
+        const data = await getDrive(userId ? { userId } : undefined);
         const formattedData = formatDriveData(data);
 
         // created_at 기준으로 최신순 정렬
@@ -98,7 +101,7 @@ const DriveLog = () => {
       }
     };
     getDriveData();
-  }, []);
+  }, [userId]);
 
   // 페이지 수 계산
   const pageCount = Math.ceil(filteredData.length / itemsPerPage);
@@ -128,9 +131,11 @@ const DriveLog = () => {
   return (
     <div className="container driving">
       <TitleBox title="운행일지" subtitle="조회" />
-      <button className="writeBtn" onClick={() => openModal("driveWrite")}>
-        운행일지 작성
-      </button>
+      {!userId && (
+        <button className="writeBtn" onClick={() => openModal("driveWrite")}>
+          운행일지 작성
+        </button>
+      )}
 
       {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
       {currentModal === "driveWrite" && (

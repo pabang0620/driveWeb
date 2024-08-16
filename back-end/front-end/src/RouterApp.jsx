@@ -88,6 +88,7 @@ function RouterApp() {
 
           {/* 운행일지 */}
           <Route path="/driving_log" element={<DriveLog />} />
+          <Route path="/driving_log/:userId" element={<DriveLog />} />
           <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
 
           {/* 결재 */}

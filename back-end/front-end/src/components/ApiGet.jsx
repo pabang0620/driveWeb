@@ -51,11 +51,15 @@ export const getProfileIncome = async () => {
 };
 
 //운행일지-운행
-export const getDrive = async () => {
-  return getData("/api/drive/driving-logs");
+export const getDrive = async (userId) => {
+  const url = userId
+    ? `/api/drive/driving-logs/${userId.userId}`
+    : `/api/drive/driving-logs`;
+  console.log(url);
+  return getData(url);
 };
 export const getDriveDetails = async (driving_log_id) => {
-  return getData(`/api/drive/driving-logs/${driving_log_id}`);
+  return getData(`/api/drive/driving-logs-detail/${driving_log_id}`);
 };
 //운행일지 - 대쉬보드
 export const getDriveDashBoard = async (startDate, endDate) => {

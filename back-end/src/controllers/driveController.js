@@ -283,6 +283,7 @@ const editExpenseRecord = async (req, res) => {
 // get 시작
 const getDrivingLogsForUser = async (req, res) => {
   const { userId } = req;
+  console.log(userId);
 
   try {
     const drivingLogs = await getDrivingLogs(userId);
