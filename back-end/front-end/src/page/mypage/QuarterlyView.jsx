@@ -1,37 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../../components/Spinner";
-
+import { dummyQuarterlyData } from "../../components/dummy";
 function QuarterlyView() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [quarter, setQuarter] = useState(1);
-  const [quarterlyData, setQuarterlyData] = useState({
-    income: [],
-    expense: [],
-    totalIncome: {
-      card_income: 0,
-      cash_income: 0,
-      kakao_income: 0,
-      uber_income: 0,
-      onda_income: 0,
-      tada_income: 0,
-      iam_income: 0,
-      other_income: 0,
-    },
-    totalExpense: {
-      fuel_expense: 0,
-      toll_fee: 0,
-      meal_expense: 0,
-      fine_expense: 0,
-      expense_spare_1: 0,
-      expense_spare_2: 0,
-      card_fee: 0,
-      maintenanceCost: 0,
-      insuranceFee: 0,
-      other_expense: 0,
-      estimatedTotalTax: 0,
-    },
-  });
+  // const [quarterlyData, setQuarterlyData] = useState({
+  //   income: [],
+  //   expense: [],
+  //   totalIncome: {
+  //     card_income: 0,
+  //     cash_income: 0,
+  //     kakao_income: 0,
+  //     uber_income: 0,
+  //     onda_income: 0,
+  //     tada_income: 0,
+  //     iam_income: 0,
+  //     other_income: 0,
+  //   },
+  //   totalExpense: {
+  //     fuel_expense: 0,
+  //     toll_fee: 0,
+  //     meal_expense: 0,
+  //     fine_expense: 0,
+  //     expense_spare_1: 0,
+  //     expense_spare_2: 0,
+  //     card_fee: 0,
+  //     maintenanceCost: 0,
+  //     insuranceFee: 0,
+  //     other_expense: 0,
+  //     estimatedTotalTax: 0,
+  //   },
+  // });
+  const [quarterlyData, setQuarterlyData] = useState(dummyQuarterlyData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -125,32 +126,36 @@ function QuarterlyView() {
 
   return (
     <div className="quarterlyView">
-      <div className="filterGroup">
-        <label>
-          <span>연도 선택</span>
-          <select value={year} onChange={handleYearChange}>
-            <option value={2018}>2018</option>
-            <option value={2019}>2019</option>
-            <option value={2020}>2020</option>
-            <option value={2021}>2021</option>
-            <option value={2022}>2022</option>
-            <option value={2023}>2023</option>
-            <option value={2024}>2024</option>
-          </select>
-        </label>
-        <label>
-          <span>분기 선택</span>
-          <select value={quarter} onChange={handleQuarterChange}>
-            <option value={1}>1분기</option>
-            <option value={2}>2분기</option>
-            <option value={3}>3분기</option>
-            <option value={4}>4분기</option>
-          </select>
-        </label>
-        <button onClick={handleFetchData} className="fetchButton">
-          조회
-        </button>
+      <div className="titleFitler">
+        <h3>분기별 수익 및 지출 합계</h3>
+        <div className="filterGroup">
+          <label>
+            <span>연도 선택</span>
+            <select value={year} onChange={handleYearChange}>
+              <option value={2018}>2018</option>
+              <option value={2019}>2019</option>
+              <option value={2020}>2020</option>
+              <option value={2021}>2021</option>
+              <option value={2022}>2022</option>
+              <option value={2023}>2023</option>
+              <option value={2024}>2024</option>
+            </select>
+          </label>
+          <label>
+            <span>분기 선택</span>
+            <select value={quarter} onChange={handleQuarterChange}>
+              <option value={1}>1분기</option>
+              <option value={2}>2분기</option>
+              <option value={3}>3분기</option>
+              <option value={4}>4분기</option>
+            </select>
+          </label>
+          <button onClick={handleFetchData} className="fetchButton">
+            조회
+          </button>
+        </div>
       </div>
+
       <div className="result">
         {quarterlyData.income.length === 0 && (
           <div className="noDataMessage">
@@ -160,7 +165,7 @@ function QuarterlyView() {
         {quarterlyData.income.length > 0 && (
           <>
             <div className="section">
-              <h3>수익 및 지출 항목별 상세</h3>
+              {/* <h3>항목별 상세</h3> */}
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>
@@ -252,9 +257,10 @@ function QuarterlyView() {
                 ))}
               </div>
             </div>
-            <hr style={{ borderColor: "black", margin: "20px 0" }} />
-            <div className="section">
-              <h3>수익 및 지출 계산</h3>
+
+            <div className="section summarySection">
+              {/* <h3>수익 및 지출 계산</h3> */}
+              <h3>이익 요약</h3>
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>
@@ -514,97 +520,182 @@ function QuarterlyView() {
           </>
         )}
       </div>
-      <style jsx>{`
+      <style jsx>
+        {`
         .quarterlyView {
-          padding: 30px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-        }
-        .filterGroup {
-          display: flex;
-          align-items: center;
-          margin-bottom: 20px;
-          gap: 10px;
-        }
-        label {
-          display: flex;
-          align-items: center;
-        }
-        label span {
-          margin-right: 10px;
-          font-weight: bold;
-        }
-        select {
-          padding: 8px;
-          border-radius: 4px;
-          border: 1px solid #ccc;
-          font-size: 16px;
-          transition: border-color 0.3s;
-        }
-        .fetchButton {
-          padding: 8px 16px;
-          border-radius: 4px;
-          border: none;
-          background-color: #4caf50;
-          color: white;
-          font-size: 16px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        .fetchButton:hover {
-          background-color: #45a049;
-        }
+          padding: 50px;
+          .titleFitler {
+            margin-bottom: 60px;
+            h3 {
+              text-align: center;
+              width: 100%;
+              font-weight: 700;
+              font-size: 22px;x
+              color: #333;
+              margin: 30px 0 20px 0;
+            }
+            .filterGroup {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 50px;
+              gap: 10px;
+              label {
+                display: flex;
+                align-items: center;
+                span {
+                  margin-right: 10px;
+                  font-weight: 600;
+                  color: #444;
+                  font-size: 15px;
+                }
+              }
+              select {
+                padding: 5px 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 16px;
+                transition: border-color 0.3s;
+                color: #444;
+                cursor: pointer;
+           
+              } .datePicker {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s;
+          } .fetchButton {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #05aced;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+          .fetchButton:hover {
+            background-color: #69c2ef;
+          }
+            }
+          }
+
+       
         .result {
           display: flex;
           flex-direction: column;
           margin-bottom: 30px;
           overflow-x: auto;
-        }
-        .section {
-          padding: 20px;
-          border-radius: 4px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          background-color: #ffffff;
-          min-height: 150px;
-        }
-        .row {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-        }
-        .column {
-          min-width: 120px;
-          flex-shrink: 0;
+          h3{
+            margin-bottom:10px;
+          
+          }
+          h4 {
+            width: 100%;
+            padding: 10px 0;
+            color: #222;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 10px;
+            text-align:center;
+          }
+        
+          .section {
+            background-color: #ffffff;
+          }
+          .section.summarySection {
+            margin-top: 30px;
+            background-color: #05aced;
+            padding: 1% 5% 5% 5%;
+            border-radius: 10px;
+            h3,
+            h4 {
+              color: white;
+            }
+            h3 {
+              font-size: 25px;
+              width: 100%;
+              text-align: center;
+              margin: 20px 0 20px 0;
+            }
+            h4 {
+              margin: 0;
+              padding-left: 10px;
+            }
+            .row {
+              
+              .column:first-of-type {
+                div {
+                  &:first-of-type {
+                    border-top-left-radius: 8px;
+                  }
+                  &:last-of-type {
+                    border-bottom-left-radius: 8px;
+                  }
+                }
+              }
+              .column:last-of-type {
+                div {
+                  &:first-of-type {
+                    border-top-right-radius: 8px;
+                  }
+                  &:last-of-type {
+                    border-bottom-right-radius: 8px;
+                  }
+                }
+              }
+            }
+            .column div {
+              background-color: white;
+              font-size: 14px;
+              line-height: 40px;
+              padding: 0 8px;
+              &:not(:last-of-type) {
+                border-bottom: 1px solid #d9d9d9;
+              }
+            }
+          }
+          .row {
+            display: flex;
+            justify-content: space-between;
+            .column:not(:first-of-type) div{
+                text-align: right;
+            }
+            
+          }
+          .column {
+            min-width: 120px;
+            flex-shrink: 0;
+            width:20%;
+          }
         }
         .income,
-        .expense {
-          display: flex;
-          flex-direction: column;
-        }
-        .income div,
-        .expense div {
-          margin-bottom: 10px;
-          display: flex;
-          justify-content: space-between;
-          padding: 5px 0;
-          border-bottom: 1px solid #eee;
-        }
-        h3 {
-          margin: 10px 0px;
-        }
-        .divider {
-          width: 100%;
-          height: 2px;
-          background-color: black;
-          margin: 10px 0;
-        }
+          .expense {
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+            margin-bottom:10px;
+           
+            div{
+              width:100%;
+              padding: 5px 10px;
+              font-size: 14px;
+              font-weight: 500;
+              background-color: #f4f4f3;
+          }
+       
+        
         .noDataMessage {
           color: #ff0000;
           text-align: center;
           font-weight: bold;
           margin-top: 20px;
         }
-      `}</style>
+        }
+      `}
+      </style>
     </div>
   );
 }

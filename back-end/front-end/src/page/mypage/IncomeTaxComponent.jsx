@@ -26,7 +26,7 @@ function IncomeTaxComponent({ title, description, icon, route }) {
           font-family: Arial, sans-serif;
           margin: 10px;
           flex: 1;
-
+          cursor: pointer;
           .card {
             display: flex;
             align-items: center;
