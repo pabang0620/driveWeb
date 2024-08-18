@@ -62,7 +62,7 @@ function SignupPassword() {
     <div className="container signup-container">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
-          <img src="/images/prevBtn.png" alt="이전" />
+          <img src="/images/.png" alt="이전" />
         </button>
         <h3>비밀번호 설정</h3>
         <div className="input-container">

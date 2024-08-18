@@ -1,572 +1,433 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import DriveWrite from "../drive/DriveWrite";
+import DriveIncome from "../drive//DriveIncome";
+import DriveExpense from "../drive/DriveExpense";
+import DriveDetails from "../drive/DriveDetails"; // 추가
+import { getDrive } from "../../components/ApiGet";
 import TitleBox from "../../components/TitleBox";
-import SearchBox from "./SearchBox";
+import { useParams } from "react-router-dom";
 
-const UserManagement = () => {
-  const [users, setUsers] = useState([]);
+const DriveLog = () => {
+  const [driveLog, setDriveLog] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const usersPerPage = 10;
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [itemsPerPage] = useState(10); // 페이지당 항목 수
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [permissionFilter, setPermissionFilter] = useState("");
-  const [startDateFilter, setStartDateFilter] = useState("");
-  const [endDateFilter, setEndDateFilter] = useState("");
-  const [editMode, setEditMode] = useState({});
+  const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
+  const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
 
-  /*------------ */
-  const [filters, setFilters] = useState({
-    searchTerm: "",
-    userStatusFilter: "",
-    userPermissionFilter: "",
-    startDateFilter: "",
-    endDateFilter: "",
-  });
-  const filterFields = [
-    {
-      id: "searchTerm",
-      label: "검색어:",
-      type: "text",
-    },
+  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+  console.log(userId);
+  // 모달 열기 함수
+  const openModal = (modalType, logId = null) => {
+    console.log(`Opening modal: ${modalType}, driving_log_id: ${logId}`);
+    setCurrentModal(modalType);
+    if (logId) {
+      setSelectedLogId(logId);
+    }
+  };
 
-    {
-      id: "userStatusFilter",
-      label: "상태:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "Active", label: "Active" },
-        { value: "Inactive", label: "Inactive" },
-      ],
-    },
-    {
-      id: "userPermissionFilter",
-      label: "권한:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "Admin", label: "Admin" },
-        { value: "Moderator", label: "Moderator" },
-        { value: "Contributor", label: "Contributor" },
-        { value: "Premium", label: "Premium" },
-        { value: "Member", label: "Member" },
-      ],
-    },
-  ];
-  /*------------ */
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUsers = async (page) => {
-      try {
-        const response = await axios.get("/api/admin/users", {
-          params: {
-            page,
-            limit: usersPerPage,
-          },
-        });
-
-        if (response.data && response.data.users) {
-          setUsers(response.data.users);
-          setTotalPages(response.data.totalPages);
-        } else {
-          console.error("Unexpected API response:", response);
-          setUsers([]);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setUsers([]);
+  // 모달 닫기 함수
+  const closeModal = (showConfirm = true) => {
+    if (showConfirm) {
+      const response = window.confirm("작성을 취소하시겠습니까?");
+      if (response) {
+        setCurrentModal(null);
+        setSelectedLogId(null);
       }
-    };
-
-    fetchUsers(currentPage);
-  }, [currentPage]);
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
+    } else {
+      setCurrentModal(null);
+      setSelectedLogId(null);
     }
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
+  // 현재 페이지의 데이터 계산
+  const indexOfLastItem = currentPage * itemsPerPage; //현재 페이지에서 마지막 항목의 다음 인덱스
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage; // 현재 페이지에서 첫 번째 항목의 인덱스
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 페이지 변경 함수
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // 검색어 입력 핸들러
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
+  // 검색 필드 변경 핸들러
+  const handleFieldChange = (e) => {
+    setSearchField(e.target.value);
+  };
+
+  // 검색어에 따라 데이터 필터링
   const handleSearchClick = () => {
-    const filteredUsers = users.filter((user) => {
-      return true;
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const filtered = driveLog.filter((item) => {
+      const fieldValue = String(item[searchField]).toLowerCase();
+      return fieldValue.includes(lowerCaseSearchTerm);
     });
-    setUsers(filteredUsers);
-    setCurrentPage(1);
+    setFilteredData(filtered);
+    setCurrentPage(1); // 검색 후 첫 페이지로 이동
   };
 
-  const handleResetFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("");
-    setPermissionFilter("");
-    setStartDateFilter("");
-    setEndDateFilter("");
-    setCurrentPage(1);
-  };
-
-  const handleChange = (id, field, newValue) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => {
-        if (user.id === id) {
-          if (field.startsWith("user_profiles.")) {
-            const profileField = field.split(".")[1];
-            return {
-              ...user,
-              user_profiles: {
-                ...user.user_profiles,
-                [profileField]: newValue,
-              },
-            };
-          } else {
-            return { ...user, [field]: newValue };
-          }
-        }
-        return user;
-      })
-    );
-  };
-
-  const toggleEditMode = (id) => {
-    setEditMode((prevEditMode) => ({
-      ...prevEditMode,
-      [id]: !prevEditMode[id],
+  // 운행일지 데이터를 가져와서 포맷팅하는 함수
+  const formatDriveData = (data) => {
+    return data.map((item) => ({
+      ...item,
+      date: item.date.split("T")[0],
+      working_hours: `${new Date(item.working_hours).getUTCHours()}시간`,
     }));
   };
 
-  const handleSave = async (id) => {
-    const userToSave = users.find((user) => user.id === id);
-    const updatedUser = {
-      ...userToSave,
-      jobtype: parseInt(userToSave.jobtype, 10),
+  // 운행일지-조회 불러오기
+  useEffect(() => {
+    const getDriveData = async () => {
+      try {
+        const data = await getDrive(userId ? { userId } : undefined);
+        const formattedData = formatDriveData(data);
+
+        // created_at 기준으로 최신순 정렬
+        const sortedData = formattedData.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setDriveLog(sortedData);
+        setFilteredData(sortedData); // 필터링 데이터 초기화
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
     };
+    getDriveData();
+  }, [userId]);
 
-    try {
-      await axios.put(`/api/admin/users/${id}`, updatedUser);
-      setUsers((prevUsers) =>
-        prevUsers.map((user) => (user.id === id ? updatedUser : user))
+  // 페이지 수 계산
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+
+  // 페이지 번호 버튼 렌더링
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.min(pageCount, 5); i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => paginate(i)}
+          className={currentPage === i ? "activePage" : ""}
+        >
+          {i}
+        </button>
       );
-      setEditMode((prevEditMode) => ({
-        ...prevEditMode,
-        [id]: false,
-      }));
-      alert("User information saved successfully.");
-    } catch (error) {
-      console.error("Error saving user information:", error);
-      alert("Failed to save user information.");
     }
+    return pageNumbers;
   };
 
-  const formatJobType = (jobtype) => {
-    switch (jobtype) {
-      case 1:
-        return "택시";
-      case 2:
-        return "배달";
-      case 3:
-        return "기타";
-      default:
-        return "알 수 없음";
-    }
-  };
-
-  const handleNavigate = (userId) => {
-    navigate(`/driving_log/${userId}`);
+  const handleRowClick = (drivingLogId) => {
+    setSelectedLogId(drivingLogId);
+    openModal("driveDetails");
   };
 
   return (
-    <div className="userManagement_container">
-      <TitleBox title="관리자페이지" subtitle="회원관리" />
-      <div className="searchBox">
-        <div className="filter_container search_container">
-          <label htmlFor="search" className="filter_label">
-            검색
-          </label>
-          <input
-            id="search"
-            type="text"
-            placeholder="검색어 입력"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="search_input"
-          />
-        </div>
-        <div className="filter_container">
-          <label htmlFor="statusFilter" className="filter_label">
-            상태
-          </label>
-          <select
-            id="statusFilter"
-            value={statusFilter}
-            onChange={(e) => handleFilterChange(e, setStatusFilter)}
-            className="filter_select"
-          >
-            <option value="">선택하세요</option>
-            {statusSetting.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div className="container driving">
+      <TitleBox title="운행일지" subtitle="조회" />
+      {!userId && (
+        <button className="writeBtn" onClick={() => openModal("driveWrite")}>
+          운행일지 작성
+        </button>
+      )}
 
-        <div className="filter_container permissionfilter_container">
-          <label htmlFor="permissionFilter" className="filter_label">
-            회원 권한
-          </label>
-          <select
-            id="permissionFilter"
-            value={permissionFilter}
-            onChange={(e) => handleFilterChange(e, setPermissionFilter)}
-            className="filter_select"
-          >
-            <option value="">선택하세요</option>
-            {permissionSetting.map((permission) => (
-              <option key={permission} value={permission}>
-                {permission}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="filter_container datefilter_container">
-          <label htmlFor="startDateFilter" className="filter_label">
-            가입일
-          </label>
-          <input
-            id="startDateFilter"
-            type="date"
-            value={startDateFilter}
-            onChange={(e) => handleFilterChange(e, setStartDateFilter)}
-            className="date_input"
-          />
-          ~
-          <input
-            id="endDateFilter"
-            type="date"
-            value={endDateFilter}
-            onChange={(e) => handleFilterChange(e, setEndDateFilter)}
-            className="date_input"
-          />
-        </div>
-      </div>
-      <div className="searchBtnBox">
-        <button onClick={handleSearchClick} className="search_button">
-          검색
-        </button>
-        <button onClick={handleResetFilters} className="reset_button">
-          초기화
-        </button>
-      </div>
-      <table className="user_table">
+      {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveWrite" && (
+        <DriveWrite
+          showModal={true}
+          toggleModal={() => openModal("driveIncome")} // 다음 모달을 직접 열기
+          closeModal={closeModal}
+          drivingLogId={selectedLogId}
+        />
+      )}
+
+      {/* DriveIncome에서 다음 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveIncome" && (
+        <DriveIncome
+          showModal={true}
+          toggleModal={() => openModal("driveExpense")} // 다음 모달을 직접 열기
+          closeModal={closeModal}
+        />
+      )}
+
+      {/* DriveExpense에서 저장 버튼 클릭 시 호출될 함수 */}
+      {currentModal === "driveExpense" && (
+        <DriveExpense
+          showModal={true}
+          toggleModal={() => closeModal(false)} // 마지막 모달은 닫기
+          closeModal={closeModal}
+        />
+      )}
+
+      {/* DriveDetails 모달 */}
+      {currentModal === "driveDetails" && (
+        <DriveDetails
+          showModal={true}
+          closeModal={closeModal}
+          drivingLogId={selectedLogId}
+        />
+      )}
+
+      <table className="drivingTable">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>아이디</th>
-            <th>닉네임</th>
-            <th>이름</th>
-            <th>전화번호</th>
-            <th>생년월일</th>
-            <th>상태</th>
-            <th>회원 권한</th>
-            <th>질문</th>
-            <th>직업</th>
-            <th>작업</th>
-            <th>운행일지</th> {/* 새로운 항목 추가 */}
+            <th>No</th>
+            <th>날짜</th>
+            <th>주행거리</th>
+            <th>운행수익합계</th>
+            <th>운행지출합계</th>
+            <th>근무시간</th>
+            <th>수정</th>
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(users) && users.length > 0 ? (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td style={{ width: "3%" }}>
-                  {editMode[user.id] ? (
-                    <input
-                      type="text"
-                      value={user.username}
-                      onChange={(e) =>
-                        handleChange(user.id, "username", e.target.value)
-                      }
-                    />
-                  ) : (
-                    user.username || "없음"
-                  )}
-                </td>
-                <td>
-                  {editMode[user.id] ? (
-                    <input
-                      type="text"
-                      value={user.nickname}
-                      onChange={(e) =>
-                        handleChange(user.id, "nickname", e.target.value)
-                      }
-                    />
-                  ) : (
-                    user.nickname || "없음"
-                  )}
-                </td>
-                <td>
-                  {editMode[user.id] ? (
-                    <input
-                      type="text"
-                      value={user.user_profiles?.name || ""}
-                      onChange={(e) =>
-                        handleChange(
-                          user.id,
-                          "user_profiles.name",
-                          e.target.value
-                        )
-                      }
-                    />
-                  ) : (
-                    user.user_profiles?.name || "없음"
-                  )}
-                </td>
-                <td>
-                  {editMode[user.id] ? (
-                    <input
-                      type="text"
-                      value={user.user_profiles?.phone || ""}
-                      onChange={(e) =>
-                        handleChange(
-                          user.id,
-                          "user_profiles.phone",
-                          e.target.value
-                        )
-                      }
-                    />
-                  ) : (
-                    user.user_profiles?.phone || "없음"
-                  )}
-                </td>
-                <td>
-                  {editMode[user.id] ? (
-                    <input
-                      type="text"
-                      value={user.user_profiles?.birth_date || ""}
-                      onChange={(e) =>
-                        handleChange(
-                          user.id,
-                          "user_profiles.birth_date",
-                          e.target.value
-                        )
-                      }
-                    />
-                  ) : (
-                    user.user_profiles?.birth_date || "없음"
-                  )}
-                </td>
-                <td style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                  {editMode[user.id] ? (
-                    <select
-                      value={user.status}
-                      onChange={(e) =>
-                        handleChange(user.id, "status", e.target.value)
-                      }
-                    >
-                      <option value="Active">Active</option>
-                      <option value="Inactive">Inactive</option>
-                    </select>
-                  ) : (
-                    user.status
-                  )}
-                </td>
-                <td style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-                  {editMode[user.id] ? (
-                    <select
-                      value={user.permission}
-                      onChange={(e) =>
-                        handleChange(user.id, "permission", e.target.value)
-                      }
-                    >
-                      <option value="Admin">Admin</option>
-                      <option value="Moderator">Moderator</option>
-                      <option value="Contributor">Contributor</option>
-                      <option value="Premium">Premium</option>
-                      <option value="Member">Member</option>
-                    </select>
-                  ) : (
-                    user.permission
-                  )}
-                </td>
-                <td>{user.userQuestion || "없음"}</td>
-                <td style={{ width: "5%" }}>
-                  {editMode[user.id] ? (
-                    <select
-                      value={user.jobtype}
-                      onChange={(e) =>
-                        handleChange(user.id, "jobtype", e.target.value)
-                      }
-                    >
-                      <option value={1}>택시</option>
-                      <option value={2}>배달</option>
-                      <option value={3}>기타</option>
-                    </select>
-                  ) : (
-                    formatJobType(user.jobtype)
-                  )}
-                </td>
-                <td>
-                  {editMode[user.id] ? (
-                    <button onClick={() => handleSave(user.id)}>저장</button>
-                  ) : (
-                    <button onClick={() => toggleEditMode(user.id)}>
-                      수정
-                    </button>
-                  )}
-                </td>
-                <td>
-                  <button onClick={() => handleNavigate(user.id)}>
-                    이동하기
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="12">No users found</td>
+          {currentItems.map((item, index) => (
+            <tr
+              key={item.driving_log_id}
+              onClick={() => handleRowClick(item.driving_log_id)}
+            >
+              <td>{indexOfFirstItem + index + 1}</td>
+              <td>{item.date}</td>
+              <td>{item.driving_distance} km</td>
+              <td>{item.total_income} 원</td>
+              <td>{item.total_expense} 원</td>
+              <td>{item.working_hours}</td>
+              <td>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // 다른 클릭 이벤트를 막기 위해 추가
+                    console.log("수정하기 버튼 클릭", item.driving_log_id);
+                    openModal("driveWrite", item.driving_log_id); // driving_log_id 함께 전달
+                  }}
+                  className="editButton"
+                >
+                  &#9998;
+                </button>
+              </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
       <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>
-          이전
+        <button onClick={() => setCurrentPage(1)}>{"<<"}</button>
+        <button
+          onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+        >
+          {"<"}
         </button>
-        <span>
-          {currentPage} / {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          다음
+        {renderPageNumbers()}
+        <button
+          onClick={() =>
+            currentPage < itemsPerPage && setCurrentPage(currentPage + 1)
+          }
+        >
+          {">"}
+        </button>
+
+        <button
+          onClick={() =>
+            setCurrentPage(Math.ceil(driveLog.length / itemsPerPage))
+          }
+        >
+          {">>"}
         </button>
       </div>
-      <style jsx>
-        {`
-          .userManagement_container {
-            width: 75%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 0;
+      <div className="search">
+        <select value={searchField} onChange={handleFieldChange}>
+          <option value="date">날짜</option>
+          <option value="driving_distance">주행거리</option>
+          <option value="total_income">운행수익합계</option>
+          <option value="total_expense">운행지출합계</option>
+          <option value="working_hours">근무시간</option>
+        </select>
+        <input
+          type="text"
+          placeholder={`${
+            searchField === "date"
+              ? "날짜로 검색"
+              : searchField === "driving_distance"
+              ? "주행거리로 검색"
+              : searchField === "total_income"
+              ? "운행수익합계로 검색"
+              : searchField === "total_expense"
+              ? "운행지출합계로 검색"
+              : "근무시간으로 검색"
+          }`}
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <button onClick={handleSearchClick}>검색</button>
+      </div>
+
+      <style jsx>{`
+        .driving {
+          width: 70%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0;
+          }
+          h2 {
+            font-size: 25px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            float: left;
+            span {
+              font-size: 20px;
+              color: #4c4c4c;
+              margin-left: 10px;
+            }
+          }
+          .writeBtn {
+            float: right;
+          }
+          .drivingTable {
+            width: 100%;
+            font-size: 15px;
+            border-top: 1px solid #4c4c4c;
+            text-align: center;
+            border-collapse: collapse;
             @media (max-width: 768px) {
-              width: 85%;
-              padding: 50px 0;
+              font-size: 13px;
             }
-
-            .user_table {
+            @media (max-width: 480px) {
+              font-size: 11px;
+            }
+            tr {
               width: 100%;
-              border-collapse: collapse;
-              margin: 20px 0;
-              tr:nth-child(even) {
-                background-color: #f9f9f9;
-              }
-              th,
-              td {
-                border: 1px solid #ddd;
-              }
-
+              line-height: 40px;
               th {
-                background-color: #f4f4f4;
-                font-size: 14px;
-                padding: 10px 0;
-                white-space: nowrap;
-
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 5px;
-                }
+                font-weight: normal;
               }
-
               td {
-                font-size: 14px;
-                padding: 3px 2px;
-                text-align: center;
-                white-space: nowrap;
-
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 2px;
-                }
-
-                input {
-                  width: 60%;
-                  padding: 3px 0;
-                  font-size: 14px;
-                  @media (max-width: 768px) {
-                    font-size: 12px;
-                  }
-                }
-                select {
-                  width: 100%;
-                  padding: 3px 0;
-                  font-size: 14px;
-                  margin: 0 5px @media (max-width: 768px) {
-                    font-size: 12px;
-                  }
-                }
-              }
-
-              button {
-                margin: 5px;
-                padding: 8px 16px;
-                border: none;
-                border-radius: 5px;
-                background-color: #3c5997;
-                color: white;
+                border-top: 1px solid #d9d9d9;
                 cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s;
-                white-space: nowrap;
-                &:hover {
-                  background-color: #7388b6;
-                }
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 5px 10px;
-                  white-space: nowrap;
-                }
+                text-align: center; /* 텍스트 수평 가운데 정렬 */
+                vertical-align: middle; /* 텍스트 수직 가운데 정렬 */
               }
             }
-            .pagination {
-              display: flex;
-              justify-content: center;
-              margin-top: 20px;
-            }
-            .pagination button {
-              margin: 0 10px;
-              padding: 8px 16px;
-              border: none;
-              border-radius: 5px;
-              background-color: #3c5997;
-              color: white;
+          }
+          .pagination {
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            button {
+              width: 40px;
+              height: 40px;
+              margin: 0 5px;
+              background-color: white;
+              border: 1px solid rgba(0, 0, 0, 0.1);
               cursor: pointer;
-              font-size: 14px;
-              transition: background-color 0.3s;
+              color: #222;
+              &.activePage,
+              &:hover {
+                color: white;
+                background-color: #05aced;
+              }
             }
-            .pagination button:disabled {
-              background-color: #c0c0c0;
-              cursor: not-allowed;
+          }
+          .search {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            input,
+            select {
+              border-radius: 5px;
+              border: 1px solid #c1c1c1;
+              padding: 10px;
             }
-            .pagination button:hover:not(:disabled) {
-              background-color: #7388b6;
+            input[type="text"] {
+              width: 40%;
             }
-            .pagination span {
-              align-self: center;
+          }
+          button {
+            background-color: #05aced;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px;
+          }
+        }
+        .drive {
+          .dynamicInput {
+            width: 100%;
+            border-bottom: 1px solid #d9d9d9;
+            label {
+              display: inline-block;
+              width: 25%;
+              color: #c1c1c1;
+              padding: 3% 1%;
+              @media (max-width: 768px) {
+                width: 40%;
+                font-size: 13px;
+                padding: 3% 0%;
+              }
             }
-          `}
-      </style>
+            input {
+              border: none;
+              background: none;
+              color: #c1c1c1;
+              width: 70%;
+              &:focus {
+                color: #222;
+              }
+              @media (max-width: 768px) {
+                font-size: 13px;
+                width: 55%;
+              }
+            }
+          }
+          button {
+            margin: 30px 0;
+            float: right;
+          }
+        }
+        .drivingTable .editButton {
+          background-color: transparent; /* 배경색 제거 */
+          color: #05aced;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+          display: flex;
+          justify-content: center; /* 아이콘을 flexbox로 수평 가운데 정렬 */
+          align-items: center; /* 아이콘을 flexbox로 수직 가운데 정렬 */
+          padding: 0;
+          transition: color 0.2s;
+          margin: 0 0 0 39%;
+          transform: scaleX(-1);
+        }
+
+        .drivingTable .editButton:hover {
+          color: #0398cb;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+          .drivingTable .editButton {
+            font-size: 14px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .drivingTable .editButton {
+            font-size: 12px;
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default UserManagement;
+export default DriveLog;

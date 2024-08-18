@@ -92,7 +92,10 @@ function SignupEmail() {
     <div className="container signup-container">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
-          <img src="/images/prevBtn.png" alt="이전" />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/prevBtn.png`}
+            alt="이전"
+          />
         </button>
         <h3>아이디 생성하기</h3>
         <p>로그인 시 사용할 아이디를 입력해주세요.</p>

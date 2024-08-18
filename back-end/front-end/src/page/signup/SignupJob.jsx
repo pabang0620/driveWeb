@@ -35,7 +35,10 @@ const SignupJob = () => {
     <div className="container signup-container">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
-          <img src="/images/prevBtn.png" alt="이전" />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/prevBtn.png`}
+            alt="이전"
+          />
         </button>
         <h3>직종선택</h3>
         <p>현재 종사하고 있는 직종 하나를 선택해주세요.</p>
