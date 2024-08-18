@@ -32,7 +32,7 @@ import DriveLog from "./page/drive/DriveLog";
 import MyCarLog from "./page/mycar/MyCarLog";
 import DriveDashBoard from "./page/drive/DriveDashBoard";
 import SummaryComponent from "./page/SummaryComponent ";
-import TopRank from "./page/TopRank ";
+// import TopRank from "./page/TopRank ";
 import EstimatedIncomeTaxPage from "./page/mypage/EstimatedIncomeTaxPage";
 import ProfitLossMainPage from "./page/mypage/ProfitLossMainPage";
 import PageTracker from "./PageTracker";

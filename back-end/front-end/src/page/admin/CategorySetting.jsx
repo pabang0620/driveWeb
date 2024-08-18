@@ -41,14 +41,12 @@ const CategorySetting = ({ categories, setCategories }) => {
     );
     setEditMode(null);
   };
-
   const handleVisibilityChange = (e) => {
     setEditedCategory({
       ...editedCategory,
       visible: e.target.value === "visible",
     });
   };
-
   return (
     <div className="categorySettings">
       <h4>카테고리 관리 및 설정</h4>

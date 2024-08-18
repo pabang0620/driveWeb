@@ -273,6 +273,7 @@ const PersonalInfo = () => {
                 margin-bottom: 10px;
                 cursor: pointer;
               }
+
               .userIcon {
                 width: 150px;
                 height: 150px;

@@ -188,7 +188,6 @@ const UserManagement = () => {
                   ))}
                 </select>
               </td>
-
               <td className="permission">
                 <select
                   value={user.permission}
