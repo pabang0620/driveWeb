@@ -318,7 +318,7 @@ model users {
   userQuestion        String?               @db.VarChar(50)
   userAnswer          String?               @db.VarChar(50)
   status              String                @default("Active") @db.VarChar(30)
-  permission          String                @default("Member") @db.VarChar(30)
+  permission          String                @default("5") @db.VarChar(30)
   comments            comments[]
   driving_logs        driving_logs[]
   expense_records     expense_records[]

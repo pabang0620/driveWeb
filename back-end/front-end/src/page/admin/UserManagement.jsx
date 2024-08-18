@@ -269,11 +269,11 @@ const UserManagement = () => {
                         handleChange(user.id, "permission", e.target.value)
                       }
                     >
-                      <option value="Admin">Admin</option>
-                      <option value="Moderator">Moderator</option>
-                      <option value="Contributor">Contributor</option>
-                      <option value="Premium">Premium</option>
-                      <option value="Member">Member</option>
+                      <option value="1">Admin</option>
+                      <option value="2">Moderator</option>
+                      <option value="3">Contributor</option>
+                      <option value="4">Premium</option>
+                      <option value="5">Member</option>
                     </select>
                   ) : (
                     user.permission
