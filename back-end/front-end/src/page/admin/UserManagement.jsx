@@ -2,20 +2,75 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
+import SearchBox from "./SearchBox";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const usersPerPage = 10;
   const [selectedUserId, setSelectedUserId] = useState(null);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [permissionFilter, setPermissionFilter] = useState("");
-  const [startDateFilter, setStartDateFilter] = useState("");
-  const [endDateFilter, setEndDateFilter] = useState("");
   const [editMode, setEditMode] = useState({});
+
+  /*----------검색----------*/
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    statusFilter: "",
+    permissionFilter: "",
+    jobFilter: "",
+    startDateFilter: "",
+    endDateFilter: "",
+  });
+  const filterFields = [
+    {
+      id: "searchTerm",
+      label: "검색어:",
+      type: "text",
+    },
+    {
+      id: "dateRangeFilter",
+      label: "기간:",
+      type: "dateRange",
+      startDateKey: "startDateFilter",
+      endDateKey: "endDateFilter",
+    },
+    {
+      id: "statusFilter",
+      label: "상태:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Active", label: "Active" },
+        { value: "Inactive", label: "Inactive" },
+      ],
+    },
+    {
+      id: "permissionFilter",
+      label: "회원권한:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Admin", label: "Admin" },
+        { value: "Moderator", label: "Moderator" },
+        { value: "Contributor", label: "Contributor" },
+        { value: "Premium", label: "Premium" },
+        { value: "Member", label: "Member" },
+      ],
+    },
+    {
+      id: "jobFilter",
+      label: "직업:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "택시", label: "택시" },
+        { value: "배달", label: "배달" },
+        { value: "화물", label: "화물" },
+      ],
+    },
+  ];
+  /*--------------------------*/
 
   const navigate = useNavigate();
 
@@ -31,14 +86,17 @@ const UserManagement = () => {
 
         if (response.data && response.data.users) {
           setUsers(response.data.users);
+          setFilteredUsers(response.data.users);
           setTotalPages(response.data.totalPages);
         } else {
           console.error("Unexpected API response:", response);
           setUsers([]);
+          setFilteredUsers([]);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
         setUsers([]);
+        setFilteredUsers([]);
       }
     };
 
@@ -56,24 +114,71 @@ const UserManagement = () => {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
+  /*----------검색핸들----------*/
+  const handleFilterChange = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSearchClick = () => {
-    const filteredUsers = users.filter((user) => {
-      return true;
+    console.log(filters);
+    const {
+      searchTerm,
+      statusFilter,
+      permissionFilter,
+      startDateFilter,
+      endDateFilter,
+    } = filters;
+
+    // 날짜 필터 값이 빈 문자열이 아닌 경우만 변환
+    const startDate = startDateFilter ? new Date(startDateFilter) : null;
+    const endDate = endDateFilter ? new Date(endDateFilter) : null;
+
+    const newFilteredUsers = users.filter((user) => {
+      const createdDate = new Date(user.createdDate);
+
+      // 날짜가 유효한지 확인
+      const isWithinDateRange =
+        (!startDate || createdDate >= startDate) &&
+        (!endDate || createdDate <= endDate);
+
+      // 검색어(닉네임, 유저네임, 이름, 전화번호), 기간, 상태, 회원권한, 직업   필터 확인
+      const matchesSearchTerm =
+        (user.nickname &&
+          user.nickname.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.username &&
+          user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.user_profiles?.name &&
+          user.user_profiles.name.includes(searchTerm)) ||
+        (user.user_profiles?.phone &&
+          user.user_profiles.phone.includes(searchTerm));
+
+      const matchesStatusFilter = !statusFilter || user.status === statusFilter;
+      const matchesPermissionFilter =
+        !permissionFilter || user.permission === permissionFilter;
+
+      return (
+        matchesSearchTerm &&
+        matchesStatusFilter &&
+        matchesPermissionFilter &&
+        isWithinDateRange
+      );
     });
-    setUsers(filteredUsers);
-    setCurrentPage(1);
+
+    setFilteredUsers(newFilteredUsers);
   };
 
   const handleResetFilters = () => {
-    setSearchTerm("");
-    setStatusFilter("");
-    setPermissionFilter("");
-    setStartDateFilter("");
-    setEndDateFilter("");
-    setCurrentPage(1);
+    setFilters({
+      searchTerm: "",
+      statusFilter: "",
+      permissionFilter: "",
+      startDateFilter: "",
+      endDateFilter: "",
+    });
+    setFilteredUsers(users);
+    setCurrentPage(1); // 필터 초기화 후 페이지 1로 리셋
   };
-
+  /*--------------------------*/
   const handleChange = (id, field, newValue) => {
     setUsers((prevUsers) =>
       prevUsers.map((user) => {
@@ -146,7 +251,13 @@ const UserManagement = () => {
   return (
     <div className="userManagement_container">
       <TitleBox title="관리자페이지" subtitle="회원관리" />
-      <div className="searchBox">{/* 검색 및 필터링 UI */}</div>
+      <SearchBox
+        filters={filters}
+        filterFields={filterFields}
+        handleFilterChange={handleFilterChange}
+        handleSearchClick={handleSearchClick}
+        handleResetFilters={handleResetFilters}
+      />
       <table className="user_table">
         <thead>
           <tr>
@@ -165,8 +276,8 @@ const UserManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(users) && users.length > 0 ? (
-            users.map((user) => (
+          {Array.isArray(filteredUsers) && filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td style={{ width: "3%" }}>
