@@ -80,15 +80,28 @@ const deleteBoardModel = async (id) => {
   });
 };
 
-const getPostsModel = async (page, itemsPerPage) => {
+const getPostsModel = async (page, itemsPerPage, filters) => {
+  const { author, title, startDate, endDate } = filters;
   const skip = (page - 1) * itemsPerPage;
   const take = itemsPerPage;
 
-  return await prisma.posts.findMany({
+  // 필터 조건을 동적으로 추가
+  const where = {
+    ...(author && { users: { nickname: { contains: author } } }),
+    ...(title && { title: { contains: title } }),
+    ...(startDate &&
+      endDate && {
+        createdAt: { gte: new Date(startDate), lte: new Date(endDate) },
+      }),
+  };
+
+  // 게시물 조회 (최신순 정렬)
+  const posts = await prisma.posts.findMany({
     skip,
     take,
+    where: Object.keys(where).length > 0 ? where : undefined, // 필터가 없으면 전체 조회
     orderBy: {
-      id: "desc", // ID 기준으로 내림차순 정렬
+      createdAt: "desc", // 최신순 정렬
     },
     select: {
       id: true,
@@ -106,6 +119,13 @@ const getPostsModel = async (page, itemsPerPage) => {
       },
     },
   });
+
+  // 전체 게시물 수 조회
+  const totalPosts = await prisma.posts.count({
+    where: Object.keys(where).length > 0 ? where : undefined, // 필터가 없으면 전체 조회
+  });
+
+  return { posts, totalPosts };
 };
 
 module.exports = {
