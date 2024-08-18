@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const CategorySetting = ({ categories, setCategories }) => {
+const CategorySetting = () => {
+  const [categories, setCategories] = useState();
   const [newCategory, setNewCategory] = useState("");
   const [editMode, setEditMode] = useState(null);
   const [editedCategory, setEditedCategory] = useState({});

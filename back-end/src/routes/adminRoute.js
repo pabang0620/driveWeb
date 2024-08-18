@@ -7,6 +7,8 @@ const {
   updateBoard,
   createBoard,
   deleteBoard,
+  getPosts,
+  deletePosts,
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -25,5 +27,9 @@ router.put("/boards/:id", updateBoard);
 router.get("/boards", getAllBoards);
 
 router.delete("/boards/:id", deleteBoard);
+
+router.get("/posts", getPosts);
+
+router.delete("/posts", deletePosts);
 
 module.exports = router;

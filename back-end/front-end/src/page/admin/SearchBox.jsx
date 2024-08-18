@@ -9,61 +9,65 @@ const SearchBox = ({
   return (
     <div className="searchBoxContainer">
       <div className="searchBox">
-        {filterFields.map((field) => (
-          <div
-            key={field.id}
-            className={`filter_container ${
-              field.id === "dateRangeFilter"
-                ? "dateRange_filter_container"
-                : field.id === "searchTerm"
-                ? "search_container"
-                : ""
-            }`}
-          >
-            <label htmlFor={field.id}>{field.label}</label>
+        {filterFields && filterFields.length > 0 ? ( // 조건부 렌더링 추가
+          filterFields.map((field) => (
+            <div
+              key={field.id}
+              className={`filter_container ${
+                field.id === "dateRangeFilter"
+                  ? "dateRange_filter_container"
+                  : field.id === "searchTerm"
+                  ? "search_container"
+                  : ""
+              }`}
+            >
+              <label htmlFor={field.id}>{field.label}</label>
 
-            {field.type === "select" ? (
-              <select
-                id={field.id}
-                value={filters[field.id]}
-                onChange={(e) => handleFilterChange(field.id, e.target.value)}
-              >
-                {field.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            ) : field.type === "dateRange" ? (
-              <>
+              {field.type === "select" ? (
+                <select
+                  id={field.id}
+                  value={filters[field.id]}
+                  onChange={(e) => handleFilterChange(field.id, e.target.value)}
+                >
+                  {field.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : field.type === "dateRange" ? (
+                <>
+                  <input
+                    id={field.startDateKey}
+                    type="date"
+                    value={filters[field.startDateKey] || ""}
+                    onChange={(e) =>
+                      handleFilterChange(field.startDateKey, e.target.value)
+                    }
+                  />
+                  {` `}~{` `}
+                  <input
+                    id={field.endDateKey}
+                    type="date"
+                    value={filters[field.endDateKey] || ""}
+                    onChange={(e) =>
+                      handleFilterChange(field.endDateKey, e.target.value)
+                    }
+                  />
+                </>
+              ) : (
                 <input
-                  id={field.startDateKey}
-                  type="date"
-                  value={filters[field.startDateKey] || ""}
-                  onChange={(e) =>
-                    handleFilterChange(field.startDateKey, e.target.value)
-                  }
+                  id={field.id}
+                  type={field.type}
+                  value={filters[field.id]}
+                  onChange={(e) => handleFilterChange(field.id, e.target.value)}
                 />
-                {` `}~{` `}
-                <input
-                  id={field.endDateKey}
-                  type="date"
-                  value={filters[field.endDateKey] || ""}
-                  onChange={(e) =>
-                    handleFilterChange(field.endDateKey, e.target.value)
-                  }
-                />
-              </>
-            ) : (
-              <input
-                id={field.id}
-                type={field.type}
-                value={filters[field.id]}
-                onChange={(e) => handleFilterChange(field.id, e.target.value)}
-              />
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))
+        ) : (
+          <p>필터 옵션을 로드하는 중...</p> // 또는 다른 로딩 상태 처리
+        )}
       </div>
       <div className="searchBtnBox">
         <button className="search_button" onClick={handleSearchClick}>

@@ -1,195 +1,165 @@
 import React, { useState, useEffect } from "react";
-import { boardmanagementdummy } from "../../components/dummy";
 import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import CategorySetting from "./CategorySetting";
 import SearchBox from "./SearchBox";
 
 function BoardManagement() {
-  const [boardData, setBoardData] = useState(boardmanagementdummy);
-  const [filteredBoards, setFilteredBoards] = useState(boardData);
-  const [categories, setCategories] = useState([
-    { id: 1, name: "전체", visible: true },
-    { id: 2, name: "공지사항", visible: true },
-    { id: 3, name: "자유게시판", visible: true },
-    { id: 4, name: "갤러리게시판", visible: true },
-  ]);
+  const navigate = useNavigate();
+  const [boardData, setBoardData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // 페이지당 항목 수
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedPosts, setSelectedPosts] = useState([]); // 선택된 게시물 ID 리스트
 
-  const [filters, setFilters] = useState({
-    searchTerm: "",
-    boardLevelFilter: "",
-    authorFilter: "",
-    categoryFilter: "",
-    startDateFilter: "",
-    endDateFilter: "",
-  });
-  const filterFields = [
-    {
-      id: "searchTerm",
-      label: "검색어:",
-      type: "text",
-    },
-    {
-      id: "dateRangeFilter",
-      label: "기간:",
-      type: "dateRange",
-      startDateKey: "startDateFilter",
-      endDateKey: "endDateFilter",
-    },
-    {
-      id: "categoryFilter",
-      label: "카테고리:",
-      type: "select",
-      options: [
-        ...categories.map((category) => ({
-          value: category.name,
-          label: category.name,
-        })),
-      ],
-    },
-    {
-      id: "boardLevelFilter",
-      label: "게시판 레벨:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "Administrator", label: "Administrator" },
-        { value: "Moderator", label: "Moderator" },
-        { value: "Advanced", label: "Advanced" },
-        { value: "Regular", label: "Regular" },
-        { value: "Newbie", label: "Newbie" },
-      ],
-    },
-  ];
+  const fetchPosts = async (page) => {
+    try {
+      const response = await axios.get("/api/admin/posts", {
+        params: {
+          page,
+          limit: itemsPerPage,
+        },
+      });
+
+      const postsData = response.data.posts.map((post) => ({
+        id: post.id,
+        title: post.title,
+        category: post.boards.name,
+        author: post.users.nickname,
+        createdDate: new Date(post.createdAt).toLocaleDateString(),
+        boardLevel: "N/A", // 이 필드는 데이터에 따라 조정해야 할 수 있습니다.
+      }));
+
+      setBoardData(postsData);
+      setTotalPages(response.data.totalPages); // 전체 페이지 수를 설정
+    } catch (error) {
+      console.error("Failed to fetch posts", error);
+    }
+  };
+  useEffect(() => {
+    fetchPosts(currentPage);
+  }, [currentPage]);
+
   const handleNoticeClick = (id) => {
-    Navigate(`/board/post/${id}`);
+    navigate(`/board/post/${id}`);
   };
 
-  /*-------------페이지네이션-------------*/
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredBoards.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalItems = filteredBoards.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const handleFirstPage = () => setCurrentPage(1);
   const handleLastPage = () => setCurrentPage(totalPages);
-  const handleNextPage = () =>
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const handlePreviousPage = () =>
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  /*--------------------------*/
 
-  /*-------------검색-------------*/
-  const handleFilterChange = (name, value) => {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+  const handleCheckboxChange = (id) => {
+    if (selectedPosts.includes(id)) {
+      setSelectedPosts(selectedPosts.filter((postId) => postId !== id));
+    } else {
+      setSelectedPosts([...selectedPosts, id]);
+    }
   };
 
-  const handleSearchClick = () => {
-    console.log(filters);
-    const {
-      searchTerm,
-      boardLevelFilter,
-      authorFilter,
-      categoryFilter,
-      startDateFilter,
-      endDateFilter,
-    } = filters;
+  const handleDeleteSelected = async () => {
+    if (selectedPosts.length === 0) {
+      alert("삭제할 게시물을 선택하세요.");
+      return;
+    }
 
-    // 날짜 필터 값이 빈 문자열이 아닌 경우만 변환
-    const startDate = startDateFilter ? new Date(startDateFilter) : null;
-    const endDate = endDateFilter ? new Date(endDateFilter) : null;
+    const confirmDelete = window.confirm(
+      "선택된 게시물을 정말 삭제하시겠습니까?"
+    );
+    if (!confirmDelete) {
+      return; // 사용자가 삭제를 취소한 경우 함수 종료
+    }
 
-    const newFilteredBoards = boardData.filter((board) => {
-      const createdDate = new Date(board.createdDate);
-
-      // 날짜가 유효한지 확인
-      const isWithinDateRange =
-        (!startDate || createdDate >= startDate) &&
-        (!endDate || createdDate <= endDate);
-
-      // 검색어, 작성자, 게시판 레벨, 카테고리 필터 확인
-      const matchesSearchTerm =
-        (board.title &&
-          board.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (board.content &&
-          board.content.toLowerCase().includes(searchTerm.toLowerCase()));
-
-      const matchesAuthor = !authorFilter || board.author === authorFilter;
-      const matchesBoardLevel =
-        !boardLevelFilter || board.boardLevel === boardLevelFilter;
-      const matchesCategory =
-        !categoryFilter || board.category === categoryFilter;
-
-      return (
-        matchesSearchTerm &&
-        matchesBoardLevel &&
-        matchesCategory &&
-        matchesAuthor &&
-        isWithinDateRange
-      );
-    });
-
-    setFilteredBoards(newFilteredBoards);
-  };
-
-  const handleResetFilters = () => {
-    setFilters({
-      searchTerm: "",
-      boardLevelFilter: "",
-      authorFilter: "",
-      categoryFilter: "",
-      startDateFilter: "",
-      endDateFilter: "",
-    });
-    setFilteredBoards(boardData);
-    setCurrentPage(1); // 필터 초기화 후 페이지를 1로 리셋
+    try {
+      await axios.delete("/api/admin/posts", {
+        data: { ids: selectedPosts },
+      });
+      alert("선택된 게시물이 삭제되었습니다.");
+      setSelectedPosts([]);
+      setCurrentPage(1); // 첫 페이지로 돌아가도록 설정
+      fetchPosts(1); // 첫 페이지의 게시물 리스트를 다시 불러오기
+    } catch (error) {
+      console.error("Failed to delete posts", error);
+      alert("게시물 삭제에 실패했습니다.");
+    }
   };
 
   return (
     <div className="board-management">
       <TitleBox title="관리자페이지" subtitle="게시판관리" />
-      <CategorySetting categories={categories} setCategories={setCategories} />
+      <CategorySetting />
       <h4>게시글 관리</h4>
-      <SearchBox
-        filters={filters}
-        filterFields={filterFields}
-        categories={categories}
-        handleFilterChange={handleFilterChange}
-        handleSearchClick={handleSearchClick}
-        handleResetFilters={handleResetFilters}
-      />
+      <SearchBox />
+
+      <button
+        className="seletedDeleted"
+        onClick={handleDeleteSelected}
+        disabled={selectedPosts.length === 0}
+      >
+        선택된 게시물 삭제
+      </button>
+
       <table className="board_table">
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedPosts(boardData.map((item) => item.id));
+                  } else {
+                    setSelectedPosts([]);
+                  }
+                }}
+                checked={
+                  selectedPosts.length === boardData.length &&
+                  boardData.length > 0
+                }
+              />
+            </th>
             <th>ID</th>
             <th>제목</th>
             <th>카테고리</th>
-            <th>작성자(등급)</th>
+            <th>작성자</th>
             <th>작성일</th>
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((item) => (
-            <tr key={item.id} onClick={() => handleNoticeClick(item.id)}>
-              <td>{item.id}</td>
-              <td>{item.title}</td>
-              <td>{item.category}</td>
+          {boardData.map((item) => (
+            <tr key={item.id}>
               <td>
-                {item.author}({item.boardLevel})
+                <input
+                  type="checkbox"
+                  checked={selectedPosts.includes(item.id)}
+                  onChange={() => handleCheckboxChange(item.id)}
+                />
               </td>
-              <td>{item.createdDate}</td>
+              <td onClick={() => handleNoticeClick(item.id)}>{item.id}</td>
+              <td onClick={() => handleNoticeClick(item.id)}>{item.title}</td>
+              <td onClick={() => handleNoticeClick(item.id)}>
+                {item.category}
+              </td>
+              <td onClick={() => handleNoticeClick(item.id)}>{item.author}</td>
+              <td onClick={() => handleNoticeClick(item.id)}>
+                {item.createdDate}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
       <div className="pagination">
         <button onClick={handleFirstPage} disabled={currentPage === 1}>
           맨 앞으로
@@ -197,21 +167,15 @@ function BoardManagement() {
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
           이전
         </button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => paginate(i + 1)}
-            className={currentPage === i + 1 ? "active" : ""}
-          >
-            {i + 1}
-          </button>
-        ))}
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>
           다음
         </button>
         <button onClick={handleLastPage} disabled={currentPage === totalPages}>
           맨 뒤로
         </button>
+        <span>
+          {currentPage} / {totalPages} 페이지
+        </span>
       </div>
       <style jsx>{`
         .board-management {
@@ -223,7 +187,16 @@ function BoardManagement() {
             width: 85%;
             padding: 50px 0;
           }
-
+          .seletedDeleted {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+          }
+          .seletedDeleted:hover {
+            background-color: #d32f2f;
+            color: white;
+          }
           /*------------------게시물테이블------------------*/
           table.board_table {
             width: 100%;
@@ -292,6 +265,8 @@ function BoardManagement() {
           .pagination {
             display: flex;
             justify-content: center;
+            align-items: center;
+            margin-top: 20px;
           }
           .pagination button {
             margin: 0 5px;
@@ -300,6 +275,10 @@ function BoardManagement() {
             background-color: #f0f0f0;
             cursor: pointer;
             transition: background-color 0.3s ease;
+          }
+          .pagination span {
+            margin-left: 10px;
+            font-size: 14px;
           }
           .pagination button.active {
             background-color: #007bff;

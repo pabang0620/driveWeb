@@ -79,6 +79,35 @@ const deleteBoardModel = async (id) => {
     where: { id: parseInt(id) },
   });
 };
+
+const getPostsModel = async (page, itemsPerPage) => {
+  const skip = (page - 1) * itemsPerPage;
+  const take = itemsPerPage;
+
+  return await prisma.posts.findMany({
+    skip,
+    take,
+    orderBy: {
+      id: "desc", // ID 기준으로 내림차순 정렬
+    },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      boards: {
+        select: {
+          name: true,
+        },
+      },
+      users: {
+        select: {
+          nickname: true,
+        },
+      },
+    },
+  });
+};
+
 module.exports = {
   getUsersByPage,
   updateUserById,
@@ -87,4 +116,5 @@ module.exports = {
   createBoardModel,
   updateBoardModel,
   deleteBoardModel,
+  getPostsModel,
 };

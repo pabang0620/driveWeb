@@ -5,6 +5,7 @@ const {
   createBoardModel,
   getAllBoardsModel,
   deleteBoardModel,
+  getPostsModel,
 } = require("../models/adminModel");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -96,6 +97,55 @@ const deleteBoard = async (req, res) => {
     res.status(500).json({ message: "Failed to delete the board", error });
   }
 };
+
+// 게시글 정보
+const getPosts = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // page 파라미터로 페이지 번호 받기
+  const itemsPerPage = parseInt(req.query.limit) || 10; // limit 파라미터로 페이지당 항목 수 받기
+
+  try {
+    // 전체 게시글 수를 가져와서 페이지네이션에 사용
+    const totalPosts = await prisma.posts.count();
+
+    // 게시글 가져오기
+    const posts = await getPostsModel(page, itemsPerPage);
+
+    // 전체 페이지 수 계산
+    const totalPages = Math.ceil(totalPosts / itemsPerPage);
+
+    res.json({
+      posts, // 게시글 데이터
+      totalPosts, // 전체 게시글 수
+      totalPages, // 전체 페이지 수
+      currentPage: page, // 현재 페이지
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch posts", error });
+  }
+};
+
+const deletePosts = async (req, res) => {
+  const { ids } = req.body;
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "유효한 ID 목록이 제공되지 않았습니다." });
+  }
+
+  try {
+    await prisma.posts.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    res.status(200).json({ message: "게시물들이 삭제되었습니다." });
+  } catch (error) {
+    res.status(500).json({ message: "게시물 삭제에 실패했습니다.", error });
+  }
+};
 module.exports = {
   fetchUsersByPage,
   updateUser,
@@ -104,4 +154,6 @@ module.exports = {
   createBoard,
   updateBoard,
   deleteBoard,
+  getPosts,
+  deletePosts,
 };
