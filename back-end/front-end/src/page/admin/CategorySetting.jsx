@@ -1,30 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const CategorySetting = ({ categories, setCategories }) => {
   const [newCategory, setNewCategory] = useState("");
   const [editMode, setEditMode] = useState(null);
   const [editedCategory, setEditedCategory] = useState({});
 
-  const addCategory = (name) => {
-    setCategories([
-      ...categories,
-      { id: categories.length + 1, name, visible: true },
-    ]);
-    setNewCategory("");
+  // API에서 카테고리 목록을 가져오는 함수
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("/api/admin/boards");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      }
+    };
+
+    fetchCategories();
+  }, [setCategories]);
+
+  const addCategory = async (name) => {
+    try {
+      const response = await axios.post("/api/admin/boards", {
+        name,
+        displayed: true,
+      });
+      setCategories([...categories, response.data]);
+      setNewCategory("");
+    } catch (error) {
+      console.error("Failed to add category", error);
+    }
   };
 
-  const toggleCategoryVisibility = (id) => {
-    setCategories(
-      categories.map((cat) =>
-        cat.id === id ? { ...cat, visible: !cat.visible } : cat
-      )
-    );
+  const updateCategory = async (id) => {
+    try {
+      const response = await axios.put(`/api/admin/boards/${id}`, {
+        ...editedCategory,
+      });
+      setCategories(
+        categories.map((cat) => (cat.id === id ? response.data : cat))
+      );
+      setEditMode(null);
+    } catch (error) {
+      console.error("Failed to update category", error);
+    }
   };
 
-  const updateCategory = (id, newName) => {
-    setCategories(
-      categories.map((cat) => (cat.id === id ? { ...cat, name: newName } : cat))
+  const deleteCategory = async (id) => {
+    const confirmed = window.confirm(
+      "삭제 시 모든 게시물도 삭제됩니다. 삭제하시겠습니까?"
     );
+
+    if (confirmed) {
+      try {
+        await axios.delete(`/api/admin/boards/${id}`);
+        setCategories(categories.filter((cat) => cat.id !== id));
+      } catch (error) {
+        console.error("Failed to delete category", error);
+      }
+    }
   };
 
   const enterEditMode = (id) => {
@@ -33,20 +68,20 @@ const CategorySetting = ({ categories, setCategories }) => {
     setEditedCategory(category);
   };
 
-  const saveCategory = () => {
-    setCategories(
-      categories.map((cat) =>
-        cat.id === editedCategory.id ? editedCategory : cat
-      )
-    );
-    setEditMode(null);
+  const handleCategoryNameChange = (e) => {
+    setEditedCategory({
+      ...editedCategory,
+      name: e.target.value,
+    });
   };
+
   const handleVisibilityChange = (e) => {
     setEditedCategory({
       ...editedCategory,
-      visible: e.target.value === "visible",
+      displayed: e.target.value === "visible",
     });
   };
+
   return (
     <div className="categorySettings">
       <h4>카테고리 관리 및 설정</h4>
@@ -61,49 +96,77 @@ const CategorySetting = ({ categories, setCategories }) => {
           </tr>
         </thead>
         <tbody>
-          {categories.map((cat) => (
-            <tr key={cat.id} className={!cat.visible ? "hidden-category" : ""}>
-              <td>{cat.id}</td>
-              <td>{cat.name}</td>
-              <td>
-                {editMode === cat.id ? (
-                  <select
-                    value={editedCategory.visible ? "visible" : "hidden"}
-                    onChange={handleVisibilityChange}
-                  >
-                    <option value="visible">표시됨</option>
-                    <option value="hidden">숨김</option>
-                  </select>
-                ) : (
-                  <p>{cat.visible ? "표시됨" : "숨김"}</p>
-                )}
-              </td>
-              <td className="tdBtn">
-                {editMode === cat.id ? (
-                  <>
-                    <button className="save" onClick={saveCategory}>
-                      저장
-                    </button>
-                    <button
-                      className="cancel"
-                      onClick={() => setEditMode(null)}
+          {categories && categories.length > 0 ? (
+            categories.map((cat) => (
+              <tr
+                key={cat.id}
+                className={!cat.displayed ? "hidden-category" : ""}
+              >
+                <td>{cat.id}</td>
+                <td>
+                  {editMode === cat.id ? (
+                    <input
+                      type="text"
+                      value={editedCategory.name}
+                      onChange={handleCategoryNameChange}
+                    />
+                  ) : (
+                    cat.name
+                  )}
+                </td>
+                <td>
+                  {editMode === cat.id ? (
+                    <select
+                      value={editedCategory.displayed ? "visible" : "hidden"}
+                      onChange={handleVisibilityChange}
                     >
-                      취소
-                    </button>
-                  </>
-                ) : cat.id === 1 && cat.name === "전체" ? (
-                  "-"
-                ) : (
-                  <button
-                    className="edit"
-                    onClick={() => enterEditMode(cat.id)}
-                  >
-                    수정
-                  </button>
-                )}
-              </td>
+                      <option value="visible">표시됨</option>
+                      <option value="hidden">숨김</option>
+                    </select>
+                  ) : (
+                    <p>{cat.displayed ? "표시됨" : "숨김"}</p>
+                  )}
+                </td>
+                <td className="tdBtn">
+                  {editMode === cat.id ? (
+                    <>
+                      <button
+                        className="save"
+                        onClick={() => updateCategory(cat.id)}
+                      >
+                        저장
+                      </button>
+                      <button
+                        className="cancel"
+                        onClick={() => setEditMode(null)}
+                      >
+                        취소
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="edit"
+                        onClick={() => enterEditMode(cat.id)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        className="delete"
+                        onClick={() => deleteCategory(cat.id)}
+                      >
+                        삭제
+                      </button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4">카테고리가 없습니다.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
@@ -181,7 +244,13 @@ const CategorySetting = ({ categories, setCategories }) => {
             background-color: #2196f3;
             color: white;
           }
-
+          .category-table button.delete {
+            background-color: #f44336;
+            color: white;
+          }
+          .category-table button.delete:hover {
+            background-color: #d32f2f;
+          }
           .category-table button.edit:hover {
             background-color: #1976d2;
           }

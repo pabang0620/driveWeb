@@ -1,4 +1,11 @@
-const { getUsersByPage, updateUserById } = require("../models/adminModel");
+const {
+  getUsersByPage,
+  updateUserById,
+  updateBoardModel,
+  createBoardModel,
+  getAllBoardsModel,
+  deleteBoardModel,
+} = require("../models/adminModel");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -41,7 +48,60 @@ const updateUser = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// 게시판 종류 관련
+// 모든 게시판 목록 가져오기
+const getAllBoards = async (req, res) => {
+  try {
+    const boards = await getAllBoardsModel();
+    res.json(boards);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get boards", error });
+  }
+};
+
+// 게시판 생성
+const createBoard = async (req, res) => {
+  const { name, displayed } = req.body;
+  try {
+    const board = await createBoardModel({
+      name,
+      displayed,
+    });
+    res.json(board);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create the board", error });
+  }
+};
+
+// 특정 게시판 이름 및 표시 여부 수정
+const updateBoard = async (req, res) => {
+  const { id } = req.params;
+  const { name, displayed } = req.body;
+  try {
+    const board = await updateBoardModel(id, { name, displayed });
+    res.json(board);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update the board", error });
+  }
+};
+
+// 게시판 삭제
+const deleteBoard = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await deleteBoardModel(id);
+    res.json({ message: "Board deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete the board", error });
+  }
+};
 module.exports = {
   fetchUsersByPage,
   updateUser,
+  // 게시판 관련
+  getAllBoards,
+  createBoard,
+  updateBoard,
+  deleteBoard,
 };

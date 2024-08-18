@@ -55,7 +55,36 @@ const updateUserById = async (userId, userData) => {
   }
 };
 
+// 게시판 종류 관련
+const getAllBoardsModel = async () => {
+  return await prisma.boards.findMany();
+};
+
+const createBoardModel = async (data) => {
+  return await prisma.boards.create({
+    data,
+  });
+};
+
+const updateBoardModel = async (id, data) => {
+  return await prisma.boards.update({
+    where: { id: parseInt(id) },
+    data,
+  });
+};
+
+// 게시판 삭제
+const deleteBoardModel = async (id) => {
+  return await prisma.boards.delete({
+    where: { id: parseInt(id) },
+  });
+};
 module.exports = {
   getUsersByPage,
   updateUserById,
+  // 게시판 종류 관련
+  getAllBoardsModel,
+  createBoardModel,
+  updateBoardModel,
+  deleteBoardModel,
 };

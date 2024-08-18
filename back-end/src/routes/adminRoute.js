@@ -3,6 +3,10 @@ const express = require("express");
 const {
   fetchUsersByPage,
   updateUser,
+  getAllBoards,
+  updateBoard,
+  createBoard,
+  deleteBoard,
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -13,5 +17,13 @@ const router = express.Router();
 router.get("/users", fetchUsersByPage);
 
 router.put("/users/:id", updateUser);
+
+router.post("/boards", createBoard);
+
+router.put("/boards/:id", updateBoard);
+
+router.get("/boards", getAllBoards);
+
+router.delete("/boards/:id", deleteBoard);
 
 module.exports = router;
