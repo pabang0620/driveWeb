@@ -127,6 +127,9 @@ const MyPage = () => {
           .subscribeADD {
             display: flex;
             flex-direction: row;
+            @media (max-width: 768px) {
+              flex-direction: column;
+            }
           }
           @media (max-width: 768px) {
             width: 85%;

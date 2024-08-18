@@ -31,6 +31,13 @@ function BoardManagement() {
       type: "text",
     },
     {
+      id: "dateRangeFilter",
+      label: "기간:",
+      type: "dateRange",
+      startDateKey: "startDateFilter",
+      endDateKey: "endDateFilter",
+    },
+    {
       id: "categoryFilter",
       label: "카테고리:",
       type: "select",
@@ -53,13 +60,6 @@ function BoardManagement() {
         { value: "Regular", label: "Regular" },
         { value: "Newbie", label: "Newbie" },
       ],
-    },
-    {
-      id: "dateRangeFilter",
-      label: "기간:",
-      type: "dateRange",
-      startDateKey: "startDateFilter",
-      endDateKey: "endDateFilter",
     },
   ];
   const handleNoticeClick = (id) => {
@@ -155,7 +155,7 @@ function BoardManagement() {
 
   return (
     <div className="board-management">
-      <TitleBox title="관리자페이지" subtitle="게시물관리" />
+      <TitleBox title="관리자페이지" subtitle="게시판관리" />
       <CategorySetting categories={categories} setCategories={setCategories} />
       <h4>게시글 관리</h4>
       <SearchBox
@@ -224,56 +224,6 @@ function BoardManagement() {
             padding: 50px 0;
           }
 
-          /*------------------검색박스-------------------- */
-          .searchBox {
-            border: 1px solid #ddd;
-            padding: 2%;
-            margin: 20px 0 5px 0;
-            display: flex;
-            margin-top: 10px;
-            gap: 10px 30px;
-            flex-wrap: wrap;
-
-            label {
-              font-size: 14px;
-              margin-right: 5px;
-              min-width: 65px;
-            }
-
-            input,
-            select {
-              padding: 3px 5px;
-              font-size: 14px;
-            }
-          }
-          .searchBtnBox {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            gap: 5px;
-            button {
-              padding: 5px 10px;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              font-size: 12px;
-              transition: background-color 0.3s;
-            }
-            .search_button {
-              color: white;
-              background-color: #3c5997;
-              &:hover {
-                background-color: #7388b6;
-              }
-            }
-            .reset_button {
-              background-color: #e0e0e0; /* 회색 계열 배경색 */
-              color: #333; /* 어두운 텍스트 색상 */
-              &:hover {
-                background-color: #b0b0b0; /* 호버 시 조금 어두운 회색 */
-              }
-            }
-          }
           /*------------------게시물테이블------------------*/
           table.board_table {
             width: 100%;

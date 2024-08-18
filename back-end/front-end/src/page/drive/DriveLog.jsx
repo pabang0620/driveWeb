@@ -364,6 +364,7 @@ const DriveLog = () => {
           .dynamicInput {
             width: 100%;
             border-bottom: 1px solid #d9d9d9;
+
             label {
               display: inline-block;
               width: 25%;

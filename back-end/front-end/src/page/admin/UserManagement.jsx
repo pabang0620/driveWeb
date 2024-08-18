@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
+import SearchBox from "./SearchBox";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,47 @@ const UserManagement = () => {
   const [startDateFilter, setStartDateFilter] = useState("");
   const [endDateFilter, setEndDateFilter] = useState("");
   const [editMode, setEditMode] = useState({});
+
+  /*------------ */
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    userStatusFilter: "",
+    userPermissionFilter: "",
+    startDateFilter: "",
+    endDateFilter: "",
+  });
+  const filterFields = [
+    {
+      id: "searchTerm",
+      label: "검색어:",
+      type: "text",
+    },
+
+    {
+      id: "userStatusFilter",
+      label: "상태:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Active", label: "Active" },
+        { value: "Inactive", label: "Inactive" },
+      ],
+    },
+    {
+      id: "userPermissionFilter",
+      label: "권한:",
+      type: "select",
+      options: [
+        { value: "", label: "전체" },
+        { value: "Admin", label: "Admin" },
+        { value: "Moderator", label: "Moderator" },
+        { value: "Contributor", label: "Contributor" },
+        { value: "Premium", label: "Premium" },
+        { value: "Member", label: "Member" },
+      ],
+    },
+  ];
+  /*------------ */
 
   const navigate = useNavigate();
 
@@ -146,7 +188,86 @@ const UserManagement = () => {
   return (
     <div className="userManagement_container">
       <TitleBox title="관리자페이지" subtitle="회원관리" />
-      <div className="searchBox">{/* 검색 및 필터링 UI */}</div>
+      <div className="searchBox">
+        <div className="filter_container search_container">
+          <label htmlFor="search" className="filter_label">
+            검색
+          </label>
+          <input
+            id="search"
+            type="text"
+            placeholder="검색어 입력"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="search_input"
+          />
+        </div>
+        <div className="filter_container">
+          <label htmlFor="statusFilter" className="filter_label">
+            상태
+          </label>
+          <select
+            id="statusFilter"
+            value={statusFilter}
+            onChange={(e) => handleFilterChange(e, setStatusFilter)}
+            className="filter_select"
+          >
+            <option value="">선택하세요</option>
+            {statusSetting.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="filter_container permissionfilter_container">
+          <label htmlFor="permissionFilter" className="filter_label">
+            회원 권한
+          </label>
+          <select
+            id="permissionFilter"
+            value={permissionFilter}
+            onChange={(e) => handleFilterChange(e, setPermissionFilter)}
+            className="filter_select"
+          >
+            <option value="">선택하세요</option>
+            {permissionSetting.map((permission) => (
+              <option key={permission} value={permission}>
+                {permission}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="filter_container datefilter_container">
+          <label htmlFor="startDateFilter" className="filter_label">
+            가입일
+          </label>
+          <input
+            id="startDateFilter"
+            type="date"
+            value={startDateFilter}
+            onChange={(e) => handleFilterChange(e, setStartDateFilter)}
+            className="date_input"
+          />
+          ~
+          <input
+            id="endDateFilter"
+            type="date"
+            value={endDateFilter}
+            onChange={(e) => handleFilterChange(e, setEndDateFilter)}
+            className="date_input"
+          />
+        </div>
+      </div>
+      <div className="searchBtnBox">
+        <button onClick={handleSearchClick} className="search_button">
+          검색
+        </button>
+        <button onClick={handleResetFilters} className="reset_button">
+          초기화
+        </button>
+      </div>
       <table className="user_table">
         <thead>
           <tr>

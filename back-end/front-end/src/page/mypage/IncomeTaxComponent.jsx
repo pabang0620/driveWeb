@@ -26,6 +26,7 @@ function IncomeTaxComponent({ title, description, icon, route }) {
           font-family: Arial, sans-serif;
           margin: 10px;
           flex: 1;
+
           .card {
             display: flex;
             align-items: center;
@@ -36,6 +37,8 @@ function IncomeTaxComponent({ title, description, icon, route }) {
             transition: transform 0.2s, box-shadow 0.2s;
             background-color: #f9f9f9;
             justify-content: space-around;
+            @media (max-width: 768px) {
+            }
           }
           .card:hover {
             transform: translateY(-3px);
@@ -50,15 +53,28 @@ function IncomeTaxComponent({ title, description, icon, route }) {
             align-items: center;
             justify-content: center;
             background-color: #fff;
+            @media (max-width: 768px) {
+              font-size: 40px;
+              width: 45px;
+              height: 45px;
+              background-color: transparent;
+            }
           }
           .content {
             width: 60%;
+            @media (max-width: 768px) {
+              width: 70%;
+            }
           }
           .title {
             font-size: 20px;
             font-weight: bold;
             margin: 0 0 8px 0;
             color: #333;
+            @media (max-width: 768px) {
+              font-size: 16px;
+              margin: 0 0 5px 0;
+            }
           }
           .description {
             width: 90%;
@@ -66,6 +82,11 @@ function IncomeTaxComponent({ title, description, icon, route }) {
             color: #555;
             margin: 0 0 15px 0;
             line-height: 1.4;
+            @media (max-width: 768px) {
+              font-size: 14px;
+              width: 100%;
+              margin: 0 0 5px 0;
+            }
           }
           .button {
             padding: 8px 28px;
@@ -76,6 +97,9 @@ function IncomeTaxComponent({ title, description, icon, route }) {
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s;
+            @media (max-width: 768px) {
+              font-size: 12px;
+            }
           }
           .button:hover {
             background-color: #486bb5;
