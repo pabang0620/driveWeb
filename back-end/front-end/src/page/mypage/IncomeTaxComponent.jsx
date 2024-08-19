@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function IncomeTaxComponent({ title, description, icon, route }) {
+function IncomeTaxComponent({ title, description, icon, route, isBlurred }) {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
@@ -9,15 +9,17 @@ function IncomeTaxComponent({ title, description, icon, route }) {
   };
 
   return (
-    <div className="income_container">
+    <div className={`income_container ${isBlurred ? "blurred" : ""}`}>
       <div className="card">
         <div className="icon">{icon}</div>
         <div className="content">
           <h3 className="title">{title}</h3>
           <p className="description">{description}</p>
-          <button className="button" onClick={handleButtonClick}>
-            서비스 자세히보기
-          </button>
+          {!isBlurred && (
+            <button className="button" onClick={handleButtonClick}>
+              서비스 자세히보기
+            </button>
+          )}
         </div>
       </div>
 
@@ -27,6 +29,9 @@ function IncomeTaxComponent({ title, description, icon, route }) {
           margin: 10px;
           flex: 1;
           cursor: pointer;
+          &.blurred {
+            filter: blur(5px);
+          }
           .card {
             display: flex;
             align-items: center;

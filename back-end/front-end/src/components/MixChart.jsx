@@ -7,7 +7,15 @@ import {
 } from "./ApiGet";
 //useMemo : 주로 계산 비용이 큰 값이나 객체에 사용
 
-const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
+const MixChart = ({
+  dateRange,
+  getDate,
+  setLoading,
+  setError,
+  title,
+  url,
+  isBlurred,
+}) => {
   // 꺾은선 - 주행거리, 근무시간
   //막대 - 총수입금
   const [data, setData] = useState([]);
@@ -170,19 +178,21 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
   };
 
   useEffect(() => {
-    fetchMyPageData(); // 데이터를 불러옵니다
-    setOptions((prevOptions) => ({
-      ...prevOptions,
-      xaxis: {
-        ...prevOptions.xaxis,
-        categories: dates, // 최신 날짜로 카테고리 업데이트
-      },
-    }));
-    console.log("dateRange", dateRange);
+    if (!isBlurred) {
+      fetchMyPageData();
+      setOptions((prevOptions) => ({
+        ...prevOptions,
+        xaxis: {
+          ...prevOptions.xaxis,
+          categories: dates, // 최신 날짜로 카테고리 업데이트
+        },
+      }));
+      console.log("dateRange", dateRange);
+    }
   }, [dateRange]); // dates가 변경될 때마다 옵션 업데이트
 
   return (
-    <div className="barChart_container">
+    <div className={`barChart_container ${isBlurred ? "blurred" : ""}`}>
       <h3>{title}</h3>
       <div className="barChart">
         {dates.length > 0 &&
@@ -198,6 +208,9 @@ const MixChart = ({ dateRange, getDate, setLoading, setError, title, url }) => {
         .barChart_container {
           width: 100%;
           height: 500px; /* 컨테이너 높이 설정 */
+          &.blurred {
+            filter: blur(5px);
+          }
           .barChart {
             background-color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

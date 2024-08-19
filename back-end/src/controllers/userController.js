@@ -121,7 +121,7 @@ const loginUser = async (req, res) => {
     // console.log("user", user);
 
     const token = jwt.sign(
-      { userId: user.id, jobtype: user.jobtype }, // jobtype을 토큰의 페이로드에 추가
+      { userId: user.id, jobtype: user.jobtype, permission: user.permission }, // jobtype을 토큰의 페이로드에 추가
       process.env.JWT_SECRET,
       { expiresIn: "10h" }
     );

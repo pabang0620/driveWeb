@@ -2,8 +2,35 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const NoticeZone = ({ boardsWithPosts }) => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const { permission } = decodedToken;
+
+        // permission 값이 1, 2, 3, 4, 5 중 하나인지 확인
+        if ([1, 2, 3, 4, 5].includes(permission)) {
+          setIsAuthorized(true);
+        } else {
+          setIsAuthorized(false);
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+        setIsAuthorized(false);
+      }
+    } else {
+      setIsAuthorized(false);
+    }
+  }, []);
+
   const navigate = useNavigate();
   const settings = {
     dots: false,
@@ -17,9 +44,15 @@ const NoticeZone = ({ boardsWithPosts }) => {
     vertical: true, // 세로 방향 슬라이드 설정
     arrows: false, // 버튼 제거
   };
+
   const handleNoticeClick = (id) => {
-    navigate(`/board/post/${id}`);
+    if (isAuthorized) {
+      navigate(`/board/post/${id}`);
+    } else {
+      alert("로그인 해주세요.");
+    }
   };
+
   return (
     <div className="noticeZone">
       <Slider {...settings}>

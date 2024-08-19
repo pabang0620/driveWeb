@@ -31,7 +31,7 @@ const generateColors = (num) => {
   return colors;
 };
 
-const CircularChart = ({ dateRange, title, url }) => {
+const CircularChart = ({ dateRange, title, url, isBlurred }) => {
   const [data, setData] = useState(null);
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);
@@ -71,7 +71,6 @@ const CircularChart = ({ dateRange, title, url }) => {
       { name: "카드 수수료", data: data.card_fee },
       { name: "기타 수수료", data: data.etc_fee },
     ];
-
     const itemsData = type === "incomeSummary" ? incomeData : expenseData;
 
     // 0인 값을 제외한 항목만 반환
@@ -190,15 +189,64 @@ const CircularChart = ({ dateRange, title, url }) => {
   };
 
   useEffect(() => {
-    fetchMyPageData();
+    if (!isBlurred) {
+      fetchMyPageData();
+    }
   }, [dateRange]);
 
   if (loading) return <Spinner />;
   if (error) return <div>Error: {error.message}</div>;
+  if (data.total_expense === 0)
+    return (
+      <div
+        style={{
+          width: "48.5%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f9f9f9",
+          color: "#666",
+          fontSize: "18px",
+          fontWeight: "bold",
+          textAlign: "center",
+          borderRadius: "10px",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          aspectRatio: "1",
+          filter: isBlurred ? "blur(5px)" : "none",
+        }}
+      >
+        {title}이 없습니다
+      </div>
+    );
+
+  if (data.total_income === 0)
+    return (
+      <div
+        style={{
+          width: "48.5%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f9f9f9",
+          color: "#666",
+          fontSize: "18px",
+          fontWeight: "bold",
+          textAlign: "center",
+          borderRadius: "10px",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          aspectRatio: "1",
+          filter: isBlurred ? "blur(5px)" : "none",
+        }}
+      >
+        {title}이 없습니다
+      </div>
+    );
 
   return (
-    <div className="circularChart_container">
-      <h3>{title}</h3>
+    <div className={`circularChart_container ${isBlurred ? "blurred" : ""}`}>
+      <h3>{title} 차트</h3>
       <div className="circularChart">
         <ApexChart
           options={{
@@ -212,6 +260,9 @@ const CircularChart = ({ dateRange, title, url }) => {
       <style jsx>{`
         .circularChart_container {
           width: 48.5%;
+          &.blurred {
+            filter: blur(5px);
+          }
           @media (max-width: 768px) {
             width: 100%;
           }

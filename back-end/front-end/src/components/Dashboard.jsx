@@ -61,12 +61,12 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchMyPageData();
-  // }, [dateRange]); // dateRange가 변경될 때마다 호출
+  useEffect(() => {
+    fetchMyPageData();
+  }, [dateRange]); // dateRange가 변경될 때마다 호출
 
-  //if (loading) return <Spinner />;
-  //if (error) return <div>Error: {error.message}</div>;
+  if (loading) return <Spinner />;
+  if (error) return <div>Error: {error.message}</div>;
   if (!data)
     return (
       <div

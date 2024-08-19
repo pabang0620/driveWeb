@@ -4,6 +4,7 @@ import CircularChart from "../../components/CircularChart";
 import MixChart from "../../components/MixChart";
 import TitleBox from "../../components/TitleBox";
 import IncomeTaxComponent from "./IncomeTaxComponent"; // 누락된 컴포넌트 임포트 추가
+import { jwtDecode } from "jwt-decode";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(true);
@@ -12,6 +13,7 @@ const MyPage = () => {
     startDate: new Date(),
     endDate: new Date(),
   });
+  const [isBlurred, setIsBlurred] = useState(false);
 
   const getDateOffset = (offset) => {
     const date = new Date();
@@ -23,6 +25,26 @@ const MyPage = () => {
 
     return koreanDate.toISOString().split("T")[0];
   };
+
+  useEffect(() => {
+    // 토큰에서 permission 값을 가져와 확인
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const { permission } = decodedToken;
+        console.log(permission);
+        // permission이 5인 경우 블러 상태로 설정
+        if (permission === 5) {
+          setIsBlurred(true);
+        } else {
+          setIsBlurred(false);
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
+  }, []);
 
   const handleDateChange = (range) => {
     const today = new Date();
@@ -81,13 +103,15 @@ const MyPage = () => {
         <CircularChart
           dateRange={dateRange}
           setError={setError}
-          title={"수입차트"}
+          title={"수입"}
           url={"incomeSummary"}
+          isBlurred={isBlurred}
         />
         <CircularChart
           dateRange={dateRange}
-          title={"지출차트"}
+          title={"지출"}
           url={"expenseSummary"}
+          isBlurred={isBlurred}
         />
         <MixChart
           dateRange={dateRange}
@@ -95,6 +119,7 @@ const MyPage = () => {
           setError={setError}
           title={"혼합차트"}
           url={"getMypageMix"}
+          isBlurred={isBlurred}
         />
       </div>
       <div>
@@ -105,12 +130,14 @@ const MyPage = () => {
             description="운행일지에 입력된 데이터를 바탕으로 예상 종합소득세를 산출하는 기능입니다."
             icon="ℹ️"
             route="/estimated-income-tax"
+            isBlurred={isBlurred}
           />
           <IncomeTaxComponent
             title="손익계산서 조회"
             description="회계 데이터를 기반으로 손익계산서를 조회하는 서비스입니다."
             icon="📊"
             route="/profit-loss-statement"
+            isBlurred={isBlurred}
           />
         </div>
       </div>
