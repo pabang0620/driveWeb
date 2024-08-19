@@ -34,7 +34,7 @@ const updateUserById = async (userId, userData) => {
         username: userData.username,
         nickname: userData.nickname,
         status: userData.status,
-        permission: userData.permission,
+        permission: parseInt(userData.permission),
         jobtype: parseInt(userData.jobtype, 10), // jobtype을 Int로 변환
         user_profiles: {
           update: {

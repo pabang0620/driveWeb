@@ -10,7 +10,6 @@ const UserManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const usersPerPage = 10;
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [editMode, setEditMode] = useState({});
 
   /*----------검색----------*/
@@ -51,11 +50,11 @@ const UserManagement = () => {
       type: "select",
       options: [
         { value: "", label: "전체" },
-        { value: "Admin", label: "Admin" },
-        { value: "Moderator", label: "Moderator" },
-        { value: "Contributor", label: "Contributor" },
-        { value: "Premium", label: "Premium" },
-        { value: "Member", label: "Member" },
+        { value: "1", label: "Admin" },
+        { value: "2", label: "Moderator" },
+        { value: "3", label: "Contributor" },
+        { value: "4", label: "Premium" },
+        { value: "5", label: "Member" },
       ],
     },
     {
@@ -73,33 +72,37 @@ const UserManagement = () => {
   /*--------------------------*/
 
   const navigate = useNavigate();
+  const fetchUsers = async (page) => {
+    try {
+      const response = await axios.get("/api/admin/users", {
+        params: {
+          page,
+          limit: usersPerPage,
+        },
+      });
 
-  useEffect(() => {
-    const fetchUsers = async (page) => {
-      try {
-        const response = await axios.get("/api/admin/users", {
-          params: {
-            page,
-            limit: usersPerPage,
-          },
-        });
+      if (response.data && response.data.users) {
+        const usersWithParsedPermission = response.data.users.map((user) => ({
+          ...user,
+          permission: parseInt(user.permission, 10), // permission을 숫자로 변환
+          jobtype: parseInt(user.jobtype, 10), // jobtype도 숫자로 변환
+        }));
 
-        if (response.data && response.data.users) {
-          setUsers(response.data.users);
-          setFilteredUsers(response.data.users);
-          setTotalPages(response.data.totalPages);
-        } else {
-          console.error("Unexpected API response:", response);
-          setUsers([]);
-          setFilteredUsers([]);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
+        setUsers(usersWithParsedPermission);
+        setFilteredUsers(usersWithParsedPermission);
+        setTotalPages(response.data.totalPages);
+      } else {
+        console.error("Unexpected API response:", response);
         setUsers([]);
         setFilteredUsers([]);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setUsers([]);
+      setFilteredUsers([]);
+    }
+  };
+  useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
 
@@ -114,6 +117,7 @@ const UserManagement = () => {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
+
   /*----------검색핸들----------*/
   const handleFilterChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -129,19 +133,16 @@ const UserManagement = () => {
       endDateFilter,
     } = filters;
 
-    // 날짜 필터 값이 빈 문자열이 아닌 경우만 변환
     const startDate = startDateFilter ? new Date(startDateFilter) : null;
     const endDate = endDateFilter ? new Date(endDateFilter) : null;
 
     const newFilteredUsers = users.filter((user) => {
-      const createdDate = new Date(user.createdDate);
+      const createdDate = new Date(user.createdAt);
 
-      // 날짜가 유효한지 확인
       const isWithinDateRange =
         (!startDate || createdDate >= startDate) &&
         (!endDate || createdDate <= endDate);
 
-      // 검색어(닉네임, 유저네임, 이름, 전화번호), 기간, 상태, 회원권한, 직업   필터 확인
       const matchesSearchTerm =
         (user.nickname &&
           user.nickname.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -154,7 +155,7 @@ const UserManagement = () => {
 
       const matchesStatusFilter = !statusFilter || user.status === statusFilter;
       const matchesPermissionFilter =
-        !permissionFilter || user.permission === permissionFilter;
+        !permissionFilter || user.permission.toString() === permissionFilter;
 
       return (
         matchesSearchTerm &&
@@ -178,6 +179,7 @@ const UserManagement = () => {
     setFilteredUsers(users);
     setCurrentPage(1); // 필터 초기화 후 페이지 1로 리셋
   };
+
   /*--------------------------*/
   const handleChange = (id, field, newValue) => {
     setUsers((prevUsers) =>
@@ -199,6 +201,21 @@ const UserManagement = () => {
         return user;
       })
     );
+    setFilteredUsers((prevFilteredUsers) =>
+      prevFilteredUsers.map((user) =>
+        user.id === id
+          ? field.startsWith("user_profiles.")
+            ? {
+                ...user,
+                user_profiles: {
+                  ...user.user_profiles,
+                  [field.split(".")[1]]: newValue,
+                },
+              }
+            : { ...user, [field]: newValue }
+          : user
+      )
+    );
   };
 
   const toggleEditMode = (id) => {
@@ -213,6 +230,7 @@ const UserManagement = () => {
     const updatedUser = {
       ...userToSave,
       jobtype: parseInt(userToSave.jobtype, 10),
+      permission: parseInt(userToSave.permission, 10),
     };
 
     try {
@@ -224,10 +242,28 @@ const UserManagement = () => {
         ...prevEditMode,
         [id]: false,
       }));
-      alert("User information saved successfully.");
+      alert("회원 정보 수정에 성공했습니다.");
+      fetchUsers();
     } catch (error) {
       console.error("Error saving user information:", error);
-      alert("Failed to save user information.");
+      alert("에러가 발생했습니다.");
+    }
+  };
+
+  const formatPermission = (permission) => {
+    switch (permission) {
+      case 1:
+        return "Admin";
+      case 2:
+        return "Moderator";
+      case 3:
+        return "Contributor";
+      case 4:
+        return "Premium";
+      case 5:
+        return "Member";
+      default:
+        return "알 수 없음";
     }
   };
 
@@ -272,7 +308,7 @@ const UserManagement = () => {
             <th>질문</th>
             <th>직업</th>
             <th>작업</th>
-            <th>운행일지</th> {/* 새로운 항목 추가 */}
+            <th>운행일지</th>
           </tr>
         </thead>
         <tbody>
@@ -380,14 +416,14 @@ const UserManagement = () => {
                         handleChange(user.id, "permission", e.target.value)
                       }
                     >
-                      <option value="1">Admin</option>
-                      <option value="2">Moderator</option>
-                      <option value="3">Contributor</option>
-                      <option value="4">Premium</option>
-                      <option value="5">Member</option>
+                      <option value={1}>Admin</option>
+                      <option value={2}>Moderator</option>
+                      <option value={3}>Contributor</option>
+                      <option value={4}>Premium</option>
+                      <option value={5}>Member</option>
                     </select>
                   ) : (
-                    user.permission
+                    formatPermission(user.permission)
                   )}
                 </td>
                 <td>{user.userQuestion || "없음"}</td>
