@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트 경로에 맞게 수정하세요
 import TitleBox from "../../components/TitleBox";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const PersonalInfo = () => {
+  useCheckPermission();
   const [userInfo, setUserInfo] = useState({
     name: "test",
     birth_date: "",

@@ -6,8 +6,11 @@ import MonthlyView from "./MonthlyView";
 import QuarterlyView from "./QuarterlyView";
 import TitleBox from "../../components/TitleBox";
 import { useNavigate } from "react-router-dom";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 function ProfitLossMainPage() {
+  useCheckPermission();
+
   const [viewMode, setViewMode] = useState("year");
   const [isVisible, setIsVisible] = useState(true);
   const navigate = useNavigate();

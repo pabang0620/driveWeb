@@ -3,7 +3,11 @@ import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import BoardBox from "./BoardBox";
 import { boardsWithPosts } from "../../components/dummy";
+import useCheckPermission from "../../utils/useCheckPermission";
+
 const Board = () => {
+  useCheckPermission();
+
   const [boardData, setBoardData] = useState(boardsWithPosts);
 
   // useEffect(() => {

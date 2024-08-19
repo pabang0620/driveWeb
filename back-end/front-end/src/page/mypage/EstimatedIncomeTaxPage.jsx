@@ -3,8 +3,11 @@ import axios from "axios";
 import Spinner from "../../components/Spinner";
 import TitleBox from "../../components/TitleBox";
 import { useNavigate } from "react-router-dom";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 function EstimatedIncomeTaxPage() {
+  useCheckPermission();
+
   const [yearlyIncome, setYearlyIncome] = useState(0); // 연간 운송 수입금
   const [expenseRate, setExpenseRate] = useState(0); // 소득 정보 기준 경비율
   const [personalDeduction, setPersonalDeduction] = useState(0); // 본인 공제

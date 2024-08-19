@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import SubMenu from "./SubMenu";
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 import SidebarMenu from "./SidebarMenu"; // 사이드바 메뉴 컴포넌트 추가
 
 function Header() {
@@ -10,11 +10,21 @@ function Header() {
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showSubMenu, setShowSubMenu] = useState(true);
-  const [showSidebar, setShowSidebar] = useState(false); // 사이드바 상태 추가
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
 
   const hideNav =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup");
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserPermission(decoded.permission); // 사용자 권한 설정
+      console.log(decoded.permission);
+    }
+  }, [token]); // 컴포넌트가 마운트될 때 한 번 실행
 
   const handleScroll = () => {
     const header = document.querySelector("header");
@@ -27,7 +37,7 @@ function Header() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -94,13 +104,14 @@ function Header() {
             </div>
           )}
         </div>
+
         <nav className={hideNav ? "hidden" : ""}>
           <ul
             className="mainmenu"
             onMouseEnter={() => setShowSubMenu(true)}
             onMouseLeave={() => setShowSubMenu(false)}
           >
-            <li className={currentPath === "/" ? "selected" : ""}>
+            <li className={getSelectedClass("/")}>
               <Link to="/">홈</Link>
             </li>
             <li className={getSelectedClass("/user")}>
@@ -165,23 +176,25 @@ function Header() {
             <li className={getSelectedClass("/payment")}>
               <Link to="/payment">프리미엄</Link>
             </li>
-            <li className={getSelectedClass("/admin_page")}>
-              <Link to="/admin/user">관리자페이지</Link>
-              <ul>
-                <li>
-                  <Link to="/admin/user">회원관리</Link>
-                </li>
-                <li>
-                  <Link to="/admin/ranking">랭킹관리</Link>
-                </li>
-                <li>
-                  <Link to="/admin/statistics">통계관리</Link>
-                </li>
-                <li>
-                  <Link to="/admin/board">게시판관리</Link>
-                </li>
-              </ul>
-            </li>
+            {token && userPermission && [1, 2, 3].includes(userPermission) && (
+              <li className={getSelectedClass("/admin_page")}>
+                <Link to="/admin/user">관리자페이지</Link>
+                <ul>
+                  <li>
+                    <Link to="/admin/user">회원관리</Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/ranking">랭킹관리</Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/statistics">통계관리</Link>
+                  </li>
+                  <li>
+                    <Link to="/admin/board">게시판관리</Link>
+                  </li>
+                </ul>
+              </li>
+            )}
           </ul>
         </nav>
 

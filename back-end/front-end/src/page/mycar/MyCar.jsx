@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const MyCar = () => {
+  useCheckPermission();
+
   const token = localStorage.getItem("token");
   const [image, setImage] = useState(null);
   const [carInfo, setCarInfo] = useState({

@@ -7,8 +7,11 @@ import DriveDetails from "./DriveDetails"; // 추가
 import { getDrive } from "../../components/ApiGet";
 import TitleBox from "../../components/TitleBox";
 import { useParams } from "react-router-dom";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const DriveLog = () => {
+  useCheckPermission();
+
   const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);

@@ -3,8 +3,11 @@ import axios from "axios";
 import Spinner from "../../components/Spinner";
 import TitleBox from "../../components/TitleBox";
 import MaintenanceEditModal from "../../components/MaintenanceEditModal";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const MyCarLog = () => {
+  useCheckPermission();
+
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

@@ -4,8 +4,11 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const BoardPostAdd = () => {
+  useCheckPermission();
+
   const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();

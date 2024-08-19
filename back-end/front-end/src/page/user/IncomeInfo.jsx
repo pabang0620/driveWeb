@@ -5,7 +5,10 @@ import { postProfileIncome } from "../../components/ApiPost";
 import locationData from "../../utils/locations.json"; // location.json 파일 import
 import { validateDate } from "../../components/Validators";
 import TitleBox from "../../components/TitleBox";
+import useCheckPermission from "../../utils/useCheckPermission";
+
 const IncomeInfo = () => {
+  useCheckPermission();
   const [userInfo, setUserInfo] = useState({
     income_type: "소득구분",
     start_date: "2024-07-14",

@@ -4,8 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import Spinner from "../../components/Spinner";
 import { dummyboardData } from "../../components/dummy";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const BoardPost = () => {
+  useCheckPermission();
+
   const navigate = useNavigate();
   const { boardId } = useParams();
 

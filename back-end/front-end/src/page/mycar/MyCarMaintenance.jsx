@@ -3,8 +3,11 @@ import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import MyCarModal from "../../components/MyCarModal";
 import MaintenanceItemCard from "../../components/MaintenanceItemCard";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const MyCarMaintenance = () => {
+  useCheckPermission();
+
   const token = localStorage.getItem("token");
   const [maintenanceItems, setMaintenanceItems] = useState([
     {

@@ -5,8 +5,12 @@ import MixChart from "../../components/MixChart";
 import Calendar from "../../components/Calendar";
 import SummaryComponent from "../SummaryComponent ";
 import DriveDateRangeDashBoard from "./DriveDateRangeDashBoard";
+import { jwtDecode } from "jwt-decode";
+import PremiumButton from "../admin/PremiumButton ";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const DriveDashBoard = () => {
+  useCheckPermission();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +18,27 @@ const DriveDashBoard = () => {
     startDate: new Date(),
     endDate: new Date(),
   });
+  const [isBlurred, setIsBlurred] = useState(false);
 
+  useEffect(() => {
+    // 토큰에서 permission 값을 가져와 확인
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const { permission } = decodedToken;
+        console.log(permission);
+        // permission이 5인 경우 블러 상태로 설정
+        if (permission === 5) {
+          setIsBlurred(true);
+        } else {
+          setIsBlurred(false);
+        }
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
+  }, []);
   const onDateChange = (update) => {
     let startDate = update[0];
     let endDate = update[1] || update[0]; // endDate가 없으면 startDate와 동일하게 설정
@@ -50,8 +74,8 @@ const DriveDashBoard = () => {
     // 여기에 API 호출 등을 추가할 수 있습니다.
   }, [dateRange]);
 
-  //if (loading) return <p>Loading...</p>;
-  //if (error) return <p>Error loading data: {error.message}</p>;
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
     <div className="container dashboard-container">
@@ -67,7 +91,10 @@ const DriveDashBoard = () => {
               dateRange={dateRange}
               handleDateChange={handleDateChange}
             />
-            <DriveDateRangeDashBoard dateRange={dateRange} />
+            <DriveDateRangeDashBoard
+              dateRange={dateRange}
+              isBlurred={isBlurred}
+            />
           </div>
         </div>
 
@@ -77,6 +104,7 @@ const DriveDashBoard = () => {
           setError={setError}
           title={"수입차트"}
           url={"incomeSummary"}
+          isBlurred={isBlurred}
         />
         <CircularChart
           dateRange={dateRange}
@@ -84,13 +112,16 @@ const DriveDashBoard = () => {
           setError={setError}
           title={"지출차트"}
           url={"expenseSummary"}
+          isBlurred={isBlurred}
         />
         <MixChart
           dateRange={dateRange}
           setLoading={setLoading}
           setError={setError}
           title={"혼합차트"}
+          isBlurred={isBlurred}
         />
+        <PremiumButton />
       </div>
       <style jsx>{`
         .dashboard-container {

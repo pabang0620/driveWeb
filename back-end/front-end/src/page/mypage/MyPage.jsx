@@ -5,8 +5,10 @@ import MixChart from "../../components/MixChart";
 import TitleBox from "../../components/TitleBox";
 import IncomeTaxComponent from "./IncomeTaxComponent"; // 누락된 컴포넌트 임포트 추가
 import { jwtDecode } from "jwt-decode";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const MyPage = () => {
+  useCheckPermission();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({

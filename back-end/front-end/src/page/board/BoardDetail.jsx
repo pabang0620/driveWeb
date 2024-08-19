@@ -9,8 +9,11 @@ import { faUserCircle, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 
 import { getUserId } from "../../components/ApiGet";
 import axios from "axios";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const BoardDetail = () => {
+  useCheckPermission();
+
   const location = useLocation();
   const { boardId = 2 } = location.state || {}; // 전달된 state가 없는
 

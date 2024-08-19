@@ -6,8 +6,11 @@ import carsData from "../../utils/cars.json";
 import FranchiseFee from "./FranchiseFee";
 import Spinner from "../../components/Spinner"; // 스피너 컴포넌트 가져오기
 import TitleBox from "../../components/TitleBox";
+import useCheckPermission from "../../utils/useCheckPermission";
 
 const CarInfo = () => {
+  useCheckPermission();
+
   const [vehicleInfo, setVehicleInfo] = useState({
     carType: "", // 차량종류
     franchise_status: "", // 가맹상태
@@ -16,7 +19,6 @@ const CarInfo = () => {
     fuel_type: "", // 연료유형
     mileage: 0, // 누적거리
   });
-
   const [jobtype, setJobtype] = useState(""); // 잡타입 상태
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
 

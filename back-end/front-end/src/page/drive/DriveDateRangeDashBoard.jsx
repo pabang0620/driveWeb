@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { getDriveDashBoard } from "../../components/ApiGet";
 
-const DriveDateRangeDashBoard = ({ dateRange }) => {
+const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [data, setData] = useState(null);
@@ -65,18 +65,20 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
 
   // 운행일지 대시보드 데이터 가져오기
   const fetchData = async () => {
-    try {
-      const response = await getDriveDashBoard(
-        dateRange.startDate,
-        dateRange.endDate
-      );
-      console.log(data);
-      setData(response);
-      setError(null);
-    } catch (error) {
-      console.error("Error fetching summary data:", error);
-      setError("Error fetching summary data");
-      setData(null);
+    if (!isBlurred) {
+      try {
+        const response = await getDriveDashBoard(
+          dateRange.startDate,
+          dateRange.endDate
+        );
+        console.log(data);
+        setData(response);
+        setError(null);
+      } catch (error) {
+        console.error("Error fetching summary data:", error);
+        setError("Error fetching summary data");
+        setData(null);
+      }
     }
   };
 
@@ -85,7 +87,7 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
   }, [dateRange]);
 
   return (
-    <div className="selectedDateRangeData">
+    <div className={`selectedDateRangeData ${isBlurred ? "blurred" : ""}`}>
       <div>
         {items.map((item, index) => (
           <div className="selectedDateRangeData_item" key={index}>
@@ -105,6 +107,22 @@ const DriveDateRangeDashBoard = ({ dateRange }) => {
           padding: 2%;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           border-radius: 5px;
+          &.blurred {
+            filter: blur(5px);
+            position: relative;
+          }
+          .blurredPremium {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            filter: none; /* 블러 효과가 적용되지 않도록 설정 */
+            color: black; /* 텍스트 색상 */
+            font-size: 24px; /* 텍스트 크기 */
+            font-weight: bold; /* 텍스트 굵기 */
+          }
           @media (max-width: 768px) {
             width: 100%;
             aspect-ratio: unset;
