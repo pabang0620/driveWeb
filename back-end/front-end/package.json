@@ -24,6 +24,7 @@
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",
     "react-ga4": "^2.1.0",
+    "react-kakao-login": "^2.1.1",
     "react-naver-login": "^0.1.4",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",

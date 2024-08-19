@@ -3,6 +3,7 @@ import axios from "axios";
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveIncome } from "../../components/ApiPost";
+import { jwtDecode } from "jwt-decode";
 
 const convertSecondsToTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);
@@ -16,6 +17,16 @@ const DriveIncome = ({
   closeModal,
   business_distance,
 }) => {
+  const token = localStorage.getItem("token");
+
+  const [userPermission, setUserPermission] = useState(null);
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserPermission(decoded.permission);
+      console.log(decoded.permission);
+    }
+  }, [token]);
   const [driveIncomeData, setDriveIncomeData] = useState({
     driving_log_id: parseInt(localStorage.getItem("drivingLogId")) || 0,
     card_income: 0,
@@ -170,34 +181,38 @@ const DriveIncome = ({
             fieldName="other_income"
             onChange={handleInputChange}
           />
-          <DynamicInput
-            labelName={"수입예비1"}
-            inputType={"number"}
-            value={driveIncomeData.income_spare_1}
-            fieldName="income_spare_1"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"수입예비2"}
-            inputType={"number"}
-            value={driveIncomeData.income_spare_2}
-            fieldName="income_spare_2"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"수입예비3"}
-            inputType={"number"}
-            value={driveIncomeData.income_spare_3}
-            fieldName="income_spare_3"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"수입예비4"}
-            inputType={"number"}
-            value={driveIncomeData.income_spare_4}
-            fieldName="income_spare_4"
-            onChange={handleInputChange}
-          />
+          {userPermission !== 5 && (
+            <>
+              <DynamicInput
+                labelName={"수입예비1"}
+                inputType={"number"}
+                value={driveIncomeData.income_spare_1}
+                fieldName="income_spare_1"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"수입예비2"}
+                inputType={"number"}
+                value={driveIncomeData.income_spare_2}
+                fieldName="income_spare_2"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"수입예비3"}
+                inputType={"number"}
+                value={driveIncomeData.income_spare_3}
+                fieldName="income_spare_3"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"수입예비4"}
+                inputType={"number"}
+                value={driveIncomeData.income_spare_4}
+                fieldName="income_spare_4"
+                onChange={handleInputChange}
+              />
+            </>
+          )}
 
           <button onClick={handleNext}>다음</button>
         </div>

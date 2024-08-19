@@ -3,8 +3,19 @@ import axios from "axios";
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveExpense } from "../../components/ApiPost";
+import { jwtDecode } from "jwt-decode";
 
 const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
+  const token = localStorage.getItem("token");
+
+  const [userPermission, setUserPermission] = useState(null);
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserPermission(decoded.permission);
+      console.log(decoded.permission);
+    }
+  }, [token]);
   const [driveExpenseData, setDriveExpenseData] = useState({
     driving_log_id: parseInt(localStorage.getItem("drivingLogId"), 10) || 0,
     fuel_expense: 0,
@@ -117,34 +128,38 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
             fieldName="other_expense"
             onChange={handleInputChange}
           />
-          <DynamicInput
-            labelName={"지출예비1"}
-            inputType={"number"}
-            value={driveExpenseData.expense_spare_1}
-            fieldName="expense_spare_1"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"지출예비2"}
-            inputType={"number"}
-            value={driveExpenseData.expense_spare_2}
-            fieldName="expense_spare_2"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"지출예비3"}
-            inputType={"number"}
-            value={driveExpenseData.expense_spare_3}
-            fieldName="expense_spare_3"
-            onChange={handleInputChange}
-          />
-          <DynamicInput
-            labelName={"지출예비4"}
-            inputType={"number"}
-            value={driveExpenseData.expense_spare_4}
-            fieldName="expense_spare_4"
-            onChange={handleInputChange}
-          />
+          {userPermission !== 5 && (
+            <>
+              <DynamicInput
+                labelName={"지출예비1"}
+                inputType={"number"}
+                value={driveExpenseData.expense_spare_1}
+                fieldName="expense_spare_1"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"지출예비2"}
+                inputType={"number"}
+                value={driveExpenseData.expense_spare_2}
+                fieldName="expense_spare_2"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"지출예비3"}
+                inputType={"number"}
+                value={driveExpenseData.expense_spare_3}
+                fieldName="expense_spare_3"
+                onChange={handleInputChange}
+              />
+              <DynamicInput
+                labelName={"지출예비4"}
+                inputType={"number"}
+                value={driveExpenseData.expense_spare_4}
+                fieldName="expense_spare_4"
+                onChange={handleInputChange}
+              />
+            </>
+          )}
           <button onClick={handleSave}>저장</button>
         </div>
       }

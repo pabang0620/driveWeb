@@ -6,6 +6,7 @@ import TitleBox from "../../components/TitleBox";
 import IncomeTaxComponent from "./IncomeTaxComponent"; // 누락된 컴포넌트 임포트 추가
 import { jwtDecode } from "jwt-decode";
 import useCheckPermission from "../../utils/useCheckPermission";
+import PremiumButton from "../admin/PremiumButton ";
 
 const MyPage = () => {
   useCheckPermission();
@@ -143,6 +144,7 @@ const MyPage = () => {
           />
         </div>
       </div>
+      <PremiumButton />
       <style jsx>{`
         .mypage-container {
           width: 70%;

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import NaverLogin from "./NaverLogin";
+import KakaoLogin from "react-kakao-login";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -23,6 +24,7 @@ function Login() {
       console.error("Login error:", error.response?.data || error.message);
     }
   };
+
   /*----------------------구글 로그인 핸들러----------------------*/
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
@@ -45,14 +47,15 @@ function Login() {
     console.error("Google login failed");
   };
 
+  /*----------------------네이버 로그인 핸들러----------------------*/
   const handleNaverLoginSuccess = async (response) => {
     try {
       console.log("Naver login success:", response);
 
-      const response = await axios.post("/api/user/naver-login", {
+      const responseData = await axios.post("/api/user/naver-login", {
         token: response.accessToken,
       });
-      localStorage.setItem("token", response.data);
+      localStorage.setItem("token", responseData.data);
       navigate("/");
     } catch (error) {
       console.error(
@@ -64,6 +67,28 @@ function Login() {
 
   const handleNaverLoginFailure = (error) => {
     console.error("Naver login failed:", error);
+  };
+
+  /*----------------------카카오 로그인 핸들러----------------------*/
+  const handleKakaoLoginSuccess = async (response) => {
+    try {
+      console.log("Kakao login success:", response);
+
+      const responseData = await axios.post("/api/user/kakao-login", {
+        token: response.response.access_token,
+      });
+      localStorage.setItem("token", responseData.data);
+      navigate("/");
+    } catch (error) {
+      console.error(
+        "Kakao login error:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleKakaoLoginFailure = (error) => {
+    console.error("Kakao login failed:", error);
   };
 
   return (
@@ -112,6 +137,16 @@ function Login() {
             onSuccess={handleNaverLoginSuccess}
             onFailure={handleNaverLoginFailure}
           />
+          <KakaoLogin
+            token={process.env.REACT_APP_KAKAO_CLIENT_ID} // 여기에 JavaScript 키를 사용해야 합니다.
+            onSuccess={handleKakaoLoginSuccess}
+            onFailure={handleKakaoLoginFailure}
+            getProfile={true}
+            redirectUri="https://krdriver.com/oauth" // 등록한 Redirect URI 사용
+          >
+            <button>카카오로 로그인하기</button>
+          </KakaoLogin>
+
           <p className="smallText">
             <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
             <Link to="/signup">회원가입</Link>

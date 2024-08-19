@@ -235,14 +235,19 @@ const MyCarMaintenance = () => {
         .add-item {
           border: 1px solid #ccc;
           border-radius: 8px;
-          padding: 16px;
-          width: 350px; /* 카드 너비 */
-          height: 188px; /* 카드 높이 */
+          padding: 3.5%;
+          width: 48%;
           box-sizing: border-box;
-          margin: 10px;
+          position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
+          @media (max-width: 768px) {
+            width: 47%;
+          }
+          @media (max-width: 480px) {
+            width: 100%;
+          }
         }
         .add-item.centered {
           width: 100%;
