@@ -17,6 +17,7 @@ function BoardManagement() {
     startDate: "",
     endDate: "",
   });
+  const [selectedPosts, setSelectedPosts] = useState([]); // 선택된 게시물 ID 리스트
 
   const filterFields = [
     { id: "author", label: "작성자명", type: "text" },
@@ -87,6 +88,42 @@ function BoardManagement() {
     }
   };
 
+  const handleCheckboxChange = (id) => {
+    if (selectedPosts.includes(id)) {
+      setSelectedPosts(selectedPosts.filter((postId) => postId !== id));
+    } else {
+      setSelectedPosts([...selectedPosts, id]);
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedPosts.length === 0) {
+      alert("삭제할 게시물을 선택하세요.");
+      return;
+    }
+
+    // 삭제 확인 메시지
+    const confirmDelete = window.confirm(
+      "선택된 게시물을 정말 삭제하시겠습니까?"
+    );
+    if (!confirmDelete) {
+      return; // 사용자가 삭제를 취소한 경우 함수 종료
+    }
+
+    try {
+      await axios.delete("/api/admin/posts", {
+        data: { ids: selectedPosts },
+      });
+      alert("선택된 게시물이 삭제되었습니다.");
+      setSelectedPosts([]);
+      setCurrentPage(1); // 첫 페이지로 돌아가도록 설정
+      fetchPosts(1); // 첫 페이지의 게시물 리스트를 다시 불러오기
+    } catch (error) {
+      console.error("Failed to delete posts", error);
+      alert("게시물 삭제에 실패했습니다.");
+    }
+  };
+
   useEffect(() => {
     fetchPosts(currentPage);
   }, [currentPage]);
@@ -107,10 +144,32 @@ function BoardManagement() {
         handleSearchClick={handleSearchClick}
         handleResetFilters={handleResetFilters}
       />
-
+      <button
+        className="seletedDelete"
+        onClick={handleDeleteSelected}
+        disabled={selectedPosts.length === 0}
+      >
+        선택된 게시물 삭제
+      </button>
       <table className="board_table">
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedPosts(boardData.map((item) => item.id));
+                  } else {
+                    setSelectedPosts([]);
+                  }
+                }}
+                checked={
+                  selectedPosts.length === boardData.length &&
+                  boardData.length > 0
+                }
+              />
+            </th>
             <th>ID</th>
             <th>제목</th>
             <th>카테고리</th>
@@ -121,6 +180,13 @@ function BoardManagement() {
         <tbody>
           {boardData.map((item) => (
             <tr key={item.id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={selectedPosts.includes(item.id)}
+                  onChange={() => handleCheckboxChange(item.id)}
+                />
+              </td>
               <td onClick={() => handleNoticeClick(item.id)}>{item.id}</td>
               <td onClick={() => handleNoticeClick(item.id)}>{item.title}</td>
               <td onClick={() => handleNoticeClick(item.id)}>
@@ -171,13 +237,13 @@ function BoardManagement() {
             width: 85%;
             padding: 50px 0;
           }
-          .seletedDeleted {
+          .seletedDelete {
             background-color: #f44336;
             color: white;
             padding: 5px 10px;
             border-radius: 4px;
           }
-          .seletedDeleted:hover {
+          .seletedDelete:hover {
             background-color: #d32f2f;
             color: white;
           }
