@@ -247,7 +247,8 @@ function Header() {
                   height: 40px;
                   line-height: 40px;
                   font-weight: bold;
-
+                  font-weight: 500;
+                  padding: 0 15px;
                   @media (max-width: 768px) {
                     font-size: 14px;
                     padding: 0 3vw;
@@ -255,12 +256,8 @@ function Header() {
                     line-height: 30px;
                   }
                   a {
-                    display: block;
-                    width: 100%;
-                    height: 100%;
+                    display: inline-block;
                     line-height: inherit;
-                    font-weight: 500;
-                    padding: 0 15px;
                   }
                   &:nth-of-type(1) {
                     background-color: #f0f3f5;
@@ -284,7 +281,7 @@ function Header() {
               width: 100%;
               position: relative;
               height: 27px;
-              z-index: 10;
+              z-index: 1;
               ul.mainmenu {
                 height: 27px;
                 position: absolute;

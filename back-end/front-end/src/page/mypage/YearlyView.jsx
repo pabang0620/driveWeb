@@ -128,94 +128,94 @@ function YearlyView() {
 
   return (
     <div className="yearlyView">
-      <div className="filterGroup">
-        <label>
-          <span>연도 선택</span>
-          <select value={year} onChange={handleYearChange}>
-            <option value={2018}>2018</option>
-            <option value={2019}>2019</option>
-            <option value={2020}>2020</option>
-            <option value={2021}>2021</option>
-            <option value={2022}>2022</option>
-            <option value={2023}>2023</option>
-            <option value={2024}>2024</option>
-          </select>
-        </label>
+      <div className="titleFitler">
+        <h3>연도별 수익 및 지출 합계</h3>
+        <div className="filterGroup">
+          <label>
+            <span>연도 선택</span>
+            <select value={year} onChange={handleYearChange}>
+              <option value={2018}>2018</option>
+              <option value={2019}>2019</option>
+              <option value={2020}>2020</option>
+              <option value={2021}>2021</option>
+              <option value={2022}>2022</option>
+              <option value={2023}>2023</option>
+              <option value={2024}>2024</option>
+            </select>
+          </label>
+        </div>
       </div>
       <div className="result">
         <div className="section">
-          <h3>연도별 수익 및 지출 합계</h3>
           <div className="row">
             <div className="column">
               <h4>수익</h4>
               {Object.entries(incomeLabels).map(([key, label]) => (
                 <div key={key}>
-                  <span>{label}:</span>{" "}
+                  <span>{label}</span>{" "}
                   <span>{formatCurrency(data.income[key] || 0)}</span>
                 </div>
               ))}
               <div className="total">
-                <span>총 수익:</span> <span>{formatCurrency(totalIncome)}</span>
+                <span>총 수익</span> <span>{formatCurrency(totalIncome)}</span>
               </div>
             </div>
             <div className="column">
               <h4>지출</h4>
               {Object.entries(expenseLabels).map(([key, label]) => (
                 <div key={key}>
-                  <span>{label}:</span>{" "}
+                  <span>{label}</span>{" "}
                   <span>{formatCurrency(data.expense[key] || 0)}</span>
                 </div>
               ))}
               <div>
-                <span>유지보수 비용:</span>{" "}
+                <span>유지보수 비용</span>{" "}
                 <span>{formatCurrency(data.maintenanceCost)}</span>
               </div>
               <div>
-                <span>보험료:</span>{" "}
+                <span>보험료</span>{" "}
                 <span>{formatCurrency(data.insuranceFee)}</span>
               </div>
               <div className="total">
-                <span>총 지출:</span>{" "}
-                <span>{formatCurrency(totalExpense)}</span>
+                <span>총 지출</span> <span>{formatCurrency(totalExpense)}</span>
               </div>
             </div>
           </div>
-          <div className="divider"></div> {/* 구분선 추가 */}
-          <div className="section">
-            <h3>이익 요약</h3>
+          <div className="section summarySection">
+            <h3>손익 요약</h3>
             <div className="row">
               <div className="column">
                 <h4>영업 이익</h4>
                 <div>
-                  <span>영업 이익:</span>{" "}
+                  <span>영업 이익</span>{" "}
                   <span>{formatCurrency(operatingIncome)}</span>
                 </div>
               </div>
               <div className="column">
                 <h4>기타 수익/지출</h4>
                 <div>
-                  <span>기타 수익:</span>{" "}
+                  <span>기타 수익</span>{" "}
                   <span>{formatCurrency(data.income.other_income || 0)}</span>
                 </div>
                 <div>
-                  <span>기타 지출:</span>{" "}
+                  <span>기타 지출</span>{" "}
                   <span>{formatCurrency(data.expense.other_expense || 0)}</span>
                 </div>
               </div>
             </div>
-            <div className="divider"></div> {/* 구분선 추가 */}
+            {/* <div className="divider"></div> 구분선 추가 */}
             <div className="row">
               <div className="column">
                 <h4>세전 이익</h4>
                 <div>
-                  <span>세전 이익:</span>{" "}
+                  <span>세전 이익</span>{" "}
                   <span>{formatCurrency(preTaxIncome)}</span>
                 </div>
               </div>
               <div className="column">
                 <h4>당기 순이익</h4>
                 <div>
-                  <span>당기 순이익:</span>{" "}
+                  <span>당기 순이익</span>{" "}
                   <span>{formatCurrency(netIncome)}</span>
                 </div>
               </div>
@@ -225,69 +225,129 @@ function YearlyView() {
       </div>
       <style jsx>{`
         .yearlyView {
-          padding: 30px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-          h3,
-          h4 {
-            margin: 10px 0px;
+          padding: 50px;
+
+          h3 {
+            text-align: center;
+            width: 100%;
+            font-weight: 700;
+            font-size: 22px;
+            color: #333;
+            margin: 30px 0 20px 0;
           }
-          .filterGroup {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 10px;
+          .titleFitler {
+            position: relative;
+            margin-bottom: 60px;
+            .filterGroup {
+              position: absolute;
+              right: 0;
+              top: 0%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              margin-bottom: 20px;
+              gap: 10px;
+              label {
+                display: flex;
+                align-items: center;
+                span {
+                  margin-right: 10px;
+                  font-weight: 600;
+                  color: #444;
+                  font-size: 15px;
+                }
+              }
+              select {
+                padding: 5px 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 16px;
+                transition: border-color 0.3s;
+                color: #444;
+                cursor: pointer;
+              }
+            }
           }
-          label {
-            display: flex;
-            align-items: center;
-          }
-          label span {
-            margin-right: 10px;
-            font-weight: bold;
-          }
-          select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            transition: border-color 0.3s;
-          }
+
           .result {
             display: flex;
             flex-direction: column;
             margin-bottom: 30px;
-          }
-          .section {
-            border-radius: 4px;
-            background-color: #ffffff;
-            margin-bottom: 20px;
-          }
-          .row {
-            display: flex;
-            justify-content: space-between;
-          }
-          .column {
-            width: 48%;
-          }
-          .column div {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
-          }
-          .column div:last-child {
-            border-bottom: none;
-          }
-          .total {
-            font-weight: bold;
-            margin-top: 10px;
-          }
-          .divider {
-            height: 1px;
-            background-color: #000;
-            margin: 20px 0;
+            h4 {
+              width: 100%;
+              padding: 10px 0;
+              color: #222;
+              font-weight: 600;
+              font-size: 15px;
+              margin-bottom: 10px;
+            }
+            .section {
+              background-color: #ffffff;
+            }
+            .section.summarySection {
+              margin-top: 30px;
+              background-color: #05aced;
+              padding: 1% 5% 5% 5%;
+              border-radius: 10px;
+              h3,
+              h4 {
+                color: white;
+              }
+              h3 {
+                font-size: 25px;
+              }
+              h4 {
+                margin: 0;
+              }
+              .column {
+                margin-bottom: 20px;
+                div {
+                  font-size: 14px;
+                  line-height: 30px;
+                  margin: 0;
+                  &:not(:last-of-type) {
+                    border-bottom: 1px solid #d9d9d9;
+                  }
+                  &:first-of-type {
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                  }
+                  &:last-of-type {
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                  }
+                }
+              }
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+            }
+            .column {
+              width: 48%;
+            }
+            .column div {
+              margin-bottom: 10px;
+              display: flex;
+              justify-content: space-between;
+              padding: 5px 10px;
+              font-size: 14px;
+              font-weight: 500;
+              background-color: #f4f4f4;
+              &.total {
+                justify-content: flex-end;
+                gap: 20px;
+                background-color: transparent;
+                font-weight: bold;
+                margin-top: 10px;
+              }
+            }
+
+            .divider {
+              height: 1px;
+              background-color: #000;
+              margin: 20px 0;
+            }
           }
         }
       `}</style>

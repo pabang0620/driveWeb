@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
-
+// import { dummymonthlyData } from "../../components/dummy";
 // 한국어 로케일 등록
 registerLocale("ko", ko);
 setDefaultLocale("ko");
@@ -40,6 +40,7 @@ function MonthlyView() {
       estimatedTotalTax: 0,
     },
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -84,6 +85,7 @@ function MonthlyView() {
         },
       });
       const data = response.data;
+
       setMonthlyData({
         income: data.income || [],
         expense: data.expense || [],
@@ -150,33 +152,37 @@ function MonthlyView() {
 
   return (
     <div className="monthlyView">
-      <div className="filterGroup">
-        <label>
-          <span>시작 월 선택</span>
-          <DatePicker
-            selected={startDate}
-            onChange={handleStartDateChange}
-            dateFormat="yyyy년 MM월"
-            showMonthYearPicker
-            locale="ko"
-            className="datePicker"
-          />
-        </label>
-        <label>
-          <span>종료 월 선택</span>
-          <DatePicker
-            selected={endDate}
-            onChange={handleEndDateChange}
-            dateFormat="yyyy년 MM월"
-            showMonthYearPicker
-            locale="ko"
-            className="datePicker"
-          />
-        </label>
-        <button onClick={handleFetchData} className="fetchButton">
-          조회
-        </button>
+      <div className="titleFitler">
+        <h3>월별 수익 및 지출 합계</h3>
+        <div className="filterGroup">
+          <label>
+            <span>시작 월</span>
+            <DatePicker
+              selected={startDate}
+              onChange={handleStartDateChange}
+              dateFormat="yyyy년 MM월"
+              showMonthYearPicker
+              locale="ko"
+              className="datePicker"
+            />
+          </label>
+          <label>
+            <span>종료 월</span>
+            <DatePicker
+              selected={endDate}
+              onChange={handleEndDateChange}
+              dateFormat="yyyy년 MM월"
+              showMonthYearPicker
+              locale="ko"
+              className="datePicker"
+            />
+          </label>
+          <button onClick={handleFetchData} className="fetchButton">
+            조회
+          </button>
+        </div>
       </div>
+
       <div className="result">
         {monthlyData.income.length === 0 && (
           <div className="noDataMessage">
@@ -186,7 +192,7 @@ function MonthlyView() {
         {monthlyData.income.length > 0 && (
           <>
             <div className="section">
-              <h3>수익 및 지출 항목별 상세</h3>
+              <h3>항목별 상세</h3>
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>
@@ -280,9 +286,10 @@ function MonthlyView() {
                 ))}
               </div>
             </div>
-            <hr style={{ borderColor: "black", margin: "20px 0" }} />
-            <div className="section">
-              <h3>수익 및 지출 계산</h3>
+
+            <div className="section summarySection">
+              {/* <h3>수익 및 지출 계산</h3> */}
+              <h3>손익 요약</h3>
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>
@@ -546,93 +553,173 @@ function MonthlyView() {
       </div>
       <style jsx>{`
         .monthlyView {
-          padding: 30px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          border-radius: 8px;
-        }
-        .filterGroup {
-          display: flex;
-          align-items: center;
-          margin-bottom: 20px;
-          gap: 10px;
-        }
-        label {
-          display: flex;
-          align-items: center;
-        }
-        label span {
-          margin-right: 10px;
-          font-weight: bold;
-        }
-        .datePicker {
-          padding: 8px;
-          border-radius: 4px;
-          border: 1px solid #ccc;
-          font-size: 16px;
-          transition: border-color 0.3s;
-        }
-        .fetchButton {
-          padding: 8px 16px;
-          border-radius: 4px;
-          border: none;
-          background-color: #4caf50;
-          color: white;
-          font-size: 16px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-        }
-        .fetchButton:hover {
-          background-color: #45a049;
-        }
-        .result {
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 30px;
-          overflow-x: auto; /* 좌우 스크롤 추가 */
-        }
-        .section {
-          padding: 20px;
-          border-radius: 4px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          background-color: #ffffff;
-          min-height: 150px; /* 최소 높이 추가 */
-        }
-        .row {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start; /* 상단 정렬 */
-        }
-        .column {
-          min-width: 120px;
-          flex-shrink: 0; /* 수축 방지 */
-        }
-        .income,
-        .expense {
-          display: flex;
-          flex-direction: column;
-        }
-        .income div,
-        .expense div {
-          margin-bottom: 10px;
-          display: flex;
-          justify-content: space-between;
-          padding: 5px 0;
-          border-bottom: 1px solid #eee;
-        }
-        h3 {
-          margin: 10px 0px;
-        }
-        .divider {
-          width: 100%;
-          height: 2px;
-          background-color: black; /* 수익과 지출 사이에 검은색 선 추가 */
-          margin: 10px 0;
-        }
-        .noDataMessage {
-          color: #ff0000;
-          text-align: center;
-          font-weight: bold;
-          margin-top: 20px;
+          padding: 50px;
+          .titleFitler {
+            margin-bottom: 60px;
+            h3 {
+              text-align: center;
+              width: 100%;
+              font-weight: 700;
+              font-size: 22px;x
+              color: #333;
+              margin: 30px 0 20px 0;
+            }
+            .filterGroup {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 50px;
+              gap: 10px;
+              label {
+                display: flex;
+                align-items: center;
+                span {
+                  margin-right: 10px;
+                  font-weight: 600;
+                  color: #444;
+                  font-size: 15px;
+                }
+              }
+              select {
+                padding: 5px 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 16px;
+                transition: border-color 0.3s;
+                color: #444;
+                cursor: pointer;
+           
+              }
+               
+              .datePicker {
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                font-size: 16px;
+                transition: border-color 0.3s;
+              }
+            }
+          }
+
+      
+          .fetchButton {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #05aced;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+          .fetchButton:hover {
+            background-color: #69c2ef;
+          }
+          .result {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+            h3{
+              margin-bottom:10px;
+            }
+            h4 {
+              width: 100%;
+              padding: 10px 0;
+              color: #222;
+              font-weight: 600;
+              font-size: 15px;
+              margin-bottom: 10px;
+            }
+     
+            .section {
+              background-color: #ffffff;
+            }
+            .section.summarySection {
+              margin-top: 30px;
+              background-color: #05aced;
+              padding: 1% 5% 5% 5%;
+              border-radius: 10px;
+              h3,
+              h4 {
+                color: white;
+              }
+              h3 {
+                font-size: 25px;
+                width:100%;
+                text-align:center;
+                margin:20px 0 20px 0;
+                
+              }
+              h4 {
+                margin: 0;
+                padding-left:10px;
+              }
+              .row{
+                .column:first-of-type{
+                  div{
+                    &:first-of-type{
+                    border-top-left-radius: 8px;
+                  }
+                  &:last-of-type{
+                  border-bottom-left-radius: 8px;
+                  }
+                  }
+                }
+                .column:last-of-type{
+                  div{
+                    &:first-of-type{
+                    border-top-right-radius: 8px;
+                  }
+                  &:last-of-type{
+                  border-bottom-right-radius: 8px;}
+                  }
+                }
+              }
+              .column div{
+                background-color:white;
+                font-size: 14px;
+                line-height: 40px;
+                padding:0 8px;
+                &:not(:last-of-type) {
+                    border-bottom: 1px solid #d9d9d9;
+                  }
+              }
+            }
+            .row {
+              display: flex;
+              justify-content: space-between;
+              .
+            }
+            .column {
+              width: 48%;
+                &:not(:first-child) h4{
+                  padding-left:10px;
+                }
+            }
+          }
+          .income,
+          .expense {
+            display: flex;
+            flex-direction: column;
+            gap:10px;
+            margin-bottom:10px;
+            div{
+              display: flex;
+              justify-content: space-between;
+              padding: 5px 10px;
+              font-size: 14px;
+              font-weight: 500;
+              background-color: #f4f4f4;
+          }
+       
+         
+          .noDataMessage {
+            color: #ff0000;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+          }
         }
       `}</style>
     </div>

@@ -23,7 +23,7 @@ function Login() {
       console.error("Login error:", error.response?.data || error.message);
     }
   };
-
+  /*----------------------구글 로그인 핸들러----------------------*/
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       console.log("Google login success:", credentialResponse);
@@ -101,6 +101,7 @@ function Login() {
           <button className="navyBox" onClick={handleLogin}>
             로그인
           </button>
+
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={handleGoogleLoginFailure}
