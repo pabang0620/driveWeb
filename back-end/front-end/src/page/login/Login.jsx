@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import NaverLogin from "./NaverLogin";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -15,10 +16,8 @@ function Login() {
         username,
         password,
       });
-      // 로그인 성공 후 토큰을 로컬 스토리지에 저장
       localStorage.setItem("token", response.data);
 
-      //홈으로 이동
       navigate("/");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
@@ -27,7 +26,7 @@ function Login() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      console.log("Google login success:", credentialResponse); // 반환된 객체를 콘솔에 출력
+      console.log("Google login success:", credentialResponse);
 
       const response = await axios.post("/api/user/google-login", {
         token: credentialResponse.credential,
@@ -46,6 +45,27 @@ function Login() {
     console.error("Google login failed");
   };
 
+  const handleNaverLoginSuccess = async (response) => {
+    try {
+      console.log("Naver login success:", response);
+
+      const response = await axios.post("/api/user/naver-login", {
+        token: response.accessToken,
+      });
+      localStorage.setItem("token", response.data);
+      navigate("/");
+    } catch (error) {
+      console.error(
+        "Naver login error:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleNaverLoginFailure = (error) => {
+    console.error("Naver login failed:", error);
+  };
+
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="container login-container">
@@ -59,7 +79,7 @@ function Login() {
           <div className="input-container">
             <label htmlFor="username">아이디</label>
             <input
-              type="username"
+              type="text"
               id="username"
               name="username"
               value={username}
@@ -84,6 +104,12 @@ function Login() {
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={handleGoogleLoginFailure}
+          />
+          <NaverLogin
+            clientId={process.env.REACT_APP_NAVER_CLIENT_ID}
+            callbackUrl={window.location.origin}
+            onSuccess={handleNaverLoginSuccess}
+            onFailure={handleNaverLoginFailure}
           />
           <p className="smallText">
             <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
