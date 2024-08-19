@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
-import { dummymonthlyData } from "../../components/dummy";
+// import { dummymonthlyData } from "../../components/dummy";
 // 한국어 로케일 등록
 registerLocale("ko", ko);
 setDefaultLocale("ko");
@@ -13,34 +13,34 @@ setDefaultLocale("ko");
 function MonthlyView() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  // const [monthlyData, setMonthlyData] = useState({
-  //   income: [],
-  //   expense: [],
-  //   totalIncome: {
-  //     card_income: 0,
-  //     cash_income: 0,
-  //     kakao_income: 0,
-  //     uber_income: 0,
-  //     onda_income: 0,
-  //     tada_income: 0,
-  //     iam_income: 0,
-  //     other_income: 0,
-  //   },
-  //   totalExpense: {
-  //     fuel_expense: 0,
-  //     toll_fee: 0,
-  //     meal_expense: 0,
-  //     fine_expense: 0,
-  //     expense_spare_1: 0,
-  //     expense_spare_2: 0,
-  //     card_fee: 0,
-  //     maintenanceCost: 0,
-  //     insuranceFee: 0,
-  //     other_expense: 0,
-  //     estimatedTotalTax: 0,
-  //   },
-  // });
-  const [monthlyData, setMonthlyData] = useState(dummymonthlyData);
+  const [monthlyData, setMonthlyData] = useState({
+    income: [],
+    expense: [],
+    totalIncome: {
+      card_income: 0,
+      cash_income: 0,
+      kakao_income: 0,
+      uber_income: 0,
+      onda_income: 0,
+      tada_income: 0,
+      iam_income: 0,
+      other_income: 0,
+    },
+    totalExpense: {
+      fuel_expense: 0,
+      toll_fee: 0,
+      meal_expense: 0,
+      fine_expense: 0,
+      expense_spare_1: 0,
+      expense_spare_2: 0,
+      card_fee: 0,
+      maintenanceCost: 0,
+      insuranceFee: 0,
+      other_expense: 0,
+      estimatedTotalTax: 0,
+    },
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -147,7 +147,7 @@ function MonthlyView() {
     insuranceFee: "보험료",
   };
 
-  // if (loading) return <Spinner />;
+  if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
 
   return (
@@ -289,7 +289,7 @@ function MonthlyView() {
 
             <div className="section summarySection">
               {/* <h3>수익 및 지출 계산</h3> */}
-              <h3>이익 요약</h3>
+              <h3>손익 요약</h3>
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>

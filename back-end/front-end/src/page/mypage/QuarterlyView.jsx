@@ -5,34 +5,34 @@ import { dummyQuarterlyData } from "../../components/dummy";
 function QuarterlyView() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [quarter, setQuarter] = useState(1);
-  // const [quarterlyData, setQuarterlyData] = useState({
-  //   income: [],
-  //   expense: [],
-  //   totalIncome: {
-  //     card_income: 0,
-  //     cash_income: 0,
-  //     kakao_income: 0,
-  //     uber_income: 0,
-  //     onda_income: 0,
-  //     tada_income: 0,
-  //     iam_income: 0,
-  //     other_income: 0,
-  //   },
-  //   totalExpense: {
-  //     fuel_expense: 0,
-  //     toll_fee: 0,
-  //     meal_expense: 0,
-  //     fine_expense: 0,
-  //     expense_spare_1: 0,
-  //     expense_spare_2: 0,
-  //     card_fee: 0,
-  //     maintenanceCost: 0,
-  //     insuranceFee: 0,
-  //     other_expense: 0,
-  //     estimatedTotalTax: 0,
-  //   },
-  // });
-  const [quarterlyData, setQuarterlyData] = useState(dummyQuarterlyData);
+  const [quarterlyData, setQuarterlyData] = useState({
+    income: [],
+    expense: [],
+    totalIncome: {
+      card_income: 0,
+      cash_income: 0,
+      kakao_income: 0,
+      uber_income: 0,
+      onda_income: 0,
+      tada_income: 0,
+      iam_income: 0,
+      other_income: 0,
+    },
+    totalExpense: {
+      fuel_expense: 0,
+      toll_fee: 0,
+      meal_expense: 0,
+      fine_expense: 0,
+      expense_spare_1: 0,
+      expense_spare_2: 0,
+      card_fee: 0,
+      maintenanceCost: 0,
+      insuranceFee: 0,
+      other_expense: 0,
+      estimatedTotalTax: 0,
+    },
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -260,7 +260,7 @@ function QuarterlyView() {
 
             <div className="section summarySection">
               {/* <h3>수익 및 지출 계산</h3> */}
-              <h3>이익 요약</h3>
+              <h3>손익 요약</h3>
               <div className="row">
                 <div className="column">
                   <h4>항목</h4>

@@ -25,27 +25,27 @@ function YearlyView() {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  //       console.log("Fetching yearly data for:", year);
+        console.log("Fetching yearly data for:", year);
 
-  //       const response = await api.get(
-  //         `/tax/profitLossStatement/yearly/${year}`
-  //       );
-  //       setData(response.data);
-  //     } catch (err) {
-  //       console.error("Error fetching data:", err);
-  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        const response = await api.get(
+          `/tax/profitLossStatement/yearly/${year}`
+        );
+        setData(response.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchData();
-  // }, [year]);
+    fetchData();
+  }, [year]);
 
   const handleYearChange = (event) => {
     setYear(Number(event.target.value));
@@ -123,7 +123,7 @@ function YearlyView() {
   const preTaxIncome = calculatePreTaxIncome(operatingIncome);
   const netIncome = calculateNetIncome(preTaxIncome);
 
-  // if (loading) return <Spinner />;
+  if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
 
   return (
@@ -182,7 +182,7 @@ function YearlyView() {
             </div>
           </div>
           <div className="section summarySection">
-            <h3>이익 요약</h3>
+            <h3>손익 요약</h3>
             <div className="row">
               <div className="column">
                 <h4>영업 이익</h4>
