@@ -1,3 +1,4 @@
+// Ranking.js
 import TitleBox from "../../components/TitleBox";
 import RankingList from "./RankingList";
 import { useState, useEffect } from "react";

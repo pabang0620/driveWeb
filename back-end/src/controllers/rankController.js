@@ -70,8 +70,12 @@ const getTopPosts = async (req, res) => {
 // 랭킹
 const getTopUsers = async (req, res) => {
   try {
-    const { filterType, filterValue } = req.body; // Using query params for better API design
-    const users = await getTopUsersByDrivingTime(filterType, filterValue);
+    const { filterType, filterValue, selectedMonth } = req.body; // Using query params for better API design
+    const users = await getTopUsersByDrivingTime(
+      filterType,
+      filterValue,
+      selectedMonth
+    );
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching top users:", error);
@@ -80,13 +84,16 @@ const getTopUsers = async (req, res) => {
     });
   }
 };
-// 순수익 랭킹 컨트롤러
+// 이익만
 const getTopNetIncomeUsersController = async (req, res) => {
   try {
-    const { filterType, filterValue } = req.body; // 클라이언트로부터 필터 타입과 값을 받음
-
+    const { filterType, filterValue, selectedMonth } = req.body; // 클라이언트로부터 필터 타입과 값을 받음
     // 모델 함수 호출
-    const users = await getTopNetIncomeUsers(filterType, filterValue);
+    const users = await getTopNetIncomeUsers(
+      filterType,
+      filterValue,
+      selectedMonth
+    );
 
     // 성공적으로 데이터를 받아왔을 때
     res.status(200).json(users);
@@ -101,8 +108,12 @@ const getTopNetIncomeUsersController = async (req, res) => {
 // 연비 랭크
 const getTopFuelEfficiencyUsers = async (req, res) => {
   try {
-    const { filterType, filterValue } = req.body; // Accept filter parameters through query
-    const users = await getTopUsersByFuelEfficiency(filterType, filterValue);
+    const { filterType, filterValue, selectedMonth } = req.body; // Accept filter parameters through query
+    const users = await getTopUsersByFuelEfficiency(
+      filterType,
+      filterValue,
+      selectedMonth
+    );
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching top fuel efficiency users:", error);
@@ -115,11 +126,12 @@ const getTopFuelEfficiencyUsers = async (req, res) => {
 // 주행 거리 랭킹
 async function topDrivingDistanceUsers(req, res) {
   try {
-    const { filterType, filterValue } = req.body; // Using query params for better API design
+    const { filterType, filterValue, selectedMonth } = req.body; // Using query params for better API design
 
     const users = await getTopDrivingDistanceUsersModel(
       filterType,
-      filterValue
+      filterValue,
+      selectedMonth
     );
     res.json(users);
   } catch (error) {
@@ -133,8 +145,12 @@ async function topDrivingDistanceUsers(req, res) {
 // 총 건수 랭킹
 async function topTotalCasesUsers(req, res) {
   try {
-    const { filterType, filterValue } = req.body;
-    const users = await getTopTotalCasesUsersModel(filterType, filterValue);
+    const { filterType, filterValue, selectedMonth } = req.body;
+    const users = await getTopTotalCasesUsersModel(
+      filterType,
+      filterValue,
+      selectedMonth
+    );
     res.json(users);
   } catch (error) {
     console.error("총 건수 랭킹 조회 중 오류 발생:", error);
@@ -147,8 +163,14 @@ async function topTotalCasesUsers(req, res) {
 // 순이익 랭킹
 async function topProfitLossUsers(req, res) {
   try {
-    const { filterType, filterValue } = req.body;
-    const users = await getTopProfitLossUsersModel(filterType, filterValue);
+    const { filterType, filterValue, selectedMonth } = req.body;
+    console.log(filterType, filterValue, selectedMonth);
+
+    const users = await getTopProfitLossUsersModel(
+      filterType,
+      filterValue,
+      selectedMonth
+    );
     res.json(users);
   } catch (error) {
     console.error("순이익 랭킹 조회 중 오류 발생:", error);

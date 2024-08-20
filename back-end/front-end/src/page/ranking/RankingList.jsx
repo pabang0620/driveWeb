@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 
 const RankingList = ({ title, filterNumber, api_name }) => {
   const [selectedOption, setSelectedOption] = useState("전체");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [profiles, setProfiles] = useState([]);
 
-  // 필터 번호에 따라 실제 필터 타입을 설정
+  useEffect(() => {
+    // 현재 날짜 기준으로 지난달을 기본 값으로 설정
+    const today = new Date();
+    const lastMonth = today.getMonth() === 0 ? 12 : today.getMonth();
+    setSelectedMonth(lastMonth);
+  }, []);
+
   const filterTypeMap = {
     1: "jobtype",
     2: "fuelType",
@@ -14,7 +23,6 @@ const RankingList = ({ title, filterNumber, api_name }) => {
 
   const filterType = filterTypeMap[filterNumber];
 
-  // 필터 번호에 따른 옵션 설정
   let options;
   switch (filterNumber) {
     case 1:
@@ -50,40 +58,71 @@ const RankingList = ({ title, filterNumber, api_name }) => {
 
   useEffect(() => {
     const fetchProfiles = async () => {
-      try {
-        const response = await axios.post(`/api/rank/${api_name}`, {
-          filterType,
-          filterValue: selectedOption !== "전체" ? selectedOption : undefined,
-        });
-        setProfiles(response.data);
-      } catch (error) {
-        console.error(`데이터 요청 중 오류 발생 (${title}):`, error);
+      if (selectedMonth) {
+        // selectedMonth가 설정된 경우에만 요청 보냄
+        try {
+          const response = await axios.post(`/api/rank/${api_name}`, {
+            filterType,
+            filterValue: selectedOption !== "전체" ? selectedOption : undefined,
+            selectedMonth: selectedMonth, // 선택한 월을 API 요청에 포함
+          });
+          setProfiles(response.data);
+        } catch (error) {
+          console.error(`데이터 요청 중 오류 발생 (${title}):`, error);
+        }
       }
     };
 
     fetchProfiles();
-  }, [selectedOption, title, api_name, filterType]);
+  }, [selectedOption, selectedMonth, title, api_name, filterType]);
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
+  };
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
   };
 
   return (
     <div className="ranking">
       <div>
         <h3>{title}</h3>
-        <select value={selectedOption} onChange={handleSelectChange}>
-          {options.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+        <div className="filters">
+          <select value={selectedOption} onChange={handleSelectChange}>
+            {options.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <select value={selectedMonth} onChange={handleMonthChange}>
+            {[...Array(3)].map((_, index) => {
+              const month = new Date().getMonth() + 1 - (index + 1);
+              const adjustedMonth = month <= 0 ? 12 + month : month;
+              return (
+                <option key={adjustedMonth} value={adjustedMonth}>
+                  {adjustedMonth}월
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
       <ul className="profileWrap">
         {profiles.map((profile, index) => (
           <li key={index} className="profile">
-            <div className="profilePicture"></div>
+            <div className="profilePicture">
+              {profile.imageUrl ? (
+                <img src={profile.imageUrl} alt="Profile" />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faUserCircle}
+                  color="#c1c1c1"
+                  size="3x"
+                />
+              )}
+            </div>
             <p className="profileName">{profile.nickname}</p>
             <p className="profileValue">{profile.value}</p>
           </li>
@@ -103,12 +142,19 @@ const RankingList = ({ title, filterNumber, api_name }) => {
               font-size: 16px;
               margin-bottom: 10px;
             }
-            select {
-              width: 50%;
-              padding: 8px 10px;
-              font-size: 14px;
-              border-radius: 5px;
-              border: 1px solid #ccc;
+            .filters {
+              width: 100%;
+              justify-content: space-between;
+              display: flex;
+              margin: 0 0 10px 0;
+              gap: 10px;
+              select {
+                width: 40%;
+                padding: 8px 10px;
+                font-size: 14px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+              }
             }
           }
         }
@@ -132,8 +178,17 @@ const RankingList = ({ title, filterNumber, api_name }) => {
               width: 35px;
               height: 35px;
               border-radius: 50%;
-              background-color: #ccc;
+              overflow: hidden;
               margin-right: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .profilePicture img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
             }
 
             .profileName {
