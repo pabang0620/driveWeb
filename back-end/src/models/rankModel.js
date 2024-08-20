@@ -23,9 +23,9 @@ async function updateRankingModel(id, updateData) {
 const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
   try {
     let vehicleFilterCondition = {};
-    console.log("Filter Type:", filterType);
-    console.log("Filter Value:", filterValue);
-    console.log("Selected Month (raw):", selectedMonth);
+    // console.log("Filter Type:", filterType);
+    // console.log("Filter Value:", filterValue);
+    // console.log("Selected Month (raw):", selectedMonth);
 
     // 필터 타입과 값에 따라 필터링 조건 설정
     if (filterType === "carType" && filterValue && filterValue !== "전체") {
@@ -246,57 +246,30 @@ const getTopUsersByFuelEfficiency = async (
   selectedMonth
 ) => {
   try {
-    let whereCondition = {};
+    let fuelTypeCondition = {};
 
-    // 필터 타입과 값에 따라 필터링 조건 설정
     if (filterType === "fuelType" && filterValue && filterValue !== "전체") {
-      whereCondition.user_vehicles = {
-        some: {
+      fuelTypeCondition = {
+        user_vehicles: {
           fuel_type: filterValue,
         },
       };
-    } else if (
-      filterType === "carType" &&
-      filterValue &&
-      filterValue !== "전체"
-    ) {
-      whereCondition.user_vehicles = {
-        some: {
-          carType: filterValue,
-        },
-      };
-    } else if (
-      filterType === "jobtype" &&
-      filterValue &&
-      filterValue !== "전체"
-    ) {
-      const jobTypeMap = {
-        택시: 1,
-        배달: 2,
-        기타: 3,
-      };
-
-      const mappedValue = jobTypeMap[filterValue];
-      if (mappedValue !== undefined) {
-        whereCondition.jobtype = mappedValue;
-      }
     }
 
-    // 특정 월에 해당하는 driving_records 조건 추가
-    const startDate = new Date(new Date().getFullYear(), selectedMonth - 1, 1);
-    const endDate = new Date(new Date().getFullYear(), selectedMonth, 1);
-
-    // users와 관련된 driving_logs와 driving_records를 가져옴
+    // users와 관련된 driving_logs와 driving_records를 가져오고, user_profiles에서 imageUrl을 가져옴
     const users = await prisma.users.findMany({
-      where: whereCondition,
+      where: {
+        ...fuelTypeCondition,
+      },
       include: {
         driving_logs: {
           include: {
             driving_records: {
               where: {
+                // created_at 필드에서 selectedMonth에 해당하는 데이터를 필터링
                 created_at: {
-                  gte: startDate,
-                  lt: endDate,
+                  gte: new Date(new Date().getFullYear(), selectedMonth - 1, 1),
+                  lt: new Date(new Date().getFullYear(), selectedMonth, 1),
                 },
               },
             },
@@ -337,8 +310,8 @@ const getTopUsersByFuelEfficiency = async (
       return {
         id: user.id,
         nickname: user.nickname,
-        imageUrl: user.user_profiles?.imageUrl || null, // 프로필 이미지 URL 추가
         value: formattedFuelEfficiency,
+        imageUrl: user.user_profiles?.imageUrl || null, // imageUrl 추가
       };
     });
 
