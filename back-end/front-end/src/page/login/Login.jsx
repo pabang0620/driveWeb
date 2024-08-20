@@ -129,6 +129,7 @@ function Login() {
             </button>
 
             <GoogleLogin
+              className="googleLogin"
               onSuccess={handleGoogleLoginSuccess}
               onError={handleGoogleLoginFailure}
             />
@@ -254,56 +255,56 @@ function Login() {
             width: 100%;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
             gap: 10px;
-          }
-          .kakaoLogin {
-            width: 100% !important;
-            height: 40px !important;
-            background-color: white !important;
-            position: relative !important;
-            img {
-              width: 100%;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
+            > div,
+            > button {
+              width: 100% !important;
+              height: 40px !important;
             }
-          }
-          .naverIdLogin {
-            width: 100% !important;
-            height: 40px !important;
-            background-color: #03c75a !important;
-            position: relative !important;
-            border-radius: 3px;
-            img {
-              height: 100%;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-          button.navyBox {
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-            font-weight: bold;
             @media (max-width: 768px) {
-              width: 70%;
+              width: 80%;
               font-size: 16px;
             }
-            a {
-              color: white;
+            .kakaoLogin {
+              background-color: #fee500 !important;
+              position: relative !important;
+              img {
+                height: 100%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
             }
-            &:hover {
-              background-color: #7388b6;
+            .naverIdLogin {
+              background-color: #03c75a !important;
+              position: relative !important;
+              border-radius: 3px;
+              img {
+                height: 100%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+            }
+            button.navyBox {
+              background-color: #3c5997;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-size: 14px;
+              transition: background-color 0.3s;
+              font-weight: bold;
+              a {
+                color: white;
+              }
+              &:hover {
+                background-color: #7388b6;
+              }
             }
           }
         `}</style>

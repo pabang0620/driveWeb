@@ -200,8 +200,8 @@ function Header() {
 
         <SidebarMenu
           showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
           setShowLogoutModal={setShowLogoutModal}
-          onClose={() => setShowSidebar(false)}
         />
         {/* 사이드바 메뉴 표시 */}
         <style jsx>{`
