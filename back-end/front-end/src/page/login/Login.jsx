@@ -123,30 +123,36 @@ function Login() {
               placeholder="비밀번호를 입력해주세요."
             />
           </div>
-          <button className="navyBox" onClick={handleLogin}>
-            로그인
-          </button>
+          <div className="btnBox">
+            <button className="navyBox" onClick={handleLogin}>
+              로그인
+            </button>
 
-          <GoogleLogin
-            onSuccess={handleGoogleLoginSuccess}
-            onError={handleGoogleLoginFailure}
-          />
-          <NaverLogin
-            clientId={process.env.REACT_APP_NAVER_CLIENT_ID}
-            callbackUrl={window.location.origin}
-            onSuccess={handleNaverLoginSuccess}
-            onFailure={handleNaverLoginFailure}
-          />
-          <KakaoLogin
-            token={process.env.REACT_APP_KAKAO_CLIENT_ID} // 여기에 JavaScript 키를 사용해야 합니다.
-            onSuccess={handleKakaoLoginSuccess}
-            onFailure={handleKakaoLoginFailure}
-            getProfile={true}
-            redirectUri="https://krdriver.com/oauth" // 등록한 Redirect URI 사용
-          >
-            <button>카카오로 로그인하기</button>
-          </KakaoLogin>
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginFailure}
+            />
+            <NaverLogin
+              clientId={process.env.REACT_APP_NAVER_CLIENT_ID}
+              callbackUrl={window.location.origin}
+              onSuccess={handleNaverLoginSuccess}
+              onFailure={handleNaverLoginFailure}
+            />
 
+            <KakaoLogin
+              className="kakaoLogin"
+              token={process.env.REACT_APP_KAKAO_CLIENT_ID} // 여기에 JavaScript 키를 사용해야 합니다.
+              onSuccess={handleKakaoLoginSuccess}
+              onFailure={handleKakaoLoginFailure}
+              getProfile={true}
+              redirectUri="https://krdriver.com/oauth" // 등록한 Redirect URI 사용
+            >
+              <img
+                src={`${process.env.PUBLIC_URL}/images/login_icons/kakao_login.png`}
+                alt="카카오 아이디로 로그인"
+              />
+            </KakaoLogin>
+          </div>
           <p className="smallText">
             <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
             <Link to="/signup">회원가입</Link>
@@ -243,17 +249,51 @@ function Login() {
               display: block;
             }
           }
+
+          .btnBox {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
+          .kakaoLogin {
+            width: 100% !important;
+            height: 40px !important;
+            background-color: white !important;
+            position: relative !important;
+            img {
+              width: 100%;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+          .naverIdLogin {
+            width: 100% !important;
+            height: 40px !important;
+            background-color: #03c75a !important;
+            position: relative !important;
+            border-radius: 3px;
+            img {
+              height: 100%;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
           button.navyBox {
             width: 100%;
-            padding: 12px;
+            height: 40px;
+            line-height: 40px;
             background-color: #3c5997;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: background-color 0.3s;
-            margin-top: 30px;
             font-weight: bold;
             @media (max-width: 768px) {
               width: 70%;
