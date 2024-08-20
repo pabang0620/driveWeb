@@ -30,10 +30,15 @@ function Login() {
     try {
       console.log("Google login success:", credentialResponse);
 
-      const response = await axios.post("/api/user/google-login", {
+      const response = await axios.post("/api/social/google-login", {
         token: credentialResponse.credential,
       });
-      localStorage.setItem("token", response.data);
+
+      // 응답 데이터에서 토큰만 추출하여 로컬스토리지에 저장
+      const token = response.data.token;
+      console.log("JWT Token:", token); // 콘솔에 토큰 값 출력
+
+      localStorage.setItem("token", token);
       navigate("/");
     } catch (error) {
       console.error(
@@ -52,10 +57,15 @@ function Login() {
     try {
       console.log("Naver login success:", response);
 
-      const responseData = await axios.post("/api/user/naver-login", {
+      const responseData = await axios.post("/api/social/naver-login", {
         token: response.accessToken,
       });
-      localStorage.setItem("token", responseData.data);
+
+      // 응답 데이터에서 토큰만 추출하여 로컬스토리지에 저장
+      const token = responseData.data.token;
+      console.log("JWT Token:", token); // 콘솔에 토큰 값 출력
+
+      localStorage.setItem("token", token);
       navigate("/");
     } catch (error) {
       console.error(
@@ -74,10 +84,19 @@ function Login() {
     try {
       console.log("Kakao login success:", response);
 
-      const responseData = await axios.post("/api/user/kakao-login", {
+      const responseData = await axios.post("/api/social/kakao-login", {
         token: response.response.access_token,
       });
-      localStorage.setItem("token", responseData.data);
+
+      // 응답 데이터에서 토큰만 추출하여 localStorage에 저장
+      const token = responseData.data.token;
+      console.log("JWT Token:", token);
+
+      // 기존 로컬스토리지 키 변경: kakao_db73a80e65b6fe722d881859aec02bb7 -> token
+      localStorage.setItem("token", token);
+      localStorage.removeItem("kakao_db73a80e65b6fe722d881859aec02bb7");
+
+      // 로그인이 성공하면 홈 페이지로 이동
       navigate("/");
     } catch (error) {
       console.error(

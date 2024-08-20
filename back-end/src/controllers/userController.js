@@ -1,9 +1,6 @@
 const {
   createUser,
   findUserByUsername,
-  findUserByGoogleId,
-  findUserByKakaoId,
-  findUserByNaverId,
   deleteFranchiseFee,
   createFranchiseFee,
   getUserProfile,
@@ -132,91 +129,6 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: "일반 로그인 중 오류가 발생했습니다." });
   }
 };
-
-const socialLogin = async (req, res, provider) => {
-  const { token } = req.body;
-
-  if (!token) {
-    return res.status(400).json({ error: "토큰이 필요합니다." });
-  }
-
-  try {
-    let userData;
-
-    if (provider === "google") {
-      // Google 토큰 검증
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      userData = {
-        id: payload.sub,
-        name: payload.name,
-        email: payload.email, // username 대신 email 사용
-      };
-    } else if (provider === "kakao") {
-      // Kakao 토큰 검증
-      const response = await axios.get("https://kapi.kakao.com/v2/user/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      userData = {
-        id: response.data.id,
-        name: response.data.properties.nickname,
-        email: response.data.kakao_account.email, // username 대신 email 사용
-      };
-    } else if (provider === "naver") {
-      // Naver 토큰 검증
-      const response = await axios.get("https://openapi.naver.com/v1/nid/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      userData = {
-        id: response.data.response.id,
-        name: response.data.response.name,
-        email: response.data.response.email, // username 대신 email 사용
-      };
-    }
-
-    const { id, name, email } = userData;
-    let user;
-
-    // 사용자 조회
-    if (provider === "google") {
-      user = await findUserByGoogleId(id);
-    } else if (provider === "kakao") {
-      user = await findUserByKakaoId(id);
-    } else if (provider === "naver") {
-      user = await findUserByNaverId(id);
-    }
-
-    // 사용자가 없으면 새로 생성
-    if (!user) {
-      user = await createUser(
-        name,
-        email,
-        null,
-        provider === "google" ? id : null,
-        provider === "kakao" ? id : null,
-        provider === "naver" ? id : null
-      );
-    }
-
-    // JWT 발급
-    const jwtToken = jwt.sign(
-      { userId: user.id, jobtype: user.jobtype },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.status(200).json({ token: jwtToken });
-  } catch (error) {
-    console.error("Error during social login:", error.message);
-    res.status(500).json({ error: "로그인 중 오류가 발생했습니다." });
-  }
-};
-
-const googleLogin = (req, res) => socialLogin(req, res, "google");
-const kakaoLogin = (req, res) => socialLogin(req, res, "kakao");
-const naverLogin = (req, res) => socialLogin(req, res, "naver");
 
 const updateUserProfile = async (req, res) => {
   const { userId } = req;
@@ -412,9 +324,6 @@ module.exports = {
   resetPassword,
   verifySecurityAnswer,
   loginUser,
-  googleLogin,
-  kakaoLogin,
-  naverLogin,
   updateUserProfile,
   updateUserVehicleHandler,
   updateUserIncome,

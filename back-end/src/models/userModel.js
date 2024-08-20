@@ -108,24 +108,6 @@ async function updateUserPassword(username, hashedPassword) {
   });
 }
 
-const findUserByGoogleId = async (googleId) => {
-  return await prisma.users.findUnique({
-    where: { googleId },
-  });
-};
-
-const findUserByKakaoId = async (kakaoId) => {
-  return await prisma.users.findUnique({
-    where: { kakaoId },
-  });
-};
-
-const findUserByNaverId = async (naverId) => {
-  return await prisma.users.findUnique({
-    where: { naverId },
-  });
-};
-
 const updateUserProfileData = async (userId, profileData) => {
   try {
     const userProfile = await prisma.user_profiles.update({
@@ -311,9 +293,6 @@ module.exports = {
   createUser,
   findUserByUsername,
   updateUserPassword,
-  findUserByGoogleId,
-  findUserByKakaoId,
-  findUserByNaverId,
   updateUserProfileData,
   updateUserVehicle,
   updateUserIncomeData,

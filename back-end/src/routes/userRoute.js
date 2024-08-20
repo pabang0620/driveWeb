@@ -28,10 +28,6 @@ router.put("/resetpassword", resetPassword);
 
 router.post("/verifysecurity", verifySecurityAnswer);
 
-router.post("/google-login", googleLogin);
-router.post("/kakao-login", kakaoLogin);
-router.post("/naver-login", naverLogin);
-
 router.get("/profile", authMiddleware, fetchUserProfile);
 
 router.put("/profile", authMiddleware, handleFileUpload, updateUserProfile);
