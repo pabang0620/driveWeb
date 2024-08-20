@@ -6,11 +6,11 @@ const {
   getAllRankings,
   updateRankingModel,
   getTopUsersByDrivingTime,
+  getTopNetIncomeUsers,
   getTopTotalCasesUsersModel,
   getTopProfitLossUsersModel,
   getTopDrivingDistanceUsersModel,
   getTopUsersByFuelEfficiency,
-  getTopUsersByNetIncome,
 } = require("../models/rankModel");
 
 // 관리자모드 설정
@@ -80,21 +80,24 @@ const getTopUsers = async (req, res) => {
     });
   }
 };
-
-// 총 운송
-const getTopNetIncomeUsers = async (req, res) => {
+// 순수익 랭킹 컨트롤러
+const getTopNetIncomeUsersController = async (req, res) => {
   try {
-    const { filterType, filterValue } = req.body;
-    const users = await getTopUsersByNetIncome(filterType, filterValue);
+    const { filterType, filterValue } = req.body; // 클라이언트로부터 필터 타입과 값을 받음
+
+    // 모델 함수 호출
+    const users = await getTopNetIncomeUsers(filterType, filterValue);
+
+    // 성공적으로 데이터를 받아왔을 때
     res.status(200).json(users);
   } catch (error) {
+    // 에러 처리
     console.error("Error fetching top net income users:", error);
     res.status(500).json({
       error: "유저 정보를 가져오는 중 오류가 발생했습니다: " + error.message,
     });
   }
 };
-
 // 연비 랭크
 const getTopFuelEfficiencyUsers = async (req, res) => {
   try {
@@ -160,5 +163,6 @@ module.exports = {
   getTopFuelEfficiencyUsers,
   topDrivingDistanceUsers,
   topTotalCasesUsers,
+  getTopNetIncomeUsersController,
   topProfitLossUsers,
 };

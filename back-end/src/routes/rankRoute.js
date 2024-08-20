@@ -1,6 +1,5 @@
 const express = require("express");
 const {
-  getTopNetIncomeUsers,
   getTopUsers,
   getTopFuelEfficiencyUsers,
   getTopPosts,
@@ -9,6 +8,7 @@ const {
   topProfitLossUsers,
   topTotalCasesUsers,
   topDrivingDistanceUsers,
+  getTopNetIncomeUsersController,
 } = require("../controllers/rankController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -19,7 +19,7 @@ router.get("/list", getRankings);
 router.put("/list/:id", updateRanking);
 
 router.post("/top-users", getTopUsers);
-router.post("/top-net-income", getTopNetIncomeUsers);
+router.post("/top-net-income", getTopNetIncomeUsersController);
 router.post("/top-fuel-efficiency", getTopFuelEfficiencyUsers);
 router.post("/driving-distance", topDrivingDistanceUsers);
 router.post("/total-cases", topTotalCasesUsers);

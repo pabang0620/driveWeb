@@ -19,40 +19,54 @@ async function updateRankingModel(id, updateData) {
 }
 
 // -----------------------------------------------
-// 순이익
+// 총 순수익 랭킹
+async function getTopNetIncomeUsers(filterType, filterValue) {
+  let whereCondition = {};
+  if (filterType && filterValue && filterValue !== "전체") {
+    whereCondition[filterType] = filterValue;
+  }
+
+  const users = await prisma.users.findMany({
+    where: whereCondition,
+    select: {
+      id: true,
+      nickname: true,
+      income_records: {
+        select: {
+          total_income: true,
+        },
+      },
+    },
+  });
+
+  const usersWithTotalIncome = users.map((user) => {
+    const totalIncome = user.income_records.reduce(
+      (acc, record) => acc + parseFloat(record.total_income || 0),
+      0
+    );
+
+    // 10000 -> 10,000원 형식으로 변환
+    const formattedIncome = totalIncome.toLocaleString("ko-KR") + "원";
+
+    return {
+      id: user.id,
+      nickname: user.nickname,
+      value: formattedIncome,
+    };
+  });
+
+  // 상위 5명의 사용자를 총 수입이 높은 순으로 정렬
+  usersWithTotalIncome.sort((a, b) => b.totalIncome - a.totalIncome);
+
+  return usersWithTotalIncome.slice(0, 5);
+}
+
+// 운행 시간
 const getTopUsersByDrivingTime = async (filterType, filterValue) => {
   try {
     let filterConditions = {};
-    if (filterValue) {
-      // 필터 값이 있을 경우에만 조건 적용
-
-      switch (filterType) {
-        case "jobtype": // Assuming 'jobtype' corresponds to a job type in the users table
-          filterConditions = {
-            jobtype: parseInt(filterValue), // Convert filterValue to integer if necessary
-          };
-          break;
-        case "fuelType": // Assuming this corresponds to fuel type in a related vehicle table
-          filterConditions = {
-            user_vehicles: {
-              some: {
-                fuel_type: filterValue,
-              },
-            },
-          };
-          break;
-        case "carType": // Assuming this corresponds to car type in a related vehicle table
-          filterConditions = {
-            user_vehicles: {
-              some: {
-                carType: filterValue,
-              },
-            },
-          };
-          break;
-        default:
-          throw new Error("Unsupported filter type");
-      }
+    if (filterValue && filterValue !== "전체") {
+      filterConditions[filterType] = parseInt(filterValue);
     }
 
     const users = await prisma.users.findMany({
@@ -64,7 +78,7 @@ const getTopUsersByDrivingTime = async (filterType, filterValue) => {
           select: {
             driving_records: {
               select: {
-                working_hours: true,
+                working_hours_seconds: true,
               },
             },
           },
@@ -73,151 +87,42 @@ const getTopUsersByDrivingTime = async (filterType, filterValue) => {
     });
 
     const usersWithTotalDrivingTime = users.map((user) => {
-      const totalDrivingTime = user.driving_logs.reduce(
+      const totalDrivingTimeInSeconds = user.driving_logs.reduce(
         (acc, log) =>
           acc +
           log.driving_records.reduce(
-            (logAcc, record) => logAcc + record.working_hours.getHours(),
+            (logAcc, record) => logAcc + (record.working_hours_seconds || 0),
             0
           ),
         0
       );
 
+      const totalDrivingTimeInHours = totalDrivingTimeInSeconds / 3600; // 초를 시간으로 변환
+
       return {
         id: user.id,
         nickname: user.nickname,
-        totalDrivingTime,
+        value: `${totalDrivingTimeInHours.toFixed(1)} 시간`,
       };
     });
 
-    usersWithTotalDrivingTime.sort(
-      (a, b) => b.totalDrivingTime - a.totalDrivingTime
-    );
+    // 총 운행 시간이 높은 순으로 정렬
+    usersWithTotalDrivingTime.sort((a, b) => b.value - a.value);
+
+    // 상위 5명 반환
     return usersWithTotalDrivingTime.slice(0, 5);
   } catch (error) {
-    console.error(
-      "Error fetching top users by driving time with filters:",
-      error
-    );
+    console.error("Error fetching top users by driving time:", error);
     throw error;
   }
 };
-// 총 운송
-const getTopUsersByNetIncome = async (filterType, filterValue) => {
-  try {
-    let whereCondition = {};
-    console.log(filterType, filterValue);
-    if (filterValue) {
-      // 필터 값이 있을 경우에만 조건 적용
-      switch (filterType) {
-        case "carType":
-          if (filterValue !== "전체") {
-            whereCondition = {
-              user_vehicles: {
-                some: {
-                  carType: filterValue,
-                },
-              },
-            };
-          }
-          break;
-        case "fuelType":
-          if (filterValue !== "전체") {
-            whereCondition = {
-              user_vehicles: {
-                some: {
-                  fuel_type: filterValue,
-                },
-              },
-            };
-          }
-          break;
-        case "jobType":
-          whereCondition = {
-            jobtype: parseInt(filterValue), // Assuming jobtype is stored as an integer
-          };
-          break;
-        default:
-          throw new Error("Unsupported filter type");
-      }
-    }
 
-    const users = await prisma.users.findMany({
-      where: whereCondition,
-      select: {
-        id: true,
-        nickname: true,
-        income_records: {
-          select: {
-            total_income: true,
-          },
-        },
-        expense_records: {
-          select: {
-            total_expense: true,
-          },
-        },
-      },
-    });
-
-    const usersWithNetIncome = users.map((user) => {
-      const totalIncome = user.income_records.reduce(
-        (acc, record) => acc + parseFloat(record.total_income || 0),
-        0
-      );
-      const totalExpense = user.expense_records.reduce(
-        (acc, record) => acc + parseFloat(record.total_expense || 0),
-        0
-      );
-      const netIncome = totalIncome - totalExpense;
-
-      return {
-        id: user.id,
-        nickname: user.nickname,
-        netIncome,
-      };
-    });
-
-    usersWithNetIncome.sort((a, b) => b.netIncome - a.netIncome);
-    return usersWithNetIncome.slice(0, 5);
-  } catch (error) {
-    console.error("Error fetching top users by net income:", error);
-    throw error;
-  }
-};
-// 연비
+// 연비 랭킹
 const getTopUsersByFuelEfficiency = async (filterType, filterValue) => {
   try {
     let whereCondition = {};
-    if (filterValue) {
-      // 필터 값이 있을 경우에만 조건 적용
-      switch (filterType) {
-        case "fuelType": // Direct filtering by fuel type if it's specifically fuelType
-          whereCondition = {
-            user_vehicles: {
-              some: {
-                fuel_type: filterValue,
-              },
-            },
-          };
-          break;
-        case "carType": // Filtering by car type
-          whereCondition = {
-            user_vehicles: {
-              some: {
-                carType: filterValue,
-              },
-            },
-          };
-          break;
-        case "jobType": // Filtering by job type, though less common in fuel efficiency
-          whereCondition = {
-            jobtype: parseInt(filterValue),
-          };
-          break;
-        default:
-          throw new Error("Unsupported filter type");
-      }
+    if (filterType && filterValue && filterValue !== "전체") {
+      whereCondition[filterType] = filterValue;
     }
 
     const users = await prisma.users.findMany({
@@ -229,8 +134,8 @@ const getTopUsersByFuelEfficiency = async (filterType, filterValue) => {
           select: {
             driving_records: {
               select: {
-                driving_distance: true,
-                fuel_amount: true,
+                driving_distance: true, // 주행 거리 (km)
+                fuel_amount: true, // 연료 소비량 (L)
               },
             },
           },
@@ -243,16 +148,17 @@ const getTopUsersByFuelEfficiency = async (filterType, filterValue) => {
         (acc, log) =>
           acc +
           log.driving_records.reduce(
-            (logAcc, record) => logAcc + record.driving_distance,
+            (logAcc, record) => logAcc + (record.driving_distance || 0),
             0
           ),
         0
       );
+
       const totalFuel = user.driving_logs.reduce(
         (acc, log) =>
           acc +
           log.driving_records.reduce(
-            (logAcc, record) => logAcc + record.fuel_amount,
+            (logAcc, record) => logAcc + (record.fuel_amount || 0),
             0
           ),
         0
@@ -260,14 +166,17 @@ const getTopUsersByFuelEfficiency = async (filterType, filterValue) => {
 
       const fuelEfficiency = totalFuel > 0 ? totalDistance / totalFuel : 0;
 
+      // 연비를 소수점 두 자리로 표시하고 "km/L" 단위 추가
+      const formattedFuelEfficiency = fuelEfficiency.toFixed(2) + " km/L";
+
       return {
         id: user.id,
         nickname: user.nickname,
-        fuelEfficiency: parseFloat(fuelEfficiency.toFixed(2)),
+        value: formattedFuelEfficiency,
       };
     });
 
-    usersWithFuelEfficiency.sort((a, b) => b.fuelEfficiency - a.fuelEfficiency);
+    usersWithFuelEfficiency.sort((a, b) => b.value - a.value);
     return usersWithFuelEfficiency.slice(0, 5);
   } catch (error) {
     console.error("Error fetching top users by fuel efficiency:", error);
@@ -278,19 +187,8 @@ const getTopUsersByFuelEfficiency = async (filterType, filterValue) => {
 // 주행 거리 랭킹
 async function getTopDrivingDistanceUsersModel(filterType, filterValue) {
   let whereCondition = {};
-
-  if (filterType && filterValue) {
-    switch (filterType) {
-      case "jobType":
-        whereCondition["jobtype"] = parseInt(filterValue);
-        break;
-      case "fuelType":
-        whereCondition["user_vehicles"] = { some: { fuel_type: filterValue } };
-        break;
-      case "carType":
-        whereCondition["user_vehicles"] = { some: { carType: filterValue } };
-        break;
-    }
+  if (filterType && filterValue && filterValue !== "전체") {
+    whereCondition[filterType] = filterValue;
   }
 
   const users = await prisma.users.findMany({
@@ -313,25 +211,18 @@ async function getTopDrivingDistanceUsersModel(filterType, filterValue) {
     },
     take: 5,
   });
-  return users;
+  return users.map((user) => ({
+    id: user.id,
+    nickname: user.nickname,
+    value: user.driving_records_aggregate._sum.driving_distance,
+  }));
 }
 
 // 총 건수 랭킹
 async function getTopTotalCasesUsersModel(filterType, filterValue) {
   let whereCondition = {};
-
-  if (filterType && filterValue) {
-    switch (filterType) {
-      case "jobType":
-        whereCondition["jobtype"] = parseInt(filterValue);
-        break;
-      case "fuelType":
-        whereCondition["user_vehicles"] = { some: { fuel_type: filterValue } };
-        break;
-      case "carType":
-        whereCondition["user_vehicles"] = { some: { carType: filterValue } };
-        break;
-    }
+  if (filterType && filterValue && filterValue !== "전체") {
+    whereCondition[filterType] = filterValue;
   }
 
   const users = await prisma.users.findMany({
@@ -354,25 +245,19 @@ async function getTopTotalCasesUsersModel(filterType, filterValue) {
     },
     take: 5,
   });
-  return users;
+  return users.map((user) => ({
+    id: user.id,
+    nickname: user.nickname,
+    value: user.driving_records_aggregate._sum.total_driving_cases,
+  }));
 }
 
 // 순이익 랭킹
 async function getTopProfitLossUsersModel(filterType, filterValue) {
   let whereCondition = {};
 
-  if (filterType && filterValue) {
-    switch (filterType) {
-      case "jobType":
-        whereCondition["jobtype"] = parseInt(filterValue);
-        break;
-      case "fuelType":
-        whereCondition["user_vehicles"] = { some: { fuel_type: filterValue } };
-        break;
-      case "carType":
-        whereCondition["user_vehicles"] = { some: { carType: filterValue } };
-        break;
-    }
+  if (filterType && filterValue && filterValue !== "전체") {
+    whereCondition[filterType] = filterValue;
   }
 
   const users = await prisma.users.findMany({
@@ -395,7 +280,21 @@ async function getTopProfitLossUsersModel(filterType, filterValue) {
     },
     take: 5,
   });
-  return users;
+
+  const usersWithFormattedProfitLoss = users.map((user) => {
+    const profitLoss = user.expense_records_aggregate._sum.profit_loss || 0;
+
+    // 10000 -> 10,000원 형식으로 변환
+    const formattedProfitLoss = profitLoss.toLocaleString("ko-KR") + "원";
+
+    return {
+      id: user.id,
+      nickname: user.nickname,
+      value: formattedProfitLoss,
+    };
+  });
+
+  return usersWithFormattedProfitLoss;
 }
 
 module.exports = {
@@ -403,7 +302,7 @@ module.exports = {
   updateRankingModel,
   //   ---------- 랭크
   getTopUsersByDrivingTime,
-  getTopUsersByNetIncome,
+  getTopNetIncomeUsers,
   getTopUsersByFuelEfficiency,
   getTopDrivingDistanceUsersModel,
   getTopTotalCasesUsersModel,
