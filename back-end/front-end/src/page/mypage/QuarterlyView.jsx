@@ -5,34 +5,34 @@ import { dummyQuarterlyData } from "../../components/dummy";
 function QuarterlyView() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [quarter, setQuarter] = useState(1);
-  const [quarterlyData, setQuarterlyData] = useState({
-    income: [],
-    expense: [],
-    totalIncome: {
-      card_income: 0,
-      cash_income: 0,
-      kakao_income: 0,
-      uber_income: 0,
-      onda_income: 0,
-      tada_income: 0,
-      iam_income: 0,
-      other_income: 0,
-    },
-    totalExpense: {
-      fuel_expense: 0,
-      toll_fee: 0,
-      meal_expense: 0,
-      fine_expense: 0,
-      expense_spare_1: 0,
-      expense_spare_2: 0,
-      card_fee: 0,
-      maintenanceCost: 0,
-      insuranceFee: 0,
-      other_expense: 0,
-      estimatedTotalTax: 0,
-    },
-  });
-
+  // const [quarterlyData, setQuarterlyData] = useState({
+  //   income: [],
+  //   expense: [],
+  //   totalIncome: {
+  //     card_income: 0,
+  //     cash_income: 0,
+  //     kakao_income: 0,
+  //     uber_income: 0,
+  //     onda_income: 0,
+  //     tada_income: 0,
+  //     iam_income: 0,
+  //     other_income: 0,
+  //   },
+  //   totalExpense: {
+  //     fuel_expense: 0,
+  //     toll_fee: 0,
+  //     meal_expense: 0,
+  //     fine_expense: 0,
+  //     expense_spare_1: 0,
+  //     expense_spare_2: 0,
+  //     card_fee: 0,
+  //     maintenanceCost: 0,
+  //     insuranceFee: 0,
+  //     other_expense: 0,
+  //     estimatedTotalTax: 0,
+  //   },
+  // });
+  const [quarterlyData, setQuarterlyData] = useState(dummyQuarterlyData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -45,42 +45,42 @@ function QuarterlyView() {
     },
   });
 
-  useEffect(() => {
-    if (quarterlyData.income.length > 0) {
-      console.log("Updated quarterly data:", quarterlyData);
-    }
-  }, [quarterlyData]);
+  // useEffect(() => {
+  //   if (quarterlyData.income.length > 0) {
+  //     console.log("Updated quarterly data:", quarterlyData);
+  //   }
+  // }, [quarterlyData]);
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      console.log("Fetching quarterly data for:", year, quarter);
+  // const fetchData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Fetching quarterly data for:", year, quarter);
 
-      const response = await api.get(
-        `/tax/profitLossStatement/quarterly/${year}/${quarter}`
-      );
-      const data = response.data;
-      setQuarterlyData({
-        income: data.income || [],
-        expense: data.expense || [],
-        totalIncome: {
-          ...quarterlyData.totalIncome,
-          ...data.totalIncome,
-        },
-        totalExpense: {
-          ...quarterlyData.totalExpense,
-          ...data.totalExpense,
-          estimatedTotalTax:
-            parseFloat(data.totalExpense.estimatedTotalTax) || 0,
-        },
-      });
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setError("데이터를 가져오는 중 오류가 발생했습니다.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const response = await api.get(
+  //       `/tax/profitLossStatement/quarterly/${year}/${quarter}`
+  //     );
+  //     const data = response.data;
+  //     setQuarterlyData({
+  //       income: data.income || [],
+  //       expense: data.expense || [],
+  //       totalIncome: {
+  //         ...quarterlyData.totalIncome,
+  //         ...data.totalIncome,
+  //       },
+  //       totalExpense: {
+  //         ...quarterlyData.totalExpense,
+  //         ...data.totalExpense,
+  //         estimatedTotalTax:
+  //           parseFloat(data.totalExpense.estimatedTotalTax) || 0,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error("Error fetching data:", err);
+  //     setError("데이터를 가져오는 중 오류가 발생했습니다.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleYearChange = (event) => {
     setYear(Number(event.target.value));
@@ -91,7 +91,7 @@ function QuarterlyView() {
   };
 
   const handleFetchData = () => {
-    fetchData();
+    // fetchData();
   };
 
   const formatCurrency = (value) => {
@@ -165,10 +165,9 @@ function QuarterlyView() {
         {quarterlyData.income.length > 0 && (
           <>
             <div className="section">
-              {/* <h3>항목별 상세</h3> */}
               <div className="row">
-                <div className="column">
-                  <h4>항목</h4>
+                <div className="column item_categorys">
+                  <h4 className="opacity">항목</h4>
                   <div className="income">
                     {Object.keys(incomeLabels).map((key) => (
                       <div key={key}>
@@ -220,50 +219,72 @@ function QuarterlyView() {
                   </div>
                 </div>
                 {quarterlyData.income.map((income, index) => (
-                  <div className="column" key={index}>
-                    <h4>{`${index + 1 + (quarter - 1) * 3} 월`}</h4>
-                    <div className="income">
-                      {Object.keys(incomeLabels).map((key) => (
-                        <div key={key}>
-                          <span
-                            style={{
-                              color: income[key] > 0 ? "red" : "inherit",
-                            }}
+                  <>
+                    <div className="column moblie item_categorys">
+                      <h4 className="opacity">항목</h4>
+                      <div className="income">
+                        {Object.keys(incomeLabels).map((key) => (
+                          <div
+                            key={key}
+                            style={{ justifyContent: "flex-start" }}
                           >
-                            {formatCurrency(income[key] || 0)}
-                          </span>
-                        </div>
-                      ))}
+                            <span>{incomeLabels[key]}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="expense">
+                        {Object.keys(expenseLabels).map((key) => (
+                          <div key={key}>
+                            <span>{expenseLabels[key]}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="expense">
-                      {Object.keys(expenseLabels).map((key) => (
-                        <div key={key}>
-                          <span
-                            style={{
-                              color:
-                                quarterlyData.expense[index][key] > 0
-                                  ? "blue"
-                                  : "inherit",
-                            }}
-                          >
-                            {formatCurrency(
-                              quarterlyData.expense[index][key] || 0
-                            )}
-                          </span>
-                        </div>
-                      ))}
+
+                    <div className="column" key={index}>
+                      <h4>{`${index + 1 + (quarter - 1) * 3} 월`}</h4>
+                      <div className="income">
+                        {Object.keys(incomeLabels).map((key) => (
+                          <div key={key}>
+                            <span
+                              style={{
+                                color: income[key] > 0 ? "red" : "inherit",
+                              }}
+                            >
+                              {formatCurrency(income[key] || 0)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="expense">
+                        {Object.keys(expenseLabels).map((key) => (
+                          <div key={key}>
+                            <span
+                              style={{
+                                color:
+                                  quarterlyData.expense[index][key] > 0
+                                    ? "blue"
+                                    : "inherit",
+                              }}
+                            >
+                              {formatCurrency(
+                                quarterlyData.expense[index][key] || 0
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </>
                 ))}
               </div>
             </div>
 
             <div className="section summarySection">
-              {/* <h3>수익 및 지출 계산</h3> */}
               <h3>손익 요약</h3>
               <div className="row">
-                <div className="column">
-                  <h4>항목</h4>
+                <div className="column item_categorys">
+                  <h4 className="opacity">항목</h4>
                   <div>
                     <span>영업이익</span>
                   </div>
@@ -311,6 +332,7 @@ function QuarterlyView() {
                       )}
                     </span>
                   </div>
+
                   <div>
                     <span
                       style={{
@@ -409,111 +431,130 @@ function QuarterlyView() {
                   </div>
                 </div>
                 {quarterlyData.income.map((income, index) => (
-                  <div className="column" key={index}>
-                    <h4>{`${index + 1 + (quarter - 1) * 3} 월`}</h4>
-                    <div>
-                      <span
-                        style={{
-                          color:
+                  <>
+                    <div className="column moblie item_categorys">
+                      <h4 className="opacity">항목</h4>
+                      <div>
+                        <span>영업이익</span>
+                      </div>
+                      <div>
+                        <span>영업외 수익</span>
+                      </div>
+                      <div>
+                        <span>영업외 지출</span>
+                      </div>
+                      <div>
+                        <span>세전 이익</span>
+                      </div>
+                      <div>
+                        <span>당기 순이익</span>
+                      </div>
+                    </div>
+                    <div className="column" key={index}>
+                      <h4>{`${index + 1 + (quarter - 1) * 3} 월`}</h4>
+                      <div>
+                        <span
+                          style={{
+                            color:
+                              Object.values(income).reduce((a, b) => a + b, 0) -
+                                Object.values(
+                                  quarterlyData.expense[index]
+                                ).reduce((a, b) => a + b, 0) >
+                              0
+                                ? "red"
+                                : "blue",
+                          }}
+                        >
+                          {formatCurrency(
                             Object.values(income).reduce((a, b) => a + b, 0) -
                               Object.values(
                                 quarterlyData.expense[index]
-                              ).reduce((a, b) => a + b, 0) >
-                            0
-                              ? "red"
-                              : "blue",
-                        }}
-                      >
-                        {formatCurrency(
-                          Object.values(income).reduce((a, b) => a + b, 0) -
-                            Object.values(quarterlyData.expense[index]).reduce(
-                              (a, b) => a + b,
+                              ).reduce((a, b) => a + b, 0)
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            color: income.other_income > 0 ? "red" : "inherit",
+                          }}
+                        >
+                          {formatCurrency(income.other_income || 0)}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            color:
+                              quarterlyData.expense[index].other_expense > 0
+                                ? "blue"
+                                : "inherit",
+                          }}
+                        >
+                          {formatCurrency(
+                            quarterlyData.expense[index].other_expense || 0
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            color:
+                              Object.values(income).reduce((a, b) => a + b, 0) +
+                                (income.other_income || 0) -
+                                (quarterlyData.expense[index].other_expense ||
+                                  0) -
+                                Object.values(
+                                  quarterlyData.expense[index]
+                                ).reduce((a, b) => a + b, 0) >
                               0
-                            )
-                        )}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        style={{
-                          color: income.other_income > 0 ? "red" : "inherit",
-                        }}
-                      >
-                        {formatCurrency(income.other_income || 0)}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        style={{
-                          color:
-                            quarterlyData.expense[index].other_expense > 0
-                              ? "blue"
-                              : "inherit",
-                        }}
-                      >
-                        {formatCurrency(
-                          quarterlyData.expense[index].other_expense || 0
-                        )}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        style={{
-                          color:
+                                ? "red"
+                                : "blue",
+                          }}
+                        >
+                          {formatCurrency(
                             Object.values(income).reduce((a, b) => a + b, 0) +
                               (income.other_income || 0) -
                               (quarterlyData.expense[index].other_expense ||
                                 0) -
                               Object.values(
                                 quarterlyData.expense[index]
-                              ).reduce((a, b) => a + b, 0) >
-                            0
-                              ? "red"
-                              : "blue",
-                        }}
-                      >
-                        {formatCurrency(
-                          Object.values(income).reduce((a, b) => a + b, 0) +
-                            (income.other_income || 0) -
-                            (quarterlyData.expense[index].other_expense || 0) -
-                            Object.values(quarterlyData.expense[index]).reduce(
-                              (a, b) => a + b,
+                              ).reduce((a, b) => a + b, 0)
+                          )}
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            color:
+                              Object.values(income).reduce((a, b) => a + b, 0) +
+                                (income.other_income || 0) -
+                                (quarterlyData.expense[index].other_expense ||
+                                  0) -
+                                Object.values(
+                                  quarterlyData.expense[index]
+                                ).reduce((a, b) => a + b, 0) -
+                                quarterlyData.totalExpense.estimatedTotalTax >
                               0
-                            )
-                        )}
-                      </span>
-                    </div>
-                    <div>
-                      <span
-                        style={{
-                          color:
-                            Object.values(income).reduce((a, b) => a + b, 0) +
+                                ? "red"
+                                : "blue",
+                          }}
+                        >
+                          {formatCurrency(
+                            (Object.values(income).reduce((a, b) => a + b, 0) +
                               (income.other_income || 0) -
                               (quarterlyData.expense[index].other_expense ||
                                 0) -
                               Object.values(
                                 quarterlyData.expense[index]
                               ).reduce((a, b) => a + b, 0) -
-                              quarterlyData.totalExpense.estimatedTotalTax >
-                            0
-                              ? "red"
-                              : "blue",
-                        }}
-                      >
-                        {formatCurrency(
-                          (Object.values(income).reduce((a, b) => a + b, 0) +
-                            (income.other_income || 0) -
-                            (quarterlyData.expense[index].other_expense || 0) -
-                            Object.values(quarterlyData.expense[index]).reduce(
-                              (a, b) => a + b,
-                              0
-                            ) -
-                            quarterlyData.totalExpense.estimatedTotalTax) /
-                            4
-                        )}
-                      </span>
+                              quarterlyData.totalExpense.estimatedTotalTax) /
+                              4
+                          )}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </>
                 ))}
               </div>
             </div>
@@ -522,179 +563,267 @@ function QuarterlyView() {
       </div>
       <style jsx>
         {`
-        .quarterlyView {
-          padding: 50px;
-          .titleFitler {
-            margin-bottom: 60px;
-            h3 {
-              text-align: center;
-              width: 100%;
-              font-weight: 700;
-              font-size: 22px;x
-              color: #333;
-              margin: 30px 0 20px 0;
+          .quarterlyView {
+            padding: 50px;
+            @media (max-width: 768px) {
+              padding: 15px;
             }
-            .filterGroup {
-              width: 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              margin-top: 50px;
-              gap: 10px;
-              label {
-                display: flex;
-                align-items: center;
-                span {
-                  margin-right: 10px;
-                  font-weight: 600;
-                  color: #444;
-                  font-size: 15px;
-                }
+            .moblie {
+              display: none;
+              @media (max-width: 768px) {
+                display: block;
               }
-              select {
-                padding: 5px 8px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-                font-size: 16px;
-                transition: border-color 0.3s;
-                color: #444;
-                cursor: pointer;
-           
-              } .datePicker {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            transition: border-color 0.3s;
-          } .fetchButton {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            background-color: #05aced;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-          }
-          .fetchButton:hover {
-            background-color: #69c2ef;
-          }
             }
-          }
+            .opacity {
+              opacity: 100%;
+              @media (max-width: 768px) {
+                opacity: 0%;
+              }
+            }
 
-       
-        .result {
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 30px;
-          overflow-x: auto;
-          h3{
-            margin-bottom:10px;
-          
-          }
-          h4 {
-            width: 100%;
-            padding: 10px 0;
-            color: #222;
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 10px;
-            text-align:center;
-          }
-        
-          .section {
-            background-color: #ffffff;
-          }
-          .section.summarySection {
-            margin-top: 30px;
-            background-color: #05aced;
-            padding: 1% 5% 5% 5%;
-            border-radius: 10px;
-            h3,
-            h4 {
-              color: white;
-            }
-            h3 {
-              font-size: 25px;
-              width: 100%;
-              text-align: center;
-              margin: 20px 0 20px 0;
-            }
-            h4 {
-              margin: 0;
-              padding-left: 10px;
-            }
-            .row {
-              
-              .column:first-of-type {
-                div {
-                  &:first-of-type {
-                    border-top-left-radius: 8px;
+            .titleFitler {
+              margin-bottom: 60px;
+              @media (max-width: 768px) {
+                margin-bottom: 20px;
+              }
+              h3 {
+                text-align: center;
+                width: 100%;
+                font-weight: 700;
+                font-size: 22px;
+                color: #333;
+                margin: 30px 0 20px 0;
+                @media (max-width: 1024px) {
+                  font-size: 20px;
+                  margin: 15px 0 10px 0;
+                }
+              }
+              .filterGroup {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 50px;
+                gap: 10px;
+                @media (max-width: 1024px) {
+                  flex-direction: column;
+                  margin-top: 15px;
+                }
+                label {
+                  display: flex;
+                  align-items: center;
+                  span {
+                    margin-right: 10px;
+                    font-weight: 600;
+                    color: #444;
+                    font-size: 15px;
+                    @media (max-width: 768px) {
+                      font-size: 13px;
+                    }
                   }
-                  &:last-of-type {
-                    border-bottom-left-radius: 8px;
+                }
+                select {
+                  padding: 5px 8px;
+                  border-radius: 4px;
+                  border: 1px solid #ccc;
+                  font-size: 16px;
+                  transition: border-color 0.3s;
+                  color: #444;
+                  cursor: pointer;
+                  @media (max-width: 768px) {
+                    font-size: 13px;
+                    padding: 5px;
+                  }
+                }
+                .datePicker {
+                  padding: 8px;
+                  border-radius: 4px;
+                  border: 1px solid #ccc;
+                  font-size: 16px;
+                  transition: border-color 0.3s;
+                }
+                .fetchButton {
+                  padding: 8px 16px;
+                  border-radius: 4px;
+                  border: none;
+                  background-color: #05aced;
+                  color: white;
+                  font-size: 16px;
+                  cursor: pointer;
+                  transition: background-color 0.3s;
+                  @media (max-width: 768px) {
+                    font-size: 13px;
+                    margin-top: 10px;
+                  }
+                }
+                .fetchButton:hover {
+                  background-color: #69c2ef;
+                }
+              }
+            }
+
+            .result {
+              display: flex;
+              flex-direction: column;
+              margin-bottom: 30px;
+              overflow-x: auto;
+              @media (max-width: 768px) {
+                margin: 20px 0 50px 0;
+              }
+              h3 {
+                margin-bottom: 10px;
+              }
+              h4 {
+                width: 100%;
+                padding: 10px 0;
+                color: #222;
+                font-weight: 600;
+                font-size: 15px;
+                margin-bottom: 10px;
+                text-align: center;
+                @media (max-width: 768px) {
+                  margin-bottom: 5px;
+                  transform: translateX(-50%);
+                }
+              }
+
+              .section {
+                background-color: #ffffff;
+              }
+
+              .row {
+                display: flex;
+                justify-content: space-between;
+
+                @media (max-width: 768px) {
+                  flex-wrap: wrap;
+                }
+              }
+              .column {
+                min-width: 120px;
+                flex-shrink: 0;
+                width: 20%;
+                @media (max-width: 768px) {
+                  width: 50%;
+                }
+                div div {
+                  text-align: right;
+                }
+
+                &.item_categorys div div {
+                  text-align: left;
+                }
+              }
+              /*------------------요약 파란박스 -------------------- */
+              .section.summarySection {
+                margin-top: 30px;
+                background-color: #05aced;
+                padding: 1% 5% 5% 5%;
+                border-radius: 10px;
+                h3,
+                h4 {
+                  color: white;
+                }
+                h3 {
+                  font-size: 25px;
+                  width: 100%;
+                  text-align: center;
+                  margin: 20px 0 20px 0;
+                }
+                h4 {
+                  margin: 0;
+                  padding-left: 10px;
+                }
+                .row {
+                  .column:first-of-type {
+                    div {
+                      &:first-of-type {
+                        border-top-left-radius: 8px;
+                      }
+                      &:last-of-type {
+                        border-bottom-left-radius: 8px;
+                      }
+                    }
+                  }
+                  .column:last-of-type {
+                    div {
+                      &:first-of-type {
+                        border-top-right-radius: 8px;
+                      }
+                      &:last-of-type {
+                        border-bottom-right-radius: 8px;
+                      }
+                    }
+                  }
+                  @media (max-width: 768px) {
+                    .column:nth-of-type(odd) {
+                      div {
+                        &:first-of-type {
+                          border-top-left-radius: 8px;
+                        }
+                        &:last-of-type {
+                          border-bottom-left-radius: 8px;
+                        }
+                      }
+                    }
+                    .column:nth-of-type(even) {
+                      div {
+                        &:first-of-type {
+                          border-top-right-radius: 8px;
+                        }
+                        &:last-of-type {
+                          border-bottom-right-radius: 8px;
+                        }
+                      }
+                    }
+                  }
+                }
+                .column div {
+                  background-color: white;
+                  font-size: 14px;
+                  line-height: 40px;
+                  padding: 0 8px;
+                  &:not(:last-of-type) {
+                    border-bottom: 1px solid #d9d9d9;
+                  }
+                  @media (max-width: 768px) {
+                    padding: 0 6%;
+                    line-height: 35px;
+                    font-size: 13px;
                   }
                 }
               }
-              .column:last-of-type {
-                div {
-                  &:first-of-type {
-                    border-top-right-radius: 8px;
-                  }
-                  &:last-of-type {
-                    border-bottom-right-radius: 8px;
-                  }
+              /*-------------------------------------- */
+            }
+            .income,
+            .expense {
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              margin-bottom: 10px;
+              @media (max-width: 768px) {
+                gap: 5px;
+              }
+              div {
+                width: 100%;
+                padding: 5px 10px;
+                font-size: 14px;
+                font-weight: 500;
+                background-color: #f4f4f3;
+                @media (max-width: 768px) {
+                  font-size: 13px;
                 }
               }
-            }
-            .column div {
-              background-color: white;
-              font-size: 14px;
-              line-height: 40px;
-              padding: 0 8px;
-              &:not(:last-of-type) {
-                border-bottom: 1px solid #d9d9d9;
+
+              .noDataMessage {
+                color: #ff0000;
+                text-align: center;
+                font-weight: bold;
+                margin-top: 20px;
               }
             }
           }
-          .row {
-            display: flex;
-            justify-content: space-between;
-            .column:not(:first-of-type) div{
-                text-align: right;
-            }
-            
-          }
-          .column {
-            min-width: 120px;
-            flex-shrink: 0;
-            width:20%;
-          }
-        }
-        .income,
-          .expense {
-            display: flex;
-            flex-direction: column;
-            gap:10px;
-            margin-bottom:10px;
-           
-            div{
-              width:100%;
-              padding: 5px 10px;
-              font-size: 14px;
-              font-weight: 500;
-              background-color: #f4f4f3;
-          }
-       
-        
-        .noDataMessage {
-          color: #ff0000;
-          text-align: center;
-          font-weight: bold;
-          margin-top: 20px;
-        }
-        }
-      `}
+        `}
       </style>
     </div>
   );

@@ -25,27 +25,27 @@ function YearlyView() {
     },
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
 
-        console.log("Fetching yearly data for:", year);
+  //       console.log("Fetching yearly data for:", year);
 
-        const response = await api.get(
-          `/tax/profitLossStatement/yearly/${year}`
-        );
-        setData(response.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("데이터를 가져오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       const response = await api.get(
+  //         `/tax/profitLossStatement/yearly/${year}`
+  //       );
+  //       setData(response.data);
+  //     } catch (err) {
+  //       console.error("Error fetching data:", err);
+  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, [year]);
+  //   fetchData();
+  // }, [year]);
 
   const handleYearChange = (event) => {
     setYear(Number(event.target.value));
@@ -123,7 +123,7 @@ function YearlyView() {
   const preTaxIncome = calculatePreTaxIncome(operatingIncome);
   const netIncome = calculateNetIncome(preTaxIncome);
 
-  if (loading) return <Spinner />;
+  // if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
 
   return (
@@ -226,7 +226,9 @@ function YearlyView() {
       <style jsx>{`
         .yearlyView {
           padding: 50px;
-
+          @media (max-width: 768px) {
+            padding: 15px;
+          }
           h3 {
             text-align: center;
             width: 100%;
@@ -234,10 +236,17 @@ function YearlyView() {
             font-size: 22px;
             color: #333;
             margin: 30px 0 20px 0;
+            @media (max-width: 1024px) {
+              font-size: 20px;
+              margin: 15px 0 10px 0;
+            }
           }
           .titleFitler {
             position: relative;
             margin-bottom: 60px;
+            @media (max-width: 1024px) {
+              margin-bottom: 20px;
+            }
             .filterGroup {
               position: absolute;
               right: 0;
@@ -247,9 +256,17 @@ function YearlyView() {
               align-items: center;
               margin-bottom: 20px;
               gap: 10px;
+              @media (max-width: 768px) {
+                position: static;
+                width: 100%;
+              }
               label {
                 display: flex;
                 align-items: center;
+                @media (max-width: 768px) {
+                  width: 100%;
+                  justify-content: center;
+                }
                 span {
                   margin-right: 10px;
                   font-weight: 600;
@@ -289,6 +306,7 @@ function YearlyView() {
               background-color: #05aced;
               padding: 1% 5% 5% 5%;
               border-radius: 10px;
+
               h3,
               h4 {
                 color: white;
@@ -322,9 +340,15 @@ function YearlyView() {
             .row {
               display: flex;
               justify-content: space-between;
+              @media (max-width: 768px) {
+                flex-wrap: wrap;
+              }
             }
             .column {
               width: 48%;
+              @media (max-width: 768px) {
+                width: 100%;
+              }
             }
             .column div {
               margin-bottom: 10px;

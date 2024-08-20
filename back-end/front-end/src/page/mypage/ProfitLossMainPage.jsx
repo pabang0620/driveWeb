@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useCheckPermission from "../../utils/useCheckPermission";
 
 function ProfitLossMainPage() {
-  useCheckPermission();
+  //useCheckPermission();
 
   const [viewMode, setViewMode] = useState("year");
   const [isVisible, setIsVisible] = useState(true);
@@ -115,6 +115,10 @@ function ProfitLossMainPage() {
           max-width: 1200px;
           margin: 100px auto 100px auto;
           height: auto;
+          @media (max-width: 768px) {
+            width: 90%;
+            margin: 50px auto 100px auto;
+          }
           > div {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 3px;
@@ -149,6 +153,9 @@ function ProfitLossMainPage() {
               &:last-child::before {
                 display: none; /* 마지막 버튼의 ::before 제거 */
               }
+              @media (max-width: 768px) {
+                font-size: 14px;
+              }
             }
             button.active {
               color: #05aced;
@@ -167,21 +174,6 @@ function ProfitLossMainPage() {
               background-color: #ddd;
             }
           }
-          label {
-            display: flex;
-            align-items: center;
-          }
-          label span {
-            margin-right: 10px;
-            font-weight: bold;
-          }
-          select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            transition: border-color 0.3s;
-          }
           .scrollBtn {
             width: 50px;
             height: 50px;
@@ -191,6 +183,12 @@ function ProfitLossMainPage() {
             bottom: 100px;
             background-color: #05aced;
             cursor: pointer;
+            @media (max-width: 1024px) {
+              width: 40px;
+              height: 40px;
+              right: 20px;
+              bottom: 80px;
+            }
             img {
               width: 40%;
               filter: brightness(0) invert(1);
@@ -260,6 +258,25 @@ function ProfitLossMainPage() {
                 border-left: 1px solid #f0f0f0;
               }
             }
+          }
+
+           {
+            /*           
+          label {
+            display: flex;
+            align-items: center;
+          }
+          label span {
+            margin-right: 10px;
+            font-weight: bold;
+          }
+          select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s;
+          } */
           }
         }
       `}</style>
