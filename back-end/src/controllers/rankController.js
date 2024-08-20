@@ -115,7 +115,12 @@ const getTopFuelEfficiencyUsers = async (req, res) => {
 // 주행 거리 랭킹
 async function topDrivingDistanceUsers(req, res) {
   try {
-    const users = await getTopDrivingDistanceUsersModel();
+    const { filterType, filterValue } = req.body; // Using query params for better API design
+
+    const users = await getTopDrivingDistanceUsersModel(
+      filterType,
+      filterValue
+    );
     res.json(users);
   } catch (error) {
     console.error("주행 거리 랭킹 조회 중 오류 발생:", error);

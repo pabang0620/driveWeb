@@ -65,13 +65,6 @@ const RankCategorySetting = () => {
     });
   };
 
-  const handleFilterNumberChange = (e) => {
-    setEditedCategory({
-      ...editedCategory,
-      filter_number: parseInt(e.target.value),
-    });
-  };
-
   const getFilterLabel = (filterNumber) => {
     const filters = { 1: "직종 필터", 2: "연료 필터", 3: "차종 필터" };
     return filters[filterNumber] || "없음";
@@ -128,21 +121,7 @@ const RankCategorySetting = () => {
                   getPositionLabel(cat.show_number)
                 )}
               </td>
-              <td>
-                {editMode === cat.id ? (
-                  <select
-                    value={editedCategory.filter_number}
-                    onChange={handleFilterNumberChange}
-                  >
-                    <option value="0">없음</option>
-                    <option value="1">직종 필터</option>
-                    <option value="2">연료 필터</option>
-                    <option value="3">차종 필터</option>
-                  </select>
-                ) : (
-                  getFilterLabel(cat.filter_number)
-                )}
-              </td>
+              <td>{getFilterLabel(cat.filter_number)}</td>
               <td>
                 {editMode === cat.id ? (
                   <>
@@ -190,11 +169,6 @@ const RankCategorySetting = () => {
               td {
                 border: 1px solid #ddd;
                 font-size: 14px;
-                select {
-                  font-size: 14px;
-                  padding: 3% 10%;
-                  display: inline;
-                }
               }
               th {
                 background-color: #f4f4f4;
@@ -251,7 +225,7 @@ const RankCategorySetting = () => {
             background-color: #d32f2f;
           }
 
-          /*---------------------카터고리 추가---------------------*/
+          /*---------------------카테고리 추가---------------------*/
           .add-category {
             width: 100%;
             display: flex;
