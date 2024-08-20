@@ -1,13 +1,18 @@
 const {
-  getTopUsersByDrivingTime,
-  getTopUsersByNetIncome,
-  getTopUsersByFuelEfficiency,
-} = require("../models/driveModel");
-const {
   getTopPostsByLikesAndViews,
   getTopPostsByBoards,
 } = require("../models/postModel");
-const { getAllRankings, updateRankingModel } = require("../models/rankModel");
+const {
+  getAllRankings,
+  updateRankingModel,
+  getTopUsersByDrivingTime,
+  getTopTotalCasesUsersModel,
+  getTopProfitLossUsersModel,
+  getTopDrivingDistanceUsersModel,
+  getTopUsersByFuelEfficiency,
+  getTopUsersByNetIncome,
+} = require("../models/rankModel");
+
 // 관리자모드 설정
 const getRankings = async (req, res) => {
   try {
@@ -65,22 +70,22 @@ const getTopPosts = async (req, res) => {
 // 랭킹
 const getTopUsers = async (req, res) => {
   try {
-    const { jobtype } = req.body;
-    const users = await getTopUsersByDrivingTime(jobtype);
+    const { filterType, filterValue } = req.body; // Using query params for better API design
+    const users = await getTopUsersByDrivingTime(filterType, filterValue);
     res.status(200).json(users);
   } catch (error) {
-    console.error("Error fetching top users by driving time:", error);
+    console.error("Error fetching top users:", error);
     res.status(500).json({
-      error: "유저 정보를 가져오는 중 오류가 발생했습니다: " + error.message,
+      error: "Error fetching top users: " + error.message,
     });
   }
 };
 
-// 순이익 탑
+// 총 운송
 const getTopNetIncomeUsers = async (req, res) => {
   try {
-    const { carType } = req.body;
-    const users = await getTopUsersByNetIncome(carType);
+    const { filterType, filterValue } = req.body;
+    const users = await getTopUsersByNetIncome(filterType, filterValue);
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching top net income users:", error);
@@ -93,8 +98,8 @@ const getTopNetIncomeUsers = async (req, res) => {
 // 연비 랭크
 const getTopFuelEfficiencyUsers = async (req, res) => {
   try {
-    const { fuelType } = req.body;
-    const users = await getTopUsersByFuelEfficiency(fuelType);
+    const { filterType, filterValue } = req.body; // Accept filter parameters through query
+    const users = await getTopUsersByFuelEfficiency(filterType, filterValue);
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching top fuel efficiency users:", error);
@@ -104,6 +109,47 @@ const getTopFuelEfficiencyUsers = async (req, res) => {
   }
 };
 
+// 주행 거리 랭킹
+async function topDrivingDistanceUsers(req, res) {
+  try {
+    const users = await getTopDrivingDistanceUsersModel();
+    res.json(users);
+  } catch (error) {
+    console.error("주행 거리 랭킹 조회 중 오류 발생:", error);
+    res
+      .status(500)
+      .json({ error: "주행 거리 랭킹 조회 중 오류 발생: " + error.message });
+  }
+}
+
+// 총 건수 랭킹
+async function topTotalCasesUsers(req, res) {
+  try {
+    const { filterType, filterValue } = req.body;
+    const users = await getTopTotalCasesUsersModel(filterType, filterValue);
+    res.json(users);
+  } catch (error) {
+    console.error("총 건수 랭킹 조회 중 오류 발생:", error);
+    res
+      .status(500)
+      .json({ error: "총 건수 랭킹 조회 중 오류 발생: " + error.message });
+  }
+}
+
+// 순이익 랭킹
+async function topProfitLossUsers(req, res) {
+  try {
+    const { filterType, filterValue } = req.body;
+    const users = await getTopProfitLossUsersModel(filterType, filterValue);
+    res.json(users);
+  } catch (error) {
+    console.error("순이익 랭킹 조회 중 오류 발생:", error);
+    res
+      .status(500)
+      .json({ error: "순이익 랭킹 조회 중 오류 발생: " + error.message });
+  }
+}
+
 module.exports = {
   getRankings,
   updateRanking,
@@ -112,4 +158,7 @@ module.exports = {
   getTopUsers,
   getTopNetIncomeUsers,
   getTopFuelEfficiencyUsers,
+  topDrivingDistanceUsers,
+  topTotalCasesUsers,
+  topProfitLossUsers,
 };

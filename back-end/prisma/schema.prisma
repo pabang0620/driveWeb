@@ -335,8 +335,9 @@ model users {
 }
 
 model Ranking {
-  id            Int    @id @default(autoincrement())
-  name          String @db.VarChar(255)
+  id            Int     @id @default(autoincrement())
+  name          String  @db.VarChar(255)
   show_number   Int?
   filter_number Int?
+  api_name      String? @db.VarChar(40)
 }

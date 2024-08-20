@@ -1,24 +1,26 @@
 import { useState, useEffect } from "react";
-import {
-  postRankTopUsers,
-  postRankTopNetIncome,
-  postRankTopFuelEfficiency,
-} from "../../components/ApiPost";
-import { fuelType, carType, jobType } from "../../components/dummy";
-const RankingList = ({ title, rankType }) => {
-  const [selectedOption, setSelectedOption] = useState("");
+import axios from "axios";
+
+const RankingList = ({ title, filterNumber, api_name }) => {
+  const [selectedOption, setSelectedOption] = useState("전체");
   const [profiles, setProfiles] = useState([]);
 
-  // rankType에 따라 options을 설정
+  // 필터 번호에 따라 실제 필터 타입을 설정
+  const filterTypeMap = {
+    1: "jobtype",
+    2: "fuelType",
+    3: "carType",
+  };
+
+  const filterType = filterTypeMap[filterNumber];
+
+  // 필터 번호에 따른 옵션 설정
   let options;
-  switch (rankType) {
-    case "jobType":
+  switch (filterNumber) {
+    case 1:
       options = ["전체", "택시", "배달", "기타"];
       break;
-    case "carType":
-      options = ["전체"];
-      break;
-    case "fuelType":
+    case 2:
       options = [
         "전체",
         "LPG",
@@ -33,50 +35,34 @@ const RankingList = ({ title, rankType }) => {
         "기타",
       ];
       break;
+    case 3:
+      options = [
+        "전체",
+        "택시(중형)",
+        "택시(대형)",
+        "택시(고급)",
+        "택시(승합)",
+      ];
+      break;
     default:
-      options = [];
+      options = ["전체"];
   }
 
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        let response;
-        // switch (rankType) {
-        //   case "jobType":
-        //     response = await postRankTopUsers({ jobtype: selectedOption });
-        //     break;
-        //   case "carType":
-        //     response = await postRankTopNetIncome({ carType: selectedOption });
-        //     break;
-        //   case "fuelType":
-        //     response = await postRankTopFuelEfficiency({
-        //       fuelType: selectedOption,
-        //     });
-        //     break;
-        //   default:
-        //     throw new Error("알 수 없는 API 타입입니다.");
-        // }
-        switch (rankType) {
-          case "jobType":
-            response = jobType; // 더미 데이터로 교체
-            break;
-          case "carType":
-            response = carType; // 더미 데이터로 교체
-            break;
-          case "fuelType":
-            response = fuelType; // 더미 데이터로 교체
-            break;
-          default:
-            throw new Error("알 수 없는 API 타입입니다.");
-        }
-        setProfiles(response);
+        const response = await axios.post(`/api/rank/${api_name}`, {
+          filterType,
+          filterValue: selectedOption !== "전체" ? selectedOption : undefined,
+        });
+        setProfiles(response.data);
       } catch (error) {
-        console.error("데이터 요청 중 오류 발생:", error);
+        console.error(`데이터 요청 중 오류 발생 (${title}):`, error);
       }
     };
 
     fetchProfiles();
-  }, [selectedOption, rankType]);
+  }, [selectedOption, title, api_name, filterType]);
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
@@ -97,18 +83,9 @@ const RankingList = ({ title, rankType }) => {
       <ul className="profileWrap">
         {profiles.map((profile, index) => (
           <li key={index} className="profile">
-            <p>{index + 1}</p>
             <div className="profilePicture"></div>
             <p className="profileName">{profile.nickname}</p>
-            {rankType === "jobType" && (
-              <p className="profileValue">{profile.totalDrivingTime}분</p>
-            )}
-            {rankType === "carType" && (
-              <p className="profileValue">{profile.netIncome} 원</p>
-            )}
-            {rankType === "fuelType" && (
-              <p className="profileValue">{profile.fuelEfficiency} km/L</p>
-            )}
+            <p className="profileValue">{profile.value}</p>
           </li>
         ))}
       </ul>
@@ -116,77 +93,57 @@ const RankingList = ({ title, rankType }) => {
       <style jsx>{`
         .ranking {
           width: 30%;
-          @media (max-width: 1024px) {
-            width: 48%;
-            margin-bottom: 15px;
-          }
-          @media (max-width: 767px) {
-            width: 100%;
-            margin-bottom: 15px;
-          }
+          margin-bottom: 15px;
           > div {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-            @media (max-width: 768px) {
-              margin-bottom: 10px;
-            }
-            h3 {
-              color: #4c4c4c;
-              font-size: 16px;
-            }
-            select {
-              width: 30%;
-              color: #505050;
-              border: 1px solid #c1c1c1;
-              font-size: 14px;
-              border-radius: 5px;
-              padding: 3px 5px;
-            }
-          }
-
-          ul.profileWrap {
-            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 5%;
-            gap: 10px;
-            background-color: #f0f3f5;
-            border-radius: 5px;
-            @media (max-width: 768px) {
-              gap: 5px;
-              padding: 3%;
+            h3 {
+              color: #4c4c4c;
+              font-size: 16px;
+              margin-bottom: 10px;
             }
-            li {
-              background-color: white;
-              border: 1px solid #d9d9d9;
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              align-items: center;
-              gap: 5%;
-              width: 100%;
+            select {
+              width: 50%;
+              padding: 8px 10px;
+              font-size: 14px;
               border-radius: 5px;
-              padding: 10px;
+              border: 1px solid #ccc;
+            }
+          }
+        }
 
-              .profilePicture {
-                width: 35px;
-                aspect-ratio: 1/1;
-                background-color: gold;
-                border-radius: 50%;
-              }
-              .profileName {
-                font-size: 14px;
-              }
+        .profileWrap {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          padding: 10px;
+          background-color: #f0f3f5;
+          border-radius: 5px;
+          li.profile {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
 
-              .profileValue {
-                font-size: 12px;
-                margin-left: auto;
-              }
+            .profilePicture {
+              width: 35px;
+              height: 35px;
+              border-radius: 50%;
+              background-color: #ccc;
+              margin-right: 10px;
+            }
+
+            .profileName {
+              font-size: 14px;
+              flex-grow: 1;
+            }
+
+            .profileValue {
+              font-size: 14px;
+              color: #555;
             }
           }
         }
