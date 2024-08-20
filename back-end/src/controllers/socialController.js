@@ -36,7 +36,7 @@ const socialLogin = async (req, res, provider) => {
         id: String(response.data.id),
         email: response.data.kakao_account.email,
         nickname:
-          response.data.kakao_account.profile_nickname || "카카오 사용자",
+          response.data.kakao_account.profile.nickname || "카카오 사용자",
       };
 
       console.log("Parsed user data:", userData);
@@ -90,81 +90,90 @@ const socialLogin = async (req, res, provider) => {
     if (!user) {
       console.log("No existing user found. Creating new user...");
 
-      user = await createUser({
-        nickname,
-        username: email,
-        password: null, // 소셜 로그인은 비밀번호가 없음
-        userQuestion: null,
-        userAnswer: null,
-        jobtype: null,
-        kakaoId: provider === "kakao" ? id : null,
-        googleId: provider === "google" ? id : null,
-        naverId: provider === "naver" ? id : null,
-      });
+      try {
+        user = await createUser({
+          nickname,
+          username: email,
+          password: null, // 소셜 로그인은 비밀번호가 없음
+          userQuestion: null,
+          userAnswer: null,
+          jobtype: null,
+          kakaoId: provider === "kakao" ? id : null,
+          googleId: provider === "google" ? id : null,
+          naverId: provider === "naver" ? id : null,
+        });
 
-      console.log("User created with ID:", user.id);
+        console.log("User created with ID:", user.id);
 
-      // 사용자 프로필 생성
-      await createUserProfile({
-        userId: user.id,
-        email: email,
-        name: nickname,
-      });
+        // 사용자 프로필 생성
+        await createUserProfile({
+          userId: user.id,
+          email: email,
+          name: nickname,
+        });
 
-      console.log("User profile created for user ID:", user.id);
+        console.log("User profile created for user ID:", user.id);
 
-      // 사용자 차량 정보 생성
-      await createUserVehicle({
-        userId: user.id,
-        carType: "",
-        franchise_status: "",
-        vehicle_name: "",
-        year: null,
-        fuel_type: "",
-        mileage: null,
-        commission_rate: null,
-      });
+        // 사용자 차량 정보 생성
+        await createUserVehicle({
+          userId: user.id,
+          carType: "",
+          franchise_status: "",
+          vehicle_name: "",
+          year: null,
+          fuel_type: "",
+          mileage: null,
+          commission_rate: null,
+        });
 
-      console.log("User vehicle info created for user ID:", user.id);
+        console.log("User vehicle info created for user ID:", user.id);
 
-      // 사용자 소득 정보 생성
-      await createUserIncome({
-        userId: user.id,
-        income_type: "",
-        start_date: null,
-        region1: "",
-        region2: "",
-        monthly_payment: null,
-        fuel_allowance: null,
-        investment: null,
-        standard_expense_rate: null,
-      });
+        // 사용자 소득 정보 생성
+        await createUserIncome({
+          userId: user.id,
+          income_type: "",
+          start_date: null,
+          region1: "",
+          region2: "",
+          monthly_payment: null,
+          fuel_allowance: null,
+          investment: null,
+          standard_expense_rate: null,
+        });
 
-      console.log("User income info created for user ID:", user.id);
+        console.log("User income info created for user ID:", user.id);
 
-      // my_car 테이블에 데이터 생성
-      const myCar = await createMyCar({
-        userId: user.id,
-        vehicle_name: "",
-        fuel_type: "",
-        year: null,
-        mileage: null,
-        license_plate: "",
-        first_registration_date: null,
-        insurance_company: "",
-        insurance_period: null,
-        insurance_fee: null,
-        insurance_period_start: null,
-        insurance_period_end: null,
-        imageUrl: "",
-      });
+        // my_car 테이블에 데이터 생성
+        const myCar = await createMyCar({
+          userId: user.id,
+          vehicle_name: "",
+          fuel_type: "",
+          year: null,
+          mileage: null,
+          license_plate: "",
+          first_registration_date: null,
+          insurance_company: "",
+          insurance_period: null,
+          insurance_fee: null,
+          insurance_period_start: null,
+          insurance_period_end: null,
+          imageUrl: "",
+        });
 
-      console.log("MyCar entry created for user ID:", user.id);
+        console.log("MyCar entry created for user ID:", user.id);
 
-      // maintenance_items 테이블에 기본 항목 생성
-      await createDefaultMaintenanceItems(myCar.id, user.id);
+        // maintenance_items 테이블에 기본 항목 생성
+        await createDefaultMaintenanceItems(myCar.id, user.id);
 
-      console.log("Default maintenance items created for car ID:", myCar.id);
+        console.log("Default maintenance items created for car ID:", myCar.id);
+      } catch (error) {
+        console.error("Error during user creation process:", error);
+        return res.status(500).json({
+          error: "회원가입 중 오류가 발생했습니다.",
+          message: error.message,
+          stack: error.stack,
+        });
+      }
     } else {
       console.log("Existing user found with ID:", user.id);
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
@@ -53,25 +53,34 @@ function Login() {
   };
 
   /*----------------------네이버 로그인 핸들러----------------------*/
-  const handleNaverLoginSuccess = async (response) => {
+  const handleNaverLoginSuccess = async (accessToken) => {
     try {
-      console.log("Naver login success:", response);
+      console.log("Extracted access token:", accessToken);
 
       const responseData = await axios.post("/api/social/naver-login", {
-        token: response.accessToken,
+        token: accessToken,
       });
 
-      // 응답 데이터에서 토큰만 추출하여 로컬스토리지에 저장
       const token = responseData.data.token;
-      console.log("JWT Token:", token); // 콘솔에 토큰 값 출력
-
+      console.log("JWT Token:", token);
       localStorage.setItem("token", token);
+
       navigate("/");
     } catch (error) {
-      console.error(
-        "Naver login error:",
-        error.response?.data || error.message
-      );
+      console.error("Naver login error:", error);
+
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        alert(
+          `Error: ${error.response.data.error}\nMessage: ${error.response.data.message}`
+        );
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert("No response received from server. Please try again later.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert(`Error: ${error.message}`);
+      }
     }
   };
 
@@ -92,7 +101,6 @@ function Login() {
       const token = responseData.data.token;
       console.log("JWT Token:", token);
 
-      // 기존 로컬스토리지 키 변경: kakao_db73a80e65b6fe722d881859aec02bb7 -> token
       localStorage.setItem("token", token);
       localStorage.removeItem("kakao_db73a80e65b6fe722d881859aec02bb7");
 
@@ -153,7 +161,7 @@ function Login() {
           <NaverLogin
             clientId={process.env.REACT_APP_NAVER_CLIENT_ID}
             callbackUrl={window.location.origin}
-            onSuccess={handleNaverLoginSuccess}
+            // onSuccess={handleNaverLoginSuccess}
             onFailure={handleNaverLoginFailure}
           />
           <KakaoLogin

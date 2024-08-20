@@ -15,7 +15,50 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 특정 함수 예시 (실행할 함수)
+  const handleAccessToken = async (accessToken) => {
+    try {
+      console.log("Extracted access token:", accessToken);
+
+      const responseData = await axios.post("/api/social/naver-login", {
+        token: accessToken,
+      });
+
+      const token = responseData.data.token;
+      console.log("JWT Token:", token);
+      localStorage.setItem("token", token);
+
+      // 로그인 후 메인 페이지로 이동
+      // navigate("/"); // 이 부분은 필요에 따라 추가할 수 있습니다.
+    } catch (error) {
+      console.error("Naver login error:", error);
+
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+        alert(
+          `Error: ${error.response.data.error}\nMessage: ${error.response.data.message}`
+        );
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        alert("No response received from server. Please try again later.");
+      } else {
+        console.error("Error setting up the request:", error.message);
+        alert(`Error: ${error.message}`);
+      }
+    }
+  };
+
   useEffect(() => {
+    const hash = window.location.hash;
+
+    if (hash.includes("access_token")) {
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get("access_token");
+      if (accessToken) {
+        handleAccessToken(accessToken); // 액세스 토큰이 있는 경우 함수 실행
+      }
+    }
+
     const fetchTopRank = async () => {
       try {
         const response = await axios.get("/api/rank/topRank");
