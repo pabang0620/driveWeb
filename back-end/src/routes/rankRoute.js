@@ -1,15 +1,19 @@
 const express = require("express");
 const {
-  getRecentPostsByBoard,
   getTopNetIncomeUsers,
   getTopUsers,
   getTopFuelEfficiencyUsers,
   getTopPosts,
+  getRankings,
+  updateRanking,
 } = require("../controllers/rankController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 // 운행시간 탑
+router.get("/list", getRankings);
+
+router.put("/list/:id", updateRanking);
 
 router.post("/top-users", authMiddleware, getTopUsers);
 

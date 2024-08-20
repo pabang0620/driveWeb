@@ -4,11 +4,42 @@ const {
   getTopUsersByFuelEfficiency,
 } = require("../models/driveModel");
 const {
-  getRecentPosts,
   getTopPostsByLikesAndViews,
   getTopPostsByBoards,
 } = require("../models/postModel");
-
+const { getAllRankings, updateRankingModel } = require("../models/rankModel");
+// 관리자모드 설정
+const getRankings = async (req, res) => {
+  try {
+    const rankings = await getAllRankings();
+    res.status(200).json(rankings);
+  } catch (error) {
+    console.error("Error fetching rankings:", error);
+    res.status(500).json({
+      error: "랭킹 정보를 가져오는 중 오류가 발생했습니다.",
+      details: error.message,
+    });
+  }
+};
+const updateRanking = async (req, res) => {
+  const { id } = req.params;
+  const { name, show_number, filter_number } = req.body;
+  // console.log(id, name, show_number, filter_number);
+  try {
+    const updatedRanking = await updateRankingModel(id, {
+      name,
+      show_number,
+      filter_number,
+    });
+    res.json(updatedRanking);
+  } catch (error) {
+    console.error("Error updating ranking:", error);
+    res.status(500).json({
+      error: "랭킹 정보를 업데이트하는 중 오류가 발생했습니다.",
+      details: error.message,
+    });
+  }
+};
 // 게시글 랭킹
 const getTopPosts = async (req, res) => {
   try {
@@ -19,12 +50,10 @@ const getTopPosts = async (req, res) => {
     res.status(200).json({ topLikedPosts, topViewedPosts, boardsWithPosts });
   } catch (error) {
     console.error("Error fetching top posts:", error); // 오류 메시지를 콘솔에 기록
-    res
-      .status(500)
-      .json({
-        error: "인기 게시글 조회 중 오류가 발생했습니다.",
-        details: error.message,
-      }); // 상세 오류 메시지를 응답에 포함
+    res.status(500).json({
+      error: "인기 게시글 조회 중 오류가 발생했습니다.",
+      details: error.message,
+    }); // 상세 오류 메시지를 응답에 포함
   }
 };
 
@@ -33,7 +62,6 @@ const getTopPosts = async (req, res) => {
 // 랭킹
 // 랭킹
 // 랭킹
-
 // 랭킹
 const getTopUsers = async (req, res) => {
   try {
@@ -77,6 +105,9 @@ const getTopFuelEfficiencyUsers = async (req, res) => {
 };
 
 module.exports = {
+  getRankings,
+  updateRanking,
+  // --관리자 끝 --
   getTopPosts,
   getTopUsers,
   getTopNetIncomeUsers,

@@ -41,21 +41,21 @@ const RankingList = ({ title, rankType }) => {
     const fetchProfiles = async () => {
       try {
         let response;
-        switch (rankType) {
-          case "jobType":
-            response = await postRankTopUsers({ jobtype: selectedOption });
-            break;
-          case "carType":
-            response = await postRankTopNetIncome({ carType: selectedOption });
-            break;
-          case "fuelType":
-            response = await postRankTopFuelEfficiency({
-              fuelType: selectedOption,
-            });
-            break;
-          default:
-            throw new Error("알 수 없는 API 타입입니다.");
-        }
+        // switch (rankType) {
+        //   case "jobType":
+        //     response = await postRankTopUsers({ jobtype: selectedOption });
+        //     break;
+        //   case "carType":
+        //     response = await postRankTopNetIncome({ carType: selectedOption });
+        //     break;
+        //   case "fuelType":
+        //     response = await postRankTopFuelEfficiency({
+        //       fuelType: selectedOption,
+        //     });
+        //     break;
+        //   default:
+        //     throw new Error("알 수 없는 API 타입입니다.");
+        // }
         switch (rankType) {
           case "jobType":
             response = jobType; // 더미 데이터로 교체
