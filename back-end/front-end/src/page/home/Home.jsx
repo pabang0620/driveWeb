@@ -5,8 +5,10 @@ import NoticeZone from "./NoticeZone";
 import TopRankList from "./TopRankList";
 import Banner from "./Banner";
 import TabsContainer from "./TabsContainer";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   const [boardsWithPosts, setBoardsWithPosts] = useState([]);
   const [topViewedPosts, setTopViewedPosts] = useState([]);
   const [topLikedPosts, setTopLikedPosts] = useState([]);
@@ -29,7 +31,8 @@ function Home() {
       localStorage.setItem("token", token);
 
       // 로그인 후 메인 페이지로 이동
-      // navigate("/"); // 이 부분은 필요에 따라 추가할 수 있습니다.
+      navigate("/"); // 이 부분은 필요에 따라 추가할 수 있습니다.
+      // window.location.reload();
     } catch (error) {
       console.error("Naver login error:", error);
 
