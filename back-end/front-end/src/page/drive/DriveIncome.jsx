@@ -42,11 +42,11 @@ const DriveIncome = ({
     income_spare_2: 0,
     income_spare_3: 0,
     income_spare_4: 0,
-    working_hours:
-      convertSecondsToTime(localStorage.getItem("working_hours_seconds")) || "",
+    working_hours: Number(localStorage.getItem("working_hours_seconds")) || "",
     business_distance: localStorage.getItem("businessDistance") || "",
   });
 
+  console.log(driveIncomeData.working_hours, driveIncomeData.business_distance);
   useEffect(() => {
     const fetchIncomeData = async () => {
       try {
@@ -79,9 +79,9 @@ const DriveIncome = ({
             income_spare_3: data.income_spare_3 || 0,
             income_spare_4: data.income_spare_4 || 0,
             working_hours:
-              convertSecondsToTime(data.working_hours_seconds) ||
-              driveIncomeData.working_hours,
-            business_distance: data.business_distance || business_distance,
+              Number(localStorage.getItem("working_hours_seconds")) || "",
+            business_distance:
+              Number(localStorage.getItem("businessDistance")) || "",
           });
         }
       } catch (error) {

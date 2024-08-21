@@ -219,7 +219,7 @@ const updateTotalIncome = async (id, data) => {
 
     // income_per_km와 income_per_hour 계산
     const business_distance = parseFloat(data.business_distance || 0);
-    const working_hours_seconds = parseFloat(data.working_hours_seconds || 0);
+    const working_hours_seconds = parseFloat(data.working_hours || 0);
 
     const income_per_km = business_distance
       ? total_income / business_distance
@@ -228,7 +228,11 @@ const updateTotalIncome = async (id, data) => {
     const income_per_hour = working_hours_seconds
       ? total_income / (working_hours_seconds / 3600) // seconds to hours
       : 0;
-
+    // console.log("###########################################");
+    // console.log(total_income);
+    // console.log(working_hours_seconds);
+    // console.log(income_per_km);
+    // console.log(income_per_hour);
     const updatedRecord = await prisma.income_records.update({
       where: { id: id },
       data: {
