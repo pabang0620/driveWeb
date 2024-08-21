@@ -163,7 +163,7 @@ function Login() {
             <NaverLogin
               clientId={process.env.REACT_APP_NAVER_CLIENT_ID}
               callbackUrl={window.location.origin}
-              // onSuccess={handleNaverLoginSuccess}
+              onSuccess={handleNaverLoginSuccess}
               onFailure={handleNaverLoginFailure}
             />
 
@@ -310,6 +310,7 @@ function Login() {
               position: relative !important;
               border-radius: 3px;
               img {
+                width: auto;
                 height: 100%;
                 position: absolute;
                 top: 50%;

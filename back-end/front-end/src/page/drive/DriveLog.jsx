@@ -4,14 +4,41 @@ import DriveWrite from "./DriveWrite";
 import DriveIncome from "./DriveIncome";
 import DriveExpense from "./DriveExpense";
 import DriveDetails from "./DriveDetails"; // 추가
-import { getDrive } from "../../components/ApiGet";
+import {
+  getDrive,
+  getJobtype,
+  getProfileVehicle,
+} from "../../components/ApiGet";
 import TitleBox from "../../components/TitleBox";
 import { useParams } from "react-router-dom";
 import useCheckPermission from "../../utils/useCheckPermission";
 
 const DriveLog = () => {
   useCheckPermission();
+  // ----- 정보 미 입력시 라우터 --------
+  const [vehicleInfo, setVehicleInfo] = useState({
+    carType: "", // 차량종류
+    franchise_status: "", // 가맹상태
+    vehicle_name: "", // 차량 이름
+    year: 0, // 연식
+    fuel_type: "", // 연료유형
+    mileage: 0, // 누적거리
+  });
+  // 회원정보 불러오기
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const vehicleData = await getProfileVehicle();
+        console.log("Vehicle Data:", vehicleData);
+        setVehicleInfo(vehicleData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getUserData();
+  }, []);
 
+  // ------------------------------------
   const [driveLog, setDriveLog] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,6 +158,31 @@ const DriveLog = () => {
     openModal("driveDetails");
   };
 
+  if (!vehicleInfo.carType) {
+    // 차량 종류가 비어있을 경우 메시지 표시
+    return (
+      <div className="container">
+        <h2>차량 정보를 입력해주세요.</h2>
+        <style jsx>{`
+          .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 67vh;
+            h2 {
+              color: #333;
+              font-family: "Arial", sans-serif;
+              font-size: 24px;
+              text-align: center;
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #ffffff;
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
   return (
     <div className="container driving">
       <TitleBox title="운행일지" subtitle="조회" />

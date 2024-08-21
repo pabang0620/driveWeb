@@ -8,6 +8,7 @@ import DriveDateRangeDashBoard from "./DriveDateRangeDashBoard";
 import { jwtDecode } from "jwt-decode";
 import PremiumButton from "../admin/PremiumButton ";
 import useCheckPermission from "../../utils/useCheckPermission";
+import { getJobtype, getProfileVehicle } from "../../components/ApiGet";
 
 const DriveDashBoard = () => {
   useCheckPermission();
@@ -19,7 +20,30 @@ const DriveDashBoard = () => {
     endDate: new Date(),
   });
   const [isBlurred, setIsBlurred] = useState(false);
+  // -----------------------------------------------------
+  const [vehicleInfo, setVehicleInfo] = useState({
+    carType: "", // 차량종류
+    franchise_status: "", // 가맹상태
+    vehicle_name: "", // 차량 이름
+    year: 0, // 연식
+    fuel_type: "", // 연료유형
+    mileage: 0, // 누적거리
+  });
+  // 회원정보 불러오기
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const vehicleData = await getProfileVehicle();
+        console.log("Vehicle Data:", vehicleData);
+        setVehicleInfo(vehicleData);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    getUserData();
+  }, []);
 
+  // ---------------------------------------
   useEffect(() => {
     // 토큰에서 permission 값을 가져와 확인
     const token = localStorage.getItem("token");
@@ -76,7 +100,31 @@ const DriveDashBoard = () => {
 
   // if (loading) return <p>Loading...</p>;
   // if (error) return <p>Error loading data: {error.message}</p>;
-
+  if (!vehicleInfo.carType) {
+    // 차량 종류가 비어있을 경우 메시지 표시
+    return (
+      <div className="container">
+        <h2>차량 정보를 입력해주세요.</h2>
+        <style jsx>{`
+          .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 67vh;
+            h2 {
+              color: #333;
+              font-family: "Arial", sans-serif;
+              font-size: 24px;
+              text-align: center;
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #ffffff;
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
   return (
     <div className="container dashboard-container">
       <h2 className="mainTitle">

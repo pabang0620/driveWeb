@@ -289,6 +289,30 @@ const getUserIncomeRecords = async (userId) => {
   }
 };
 
+async function updateUserJobType(userId, jobtype) {
+  try {
+    console.log(userId, jobtype);
+    const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: { jobtype },
+    });
+    return updatedUser;
+  } catch (error) {
+    console.error("Failed to update job type:", error);
+    throw error; // Error를 던져 컨트롤러에서 처리하도록 합니다.
+  }
+}
+async function findUserById(userId) {
+  try {
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
+    return user;
+  } catch (error) {
+    console.error("Error finding user by ID:", error);
+    throw error;
+  }
+}
 module.exports = {
   createUser,
   findUserByUsername,
@@ -303,4 +327,6 @@ module.exports = {
   getUserProfile,
   getUserVehiclesWithFees,
   getUserIncomeRecords,
+  updateUserJobType,
+  findUserById,
 };

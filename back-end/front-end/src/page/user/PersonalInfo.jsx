@@ -8,9 +8,25 @@ import { faUserCircle, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트 경로에 맞게 수정하세요
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
+import JobTypeComponent from "./JobTypeComponent";
 
 const PersonalInfo = () => {
   useCheckPermission();
+  const [jobtype, setJobtype] = useState(""); // 잡타입 상태
+
+  useEffect(() => {
+    const fetchJobType = async () => {
+      try {
+        const jobtypeData = await getJobtype(); // 잡타입 데이터 가져오기
+        console.log("Job Type Data:", jobtypeData);
+        setJobtype(jobtypeData); // 잡타입 상태 설정
+      } catch (error) {
+        console.error("Failed to fetch job type:", error);
+      }
+    };
+
+    fetchJobType();
+  }, []);
   const [userInfo, setUserInfo] = useState({
     name: "test",
     birth_date: "",
@@ -133,7 +149,10 @@ const PersonalInfo = () => {
   if (loading) {
     return <Spinner />; // 로딩 중일 때 스피너 표시
   }
-
+  if (jobtype === null) {
+    // 차량 종류가 비어있을 경우 메시지 표시
+    return <JobTypeComponent />;
+  }
   return (
     <div className="container userInfo">
       <TitleBox title="회원정보" subtitle="개인정보" />

@@ -16,6 +16,7 @@ const {
   getFranchiseFees,
   verifySecurityAnswer,
   resetPassword,
+  updateJobType,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const handleFileUpload = require("../middleware/handleFileUpload");
@@ -45,5 +46,7 @@ router.get("/franchise-fee", authMiddleware, getFranchiseFees);
 router.post("/franchise-fee", authMiddleware, addFranchiseFee);
 
 router.delete("/franchise-fee/:id", authMiddleware, removeFranchiseFee);
+
+router.put("/jobtype", authMiddleware, updateJobType);
 
 module.exports = router;

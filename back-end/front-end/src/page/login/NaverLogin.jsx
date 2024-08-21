@@ -12,16 +12,18 @@ function NaverLogin() {
       clientId: process.env.REACT_APP_NAVER_CLIENT_ID,
       callbackUrl: window.location.origin,
       isPopup: false, // 팝업 형태로 로그인 창을 띄울지 여부
-      // loginButton: { color: "green", type: 3, height: 40 }, // 로그인 버튼 스타일
     });
 
     naverLogin.init();
 
+    // '네이버 아이디로 로그인' 버튼을 클릭할 때 로그인을 진행
+    const loginTrigger = document.getElementById("naverIdLogin");
+    loginTrigger.onclick = () => naverLogin.authorize();
+
     naverLogin.getLoginStatus(async function (status) {
       if (status) {
-        // 로그인 성공 시 반환된 토큰 및 사용자 정보를 콘솔에 출력
         const token = naverLogin.accessToken.accessToken;
-        const userInfo = naverLogin.user; // 사용자 정보
+        const userInfo = naverLogin.user;
 
         console.log("Naver Login Success");
         console.log("Access Token:", token);
@@ -32,7 +34,7 @@ function NaverLogin() {
             token,
           });
           localStorage.setItem("token", response.data);
-          //   navigate("/");
+          navigate("/"); // 로그인 후 리다이렉트할 경로
         } catch (error) {
           console.error(
             "Naver login error:",
@@ -44,7 +46,11 @@ function NaverLogin() {
   }, [navigate]);
 
   return (
-    <div id="naverIdLogin" className="naverIdLogin">
+    <div
+      id="naverIdLogin"
+      className="naverIdLogin"
+      style={{ cursor: "pointer" }}
+    >
       <img
         src={`${process.env.PUBLIC_URL}/images/login_icons/naver_login.png`}
         alt="네이버 아이디로 로그인"

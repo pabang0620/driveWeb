@@ -12,6 +12,8 @@ const {
   getFranchiseFeesByUserId,
   updateFranchiseFee,
   updateUserPassword,
+  updateUserJobType,
+  findUserById,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -318,7 +320,31 @@ const fetchUserIncomeRecords = async (req, res) => {
       .json({ error: "회원 수입 정보를 조회하는 중 오류가 발생했습니다." });
   }
 };
+async function updateJobType(req, res) {
+  const { userId } = req; // 인증 미들웨어에서 설정된 사용자 ID
+  const { jobType } = req.body;
+  const jobtype = Number(jobType);
+  try {
+    const updatedUser = await updateUserJobType(userId, jobtype);
+    // 사용자의 최신 정보를 가져옵니다.
+    const user = await findUserById(userId);
 
+    if (!user) {
+      return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, jobType: user.jobType, permission: user.permission }, // jobType을 토큰의 페이로드에 추가
+      process.env.JWT_SECRET,
+      { expiresIn: "10h" }
+    );
+
+    res.json({ success: true, updatedJobType: updatedUser.jobType, token });
+  } catch (error) {
+    console.error("Failed to update job type:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}
 module.exports = {
   registerUser,
   resetPassword,
@@ -334,4 +360,5 @@ module.exports = {
   fetchUserProfile,
   fetchUserVehiclesWithFees,
   fetchUserIncomeRecords,
+  updateJobType,
 };

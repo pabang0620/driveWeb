@@ -7,6 +7,7 @@ import FranchiseFee from "./FranchiseFee";
 import Spinner from "../../components/Spinner"; // 스피너 컴포넌트 가져오기
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
+import JobTypeComponent from "./JobTypeComponent";
 
 const CarInfo = () => {
   useCheckPermission();
@@ -93,7 +94,10 @@ const CarInfo = () => {
   if (loading) {
     return <Spinner />; // 로딩 중일 때 스피너 표시
   }
-
+  if (jobtype === null) {
+    // 차량 종류가 비어있을 경우 메시지 표시
+    return <JobTypeComponent />;
+  }
   return (
     <div className="container userInfo">
       <TitleBox title="회원정보" subtitle="차량정보" />

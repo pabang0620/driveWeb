@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { DynamicInput } from "../../components/InputBox";
-import { getProfileIncome } from "../../components/ApiGet";
+import { getJobtype, getProfileIncome } from "../../components/ApiGet";
 import { postProfileIncome } from "../../components/ApiPost";
 import locationData from "../../utils/locations.json"; // location.json 파일 import
 import { validateDate } from "../../components/Validators";
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
+import JobTypeComponent from "./JobTypeComponent";
 
 const IncomeInfo = () => {
   useCheckPermission();
+  const [jobtype, setJobtype] = useState(""); // 잡타입 상태
+
+  useEffect(() => {
+    const fetchJobType = async () => {
+      try {
+        const jobtypeData = await getJobtype(); // 잡타입 데이터 가져오기
+        console.log("Job Type Data:", jobtypeData);
+        setJobtype(jobtypeData); // 잡타입 상태 설정
+      } catch (error) {
+        console.error("Failed to fetch job type:", error);
+      }
+    };
+
+    fetchJobType();
+  }, []);
   const [userInfo, setUserInfo] = useState({
     income_type: "소득구분",
     start_date: "2024-07-14",
@@ -62,7 +78,10 @@ const IncomeInfo = () => {
       [field]: value,
     }));
   };
-
+  if (jobtype === null) {
+    // 차량 종류가 비어있을 경우 메시지 표시
+    return <JobTypeComponent />;
+  }
   return (
     <div className="container userInfo">
       <TitleBox title="회원정보" subtitle="소득정보" />
