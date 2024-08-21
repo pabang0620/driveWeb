@@ -16,6 +16,8 @@ import { jwtDecode } from "jwt-decode";
 
 const DriveLog = () => {
   useCheckPermission();
+  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+
   // ----- 정보 미 입력시 라우터 --------
   const [vehicleInfo, setVehicleInfo] = useState({
     carType: "", // 차량종류
@@ -25,29 +27,24 @@ const DriveLog = () => {
     fuel_type: "", // 연료유형
     mileage: 0, // 누적거리
   });
-  const navigate = useNavigate(); // useNavigate 추가
+  const navigate = useNavigate();
+  const [userPermission, setUserPermission] = useState(null);
 
-  const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserPermission(decodedToken.permission);
+    if (userId != undefined) {
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        setUserPermission(decodedToken.permission);
 
-      // 권한이 1 또는 2가 아닌 경우 접근 차단
-      if (
-        userId &&
-        decodedToken.permission !== 1 &&
-        decodedToken.permission !== 2
-      ) {
-        alert("접근 권한이 없습니다.");
-        navigate("/"); // 권한이 없을 때 리디렉션할 경로를 설정
+        // 권한이 1 또는 2가 아닌 경우 홈으로 리디렉션
+        if (decodedToken.permission !== 1 && decodedToken.permission !== 2) {
+          alert("접근 권한이 없습니다.");
+          navigate("/"); // 홈으로 리디렉션
+        }
       }
-    } else {
-      alert("로그인이 필요합니다.");
-      navigate("/login"); // 로그인 페이지로 리디렉션
     }
-  }, [userId, navigate]);
+  }, [navigate]);
 
   // 회원정보 불러오기
   useEffect(() => {
@@ -73,8 +70,6 @@ const DriveLog = () => {
 
   const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
   const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
-
-  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
   console.log(userId);
   // 모달 열기 함수
   const openModal = (modalType, logId = null) => {
