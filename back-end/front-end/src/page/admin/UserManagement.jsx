@@ -210,7 +210,11 @@ const UserManagement = () => {
   };
 
   const handleNavigate = (userId) => {
-    navigate(`/driving_log/${userId}`);
+    if (userPermission === 1 || userPermission === 2) {
+      navigate(`/driving_log/${userId}`);
+    } else {
+      alert("권한이 없습니다.");
+    }
   };
 
   return (
@@ -337,7 +341,13 @@ const UserManagement = () => {
                     user.status
                   )}
                 </td>
-                <td style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                <td
+                  style={{
+                    color: user.permission === 4 ? "red" : "inherit",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                  }}
+                >
                   {editMode[user.id] ? (
                     <select
                       value={user.permission}

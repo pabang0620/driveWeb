@@ -22,6 +22,13 @@ function Login() {
       navigate("/");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
+
+      // 서버에서 받은 에러 메시지를 alert로 표시
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 

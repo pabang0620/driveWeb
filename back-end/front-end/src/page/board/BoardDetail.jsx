@@ -10,6 +10,7 @@ import { faUserCircle, faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../../components/ApiGet";
 import axios from "axios";
 import useCheckPermission from "../../utils/useCheckPermission";
+import { jwtDecode } from "jwt-decode";
 
 const BoardDetail = () => {
   useCheckPermission();
@@ -27,6 +28,7 @@ const BoardDetail = () => {
   const [postOptionModalOpen, setPostOptionModalOpen] = useState(false);
   const [commentOptionModalOpen, setCommentOptionModalOpen] = useState({});
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [userPermission, setUserPermission] = useState(null); // 유저 권한 상태 추가
 
   // // 대댓글
   // const [replyOptionModalOpen, setReplyOptionModalOpen] = useState({});
@@ -56,6 +58,10 @@ const BoardDetail = () => {
       try {
         // 토큰 가져오기
         const token = localStorage.getItem("token");
+        if (token) {
+          const decodedToken = jwtDecode(token); // 토큰 디코딩
+          setUserPermission(decodedToken.permission); // 유저 권한 설정
+        }
         const response = await axios.get(`/api/post/${postId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -134,9 +140,11 @@ const BoardDetail = () => {
   };
 
   const handlePostDelete = async () => {
-    if (currentUserId !== post.users.id) {
-      alert("삭제 권한이 없습니다.");
-      return;
+    if (userPermission !== 1 && userPermission !== 2 && userPermission !== 3) {
+      if (currentUserId !== post.users.id) {
+        alert("삭제 권한이 없습니다.");
+        return;
+      }
     }
 
     const confirmed = window.confirm("게시글을 삭제하시겠습니까?");
@@ -161,10 +169,13 @@ const BoardDetail = () => {
   const handleCommentDelete = async (commentId) => {
     const comment = post.comments.find((comment) => comment.id === commentId);
 
-    if (currentUserId !== comment.userId) {
-      alert("삭제 권한이 없습니다.");
-      return;
+    if (userPermission !== 1 && userPermission !== 2 && userPermission !== 3) {
+      if (currentUserId !== comment.userId) {
+        alert("삭제 권한이 없습니다.");
+        return;
+      }
     }
+
     const confirmed = window.confirm("덧글을 삭제하시겠습니까?");
     if (!confirmed) {
       return;

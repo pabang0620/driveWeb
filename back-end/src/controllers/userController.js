@@ -110,14 +110,23 @@ const loginUser = async (req, res) => {
   }
   try {
     const user = await findUserByUsername(username);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
       return res
         .status(401)
         .json({ error: "잘못된 이메일 또는 비밀번호입니다." });
     }
 
-    // console.log("username", username);
-    // console.log("user", user);
+    // 유저 상태가 Inactive인 경우
+    if (user.status === "Inactive") {
+      return res.status(403).json({ error: "계정이 비활성화 되었습니다." });
+    }
+
+    // 비밀번호 비교
+    if (!(await bcrypt.compare(password, user.password))) {
+      return res
+        .status(401)
+        .json({ error: "잘못된 이메일 또는 비밀번호입니다." });
+    }
 
     const token = jwt.sign(
       { userId: user.id, jobtype: user.jobtype, permission: user.permission }, // jobtype을 토큰의 페이로드에 추가
@@ -125,7 +134,6 @@ const loginUser = async (req, res) => {
       { expiresIn: "10h" }
     );
 
-    // console.log(token);
     res.status(200).json(token);
   } catch (error) {
     res.status(500).json({ error: "일반 로그인 중 오류가 발생했습니다." });
