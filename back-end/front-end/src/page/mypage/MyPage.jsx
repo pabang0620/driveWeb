@@ -131,14 +131,14 @@ const MyPage = () => {
           <IncomeTaxComponent
             title="예상종합소득세"
             description="운행일지에 입력된 데이터를 바탕으로 예상 종합소득세를 산출하는 기능입니다."
-            icon="ℹ️"
+            icon="🧾"
             route="/estimated-income-tax"
             isBlurred={isBlurred}
           />
           <IncomeTaxComponent
             title="손익계산서 조회"
             description="회계 데이터를 기반으로 손익계산서를 조회하는 서비스입니다."
-            icon="📊"
+            icon="💰"
             route="/profit-loss-statement"
             isBlurred={isBlurred}
           />

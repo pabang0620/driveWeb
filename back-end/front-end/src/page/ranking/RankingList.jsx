@@ -131,6 +131,7 @@ const RankingList = ({ title, filterNumber, api_name }) => {
 
       <style jsx>{`
         .ranking {
+          min-width: 160px;
           width: 30%;
           margin-bottom: 15px;
           > div {
@@ -156,6 +157,12 @@ const RankingList = ({ title, filterNumber, api_name }) => {
                 border: 1px solid #ccc;
               }
             }
+            @media (max-width: 768px) {
+              .filters select {
+                font-size: 10px;
+                padding: 4px 5px;
+              }
+            }
           }
         }
 
@@ -166,6 +173,7 @@ const RankingList = ({ title, filterNumber, api_name }) => {
           padding: 10px;
           background-color: #f0f3f5;
           border-radius: 5px;
+          min-width: 120px;
           li.profile {
             display: flex;
             align-items: center;

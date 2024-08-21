@@ -16,6 +16,27 @@ function Home() {
   const [activeRightTab, setActiveRightTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // ----------------------------랭킹
+  const [rankings, setRankings] = useState([]);
+
+  useEffect(() => {
+    const fetchRankingSettings = async () => {
+      try {
+        const response = await axios.get("/api/rank/list");
+        const visibleRankings = response.data.filter(
+          (r) =>
+            r.show_number === 1 || r.show_number === 2 || r.show_number === 3
+        );
+        setRankings(visibleRankings);
+      } catch (error) {
+        console.error("랭킹 설정을 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchRankingSettings();
+  }, []);
+
+  // ----------------------------랭킹
 
   // 특정 함수 예시 (실행할 함수)
   const handleAccessToken = async (accessToken) => {
@@ -90,9 +111,14 @@ function Home() {
           <>
             <NoticeZone boardsWithPosts={boardsWithPosts} />
             <div className="rankingList">
-              <RankingList title={"연비"} rankType={"fuelType"} />
-              <RankingList title={"운행시간"} rankType={"jobType"} />
-              <RankingList title={"총 운송수입금"} rankType={"carType"} />
+              {rankings.map((ranking) => (
+                <RankingList
+                  key={ranking.id}
+                  title={ranking.name}
+                  filterNumber={ranking.filter_number}
+                  api_name={ranking.api_name}
+                />
+              ))}
             </div>
             <TabsContainer
               boardsWithPosts={boardsWithPosts}

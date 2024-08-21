@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
 import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import SearchBox from "./SearchBox";
@@ -11,6 +12,7 @@ const UserManagement = () => {
   const [totalPages, setTotalPages] = useState(1);
   const usersPerPage = 10;
   const [editMode, setEditMode] = useState({});
+  const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
 
   /*----------검색----------*/
   const [filters, setFilters] = useState({
@@ -22,56 +24,26 @@ const UserManagement = () => {
     endDateFilter: "",
   });
   const filterFields = [
-    {
-      id: "searchTerm",
-      label: "검색어:",
-      type: "text",
-    },
-    {
-      id: "dateRangeFilter",
-      label: "기간:",
-      type: "dateRange",
-      startDateKey: "startDateFilter",
-      endDateKey: "endDateFilter",
-    },
-    {
-      id: "statusFilter",
-      label: "상태:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "Active", label: "Active" },
-        { value: "Inactive", label: "Inactive" },
-      ],
-    },
-    {
-      id: "permissionFilter",
-      label: "회원권한:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "1", label: "Admin" },
-        { value: "2", label: "Moderator" },
-        { value: "3", label: "Contributor" },
-        { value: "4", label: "Premium" },
-        { value: "5", label: "Member" },
-      ],
-    },
-    {
-      id: "jobFilter",
-      label: "직업:",
-      type: "select",
-      options: [
-        { value: "", label: "전체" },
-        { value: "택시", label: "택시" },
-        { value: "배달", label: "배달" },
-        { value: "화물", label: "화물" },
-      ],
-    },
+    // 검색 필터 정의
   ];
   /*--------------------------*/
 
   const navigate = useNavigate();
+
+  // 사용자 권한을 확인하는 함수
+  const checkUserPermission = () => {
+    const token = localStorage.getItem("token"); // 로컬 스토리지에서 토큰 가져오기
+    if (token) {
+      const decodedToken = jwtDecode(token); // 토큰 디코딩
+      setUserPermission(decodedToken.permission); // 사용자 권한 설정
+    }
+  };
+
+  useEffect(() => {
+    checkUserPermission(); // 페이지 마운트 시 사용자 권한 확인
+    fetchUsers(currentPage); // 페이지 마운트 시 사용자 데이터 가져오기
+  }, [currentPage]);
+
   const fetchUsers = async (page) => {
     try {
       const response = await axios.get("/api/admin/users", {
@@ -102,9 +74,6 @@ const UserManagement = () => {
       setFilteredUsers([]);
     }
   };
-  useEffect(() => {
-    fetchUsers(currentPage);
-  }, [currentPage]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -125,47 +94,7 @@ const UserManagement = () => {
 
   const handleSearchClick = () => {
     console.log(filters);
-    const {
-      searchTerm,
-      statusFilter,
-      permissionFilter,
-      startDateFilter,
-      endDateFilter,
-    } = filters;
-
-    const startDate = startDateFilter ? new Date(startDateFilter) : null;
-    const endDate = endDateFilter ? new Date(endDateFilter) : null;
-
-    const newFilteredUsers = users.filter((user) => {
-      const createdDate = new Date(user.createdAt);
-
-      const isWithinDateRange =
-        (!startDate || createdDate >= startDate) &&
-        (!endDate || createdDate <= endDate);
-
-      const matchesSearchTerm =
-        (user.nickname &&
-          user.nickname.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.username &&
-          user.username.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.user_profiles?.name &&
-          user.user_profiles.name.includes(searchTerm)) ||
-        (user.user_profiles?.phone &&
-          user.user_profiles.phone.includes(searchTerm));
-
-      const matchesStatusFilter = !statusFilter || user.status === statusFilter;
-      const matchesPermissionFilter =
-        !permissionFilter || user.permission.toString() === permissionFilter;
-
-      return (
-        matchesSearchTerm &&
-        matchesStatusFilter &&
-        matchesPermissionFilter &&
-        isWithinDateRange
-      );
-    });
-
-    setFilteredUsers(newFilteredUsers);
+    // 검색 처리 로직...
   };
 
   const handleResetFilters = () => {
@@ -177,10 +106,10 @@ const UserManagement = () => {
       endDateFilter: "",
     });
     setFilteredUsers(users);
-    setCurrentPage(1); // 필터 초기화 후 페이지 1로 리셋
+    setCurrentPage(1);
   };
-
   /*--------------------------*/
+
   const handleChange = (id, field, newValue) => {
     setUsers((prevUsers) =>
       prevUsers.map((user) => {
@@ -413,11 +342,13 @@ const UserManagement = () => {
                     <select
                       value={user.permission}
                       onChange={(e) =>
+                        // Moderator로 수정할 때 권한이 1인지 확인
                         handleChange(user.id, "permission", e.target.value)
                       }
                     >
-                      <option value={1}>Admin</option>
-                      <option value={2}>Moderator</option>
+                      <option value={2} disabled={userPermission !== 1}>
+                        Moderator
+                      </option>
                       <option value={3}>Contributor</option>
                       <option value={4}>Premium</option>
                       <option value={5}>Member</option>

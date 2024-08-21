@@ -251,7 +251,7 @@ function EstimatedIncomeTaxPage() {
           마이페이지로 이동
         </button>
         <button onClick={() => navigate("/profit-loss-statement")}>
-          손익계산서 조회 <span>📊</span>
+          손익계산서 조회 <span>💰</span>
         </button>
       </div>
       <style jsx>{`

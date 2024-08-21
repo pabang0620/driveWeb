@@ -13,7 +13,6 @@ export default function Payment() {
   useEffect(() => {
     (async () => {
       const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-
       const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
         "#payment-widget",
         price
@@ -73,15 +72,13 @@ export default function Payment() {
         </div>
         <div className="premium_benefits">
           <div>
-            <div className="imgbox"></div>운행일지 차트로 보기
+            <div className="imgbox">📊</div>운행일지 차트로 보기
           </div>
           <div>
-            {" "}
-            <div className="imgbox"></div>손익계산서
+            <div className="imgbox">💰</div>손익계산서
           </div>
           <div>
-            {" "}
-            <div className="imgbox"></div>종합소득세
+            <div className="imgbox">🧾</div>종합소득세
           </div>
         </div>
 
@@ -311,9 +308,9 @@ export default function Payment() {
                   gap: 5px;
                 }
                 .imgbox {
-                  width: 40%;
-                  aspect-ratio: 1/1;
-                  background-color: gold;
+                  text-align: center;
+                  font-size: 50px;
+                  line-height: 98px;
                 }
                 &:not(:nth-of-type(3n)) {
                   border-right: 1px solid #d9d9d9;
