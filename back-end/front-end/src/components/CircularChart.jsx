@@ -214,6 +214,12 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
           aspectRatio: "1",
           filter: isBlurred ? "blur(5px)" : "none",
+          // 미디어 쿼리
+          ...(window.innerWidth <= 768 && {
+            width: "100%", // 모바일 화면에서 너비를 100%로
+            height: "100px",
+            fontSize: "15px",
+          }),
         }}
       >
         {title}이 없습니다
@@ -238,6 +244,12 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
           aspectRatio: "1",
           filter: isBlurred ? "blur(5px)" : "none",
+          // 미디어 쿼리
+          ...(window.innerWidth <= 768 && {
+            width: "100%", // 모바일 화면에서 너비를 100%로
+            height: "100px",
+            fontSize: "15px",
+          }),
         }}
       >
         {title}이 없습니다

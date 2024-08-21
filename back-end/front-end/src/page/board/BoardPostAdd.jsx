@@ -241,13 +241,13 @@ const BoardPostAdd = () => {
             gap: 10px;
           }
           .PostTitle {
-            height: 75px;
-            font-size: 32px;
+            height: 70px;
+            font-size: 30px;
             border: none;
             padding: 0 0 0 10px;
             flex-grow: 1;
             @media (max-width: 768px) {
-              font-size: 25px;
+              font-size: 20px;
               padding: 0;
               height: auto;
             }

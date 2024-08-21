@@ -1,12 +1,57 @@
 // SidebarMenu.js
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 
-function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
+function SidebarMenu({
+  showSidebar,
+  setShowSidebar,
+  setShowLogoutModal,
+  handleLogout,
+}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
+
+  const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
+
   const isLoggedIn = !!localStorage.getItem("token");
+
+  const hideNav =
+    location.pathname.startsWith("/login") ||
+    location.pathname.startsWith("/signup");
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserPermission(decoded.permission); // 사용자 권한 설정
+      console.log(decoded.permission);
+    }
+  }, [token]); // 컴포넌트가 마운트될 때 한 번 실행
+
+  const handleLinkClick = () => {
+    setShowSidebar((prev) => !prev);
+  };
+
+  useEffect(() => {
+    // 모든 a 태그에 이벤트 리스너 추가
+    const links = document.querySelectorAll(".sidebar-menu a");
+    links.forEach((link) => {
+      link.addEventListener("click", handleLinkClick);
+    });
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      links.forEach((link) => {
+        link.removeEventListener("click", handleLinkClick);
+      });
+    };
+  }, [showSidebar]);
+
   return (
     <div className={`sidebar-menu ${showSidebar ? "open" : ""}`}>
-      <button className="close-btn" onClick={onClose}>
+      <button className="close-btn" onClick={handleLinkClick}>
         X
       </button>
       <h1>
@@ -23,18 +68,14 @@ function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
       <ul className="login">
         {!isLoggedIn && (
           <li>
-            <Link to="/signup" onClick={onClose}>
-              회원가입
-            </Link>
+            <Link to="/signup">회원가입</Link>
           </li>
         )}
         {isLoggedIn ? (
-          <li onClick={() => setShowLogoutModal(true)}>로그아웃</li>
+          <li onClick={() => handleLogout()}>로그아웃</li>
         ) : (
           <li>
-            <Link to="/login" onClick={onClose}>
-              로그인
-            </Link>
+            <Link to="/login">로그인</Link>
           </li>
         )}
       </ul>
@@ -98,9 +139,6 @@ function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
           <Link to="/board">게시판</Link>
           <ul>
             <li>
-              <Link to="/board">게시판</Link>
-            </li>
-            <li>
               <Link to="/board/list/1">공지사항</Link>
             </li>
             <li>
@@ -120,7 +158,29 @@ function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
           </ul>
         </li>
         <li>
-          <Link to="/admin_page">관리자페이지</Link>
+          <Link to="/payment">프리미엄</Link>
+          <ul>
+            <li>
+              <Link to="/payment">프리미엄</Link>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <Link to="/admin/user">관리자페이지</Link>
+          <ul>
+            <li>
+              <Link to="/admin/user">회원관리</Link>
+            </li>
+            <li>
+              <Link to="/admin/ranking">랭킹관리</Link>
+            </li>
+            <li>
+              <Link to="/admin/statistics">통계관리</Link>
+            </li>
+            <li>
+              <Link to="/admin/board">게시판관리</Link>
+            </li>
+          </ul>
         </li>
       </ul>
       <style jsx>{`
@@ -225,10 +285,12 @@ function SidebarMenu({ onClose, showSidebar, setShowLogoutModal }) {
               @media (max-width: 480px) {
                 padding: 5% 0;
               }
+              > a {
+                font-weight: bold;
+              }
               &:not(:last-of-type) {
                 border-bottom: 1px solid #ddd;
                 > a {
-                  font-weight: bold;
                   color: #222;
                   font-size: 15px;
                   @media (max-width: 480px) {

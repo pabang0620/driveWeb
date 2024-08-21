@@ -125,8 +125,9 @@ const MyPage = () => {
           isBlurred={isBlurred}
         />
       </div>
-      <div>
-        <p className="note">- 프리미엄 기능입니다.</p>
+
+      <div className="premiumBox">
+        <TitleBox title="프리미엄 ✨" />
         <div className="subscribeADD">
           <IncomeTaxComponent
             title="예상종합소득세"
@@ -152,19 +153,10 @@ const MyPage = () => {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
-          .note {
-            margin-top: 80px;
-          }
-          .subscribeADD {
-            display: flex;
-            flex-direction: row;
-            @media (max-width: 768px) {
-              flex-direction: column;
-            }
-          }
+
           @media (max-width: 768px) {
             width: 85%;
-            padding: 50px 0;
+            padding: 50px 0 100px 0;
           }
           h2 {
             font-size: 25px;
@@ -212,6 +204,21 @@ const MyPage = () => {
             }
             @media (max-width: 768px) {
               padding: 5% 5% 20% 5%;
+            }
+          }
+
+          .premiumBox {
+            margin-top: 80px;
+            h2 {
+              width: 100%;
+            }
+            .subscribeADD {
+              display: flex;
+              flex-direction: row;
+              width: 100%;
+              @media (max-width: 768px) {
+                flex-direction: column;
+              }
             }
           }
         }

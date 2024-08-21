@@ -219,6 +219,10 @@ const MyCarMaintenance = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          @media (max-width: 768px) {
+            width: 85%;
+            padding: 50px 0 100px 0;
+          }
         }
         .maintenance-items {
           display: flex;

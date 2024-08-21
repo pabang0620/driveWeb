@@ -417,13 +417,20 @@ const UserManagement = () => {
             padding: 100px 0;
             @media (max-width: 768px) {
               width: 85%;
-              padding: 50px 0;
+              padding: 50px 0 100px 0;
             }
 
             .user_table {
               width: 100%;
               border-collapse: collapse;
               margin: 20px 0;
+
+              @media (max-width: 768px) {
+                display: block;
+                overflow-x: scroll;
+                overflow-y: visible;
+              }
+
               tr:nth-child(even) {
                 background-color: #f9f9f9;
               }
@@ -441,6 +448,7 @@ const UserManagement = () => {
                 @media (max-width: 768px) {
                   font-size: 12px;
                   padding: 5px;
+                  overflow-x: scroll;
                 }
               }
 
@@ -467,7 +475,8 @@ const UserManagement = () => {
                   width: 100%;
                   padding: 3px 0;
                   font-size: 14px;
-                  margin: 0 5px @media (max-width: 768px) {
+                  margin: 0 5px;
+                  @media (max-width: 768px) {
                     font-size: 12px;
                   }
                 }
@@ -494,33 +503,36 @@ const UserManagement = () => {
                 }
               }
             }
+
+            /*------------------------페이지------------------------ */
             .pagination {
               display: flex;
               justify-content: center;
               margin-top: 20px;
+              button {
+                margin: 0 10px;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 5px;
+                background-color: #3c5997;
+                color: white;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s;
+              }
+              button:disabled {
+                background-color: #c0c0c0;
+                cursor: not-allowed;
+              }
+              button:hover:not(:disabled) {
+                background-color: #7388b6;
+              }
+              span {
+                align-self: center;
+              }
             }
-            .pagination button {
-              margin: 0 10px;
-              padding: 8px 16px;
-              border: none;
-              border-radius: 5px;
-              background-color: #3c5997;
-              color: white;
-              cursor: pointer;
-              font-size: 14px;
-              transition: background-color 0.3s;
-            }
-            .pagination button:disabled {
-              background-color: #c0c0c0;
-              cursor: not-allowed;
-            }
-            .pagination button:hover:not(:disabled) {
-              background-color: #7388b6;
-            }
-            .pagination span {
-              align-self: center;
-            }
-          `}
+          }
+        `}
       </style>
     </div>
   );

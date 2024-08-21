@@ -49,9 +49,10 @@ function Header() {
   };
 
   const handleLogout = () => {
+    setShowSidebar((prev) => !prev);
+    setShowLogoutModal(true);
     localStorage.removeItem("token");
     navigate("/");
-    setShowLogoutModal(false);
   };
 
   const isLoggedIn = !!localStorage.getItem("token");
@@ -200,8 +201,9 @@ function Header() {
 
         <SidebarMenu
           showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
           setShowLogoutModal={setShowLogoutModal}
-          onClose={() => setShowSidebar(false)}
+          handleLogout={handleLogout}
         />
         {/* 사이드바 메뉴 표시 */}
         <style jsx>{`
@@ -390,6 +392,7 @@ function Header() {
               justify-content: center;
               align-items: center;
               z-index: 2;
+
               .modal_content {
                 background: white;
                 padding: 30px 10px;
@@ -400,10 +403,16 @@ function Header() {
                 justify-content: center;
                 gap: 10px;
                 z-index: 3;
-
+                @media (max-width: 768px) {
+                  width: 85%;
+                  padding: 25px 10px;
+                }
                 p {
                   width: 100%;
                   margin-bottom: 30px;
+                  @media (max-width: 768px) {
+                    margin-bottom: 15px;
+                  }
                 }
                 button {
                   width: 30%;
@@ -411,9 +420,9 @@ function Header() {
                   border: none;
                   border-radius: 5px;
                   cursor: pointer;
-
                   color: white;
                   cursor: pointer;
+
                   &:nth-of-type(1) {
                     background-color: #7388b6;
                     &:hover {

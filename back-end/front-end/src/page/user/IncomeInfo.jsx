@@ -83,6 +83,7 @@ const IncomeInfo = () => {
           <DynamicInput
             labelName={"개업일/취업일"}
             inputType={"number"}
+            placeholder={"날짜를 입력해주세요."}
             value={userInfo.start_date}
             fieldName="start_date"
             onChange={handleInputChange}
@@ -206,6 +207,7 @@ const IncomeInfo = () => {
               width: 15%;
               @media (max-width: 768px) {
                 width: 25%;
+                font-size: 13px;
               }
             }
             input {
@@ -218,6 +220,7 @@ const IncomeInfo = () => {
               background: none;
               @media (max-width: 768px) {
                 width: 60%;
+                font-size: 13px;
               }
               &:focus {
                 border: none;

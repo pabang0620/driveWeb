@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useCheckPermission from "../../utils/useCheckPermission";
 
 function EstimatedIncomeTaxPage() {
-  useCheckPermission();
+  //useCheckPermission();
 
   const [yearlyIncome, setYearlyIncome] = useState(0); // 연간 운송 수입금
   const [expenseRate, setExpenseRate] = useState(0); // 소득 정보 기준 경비율
@@ -33,29 +33,29 @@ function EstimatedIncomeTaxPage() {
     },
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get(
-          `/tax/estimatedIncomeTaxPage/${selectedYear}`
-        );
-        const { totalIncome, standardExpenseRate, personalDeduction } =
-          response.data;
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await api.get(
+  //         `/tax/estimatedIncomeTaxPage/${selectedYear}`
+  //       );
+  //       const { totalIncome, standardExpenseRate, personalDeduction } =
+  //         response.data;
 
-        setYearlyIncome(totalIncome);
-        setExpenseRate(standardExpenseRate);
-        setPersonalDeduction(personalDeduction);
-        setIsModified(false); // 데이터를 불러오면 수정 상태를 초기화
-      } catch (err) {
-        setError("데이터를 가져오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       setYearlyIncome(totalIncome);
+  //       setExpenseRate(standardExpenseRate);
+  //       setPersonalDeduction(personalDeduction);
+  //       setIsModified(false); // 데이터를 불러오면 수정 상태를 초기화
+  //     } catch (err) {
+  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, [selectedYear]);
+  //   fetchData();
+  // }, [selectedYear]);
 
   const handleYearlyIncomeChange = (event) => {
     setYearlyIncome(Number(event.target.value));
@@ -458,18 +458,6 @@ function EstimatedIncomeTaxPage() {
                 border-left: 1px solid #f0f0f0;
               }
             }
-          }
-           {
-            /* .taxCulResult div {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
-          }
-          .taxCulResult div:last-child {
-            border-bottom: none;
-          } */
           }
         }
       `}</style>

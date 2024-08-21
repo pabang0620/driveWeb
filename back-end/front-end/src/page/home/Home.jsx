@@ -156,18 +156,6 @@ function Home() {
               align-items: flex-start;
             }
           }
-          .contents_inner {
-            width: 70%;
-            margin: 50px auto;
-            .rankingList {
-              width: 100%;
-              display: flex;
-              flex-wrap: wrap;
-              flex-direction: row;
-              justify-content: space-between;
-              align-items: flex-start;
-            }
-          }
         }
       `}</style>
     </div>

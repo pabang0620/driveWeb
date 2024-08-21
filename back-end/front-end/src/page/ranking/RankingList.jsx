@@ -134,6 +134,9 @@ const RankingList = ({ title, filterNumber, api_name }) => {
           min-width: 160px;
           width: 30%;
           margin-bottom: 15px;
+          @media (max-width: 768px) {
+            width: 100%;
+          }
           > div {
             display: flex;
             flex-direction: column;
@@ -159,8 +162,8 @@ const RankingList = ({ title, filterNumber, api_name }) => {
             }
             @media (max-width: 768px) {
               .filters select {
-                font-size: 10px;
-                padding: 4px 5px;
+                font-size: 11px;
+                padding: 5px 6px;
               }
             }
           }
@@ -181,7 +184,9 @@ const RankingList = ({ title, filterNumber, api_name }) => {
             background-color: white;
             border-radius: 5px;
             margin-bottom: 10px;
-
+            @media (max-width: 768px) {
+              padding: 5px 10px;
+            }
             .profilePicture {
               width: 35px;
               height: 35px;
@@ -191,6 +196,10 @@ const RankingList = ({ title, filterNumber, api_name }) => {
               display: flex;
               align-items: center;
               justify-content: center;
+              @media (max-width: 768px) {
+                width: 30px;
+                height: 30px;
+              }
             }
 
             .profilePicture img {

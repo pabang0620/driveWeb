@@ -222,6 +222,9 @@ const CarInfo = () => {
               display: flex;
               flex-direction: row;
               align-items: flex-start;
+              @media (max-width: 768px) {
+                flex-wrap: wrap;
+              }
               .franchise-item {
                 width: 100%;
                 display: flex;
@@ -230,6 +233,11 @@ const CarInfo = () => {
                 align-items: center;
                 gap: 5px;
                 height: 50px;
+                @media (max-width: 768px) {
+                  width: 50%;
+                  gap: 3px;
+                  height: 40px;
+                }
                 p {
                 }
                 label:first-child {

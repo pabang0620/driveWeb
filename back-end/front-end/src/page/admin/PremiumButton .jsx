@@ -29,6 +29,10 @@ const PremiumButton = () => {
           align-items: center;
           z-index: 1000;
           flex-direction: column;
+          @media (max-width: 768px) {
+            bottom: 50px;
+            right: 30px;
+          }
         }
 
         .premium-button {
