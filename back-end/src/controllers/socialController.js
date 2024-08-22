@@ -182,7 +182,7 @@ const socialLogin = async (req, res, provider) => {
     const jwtToken = jwt.sign(
       { userId: user.id, jobtype: user.jobtype, permission: user.permission },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "10h" }
     );
 
     console.log("JWT token generated for user ID:", user.id);
