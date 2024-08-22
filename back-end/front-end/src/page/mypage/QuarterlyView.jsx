@@ -5,34 +5,33 @@ import { dummyQuarterlyData } from "../../components/dummy";
 function QuarterlyView() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [quarter, setQuarter] = useState(1);
-  // const [quarterlyData, setQuarterlyData] = useState({
-  //   income: [],
-  //   expense: [],
-  //   totalIncome: {
-  //     card_income: 0,
-  //     cash_income: 0,
-  //     kakao_income: 0,
-  //     uber_income: 0,
-  //     onda_income: 0,
-  //     tada_income: 0,
-  //     iam_income: 0,
-  //     other_income: 0,
-  //   },
-  //   totalExpense: {
-  //     fuel_expense: 0,
-  //     toll_fee: 0,
-  //     meal_expense: 0,
-  //     fine_expense: 0,
-  //     expense_spare_1: 0,
-  //     expense_spare_2: 0,
-  //     card_fee: 0,
-  //     maintenanceCost: 0,
-  //     insuranceFee: 0,
-  //     other_expense: 0,
-  //     estimatedTotalTax: 0,
-  //   },
-  // });
-  const [quarterlyData, setQuarterlyData] = useState(dummyQuarterlyData);
+  const [quarterlyData, setQuarterlyData] = useState({
+    income: [],
+    expense: [],
+    totalIncome: {
+      card_income: 0,
+      cash_income: 0,
+      kakao_income: 0,
+      uber_income: 0,
+      onda_income: 0,
+      tada_income: 0,
+      iam_income: 0,
+      other_income: 0,
+    },
+    totalExpense: {
+      fuel_expense: 0,
+      toll_fee: 0,
+      meal_expense: 0,
+      fine_expense: 0,
+      expense_spare_1: 0,
+      expense_spare_2: 0,
+      card_fee: 0,
+      maintenanceCost: 0,
+      insuranceFee: 0,
+      other_expense: 0,
+      estimatedTotalTax: 0,
+    },
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -45,42 +44,42 @@ function QuarterlyView() {
     },
   });
 
-  // useEffect(() => {
-  //   if (quarterlyData.income.length > 0) {
-  //     console.log("Updated quarterly data:", quarterlyData);
-  //   }
-  // }, [quarterlyData]);
+  useEffect(() => {
+    if (quarterlyData.income.length > 0) {
+      console.log("Updated quarterly data:", quarterlyData);
+    }
+  }, [quarterlyData]);
 
-  // const fetchData = async () => {
-  //   try {
-  //     setLoading(true);
-  //     console.log("Fetching quarterly data for:", year, quarter);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching quarterly data for:", year, quarter);
 
-  //     const response = await api.get(
-  //       `/tax/profitLossStatement/quarterly/${year}/${quarter}`
-  //     );
-  //     const data = response.data;
-  //     setQuarterlyData({
-  //       income: data.income || [],
-  //       expense: data.expense || [],
-  //       totalIncome: {
-  //         ...quarterlyData.totalIncome,
-  //         ...data.totalIncome,
-  //       },
-  //       totalExpense: {
-  //         ...quarterlyData.totalExpense,
-  //         ...data.totalExpense,
-  //         estimatedTotalTax:
-  //           parseFloat(data.totalExpense.estimatedTotalTax) || 0,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.error("Error fetching data:", err);
-  //     setError("데이터를 가져오는 중 오류가 발생했습니다.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const response = await api.get(
+        `/tax/profitLossStatement/quarterly/${year}/${quarter}`
+      );
+      const data = response.data;
+      setQuarterlyData({
+        income: data.income || [],
+        expense: data.expense || [],
+        totalIncome: {
+          ...quarterlyData.totalIncome,
+          ...data.totalIncome,
+        },
+        totalExpense: {
+          ...quarterlyData.totalExpense,
+          ...data.totalExpense,
+          estimatedTotalTax:
+            parseFloat(data.totalExpense.estimatedTotalTax) || 0,
+        },
+      });
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setError("데이터를 가져오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleYearChange = (event) => {
     setYear(Number(event.target.value));
@@ -735,6 +734,12 @@ function QuarterlyView() {
                   padding-left: 10px;
                 }
                 .row {
+                  .item_categorys div {
+                    text-align: left;
+                  }
+                  div {
+                    text-align: right;
+                  }
                   .column:first-of-type {
                     div {
                       &:first-of-type {
@@ -782,7 +787,7 @@ function QuarterlyView() {
                   background-color: white;
                   font-size: 14px;
                   line-height: 40px;
-                  padding: 0 8px;
+                  padding: 0 10%;
                   &:not(:last-of-type) {
                     border-bottom: 1px solid #d9d9d9;
                   }

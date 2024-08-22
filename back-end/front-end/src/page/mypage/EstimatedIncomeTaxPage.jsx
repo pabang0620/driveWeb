@@ -33,29 +33,29 @@ function EstimatedIncomeTaxPage() {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await api.get(
-  //         `/tax/estimatedIncomeTaxPage/${selectedYear}`
-  //       );
-  //       const { totalIncome, standardExpenseRate, personalDeduction } =
-  //         response.data;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get(
+          `/tax/estimatedIncomeTaxPage/${selectedYear}`
+        );
+        const { totalIncome, standardExpenseRate, personalDeduction } =
+          response.data;
 
-  //       setYearlyIncome(totalIncome);
-  //       setExpenseRate(standardExpenseRate);
-  //       setPersonalDeduction(personalDeduction);
-  //       setIsModified(false); // 데이터를 불러오면 수정 상태를 초기화
-  //     } catch (err) {
-  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        setYearlyIncome(totalIncome);
+        setExpenseRate(standardExpenseRate);
+        setPersonalDeduction(personalDeduction);
+        setIsModified(false); // 데이터를 불러오면 수정 상태를 초기화
+      } catch (err) {
+        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchData();
-  // }, [selectedYear]);
+    fetchData();
+  }, [selectedYear]);
 
   const handleYearlyIncomeChange = (event) => {
     setYearlyIncome(Number(event.target.value));

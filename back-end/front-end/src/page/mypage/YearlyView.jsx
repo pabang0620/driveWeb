@@ -25,27 +25,27 @@ function YearlyView() {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
 
-  //       console.log("Fetching yearly data for:", year);
+        console.log("Fetching yearly data for:", year);
 
-  //       const response = await api.get(
-  //         `/tax/profitLossStatement/yearly/${year}`
-  //       );
-  //       setData(response.data);
-  //     } catch (err) {
-  //       console.error("Error fetching data:", err);
-  //       setError("데이터를 가져오는 중 오류가 발생했습니다.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        const response = await api.get(
+          `/tax/profitLossStatement/yearly/${year}`
+        );
+        setData(response.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchData();
-  // }, [year]);
+    fetchData();
+  }, [year]);
 
   const handleYearChange = (event) => {
     setYear(Number(event.target.value));

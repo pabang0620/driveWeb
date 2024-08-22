@@ -10,21 +10,21 @@ const Board = () => {
 
   const [boardData, setBoardData] = useState(boardsWithPosts);
 
-  // useEffect(() => {
-  //   const fetchBoardData = async () => {
-  //     try {
-  //       const response = await axios.get("/api/post/latest");
-  //       setBoardData(response.data);
-  //     } catch (error) {
-  //       console.error(
-  //         "게시판 데이터를 가져오는 중 오류가 발생했습니다.",
-  //         error
-  //       );
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchBoardData = async () => {
+      try {
+        const response = await axios.get("/api/post/latest");
+        setBoardData(response.data);
+      } catch (error) {
+        console.error(
+          "게시판 데이터를 가져오는 중 오류가 발생했습니다.",
+          error
+        );
+      }
+    };
 
-  //   fetchBoardData();
-  // }, []);
+    fetchBoardData();
+  }, []);
 
   const formatRelativeDate = (dateString) => {
     const date = new Date(dateString);

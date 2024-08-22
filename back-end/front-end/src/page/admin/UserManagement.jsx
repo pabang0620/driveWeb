@@ -492,7 +492,7 @@ const UserManagement = () => {
               border-collapse: collapse;
               margin: 20px 0;
 
-              @media (max-width: 768px) {
+              @media (max-width: 1024px) {
                 display: block;
                 overflow-x: scroll;
                 overflow-y: visible;

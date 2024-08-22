@@ -125,11 +125,26 @@ const RankCategorySetting = () => {
               <td>
                 {editMode === cat.id ? (
                   <>
-                    <button onClick={() => updateCategory(cat.id)}>저장</button>
-                    <button onClick={() => setEditMode(null)}>취소</button>
+                    <button
+                      className="save"
+                      onClick={() => updateCategory(cat.id)}
+                    >
+                      저장
+                    </button>
+                    <button
+                      className="cancel"
+                      onClick={() => setEditMode(null)}
+                    >
+                      취소
+                    </button>
                   </>
                 ) : (
-                  <button onClick={() => enterEditMode(cat.id)}>수정</button>
+                  <button
+                    className="edit"
+                    onClick={() => enterEditMode(cat.id)}
+                  >
+                    수정
+                  </button>
                 )}
               </td>
             </tr>
