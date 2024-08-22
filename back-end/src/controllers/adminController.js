@@ -6,6 +6,7 @@ const {
   getAllBoardsModel,
   deleteBoardModel,
   getPostsModel,
+  buildFilterConditions,
 } = require("../models/adminModel");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -15,9 +16,31 @@ const fetchUsersByPage = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
 
+  // 필터 값 가져오기
+  const { username, nickname, name, phone, birth_date, permission, jobtype } =
+    req.query;
+
   try {
-    const users = await getUsersByPage(page, limit);
-    const totalUsers = await prisma.users.count(); // 전체 유저 수 계산
+    const users = await getUsersByPage(page, limit, {
+      username,
+      nickname,
+      name,
+      phone,
+      birth_date,
+      permission,
+      jobtype,
+    });
+    const totalUsers = await prisma.users.count({
+      where: buildFilterConditions({
+        username,
+        nickname,
+        name,
+        phone,
+        birth_date,
+        permission,
+        jobtype,
+      }),
+    });
 
     res.status(200).json({
       users,

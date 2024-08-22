@@ -2,13 +2,56 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // 페이지 단위로 유저 정보를 가져오는 모델 함수
-const getUsersByPage = async (page, limit) => {
+
+const buildFilterConditions = (filters) => {
+  const conditions = {};
+
+  if (filters.username) {
+    conditions.username = { contains: filters.username };
+  }
+
+  if (filters.nickname) {
+    conditions.nickname = { contains: filters.nickname };
+  }
+
+  const profileConditions = {};
+
+  if (filters.name) {
+    profileConditions.name = { contains: filters.name };
+  }
+
+  if (filters.phone) {
+    profileConditions.phone = { contains: filters.phone };
+  }
+
+  if (filters.birth_date) {
+    profileConditions.birth_date = { contains: filters.birth_date };
+  }
+
+  if (Object.keys(profileConditions).length > 0) {
+    conditions.user_profiles = {
+      is: profileConditions,
+    };
+  }
+
+  if (filters.permission) {
+    conditions.permission = parseInt(filters.permission, 10);
+  }
+
+  if (filters.jobtype) {
+    conditions.jobtype = parseInt(filters.jobtype, 10);
+  }
+
+  return conditions;
+};
+const getUsersByPage = async (page, limit, filters) => {
   const offset = (page - 1) * limit;
 
   try {
     const users = await prisma.users.findMany({
       skip: offset,
       take: limit,
+      where: buildFilterConditions(filters),
       include: {
         user_profiles: {
           select: {
@@ -21,10 +64,10 @@ const getUsersByPage = async (page, limit) => {
     });
     return users;
   } catch (error) {
+    console.error("Database error details:", error);
     throw new Error("Database error while fetching users");
   }
 };
-
 // 유저 정보 수정 모델 함수
 const updateUserById = async (userId, userData) => {
   try {
@@ -131,6 +174,7 @@ const getPostsModel = async (page, itemsPerPage, filters) => {
 module.exports = {
   getUsersByPage,
   updateUserById,
+  buildFilterConditions,
   // 게시판 종류 관련
   getAllBoardsModel,
   createBoardModel,

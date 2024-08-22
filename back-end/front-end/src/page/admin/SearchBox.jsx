@@ -181,12 +181,16 @@ const SearchBox = ({
           .filterRow {
             flex-direction: column;
           }
+
           .searchBox {
+            flex-direction: row;
+            flex-wrap: wrap;
             gap: 4px;
             padding: 12px;
           }
 
           .filterRow {
+            width: 49%;
             gap: 6px;
           }
 

@@ -163,7 +163,7 @@ const UserManagement = () => {
       jobtype: "",
     });
     setFilteredUsers(users);
-    setCurrentPage(1);
+    window.location.reload();
   };
   /*--------------------------*/
 
