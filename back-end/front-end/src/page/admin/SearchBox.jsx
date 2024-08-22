@@ -1,152 +1,229 @@
 const SearchBox = ({
   filters,
-  filterFields,
-  categories,
   handleFilterChange,
   handleSearchClick,
   handleResetFilters,
 }) => {
   return (
-    <div className="searchBoxContainer">
-      <div className="searchBox">
-        {filterFields && filterFields.length > 0 ? ( // 조건부 렌더링 추가
-          filterFields.map((field) => (
-            <div
-              key={field.id}
-              className={`filter_container ${
-                field.id === "dateRangeFilter"
-                  ? "dateRange_filter_container"
-                  : field.id === "searchTerm"
-                  ? "search_container"
-                  : ""
-              }`}
-            >
-              <label htmlFor={field.id}>{field.label}</label>
-
-              {field.type === "select" ? (
-                <select
-                  id={field.id}
-                  value={filters[field.id]}
-                  onChange={(e) => handleFilterChange(field.id, e.target.value)}
-                >
-                  {field.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : field.type === "dateRange" ? (
-                <>
-                  <input
-                    id={field.startDateKey}
-                    type="date"
-                    value={filters[field.startDateKey] || ""}
-                    onChange={(e) =>
-                      handleFilterChange(field.startDateKey, e.target.value)
-                    }
-                  />
-                  {` `}~{` `}
-                  <input
-                    id={field.endDateKey}
-                    type="date"
-                    value={filters[field.endDateKey] || ""}
-                    onChange={(e) =>
-                      handleFilterChange(field.endDateKey, e.target.value)
-                    }
-                  />
-                </>
-              ) : (
-                <input
-                  id={field.id}
-                  type={field.type}
-                  value={filters[field.id]}
-                  onChange={(e) => handleFilterChange(field.id, e.target.value)}
-                />
-              )}
-            </div>
-          ))
-        ) : (
-          <p>필터 옵션을 로드하는 중...</p> // 또는 다른 로딩 상태 처리
-        )}
+    <div className="searchBox">
+      <div className="filterRow">
+        {/* 첫 줄: 아이디, 닉네임 */}
+        <div className="filterField">
+          <label className="filterLabel">아이디</label>
+          <input
+            className="filterInput"
+            type="text"
+            value={filters.username}
+            onChange={(e) => handleFilterChange("username", e.target.value)}
+          />
+        </div>
+        <div className="filterField">
+          <label className="filterLabel">닉네임</label>
+          <input
+            className="filterInput"
+            type="text"
+            value={filters.nickname}
+            onChange={(e) => handleFilterChange("nickname", e.target.value)}
+          />
+        </div>
       </div>
-      <div className="searchBtnBox">
-        <button className="search_button" onClick={handleSearchClick}>
+
+      <div className="filterRow">
+        {/* 둘째 줄: 이름, 전화번호 */}
+        <div className="filterField">
+          <label className="filterLabel">이름</label>
+          <input
+            className="filterInput"
+            type="text"
+            value={filters.name}
+            onChange={(e) => handleFilterChange("name", e.target.value)}
+          />
+        </div>
+        <div className="filterField">
+          <label className="filterLabel">전화번호</label>
+          <input
+            className="filterInput"
+            type="text"
+            value={filters.phone}
+            onChange={(e) => handleFilterChange("phone", e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="filterRow">
+        {/* 셋째 줄: 생년월일, 회원 권한 */}
+        <div className="filterField">
+          <label className="filterLabel">생년월일</label>
+          <input
+            className="filterInput"
+            type="text"
+            value={filters.birth_date}
+            onChange={(e) => handleFilterChange("birth_date", e.target.value)}
+          />
+        </div>
+        <div className="filterField">
+          <label className="filterLabel">회원 권한</label>
+          <select
+            className="filterSelect"
+            value={filters.permission}
+            onChange={(e) => handleFilterChange("permission", e.target.value)}
+          >
+            <option value="">선택하세요</option>
+            <option value="1">Admin</option>
+            <option value="2">Moderator</option>
+            <option value="3">Contributor</option>
+            <option value="4">Premium</option>
+            <option value="5">Member</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="filterRow">
+        {/* 넷째 줄: 직업 */}
+        <div className="filterField">
+          <label className="filterLabel">직업</label>
+          <select
+            className="filterSelect"
+            value={filters.jobtype}
+            onChange={(e) => handleFilterChange("jobtype", e.target.value)}
+          >
+            <option value="">선택하세요</option>
+            <option value="1">택시</option>
+            <option value="2">배달</option>
+            <option value="3">기타</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="buttonGroup">
+        <button className="searchButton" onClick={handleSearchClick}>
           검색
         </button>
-        <button className="reset_button" onClick={handleResetFilters}>
+        <button className="resetButton" onClick={handleResetFilters}>
           초기화
         </button>
       </div>
+
       <style jsx>{`
-        .searchBoxContainer {
-          .searchBox {
-            border: 1px solid #ddd;
-            padding: 2%;
-            display: flex;
-            margin-top: 10px;
-            gap: 10px 30px;
-            flex-wrap: wrap;
+        .searchBox {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin: 20px 0;
+          background-color: #f7f7f7;
+          padding: 16px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-            .filter_container {
-              display: flex;
-              align-items: center;
-              height: auto; /* 필요에 따라 조정 */
+        .filterRow {
+          display: flex;
+          gap: 16px;
+        }
 
-              &.search_container,
-              &.datefilter_containter {
-                width: 45%;
-                input {
-                  width: 80%;
-                }
-              }
+        .filterField {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
 
-              label {
-                font-size: 14px;
-                margin-right: 10px;
-              }
+        .filterLabel {
+          margin-bottom: 8px;
+          font-size: 14px;
+          font-weight: bold;
+          color: #333;
+        }
 
-              input,
-              select {
-                padding: 3px 5px;
-                font-size: 14px;
-              }
-            }
+        .filterInput,
+        .filterSelect {
+          padding: 8px;
+          font-size: 14px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .buttonGroup {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .searchButton,
+        .resetButton {
+          padding: 10px 20px;
+          font-size: 14px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          background-color: #3c5997;
+          color: #fff;
+          transition: background-color 0.3s ease;
+        }
+
+        .searchButton:hover,
+        .resetButton:hover {
+          background-color: #2c4372;
+        }
+
+        .resetButton {
+          background-color: #e74c3c;
+        }
+
+        .resetButton:hover {
+          background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+          .filterRow {
+            flex-direction: column;
           }
-          /*-------------------------검색 초기화 버튼-------------- */
+          .searchBox {
+            gap: 4px;
+            padding: 12px;
+          }
 
-          .searchBtnBox {
+          .filterRow {
+            gap: 6px;
+          }
+
+          .filterLabel {
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+          }
+
+          .filterInput,
+          .filterSelect {
+            padding: 8px;
+            font-size: 11px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             width: 100%;
+            box-sizing: border-box;
+          }
+
+          .buttonGroup {
             display: flex;
-            justify-content: flex-end;
-            gap: 5px;
+            gap: 10px;
             margin-top: 10px;
-            button {
-              padding: 5px 10px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              font-size: 14px;
-              transition: background-color 0.3s;
-            }
-            .search_button {
-              color: white;
-              background-color: #2196f3;
-              color: white;
-              &:hover {
-                background-color: #1976d2;
-              }
-            }
-            .reset_button {
-              background-color: #e0e0e0; /* 회색 계열 배경색 */
-              color: #333; /* 어두운 텍스트 색상 */
-              &:hover {
-                background-color: #b0b0b0; /* 호버 시 조금 어두운 회색 */
-              }
-            }
+            justify-content: center;
+            width: 100%;
+          }
+
+          .searchButton,
+          .resetButton {
+            padding: 6px 12px;
+            font-size: 12px;
           }
         }
       `}</style>
     </div>
   );
 };
+
 export default SearchBox;

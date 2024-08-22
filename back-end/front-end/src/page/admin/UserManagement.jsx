@@ -16,16 +16,47 @@ const UserManagement = () => {
 
   /*----------검색----------*/
   const [filters, setFilters] = useState({
-    searchTerm: "",
-    statusFilter: "",
-    permissionFilter: "",
-    jobFilter: "",
-    startDateFilter: "",
-    endDateFilter: "",
+    username: "", // 아이디
+    nickname: "", // 닉네임
+    name: "", // 이름
+    phone: "", // 전화번호
+    birth_date: "", // 생년월일
+    permission: "", // 회원 권한
+    jobtype: "", // 직업
   });
+
   const filterFields = [
-    // 검색 필터 정의
+    { name: "username", label: "아이디" },
+    { name: "nickname", label: "닉네임" },
+    { name: "name", label: "이름" },
+    { name: "phone", label: "전화번호" },
+    { name: "birth_date", label: "생년월일" },
+    {
+      name: "permission",
+      label: "회원 권한",
+      type: "select",
+      options: [
+        { value: "", label: "선택하세요" },
+        { value: "1", label: "Admin" },
+        { value: "2", label: "Moderator" },
+        { value: "3", label: "Contributor" },
+        { value: "4", label: "Premium" },
+        { value: "5", label: "Member" },
+      ],
+    },
+    {
+      name: "jobtype",
+      label: "직업",
+      type: "select",
+      options: [
+        { value: "", label: "선택하세요" },
+        { value: "1", label: "택시" },
+        { value: "2", label: "배달" },
+        { value: "3", label: "기타" },
+      ],
+    },
   ];
+
   /*--------------------------*/
 
   const navigate = useNavigate();
@@ -92,18 +123,44 @@ const UserManagement = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearchClick = () => {
-    console.log(filters);
-    // 검색 처리 로직...
+  const handleSearchClick = async () => {
+    try {
+      const response = await axios.get("/api/admin/users", {
+        params: {
+          ...filters, // 필터 조건을 백엔드에 전달
+          page: currentPage,
+          limit: usersPerPage,
+        },
+      });
+      if (response.data && response.data.users) {
+        const usersWithParsedPermission = response.data.users.map((user) => ({
+          ...user,
+          permission: parseInt(user.permission, 10),
+          jobtype: parseInt(user.jobtype, 10),
+        }));
+        setUsers(usersWithParsedPermission);
+        setFilteredUsers(usersWithParsedPermission);
+        setTotalPages(response.data.totalPages);
+      } else {
+        console.error("Unexpected API response:", response);
+        setUsers([]);
+        setFilteredUsers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setUsers([]);
+      setFilteredUsers([]);
+    }
   };
-
   const handleResetFilters = () => {
     setFilters({
-      searchTerm: "",
-      statusFilter: "",
-      permissionFilter: "",
-      startDateFilter: "",
-      endDateFilter: "",
+      username: "",
+      nickname: "",
+      name: "",
+      phone: "",
+      birth_date: "",
+      permission: "",
+      jobtype: "",
     });
     setFilteredUsers(users);
     setCurrentPage(1);
@@ -458,7 +515,7 @@ const UserManagement = () => {
                 @media (max-width: 768px) {
                   font-size: 12px;
                   padding: 5px;
-                  overflow-x: scroll;
+                  /*overflow-x: scroll; 원호가 지움*/
                 }
               }
 
