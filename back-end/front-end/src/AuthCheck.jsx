@@ -6,7 +6,7 @@ function AuthCheck({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token"); // 토큰을 로컬 스토리지에서 가져옴
-    if (!token || isTokenExpired(token)) {
+    if (token && isTokenExpired(token)) {
       // 토큰이 없거나 만료된 경우
       alert("세션이 만료되었습니다. 재로그인 해주세요.");
       navigate("/login"); // 로그인 페이지로 리다이렉트

@@ -50,14 +50,7 @@ function RouterApp() {
       <Routes>
         {/* Layout이 적용된 경로 */}
         <Route element={<LayoutWithOutlet />}>
-          <Route
-            path="/"
-            element={
-              <AuthCheck>
-                <Home />
-              </AuthCheck>
-            }
-          />
+          <Route path="/" element={<Home />} />
           {/* 로그인 */}
           <Route path="/login" element={<Login />} />
 
@@ -72,9 +65,30 @@ function RouterApp() {
           <Route path="/signup/job" element={<SignupJob />} />
 
           {/* 회원정보 */}
-          <Route path="/user/personalinfo" element={<PersonalInfo />} />
-          <Route path="/user/carinfo" element={<CarInfo />} />
-          <Route path="/user/incomeinfo" element={<IncomeInfo />} />
+          <Route
+            path="/user/personalinfo"
+            element={
+              <AuthCheck>
+                <PersonalInfo />{" "}
+              </AuthCheck>
+            }
+          />
+          <Route
+            path="/user/carinfo"
+            element={
+              <AuthCheck>
+                <CarInfo />{" "}
+              </AuthCheck>
+            }
+          />
+          <Route
+            path="/user/incomeinfo"
+            element={
+              <AuthCheck>
+                <IncomeInfo />{" "}
+              </AuthCheck>
+            }
+          />
 
           {/* 게시판 */}
           <Route path="/board" element={<Board />} />
@@ -87,15 +101,36 @@ function RouterApp() {
           <Route path="/ranking" element={<Ranking />} />
 
           {/* 마이페이지 */}
-          <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/mypage"
+            element={
+              <AuthCheck>
+                <MyPage />{" "}
+              </AuthCheck>
+            }
+          />
 
           {/* 차계부 */}
-          <Route path="/mycar" element={<MyCar />} />
+          <Route
+            path="/mycar"
+            element={
+              <AuthCheck>
+                <MyCar />{" "}
+              </AuthCheck>
+            }
+          />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
           <Route path="/mycar/log" element={<MyCarLog />} />
 
           {/* 운행일지 */}
-          <Route path="/driving_log" element={<DriveLog />} />
+          <Route
+            path="/driving_log"
+            element={
+              <AuthCheck>
+                <DriveLog />{" "}
+              </AuthCheck>
+            }
+          />
           <Route path="/driving_log/:userId" element={<DriveLog />} />
           <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
 
