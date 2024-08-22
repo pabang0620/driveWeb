@@ -90,7 +90,7 @@ function QuarterlyView() {
   };
 
   const handleFetchData = () => {
-    // fetchData();
+    fetchData();
   };
 
   const formatCurrency = (value) => {

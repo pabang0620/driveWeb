@@ -261,7 +261,11 @@ function EstimatedIncomeTaxPage() {
           margin: 0 auto;
           padding: 100px 0;
           height: auto;
-
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           @media (max-width: 768px) {
             width: 85%;
             padding: 50px 0 100px 0;

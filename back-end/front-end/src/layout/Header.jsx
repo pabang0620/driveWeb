@@ -213,6 +213,11 @@ function Header() {
           header {
             width: 100%;
             background-color: white;
+            ul,
+            li,
+            ol {
+              list-style: none;
+            }
             &.scrolling {
               top: -60px;
             }

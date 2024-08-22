@@ -19,11 +19,7 @@ a {
   color: #222;
   text-decoration: none;
 }
-ul,
-li,
-ol {
-  list-style: none;
-}
+
 button {
   background: none;
   border: none;

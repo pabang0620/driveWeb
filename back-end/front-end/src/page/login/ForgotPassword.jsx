@@ -93,7 +93,11 @@ function ForgotPassword() {
       <style jsx>{`
         .forgotpassword-container {
           padding: 80px 0 150px 0;
-
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           .forgotpassword-box {
             max-width: 350px;
             width: 70%;

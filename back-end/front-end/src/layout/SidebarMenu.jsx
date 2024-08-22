@@ -216,6 +216,11 @@ function SidebarMenu({
           transform: translateX(-100%);
           transition: transform 0.3s ease-in-out;
           overflow-y: scroll;
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           @media (max-width: 480px) {
             width: 100vw;
             height: 100vh;
