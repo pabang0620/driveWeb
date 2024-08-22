@@ -41,6 +41,7 @@ import BoardManagement from "./page/admin/BoardManagement";
 import UserManagement from "./page/admin/UserManagement";
 import RankingManagement from "./page/admin/RankingManagement";
 import StatisticsManagement from "./page/admin/StatisticsManagement";
+import AuthCheck from "./AuthCheck";
 
 function RouterApp() {
   return (
@@ -49,7 +50,14 @@ function RouterApp() {
       <Routes>
         {/* Layout이 적용된 경로 */}
         <Route element={<LayoutWithOutlet />}>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <AuthCheck>
+                <Home />
+              </AuthCheck>
+            }
+          />
           {/* 로그인 */}
           <Route path="/login" element={<Login />} />
 
