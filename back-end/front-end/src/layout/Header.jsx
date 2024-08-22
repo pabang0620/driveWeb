@@ -45,12 +45,15 @@ function Header() {
   }, []);
 
   const getSelectedClass = (pathPrefix) => {
+    if (pathPrefix === "/") {
+      return currentPath === pathPrefix ? "selected" : "";
+    }
     return currentPath.startsWith(pathPrefix) ? "selected" : "";
   };
 
   const handleLogout = () => {
-    setShowSidebar((prev) => !prev);
-    setShowLogoutModal(true);
+    setShowSidebar(false);
+    setShowLogoutModal(false);
     localStorage.removeItem("token");
     navigate("/");
   };
@@ -210,6 +213,11 @@ function Header() {
           header {
             width: 100%;
             background-color: white;
+            ul,
+            li,
+            ol {
+              list-style: none;
+            }
             &.scrolling {
               top: -60px;
             }

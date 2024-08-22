@@ -234,6 +234,11 @@ export default function Payment() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           .mobile_br {
             display: none;
           }

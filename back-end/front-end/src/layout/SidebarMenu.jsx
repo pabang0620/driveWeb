@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 function SidebarMenu({
   showSidebar,
   setShowSidebar,
+  showLogoutModal,
   setShowLogoutModal,
   handleLogout,
 }) {
@@ -32,6 +33,11 @@ function SidebarMenu({
 
   const handleLinkClick = () => {
     setShowSidebar((prev) => !prev);
+  };
+
+  const handleLogoutSideMenu = () => {
+    setShowSidebar((prev) => !prev);
+    setShowLogoutModal(true);
   };
 
   useEffect(() => {
@@ -72,13 +78,24 @@ function SidebarMenu({
           </li>
         )}
         {isLoggedIn ? (
-          <li onClick={() => handleLogout()}>로그아웃</li>
+          <li onClick={handleLogoutSideMenu}>로그아웃</li>
         ) : (
           <li>
             <Link to="/login">로그인</Link>
           </li>
         )}
       </ul>
+      {showLogoutModal && (
+        <div className="logout_modal">
+          <div className="modal_content">
+            <p>정말 로그아웃 하시겠습니까?</p>
+            <button onClick={handleLogout}>로그아웃</button>
+            <button onClick={() => setShowLogoutModal(false)}>
+              로그인 유지
+            </button>
+          </div>
+        </div>
+      )}
       <ul className="sideMenu">
         <li>
           <Link to="/">홈</Link>
@@ -199,6 +216,11 @@ function SidebarMenu({
           transform: translateX(-100%);
           transition: transform 0.3s ease-in-out;
           overflow-y: scroll;
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           @media (max-width: 480px) {
             width: 100vw;
             height: 100vh;

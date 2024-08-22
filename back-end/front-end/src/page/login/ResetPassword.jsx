@@ -135,7 +135,11 @@ function ResetPassword() {
       <style jsx>{`
         .resetpassword-container {
           padding: 80px 0 150px 0;
-
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           .resetpassword-box {
             max-width: 350px;
             width: 70%;
