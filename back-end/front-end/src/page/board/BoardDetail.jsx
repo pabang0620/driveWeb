@@ -597,7 +597,8 @@ const BoardDetail = () => {
               }
             }
           }
-          .dlatldlatl {
+          .dlatldlatl,
+          .dlatl {
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -605,21 +606,27 @@ const BoardDetail = () => {
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden; /* 이미지가 div를 벗어나지 않도록 설정 */
             img {
-              width: 70px;
-              height: 70px;
-              border-radius: 50%;
+              width: 100%;
+              height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
+              max-width: 100%; /* 이미지의 최대 너비를 100%로 제한 */
             }
           }
+
           .dlatl {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 이미지가 div를 벗어나지 않도록 설정 */
             img {
-              width: 50px;
-              height: 50px;
-              border-radius: 50%;
+              width: 100%;
+              height: auto; /* 높이를 자동으로 설정하여 비율 유지 */
+              max-width: 100%; /* 이미지의 최대 너비를 100%로 제한 */
             }
           }
           section {
@@ -655,6 +662,9 @@ const BoardDetail = () => {
             .detailBodyDetail {
               min-height: 500px;
               padding: 20px;
+              img {
+                width: 100%;
+              }
               @media (max-width: 768px) {
                 padding: 10px 5px;
                 font-size: 13px;

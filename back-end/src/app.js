@@ -8,8 +8,8 @@ require("dotenv").config();
 
 const app = express();
 
-// 요청 본문의 크기 제한을 500KB로 설정하고, 크기 초과 에러 처리를 추가
 app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use(cors());
 
