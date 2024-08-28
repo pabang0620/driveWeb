@@ -81,7 +81,7 @@ const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
         }
 
         console.log("Response data:", response);
-        localStorage.setItem("drivingLogId", response.driving_log_id);
+        // localStorage.setItem("drivingLogId", response.driving_log_id); 이거 ?
         localStorage.setItem(
           "working_hours_seconds",
           response.working_hours_seconds

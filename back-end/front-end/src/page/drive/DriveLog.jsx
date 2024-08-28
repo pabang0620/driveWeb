@@ -75,8 +75,10 @@ const DriveLog = () => {
   const openModal = (modalType, logId = null) => {
     console.log(`Opening modal: ${modalType}, driving_log_id: ${logId}`);
     setCurrentModal(modalType);
+
     if (logId) {
       setSelectedLogId(logId);
+      localStorage.setItem("drivingLogId", logId); // 로컬 스토리지에 logId 저장
     }
   };
 
