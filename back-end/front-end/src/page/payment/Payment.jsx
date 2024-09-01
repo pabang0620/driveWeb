@@ -1,57 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
-import { nanoid } from "nanoid";
-
-const clientKey = "_";
-const customerKey = "_";
+import Checkout from "./Checkout";
 
 export default function Payment() {
-  const paymentWidgetRef = useRef(null);
-  const paymentMethodsWidgetRef = useRef(null);
-  const [price, setPrice] = useState(50_000);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-      const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
-        "#payment-widget",
-        price
-      );
-
-      paymentWidgetRef.current = paymentWidget;
-      paymentMethodsWidgetRef.current = paymentMethodsWidget;
-    })();
-  }, [price]);
-
-  useEffect(() => {
-    const paymentMethodsWidget = paymentMethodsWidgetRef.current;
-
-    if (paymentMethodsWidget == null) {
-      return;
-    }
-
-    paymentMethodsWidget.updateAmount(
-      price,
-      paymentMethodsWidget.UPDATE_REASON.COUPON
-    );
-  }, [price]);
-
-  const handlePaymentClick = async () => {
-    const paymentWidget = paymentWidgetRef.current;
-
-    try {
-      await paymentWidget.requestPayment({
-        orderId: nanoid(),
-        orderName: "토스 티셔츠 외 2건",
-        customerName: "김토스",
-        customerEmail: "customer123@gmail.com",
-        successUrl: `${window.location.origin}/success`,
-        failUrl: `${window.location.origin}/fail`,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="payment_container">
@@ -82,18 +36,20 @@ export default function Payment() {
           </div>
         </div>
 
-        {/* <div>
-        // 할인제도 있다면
-        <input
-          type="checkbox"
-          onChange={(event) => {
-            setPrice(event.target.checked ? price - 5_000 : price + 5_000);
-          }}
-        />
-      </div> */}
-        <button onClick={handlePaymentClick} className="payment_button">
+        <button onClick={openModal} className="payment_button">
           멤버십 가입하기
         </button>
+
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button onClick={closeModal} className="modal-close-button">
+                ×
+              </button>
+              <Checkout />
+            </div>
+          </div>
+        )}
 
         <div className="subscription_info">
           <h4>
@@ -470,6 +426,42 @@ export default function Payment() {
                 box-shadow: 0 0 0 3px rgba;
               }
             }
+          }
+          /*페이먼트 모달 */
+          .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+          }
+          .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 80%;
+            height: 80%;
+            overflow-y: scroll;
+            max-width: 600px;
+            position: relative;
+            @media (max-width: 767px) {
+              width: 85%;
+              height: 85%;
+            }
+          }
+
+          .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
           }
         }
       `}</style>

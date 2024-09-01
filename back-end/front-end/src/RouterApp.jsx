@@ -37,6 +37,8 @@ import EstimatedIncomeTaxPage from "./page/mypage/EstimatedIncomeTaxPage";
 import ProfitLossMainPage from "./page/mypage/ProfitLossMainPage";
 import PageTracker from "./PageTracker";
 import Payment from "./page/payment/Payment";
+import { SuccessPage } from "./page/payment/SuccessPage";
+import { FailPage } from "./page/payment/FailPage";
 import BoardManagement from "./page/admin/BoardManagement";
 import UserManagement from "./page/admin/UserManagement";
 import RankingManagement from "./page/admin/RankingManagement";
@@ -136,6 +138,8 @@ function RouterApp() {
 
           {/* 결재 */}
           <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/success" element={<SuccessPage />} />
+          <Route path="/payment/fail" element={<FailPage />} />
 
           {/* 관리자페이지 */}
           <Route path="/admin/user" element={<UserManagement />} />
