@@ -27,6 +27,11 @@ function Footer() {
           display: flex;
           flex-direction: column;
           gap: 30px 0;
+          ul,
+          li,
+          ol {
+            list-style: none;
+          }
           @media (max-width: 1024px) {
             height: 220px;
             padding: 5% 8%;

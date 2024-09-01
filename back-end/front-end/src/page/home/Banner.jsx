@@ -4,7 +4,7 @@ const Banner = () => {
   return (
     <div className="main_banner">
       <div className="banner_text">
-        <h3>당신의 안전한 운행을 위한 최고의 기록 도구</h3>
+        <h3>당신의 건강한 매출을 위한 최고의 기록 도구</h3>
         <h2>
           손쉽게, 더 효율적으로
           <br />
