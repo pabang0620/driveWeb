@@ -186,7 +186,7 @@ const socialLogin = async (req, res, provider) => {
     );
 
     console.log("JWT token generated for user ID:", user.id);
-    res.status(200).json({ token: jwtToken });
+    res.status(200).json({ token: jwtToken, nickname: user.nickname });
   } catch (error) {
     console.error("Error during social login:", error);
 

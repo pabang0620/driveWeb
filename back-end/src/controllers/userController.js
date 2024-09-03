@@ -22,7 +22,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const registerUser = async (req, res) => {
   const {
-    username,
+    email,
     nickname,
     password,
     securityQuestion,
@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
     jobtype,
   } = req.body;
   if (
-    !username ||
+    !email ||
     !nickname ||
     !password ||
     !securityQuestion ||
@@ -44,7 +44,7 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser(
       nickname,
-      username,
+      email,
       hashedPassword,
       securityQuestion,
       securityAnswer,
@@ -131,10 +131,10 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, jobtype: user.jobtype, permission: user.permission }, // jobtype을 토큰의 페이로드에 추가
       process.env.JWT_SECRET,
-      { expiresIn: "10h" }
+      { expiresIn: "12h" }
     );
 
-    res.status(200).json(token);
+    res.status(200).json({ token, nickname: user.nickname });
   } catch (error) {
     res.status(500).json({ error: "일반 로그인 중 오류가 발생했습니다." });
   }

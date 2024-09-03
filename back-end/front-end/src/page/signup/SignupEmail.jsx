@@ -1,40 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignupEmail() {
-  const [username, setUsername] = useState(""); // 이메일 상태
+  const [email, setEmail] = useState(""); // 이메일 상태
   const [nickname, setNickname] = useState(""); // 닉네임 상태
 
-  const [agreeAll, setAgreeAll] = useState(false); //모두동의
-  const [agreePrivacy, setAgreePrivacy] = useState(false); //개인정보수집이용동의
-  const [agreeTerms, setAgreeTerms] = useState(false); //이용약관동의
+  const [agreeAll, setAgreeAll] = useState(false); // 모두동의
+  const [agreePrivacy, setAgreePrivacy] = useState(false); // 개인정보수집이용동의
+  const [agreeTerms, setAgreeTerms] = useState(false); // 이용약관동의
 
   const navigate = useNavigate(); // React Router의 navigate 함수 사용
 
-  // 아이디 유효성 검사 함수
-  const isValidId = (username) => {
-    // 영문자와 숫자가 모두 포함되어 있는지 검사
-    const hasLetter = /[a-zA-Z]/.test(username);
-    const hasDigit = /\d/.test(username);
-
-    // 영문자와 숫자가 모두 포함되어 있는지 확인
-    if (!hasLetter || !hasDigit) {
-      return false;
-    }
-
-    // 3자 이상인지 검사
-    if (username.length < 3) {
-      return false;
-    }
-
-    return true;
+  // 이메일 유효성 검사 함수
+  const isValidEmail = (email) => {
+    // 이메일 형식 검사 (간단한 정규식)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   // 전체 동의 체크
   const handleAgreeAll = () => {
-    setAgreeAll(!agreePrivacy);
-    setAgreePrivacy(!agreePrivacy);
-    setAgreeTerms(!agreePrivacy);
+    setAgreeAll(!agreeAll);
+    setAgreePrivacy(!agreeAll);
+    setAgreeTerms(!agreeAll);
   };
 
   // 개인정보 수집/이용 동의 체크
@@ -49,7 +37,7 @@ function SignupEmail() {
 
   // 모든 입력값과 동의 상태 체크 함수
   const canProceed = () => {
-    return isValidId(username) && nickname !== "" && agreeAll;
+    return isValidEmail(email) && nickname !== "" && agreeAll;
   };
 
   // 다음 버튼 클릭 시 처리 함수
@@ -58,10 +46,12 @@ function SignupEmail() {
     let errorMessage = null;
 
     // 조건 체크
-    if (!isValidId(username)) {
-      errorMessage = "아이디를 영문과 숫자, 최소 3자 입력해주세요.";
+    if (!isValidEmail(email)) {
+      errorMessage = "유효한 이메일 주소를 입력해주세요.";
+    } else if (nickname === "") {
+      errorMessage = "닉네임을 입력해주세요.";
     } else if (!agreeAll) {
-      errorMessage = "약관에 동의해주세요";
+      errorMessage = "약관에 동의해주세요.";
     }
 
     // 오류 메시지가 있을 경우 경고창을 띄우고 함수 종료
@@ -73,7 +63,7 @@ function SignupEmail() {
     // 모든 조건이 충족되면 다음 페이지로 이동
     navigate("/signup/password", {
       state: {
-        username: username,
+        email: email,
         nickname: nickname,
       },
     });
@@ -97,27 +87,26 @@ function SignupEmail() {
             alt="이전"
           />
         </button>
-        <h3>아이디 생성하기</h3>
-        <p>로그인 시 사용할 아이디를 입력해주세요.</p>
+        <h3>이메일로 가입하기</h3>
+        <p>로그인 시 사용할 이메일 주소를 입력해주세요.</p>
         <div className="input-container">
-          <label htmlFor="username">아이디</label>
+          <label htmlFor="email">이메일</label>
           <input
-            type="username"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="아이디를 입력하세요"
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일을 입력하세요"
           />
           <ul>
-            <li>영문과 숫자</li>
-            <li>최소 3자</li>
+            <li>유효한 이메일 형식이어야 합니다.</li>
           </ul>
         </div>
         <div className="input-container">
           <label htmlFor="nickname">닉네임</label>
           <input
-            type="nickname"
+            type="text"
             id="nickname"
             name="nickname"
             value={nickname}

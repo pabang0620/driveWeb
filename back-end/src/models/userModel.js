@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const createUser = async (
   nickname,
-  username,
+  email,
   password,
   securityQuestion,
   securityAnswer,
@@ -17,7 +17,7 @@ const createUser = async (
     const user = await prisma.users.create({
       data: {
         nickname,
-        username,
+        username: email,
         password, // 비밀번호는 해시처리된 상태로 저장
         jobtype,
         googleId,
@@ -30,7 +30,7 @@ const createUser = async (
             name: "", // 이름 초기화
             birth_date: null, // 생년월일 초기화
             phone: "", // 전화번호 초기화
-            email: "", // 이메일 초기화
+            email: email, // 이메일 초기화
           },
         },
         user_vehicles: {
@@ -94,6 +94,14 @@ const createUser = async (
 const findUserByUsername = async (username) => {
   return await prisma.users.findUnique({
     where: { username },
+    select: {
+      id: true,
+      password: true,
+      status: true,
+      jobtype: true,
+      permission: true,
+      nickname: true, // 닉네임도 조회하도록 추가
+    },
   });
 };
 

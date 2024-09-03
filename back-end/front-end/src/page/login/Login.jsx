@@ -17,7 +17,11 @@ function Login() {
         username,
         password,
       });
-      localStorage.setItem("token", response.data);
+
+      const { token, nickname } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("nickname", nickname); // 닉네임 저장
 
       navigate("/");
     } catch (error) {
@@ -42,10 +46,11 @@ function Login() {
       });
 
       // 응답 데이터에서 토큰만 추출하여 로컬스토리지에 저장
-      const token = response.data.token;
-      console.log("JWT Token:", token); // 콘솔에 토큰 값 출력
+      const { token, nickname } = response.data;
 
       localStorage.setItem("token", token);
+      localStorage.setItem("nickname", nickname); // 닉네임 저장
+
       navigate("/");
     } catch (error) {
       console.error(
@@ -68,9 +73,10 @@ function Login() {
         token: accessToken,
       });
 
-      const token = responseData.data.token;
-      console.log("JWT Token:", token);
+      const { token, nickname } = responseData.data;
+
       localStorage.setItem("token", token);
+      localStorage.setItem("nickname", nickname); // 닉네임 저장
 
       navigate("/");
     } catch (error) {
@@ -105,10 +111,10 @@ function Login() {
       });
 
       // 응답 데이터에서 토큰만 추출하여 localStorage에 저장
-      const token = responseData.data.token;
-      console.log("JWT Token:", token);
+      const { token, nickname } = responseData.data;
 
       localStorage.setItem("token", token);
+      localStorage.setItem("nickname", nickname); // 닉네임 저장
       localStorage.removeItem("kakao_db73a80e65b6fe722d881859aec02bb7");
 
       // 로그인이 성공하면 홈 페이지로 이동

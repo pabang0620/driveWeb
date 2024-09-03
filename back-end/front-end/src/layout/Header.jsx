@@ -12,6 +12,7 @@ function Header() {
   const [showSubMenu, setShowSubMenu] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
   const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
+  const [nickname, setNickname] = useState(""); // 닉네임 상태 추가
 
   const hideNav =
     location.pathname.startsWith("/login") ||
@@ -23,6 +24,11 @@ function Header() {
       const decoded = jwtDecode(token);
       setUserPermission(decoded.permission); // 사용자 권한 설정
       console.log(decoded.permission);
+
+      const storedNickname = localStorage.getItem("nickname");
+      if (storedNickname) {
+        setNickname(storedNickname); // 닉네임 설정
+      }
     }
   }, [token]); // 컴포넌트가 마운트될 때 한 번 실행
 
@@ -83,6 +89,9 @@ function Header() {
           </h1>
 
           <ul className="login">
+            {isLoggedIn && nickname && (
+              <li className="nickname">반갑습니다, {nickname}님</li>
+            )}
             {!isLoggedIn && (
               <li>
                 <Link to="/signup">회원가입</Link>
