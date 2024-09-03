@@ -26,7 +26,9 @@ const BoardPost = () => {
         const response = await axios.get(
           `/api/post/board/${boardId}?page=${currentPage}&search=${searchTerm}`
         );
-        setPosts(response.data.posts);
+        const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
+
+        setPosts(sortedPosts);
         setTotalPosts(response.data.totalPosts);
         setBoardName(response.data.board.name);
       } catch (error) {
@@ -49,7 +51,9 @@ const BoardPost = () => {
       const response = await axios.get(
         `/api/post/board/${boardId}?page=${currentPage}&search=${searchTerm}`
       );
-      setPosts(response.data.posts);
+      const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
+
+      setPosts(sortedPosts);
       setTotalPosts(response.data.totalPosts);
     } catch (error) {
       console.error("게시글 데이터를 가져오는 중 오류가 발생했습니다.", error);
@@ -114,7 +118,7 @@ const BoardPost = () => {
                 className="postItem"
                 onClick={() => handlePostClick(post.id)}
               >
-                <td>{index + 1 + (currentPage - 1) * 10}</td>
+                <td>{post.id}</td>
                 <td>
                   {post.title} [{post._count.comments}]
                 </td>
@@ -249,7 +253,7 @@ const BoardPost = () => {
 
         .tableWrapper {
           margin-top: 20px;
-          height: 484px;
+          height: 503px;
           overflow-y: hidden; /* 세로 스크롤 제거 */
           overflow-x: hidden;
           @media (max-width: 768px) {

@@ -289,9 +289,11 @@ const BoardDetail = () => {
   return (
     <div className="boardDetail">
       <div className="boardPostHeader">
-        <TitleBox title="게시판" subtitle="게시글" />
+        <TitleBox title="게시판" />
         <div>
-          <button className="writeButton">목록</button>
+          <button className="writeButton" onClick={() => navigate("/board")}>
+            목록
+          </button>
           <button className="writeButton" onClick={handleWriteButtonClick}>
             글쓰기
           </button>
@@ -656,6 +658,9 @@ const BoardDetail = () => {
             .detailBodyDetail {
               min-height: 500px;
               padding: 20px;
+              img {
+                max-width: 100%;
+              }
               @media (max-width: 768px) {
                 padding: 10px 5px;
                 font-size: 13px;

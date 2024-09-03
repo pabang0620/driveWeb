@@ -14,6 +14,7 @@ const {
   updateUserPassword,
   updateUserJobType,
   findUserById,
+  findUserByNicknameAndSecurity,
 } = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -50,7 +51,13 @@ const registerUser = async (req, res) => {
       securityAnswer,
       jobtype
     );
-    res.status(201).json(user);
+
+    const token = jwt.sign(
+      { userId: user.id, jobtype: user.jobtype, permission: user.permission },
+      process.env.JWT_SECRET,
+      { expiresIn: "12h" } // 토큰 만료 시간 설정
+    );
+    res.status(201).json({ token, nickname: user.nickname });
   } catch (error) {
     res.status(500).json({ error: "사용자 생성 중 오류가 발생했습니다." });
   }
@@ -83,6 +90,39 @@ async function verifySecurityAnswer(req, res) {
       .json({ success: false, message: "Internal server error" });
   }
 }
+// 아이디 찾기
+const findUsername = async (req, res) => {
+  const { nickname, securityQuestion, securityAnswer } = req.body;
+
+  try {
+    // 모델에서 사용자 정보를 찾습니다.
+    const user = await findUserByNicknameAndSecurity(
+      nickname,
+      securityQuestion,
+      securityAnswer
+    );
+
+    // 사용자가 존재할 경우
+    if (user) {
+      return res.status(200).json({
+        success: true,
+        username: user.username,
+      });
+    } else {
+      // 사용자가 없을 경우
+      return res.status(404).json({
+        success: false,
+        message: "일치하는 사용자를 찾을 수 없습니다.",
+      });
+    }
+  } catch (error) {
+    console.error("아이디 찾기 중 오류 발생:", error);
+    return res.status(500).json({
+      success: false,
+      message: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+    });
+  }
+};
 
 async function resetPassword(req, res) {
   const { username, newPassword } = req.body;
@@ -357,6 +397,7 @@ module.exports = {
   registerUser,
   resetPassword,
   verifySecurityAnswer,
+  findUsername,
   loginUser,
   updateUserProfile,
   updateUserVehicleHandler,

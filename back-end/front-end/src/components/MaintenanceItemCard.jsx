@@ -8,7 +8,7 @@ const MaintenanceItemCard = ({
   onRecordAdded,
   maintenanceItems,
 }) => {
-  const { name = "이름 없음", maintenance_records } = item;
+  const { name = "이름 없음", maintenance_records = [] } = item; // default value 설정
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastMaintenanceRecord, setLastMaintenanceRecord] = useState(null);

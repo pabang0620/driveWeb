@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import dummyboardData from "../../components/dummy";
-const BoardBox = ({ boardTitle, notices }) => {
+const BoardBox = ({ boardTitle, notices, boardId }) => {
   const navigate = useNavigate();
 
   const handleNoticeClick = (id) => {
     navigate(`/board/post/${id}`);
   };
 
+  const handleListClick = () => {
+    navigate(`/board/list/${boardId}`);
+  };
+
   return (
     <div className="boardBox">
-      <div className="boardBoxheader">{boardTitle}</div>
+      <div className="boardBoxheader" onClick={handleListClick}>
+        {boardTitle}
+      </div>
       {notices.map((notice, index) => (
         <div
           key={index}
@@ -40,6 +46,7 @@ const BoardBox = ({ boardTitle, notices }) => {
           font-size: 20px;
           font-weight: bold;
           margin: 5px 0;
+          cursor: pointer;
           @media (max-width: 768px) {
             font-size: 18px;
           }

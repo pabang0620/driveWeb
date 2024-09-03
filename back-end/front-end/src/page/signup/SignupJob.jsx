@@ -24,8 +24,12 @@ const SignupJob = () => {
         ...location.state,
         jobtype: jobtype,
       });
+
+      const { token, nickname } = response.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("nickname", nickname);
       alert("회원가입이 완료되었습니다.");
-      navigate("/login");
+      navigate("/");
       //로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
     } catch (error) {
       console.error("Signup error:", error.response?.data || error.message);

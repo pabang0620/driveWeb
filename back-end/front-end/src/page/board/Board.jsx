@@ -52,6 +52,7 @@ const Board = () => {
       <div className="boardFlex">
         {boardData.map((data, index) => (
           <BoardBox
+            boardId={data.boardId}
             key={index}
             boardTitle={data.boardName}
             notices={data.posts.map((post) => ({

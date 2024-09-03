@@ -8,6 +8,7 @@ import {
 
 import Login from "./page/login/Login";
 import ForgotPassword from "./page/login/ForgotPassword";
+import FindUsername from "./page/login/FindUsername";
 import ResetPassword from "./page/login/ResetPassword";
 import Signup from "./page/signup/Signup";
 import Home from "./page/home/Home";
@@ -57,6 +58,7 @@ function RouterApp() {
           {/* 비밀번호 찾기 & 재설정 */}
           <Route path="/login/forgotpassword" element={<ForgotPassword />} />
           <Route path="/login/resetpassword" element={<ResetPassword />} />
+          <Route path="/login/findUsername" element={<FindUsername />} />
 
           {/* 회원가입 */}
           <Route path="/signup" element={<Signup />} />

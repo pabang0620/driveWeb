@@ -195,6 +195,7 @@ function Login() {
             </KakaoLogin>
           </div>
           <p className="smallText">
+            <Link to="/login/findUsername">아이디를 잊으셨나요?</Link>
             <Link to="/login/forgotpassword">비밀번호를 잊으셨나요?</Link>
             <Link to="/signup">회원가입</Link>
           </p>

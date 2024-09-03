@@ -182,23 +182,26 @@ function SidebarMenu({
             </li>
           </ul>
         </li>
-        <li>
-          <Link to="/admin/user">관리자페이지</Link>
-          <ul>
-            <li>
-              <Link to="/admin/user">회원관리</Link>
-            </li>
-            <li>
-              <Link to="/admin/ranking">랭킹관리</Link>
-            </li>
-            <li>
-              <Link to="/admin/statistics">통계관리</Link>
-            </li>
-            <li>
-              <Link to="/admin/board">게시판관리</Link>
-            </li>
-          </ul>
-        </li>
+        {/* 관리자 페이지 항목: permission 값이 1, 2, 3인 경우에만 렌더링 */}
+        {userPermission && [1, 2, 3].includes(userPermission) && (
+          <li>
+            <Link to="/admin/user">관리자페이지</Link>
+            <ul>
+              <li>
+                <Link to="/admin/user">회원관리</Link>
+              </li>
+              <li>
+                <Link to="/admin/ranking">랭킹관리</Link>
+              </li>
+              <li>
+                <Link to="/admin/statistics">통계관리</Link>
+              </li>
+              <li>
+                <Link to="/admin/board">게시판관리</Link>
+              </li>
+            </ul>
+          </li>
+        )}
       </ul>
       <style jsx>{`
         .sidebar-menu {

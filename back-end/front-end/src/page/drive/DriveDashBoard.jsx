@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import PremiumButton from "../admin/PremiumButton ";
 import useCheckPermission from "../../utils/useCheckPermission";
 import { getJobtype, getProfileVehicle } from "../../components/ApiGet";
+import { Link } from "react-router-dom";
 
 const DriveDashBoard = () => {
   useCheckPermission();
@@ -104,7 +105,7 @@ const DriveDashBoard = () => {
     // 차량 종류가 비어있을 경우 메시지 표시
     return (
       <div className="container">
-        <h2>차량 정보를 입력해주세요.</h2>
+        <Link to="/user/carInfo">차량 정보를 입력해주세요(클릭 시 이동)</Link>
         <style jsx>{`
           .container {
             display: flex;
@@ -119,6 +120,12 @@ const DriveDashBoard = () => {
               padding: 20px;
               border-radius: 8px;
               background-color: #ffffff;
+            }
+            a {
+              color: rgb(132 141 148);
+              font-weight: bold;
+              padding: 5px 10px;
+              display: block;
             }
           }
         `}</style>

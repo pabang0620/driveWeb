@@ -17,6 +17,7 @@ const {
   verifySecurityAnswer,
   resetPassword,
   updateJobType,
+  findUsername,
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const handleFileUpload = require("../middleware/handleFileUpload");
@@ -28,6 +29,7 @@ router.post("/login", loginUser);
 router.put("/resetpassword", resetPassword);
 
 router.post("/verifysecurity", verifySecurityAnswer);
+router.post("/findusername", findUsername);
 
 router.get("/profile", authMiddleware, fetchUserProfile);
 

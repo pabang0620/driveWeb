@@ -5,6 +5,7 @@ import "quill/dist/quill.snow.css";
 import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
+import { jwtDecode } from "jwt-decode";
 
 const BoardPostAdd = () => {
   useCheckPermission();
@@ -19,6 +20,20 @@ const BoardPostAdd = () => {
   ); // 기본값 설정
   const [boards, setBoards] = useState([]); // 게시판 리스트 상태
   const quillRef = useRef(null);
+
+  const [userPermission, setUserPermission] = useState(null); // 사용자 권한 상태 추가
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserPermission(decoded.permission); // 사용자 권한 설정
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const quill = new Quill(quillRef.current, {
@@ -146,10 +161,7 @@ const BoardPostAdd = () => {
       <div className="boardPostHeader">
         <TitleBox title="게시판" subtitle={id ? "글 수정" : "글쓰기"} />
         <div>
-          <button
-            className="writeButton"
-            onClick={() => navigate(`/board/list/${id || ""}`)}
-          >
+          <button className="writeButton" onClick={() => navigate("/board")}>
             목록
           </button>
           <button className="writeButton" onClick={handleSave}>
@@ -174,11 +186,19 @@ const BoardPostAdd = () => {
             className="boardSelect"
           >
             {Array.isArray(boards) &&
-              boards.map((board) => (
-                <option key={board.id} value={board.id}>
-                  {board.name}
-                </option>
-              ))}
+              boards
+                .filter(
+                  (board) =>
+                    userPermission === null || // userPermission이 null이면 모든 보드를 표시
+                    userPermission === undefined || // userPermission이 undefined면 모든 보드를 표시
+                    board.name !== "공지사항" || // "공지사항"이 아닌 경우
+                    [1, 2, 3].includes(userPermission) // "공지사항"이면서 권한이 1, 2, 3인 경우
+                )
+                .map((board) => (
+                  <option key={board.id} value={board.id}>
+                    {board.name}
+                  </option>
+                ))}
           </select>
         </div>
         <div className="EditorWrapper">

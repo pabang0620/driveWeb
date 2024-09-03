@@ -129,6 +129,20 @@ const updateUserProfileData = async (userId, profileData) => {
   }
 };
 
+// 닉네임, 보안 질문, 보안 답변을 기반으로 사용자 찾기
+const findUserByNicknameAndSecurity = async (
+  nickname,
+  userQuestion,
+  userAnswer
+) => {
+  return await prisma.users.findFirst({
+    where: {
+      nickname: nickname,
+      userQuestion: userQuestion,
+      userAnswer: userAnswer,
+    },
+  });
+};
 // 자동차등록 관련
 const updateUserVehicle = async (userId, vehicleData) => {
   try {
@@ -324,6 +338,7 @@ async function findUserById(userId) {
 module.exports = {
   createUser,
   findUserByUsername,
+  findUserByNicknameAndSecurity,
   updateUserPassword,
   updateUserProfileData,
   updateUserVehicle,

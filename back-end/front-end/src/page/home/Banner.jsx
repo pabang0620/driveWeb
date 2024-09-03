@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
+  const navigate = useNavigate();
+
+  const handleBoardPostClick = () => {
+    navigate("/board/post/43");
+  };
   return (
-    <div className="main_banner">
+    <div className="main_banner" onClick={handleBoardPostClick}>
       <div className="banner_text">
-        <h3>당신의 안전한 운행을 위한 최고의 기록 도구</h3>
+        <h3>당신의 건강한 매출을 위한 최고의 기록 도구</h3>
         <h2>
           손쉽게, 더 효율적으로
           <br />
@@ -20,6 +26,7 @@ const Banner = () => {
           background-position: center;
           display: flex;
           align-items: center;
+          cursor: pointer;
           @media (max-width: 768px) {
             background-position: 85%;
           }
