@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../../components/Spinner";
 import TitleBox from "../../components/TitleBox";
 import { useNavigate } from "react-router-dom";
-import useCheckPermission from "../../utils/useCheckPermission";
 
 function EstimatedIncomeTaxPage() {
-  //useCheckPermission();
-
   const [yearlyIncome, setYearlyIncome] = useState(0); // 연간 운송 수입금
   const [expenseRate, setExpenseRate] = useState(0); // 소득 정보 기준 경비율
   const [personalDeduction, setPersonalDeduction] = useState(0); // 본인 공제
@@ -15,13 +12,10 @@ function EstimatedIncomeTaxPage() {
   const [incomeTax, setIncomeTax] = useState(0); // 소득세
   const [localTax, setLocalTax] = useState(0); // 지방세
   const [estimatedTotalTax, setEstimatedTotalTax] = useState(0); // 예상 종합 소득세
-  /*----효과----*/
   const [resultVisible, setResultVisible] = useState(false); // 결과 가시성 상태
-  /*--------*/
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // 선택된 연도
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
   const [isModified, setIsModified] = useState(false); // 수정 여부 추적
 
   const token = localStorage.getItem("token");
@@ -45,7 +39,9 @@ function EstimatedIncomeTaxPage() {
 
         setYearlyIncome(totalIncome);
         setExpenseRate(standardExpenseRate);
-        setPersonalDeduction(personalDeduction);
+        setPersonalDeduction(
+          personalDeduction === 0 ? 1500000 : personalDeduction
+        );
         setIsModified(false); // 데이터를 불러오면 수정 상태를 초기화
       } catch (err) {
         setError("데이터를 가져오는 중 오류가 발생했습니다.");
@@ -57,8 +53,19 @@ function EstimatedIncomeTaxPage() {
     fetchData();
   }, [selectedYear]);
 
+  // 천 단위로 콤마를 추가하고 소수점을 제거한 금액 표시
+  const formatCurrency = (value) => {
+    return `${Math.round(value).toLocaleString()}`;
+  };
+
+  // 입력된 값에 콤마를 넣지 않기 위해 숫자로 변환
+  const parseCurrency = (value) => {
+    return value.replace(/,/g, "");
+  };
+
   const handleYearlyIncomeChange = (event) => {
-    setYearlyIncome(Number(event.target.value));
+    const value = parseCurrency(event.target.value);
+    setYearlyIncome(Number(value));
     setIsModified(true);
   };
 
@@ -68,17 +75,13 @@ function EstimatedIncomeTaxPage() {
   };
 
   const handlePersonalDeductionChange = (event) => {
-    setPersonalDeduction(Number(event.target.value));
+    const value = parseCurrency(event.target.value);
+    setPersonalDeduction(Number(value));
   };
 
   const handleYearChange = (event) => {
     setSelectedYear(Number(event.target.value));
     setResultVisible(false);
-  };
-
-  // 천 단위로 콤마를 추가하고 소수점을 제거한 금액 표시
-  const formatCurrency = (value) => {
-    return `${Math.round(value).toLocaleString()}`;
   };
 
   const calculateEstimatedTax = () => {
@@ -97,11 +100,11 @@ function EstimatedIncomeTaxPage() {
     const calculatedLocalTax = calculatedIncomeTax * 0.1;
     setLocalTax(calculatedLocalTax);
 
-    const totalTax = calculatedIncomeTax + calculatedLocalTax;
-    setEstimatedTotalTax(totalTax); // 상태 업데이트
-    setResultVisible(true); // 결과를 표시하고 스크롤 이동
+    const totalTax = Math.max(calculatedIncomeTax + calculatedLocalTax, 0); // 예상 종합 소득세가 음수면 0으로 처리
+    setEstimatedTotalTax(totalTax);
 
-    // 수정되지 않은 경우에만 서버로 전송
+    setResultVisible(true);
+
     if (!isModified) {
       saveTaxData(personalDeduction, totalTax);
     } else {
@@ -116,7 +119,6 @@ function EstimatedIncomeTaxPage() {
         personalDeduction,
         estimatedTotalTax,
       });
-      // alert("예상 종합 소득세를 계산했습니다.");
     } catch (err) {
       console.error("데이터 저장 중 오류 발생:", err);
       alert("데이터 저장 중 오류가 발생했습니다.");
@@ -169,8 +171,8 @@ function EstimatedIncomeTaxPage() {
             <label>
               <span>연간 운송 수입금</span>
               <input
-                type="number"
-                value={yearlyIncome}
+                type="text"
+                value={formatCurrency(yearlyIncome)}
                 onChange={handleYearlyIncomeChange}
               />
             </label>
@@ -189,8 +191,8 @@ function EstimatedIncomeTaxPage() {
             <label>
               <span>본인 공제</span>
               <input
-                type="number"
-                value={personalDeduction}
+                type="text"
+                value={formatCurrency(personalDeduction)}
                 onChange={handlePersonalDeductionChange}
               />
             </label>
