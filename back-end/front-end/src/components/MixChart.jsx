@@ -20,12 +20,6 @@ const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
       const drivingDistances = response.map((item) =>
         Number(item.driving_distance)
       );
-      const workingHours = response.map((item) => {
-        const [hours, minutes, seconds] = item.working_hours
-          .split(":")
-          .map(Number);
-        return hours + minutes / 60 + seconds / 3600; // 시:분:초를 시간 단위로 변환
-      });
       const totalIncomes = response.map((item) => Number(item.total_income));
 
       // 정제된 데이터로 시리즈 설정
@@ -39,12 +33,6 @@ const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
         {
           name: "주행거리",
           data: drivingDistances,
-          type: "line",
-          yAxisIndex: 1, // 오른쪽 Y축
-        },
-        {
-          name: "근무시간",
-          data: workingHours,
           type: "line",
           yAxisIndex: 1, // 오른쪽 Y축
         },
@@ -72,9 +60,9 @@ const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
         show: true,
       },
     },
-    colors: ["#D5AAFF", "#C5E1A5", "#FFABAB"], // 시리즈 색상 설정
+    colors: ["#D5AAFF", "#C5E1A5"], // 시리즈 색상 설정
     stroke: {
-      width: [0, 4, 4],
+      width: [0, 4],
     },
     plotOptions: {
       bar: {
@@ -118,7 +106,7 @@ const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
       {
         opposite: true, // 오른쪽 Y축
         title: {
-          text: "주행거리 / 근무시간",
+          text: "주행거리",
         },
         labels: {
           formatter: (value) => value,
