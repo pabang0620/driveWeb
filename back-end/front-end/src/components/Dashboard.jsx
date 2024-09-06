@@ -1,19 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
 import { getMypage } from "./ApiGet";
+import { useNavigate } from "react-router-dom";
+
 import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 
 const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
+  const navigate = useNavigate();
+  const handleMoreClick = () => {
+    navigate("/driving_log/dashboard");
+  };
+
   const [data, setData] = useState({
-    totalIncome: "30000",
-    todayIncome: "30000",
+    totalIncome: 0,
+    todayIncome: 0,
     totalMileage: 0,
     todayDrivingDistance: 0,
-    netProfit: 20000,
-    todayNetProfit: 20000,
+    netProfit: 0,
+    todayNetProfit: 0,
     totalMileagePercentage: 0,
     totalIncomePercentage: 0,
     netProfitPercentage: 0,
-  }); // 초기값을 null로 설정
+    totalExpense: 0,
+    totalDrivingTimeHours: "0.00",
+    todayExpense: 0,
+    todayDrivingTimeHours: "0.00",
+    totalExpensePercentage: 0, // 지출 퍼센트
+    totalDrivingTimePercentage: 0, // 운행시간 퍼센트
+  });
+
   const [loading, setLoadingState] = useState(true);
   const [error, setErrorState] = useState(null);
 
@@ -26,34 +40,72 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
         value: data.totalIncome,
         subTitle: "당일의 수입",
         subValue: data.todayIncome,
-        topPercentage: data.totalIncomePercentage,
+        topPercentage: data.totalIncome > 0 ? data.totalIncomePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 주행거리",
-        value: data.totalMileage,
+        value: `${data.totalMileage} km`,
         subTitle: "당일의 주행거리",
-        subValue: data.todayDrivingDistance,
-        topPercentage: data.totalMileagePercentage,
+        subValue: `${data.todayDrivingDistance} km`,
+        topPercentage:
+          data.totalMileage > 0 ? data.totalMileagePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 손익(초과금)",
         value: data.netProfit,
         subTitle: "당일의 손익(초과금)",
         subValue: data.todayNetProfit,
-        topPercentage: data.netProfitPercentage,
+        topPercentage: data.netProfit > 0 ? data.netProfitPercentage : null, // 값이 0이면 퍼센테이지 숨김
+      },
+      {
+        title: "총 지출",
+        value: data.totalExpense,
+        subTitle: "당일의 지출",
+        subValue: data.todayExpense,
+        topPercentage:
+          data.totalExpense > 0 ? data.totalExpensePercentage : null, // 값이 0이면 퍼센테이지 숨김
+      },
+      {
+        title: "총 운행 시간",
+        value: `${data.totalDrivingTimeHours} 시간`,
+        subTitle: "당일의 운행 시간",
+        subValue: `${data.todayDrivingTimeHours} 시간`,
+        topPercentage:
+          data.totalDrivingTimeHours > 0
+            ? data.totalDrivingTimePercentage
+            : null, // 값이 0이면 퍼센테이지 숨김
       },
     ];
+
     return items;
   };
 
   const items = useMemo(() => getItems(data), [data]);
 
-  // 마이페이지 데이터 가져오기
   const fetchMyPageData = async () => {
     try {
-      const response = await getMypage(dateRange.startDate, dateRange.endDate); // getMypage 호출로 응답 받기
+      const response = await getMypage(dateRange.startDate, dateRange.endDate);
       console.log("들어오는 데이터 확인", response);
-      setData(response); // 응답에서 데이터 추출 및 상태 업데이트
+
+      // 상태 업데이트 (백엔드 응답에 맞게 수정)
+      setData({
+        totalIncome: response.total.income,
+        todayIncome: response.today.income,
+        totalMileage: response.total.mileage,
+        todayDrivingDistance: response.today.drivingDistance,
+        netProfit: response.total.netProfit,
+        todayNetProfit: response.today.netProfit,
+        totalMileagePercentage: response.total.mileagePercent,
+        totalIncomePercentage: response.total.incomePercent,
+        netProfitPercentage: response.total.netProfitPercent,
+        totalExpense: response.total.expense,
+        totalDrivingTimeHours: response.total.drivingTime, // 운행 시간 (총합)
+        todayExpense: response.today.expense,
+        todayDrivingTimeHours: response.today.drivingTime, // 오늘의 운행 시간
+        totalExpensePercentage: response.total.expensePercent, // 지출 퍼센트 연동
+        totalDrivingTimePercentage: response.total.drivingTimePercent, // 운행 시간 퍼센트 연동
+      });
+
       setLoadingState(false);
     } catch (error) {
       setErrorState(error);
@@ -63,7 +115,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
 
   useEffect(() => {
     fetchMyPageData();
-  }, [dateRange]); // dateRange가 변경될 때마다 호출
+  }, [dateRange]); // dateRange 변경될 때마다 호출
 
   if (loading) return <Spinner />;
   if (error) return <div>Error: {error.message}</div>;
@@ -94,22 +146,42 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
             <div>
               <div>
                 <h4>{item.title}</h4>
-                <p>{item.value}원</p>
+                <p>
+                  {item.value}
+                  {item.title.includes("시간") ||
+                  item.title.includes("주행거리")
+                    ? ""
+                    : "원"}{" "}
+                </p>
               </div>
               <div>
                 <h5>{item.subTitle} : </h5>
-                <p>{item.subValue}원</p>
+                <p>
+                  {item.subValue}
+                  {item.subTitle.includes("시간") ||
+                  item.subTitle.includes("주행거리")
+                    ? ""
+                    : "원"}{" "}
+                </p>
               </div>
             </div>
-            <p className="top_percent">상위 {item.topPercentage}%</p>
+            {item.topPercentage !== null && (
+              <p className="top_percent">상위 {item.topPercentage}%</p>
+            )}
           </div>
         ))}
+        <div
+          className="dashboard_item more_style_button"
+          onClick={handleMoreClick}
+        >
+          <div>운행일지 대시보드에서 더보기</div>
+        </div>
       </div>
 
+      {/* 스타일링 */}
       <style jsx>{`
         .dashboard_container {
           width: 100%;
-
           h3 {
             font-size: 20px;
           }
@@ -126,6 +198,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
               gap: 10px;
             }
             .dashboard_item {
+              margin: 10px 0;
               width: 31%;
               @media (max-width: 1024px) {
                 width: 48%;
@@ -195,6 +268,18 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
                   font-size: 15px;
                   margin-top: 5px;
                 }
+              }
+              .more_style_button div {
+                text-align: center;
+                background-color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-weight: bold;
+                color: #333;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+              }
+              .more_style_button {
+                cursor: pointer;
               }
             }
           }

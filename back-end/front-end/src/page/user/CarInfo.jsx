@@ -153,7 +153,14 @@ const CarInfo = () => {
           <DynamicInput
             labelName={"연료"}
             inputType={"select"}
-            options={["LPG", "전기", "직접입력"]}
+            options={[
+              "LPG",
+              "전기",
+              "휘발유",
+              "경유",
+              "하이브리드",
+              "직접입력",
+            ]}
             value={vehicleInfo.fuel_type}
             fieldName="fuel_type"
             onChange={handleInputChange}

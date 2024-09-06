@@ -71,6 +71,7 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
       await postDriveExpense(driveExpenseData);
       console.log("운행일지-지출 보내기 성공!");
       toggleModal(); // 모달 닫기
+      localStorage.removeItem("drivingLogId");
     } catch (error) {
       console.error("운행일지-지출 보내기 실패:", error.message);
     }

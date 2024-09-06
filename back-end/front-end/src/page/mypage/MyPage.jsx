@@ -10,24 +10,26 @@ import PremiumButton from "../admin/PremiumButton ";
 
 const MyPage = () => {
   useCheckPermission();
+  const koreanToday = new Date(new Date().getTime() + 9 * 3600 * 1000);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: koreanToday,
+    endDate: koreanToday,
   });
   const [isBlurred, setIsBlurred] = useState(false);
 
-  const getDateOffset = (offset) => {
-    const date = new Date();
-    date.setDate(date.getDate() + offset);
+  // const getDateOffset = (offset) => {
+  //   const date = new Date();
+  //   date.setDate(date.getDate() + offset);
 
-    // UTC 시간에서 9시간을 더해 한국 시간으로 변경
-    const koreanTimeOffset = date.getTime() + 9 * 60 * 60 * 1000;
-    const koreanDate = new Date(koreanTimeOffset);
+  //   // UTC 시간에서 9시간을 더해 한국 시간으로 변경
+  //   const koreanTimeOffset = date.getTime() + 9 * 60 * 60 * 1000;
+  //   const koreanDate = new Date(koreanTimeOffset);
 
-    return koreanDate.toISOString().split("T")[0];
-  };
+  //   return koreanDate.toISOString().split("T")[0];
+  // };
 
   useEffect(() => {
     // 토큰에서 permission 값을 가져와 확인
@@ -49,54 +51,54 @@ const MyPage = () => {
     }
   }, []);
 
-  const handleDateChange = (range) => {
-    const today = new Date();
-    let newStartDate;
-    let newEndDate;
+  // const handleDateChange = (range) => {
+  //   const today = new Date();
+  //   let newStartDate;
+  //   let newEndDate;
 
-    switch (range) {
-      case "today":
-        newStartDate = today;
-        newEndDate = today;
-        break;
-      case "yesterday":
-        newStartDate = new Date(today);
-        newStartDate.setDate(today.getDate() - 1);
-        newEndDate = newStartDate;
-        break;
-      case "dayBeforeYesterday":
-        newStartDate = new Date(today);
-        newStartDate.setDate(today.getDate() - 2);
-        newEndDate = newStartDate;
-        break;
-      default:
-        newStartDate = today;
-        newEndDate = today;
-    }
+  //   switch (range) {
+  //     case "today":
+  //       newStartDate = today;
+  //       newEndDate = today;
+  //       break;
+  //     case "yesterday":
+  //       newStartDate = new Date(today);
+  //       newStartDate.setDate(today.getDate() - 1);
+  //       newEndDate = newStartDate;
+  //       break;
+  //     case "dayBeforeYesterday":
+  //       newStartDate = new Date(today);
+  //       newStartDate.setDate(today.getDate() - 2);
+  //       newEndDate = newStartDate;
+  //       break;
+  //     default:
+  //       newStartDate = today;
+  //       newEndDate = today;
+  //   }
 
-    setDateRange({ startDate: newStartDate, endDate: newEndDate });
-  };
+  //   setDateRange({ startDate: newStartDate, endDate: newEndDate });
+  // };
 
-  const getDate = () => {
-    const startDate = getDateOffset(0, dateRange.startDate);
-    const endDate = getDateOffset(0, dateRange.endDate);
-    console.log(`Selected Date Range (Frontend): ${startDate} - ${endDate}`);
-    return { startDate, endDate };
-  };
+  // const getDate = () => {
+  //   const startDate = getDateOffset(0, dateRange.startDate);
+  //   const endDate = getDateOffset(0, dateRange.endDate);
+  //   console.log(`Selected Date Range (Frontend): ${startDate} - ${endDate}`);
+  //   return { startDate, endDate };
+  // };
   //if (loading) return <p>Loading...</p>;
   //if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
     <div className="container mypage-container">
       <TitleBox title="마이페이지" />
-      <select
+      {/* <select
         className="dateSelector"
         onChange={(e) => handleDateChange(e.target.value)}
       >
         <option value="today">오늘</option>
         <option value="yesterday">어제</option>
         <option value="dayBeforeYesterday">그제</option>
-      </select>
+      </select> */}
       <div className="dataBox">
         <Dashboard
           dateRange={dateRange}

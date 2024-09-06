@@ -87,6 +87,7 @@ const DriveLog = () => {
     if (showConfirm) {
       const response = window.confirm("작성을 취소하시겠습니까?");
       if (response) {
+        localStorage.removeItem("drivingLogId");
         setCurrentModal(null);
         setSelectedLogId(null);
       }

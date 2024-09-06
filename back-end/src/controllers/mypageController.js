@@ -12,13 +12,10 @@ const {
   getDrivingRecords,
   getIncomeRecords,
   getExpenseRecords,
+  getTotalDrivingTime,
+  getTodayDrivingTime,
+  getAllUsersAggregatedData,
 } = require("../models/mypageModel");
-
-const calculatePercentage = (userValue, allValues) => {
-  const numericValues = allValues.map(Number).sort((a, b) => a - b);
-  const rank = numericValues.findIndex((value) => userValue <= value) + 1;
-  return ((numericValues.length - rank) / numericValues.length) * 100;
-};
 
 const formatDateToYYYYMMDD = (date) => {
   const year = date.getFullYear();
@@ -29,95 +26,96 @@ const formatDateToYYYYMMDD = (date) => {
 
 const getMyPageData = async (req, res) => {
   try {
-    const { userId } = req;
-    const { startDate, endDate } = req.params;
+    const { userId } = req; // 로그인된 사용자의 ID를 가져옴
 
-    if (!startDate || !endDate) {
-      return res
-        .status(400)
-        .json({ error: "Start date and end date are required" });
-    }
+    const today = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD 형식)
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    end.setHours(23, 59, 59, 999);
+    // 1. 오늘의 데이터 가져오기
+    const todayIncome = await getTodayIncome(userId, today);
+    const todayExpense = await getTodayExpense(userId, today);
+    const todayDrivingDistance = await getTodayDrivingDistance(userId, today);
+    const todayDrivingTime = await getTodayDrivingTime(userId, today);
+    const todayNetProfit = todayIncome - todayExpense; // 오늘의 수익금 계산
 
-    const startDateString = formatDateToYYYYMMDD(start);
-    const endDateString = formatDateToYYYYMMDD(end);
+    // 2. 전체 데이터 가져오기 (총 수입, 지출, 주행거리, 운행시간, 수익금)
+    const totalIncome = await getTotalIncome(userId);
+    const totalExpense = await getTotalExpense(userId);
+    const totalMileage = await getTotalMileage(userId);
+    const totalDrivingTime = await getTotalDrivingTime(userId);
+    const totalNetProfit = totalIncome - totalExpense; // 총 수익금 계산
 
-    const drivingLogs = await getDrivingLogs(startDateString, endDateString);
-    const logIds = drivingLogs.map((log) => log.id);
+    // 3. 전체 사용자 데이터 가져오기
+    const { incomeRecords, expenseRecords, drivingRecords } =
+      await getAllUsersAggregatedData();
 
-    const drivingRecords = await getDrivingRecords(logIds);
-    const incomeRecords = await getIncomeRecords(logIds);
-    const expenseRecords = await getExpenseRecords(logIds);
-
-    const userLogIds = drivingLogs
-      .filter((log) => log.userId === userId)
-      .map((log) => log.id);
-    const userDrivingRecord = drivingRecords.find((record) =>
-      userLogIds.includes(record.driving_log_id)
-    );
-    const userIncomeRecord = incomeRecords.find((record) =>
-      userLogIds.includes(record.driving_log_id)
-    );
-    const userExpenseRecord = expenseRecords.find((record) =>
-      userLogIds.includes(record.driving_log_id)
-    );
-
-    const totalMileage = userDrivingRecord
-      ? userDrivingRecord._sum.driving_distance
-      : 0;
-    const totalIncome = userIncomeRecord
-      ? userIncomeRecord._sum.total_income
-      : 0;
-    const totalExpense = userExpenseRecord
-      ? userExpenseRecord._sum.total_expense
-      : 0;
-    const netProfit = totalIncome - totalExpense;
-
-    const todayIncome = await getTodayIncome(userId, endDateString);
-    const todayDrivingDistance = await getTodayDrivingDistance(
-      userId,
-      endDateString
-    );
-    const todayExpense = await getTodayExpense(userId, endDateString);
-    const todayNetProfit = todayIncome - todayExpense;
-
-    const allMileages = drivingRecords.map(
-      (record) => record._sum.driving_distance || 0
-    );
+    // 전체 유저 데이터에서 각 항목별 리스트 생성
     const allIncomes = incomeRecords.map(
       (record) => record._sum.total_income || 0
     );
     const allExpenses = expenseRecords.map(
       (record) => record._sum.total_expense || 0
     );
-    const allNetProfits = allIncomes.map(
-      (income, index) => income - allExpenses[index]
+    const allDrivingDistances = drivingRecords.map(
+      (record) => record._sum.driving_distance || 0
+    );
+    const allDrivingTimes = drivingRecords.map(
+      (record) => record._sum.working_hours_seconds || 0
     );
 
-    const totalMileagePercentage = calculatePercentage(
+    // 손익 계산
+    const netProfits = incomeRecords.map((income, index) => {
+      const expense = expenseRecords[index]?._sum?.total_expense || 0;
+      return income._sum.total_income - expense;
+    });
+
+    // 4. 상위 퍼센트 계산
+    const calculatePercentage = (value, allValues) => {
+      allValues.sort((a, b) => a - b); // 오름차순 정렬
+      const position = allValues.indexOf(value) + 1; // 현재 유저의 위치
+      return ((position / allValues.length) * 100).toFixed(2); // 상위 퍼센트 계산
+    };
+
+    // 사용자 퍼센트 계산
+    const totalIncomePercent = calculatePercentage(totalIncome, allIncomes);
+    const totalExpensePercent = calculatePercentage(totalExpense, allExpenses);
+    const totalMileagePercent = calculatePercentage(
       totalMileage,
-      allMileages
+      allDrivingDistances
     );
-    const totalIncomePercentage = calculatePercentage(totalIncome, allIncomes);
-    const netProfitPercentage = calculatePercentage(netProfit, allNetProfits);
+    const totalDrivingTimePercent = calculatePercentage(
+      totalDrivingTime * 3600,
+      allDrivingTimes
+    ); // 시간 -> 초 단위로 변환해서 비교
+    const totalNetProfitPercent = calculatePercentage(
+      totalNetProfit,
+      netProfits
+    );
 
+    // 5. 결과를 응답으로 전송
     res.status(200).json({
-      totalIncome,
-      todayIncome,
-      totalMileage,
-      todayDrivingDistance,
-      netProfit,
-      todayNetProfit,
-      totalMileagePercentage,
-      totalIncomePercentage,
-      netProfitPercentage,
+      today: {
+        income: todayIncome,
+        expense: todayExpense,
+        drivingDistance: todayDrivingDistance,
+        drivingTime: todayDrivingTime,
+        netProfit: todayNetProfit,
+      },
+      total: {
+        income: totalIncome,
+        expense: totalExpense,
+        mileage: totalMileage,
+        drivingTime: totalDrivingTime, // 초 단위가 아닌 시간 단위로 전달
+        netProfit: totalNetProfit,
+        incomePercent: totalIncomePercent,
+        expensePercent: totalExpensePercent,
+        mileagePercent: totalMileagePercent,
+        drivingTimePercent: totalDrivingTimePercent,
+        netProfitPercent: totalNetProfitPercent,
+      },
     });
   } catch (error) {
-    console.error("Error fetching mypage data:", error);
-    res.status(500).json({ error: "Error fetching mypage data" });
+    console.error("Error in getMyPageData:", error);
+    res.status(500).json({ error: "An error occurred while fetching data." });
   }
 };
 
