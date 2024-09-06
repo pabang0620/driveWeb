@@ -249,19 +249,35 @@ const deleteFranchiseFee = async (id) => {
 };
 // 회원정보 - 개인 정보 조회
 const getUserProfile = async (userId) => {
-  console.log("모델에서 유저아이디", userId);
   try {
-    const latestUserProfile = await prisma.user_profiles.findMany({
+    const userProfile = await prisma.user_profiles.findFirst({
       where: { userId: userId },
-      orderBy: { id: "desc" }, // 'desc'는 내림차순으로 정렬함을 의미합니다.
+      orderBy: { id: "desc" },
+      include: {
+        users: {
+          select: {
+            googleId: true,
+            kakaoId: true,
+            naverId: true,
+          },
+        }, // user 테이블에서 특정 필드만 포함시킵니다.
+      },
     });
 
-    if (!latestUserProfile) {
-      console.log("해당 사용자에 대한 소득 정보가 없습니다.");
-      return null; // 소득 정보가 없는 경우 null 반환
+    if (!userProfile) {
+      console.log("해당 사용자에 대한 프로필 정보가 없습니다.");
+      return null; // 프로필 정보가 없는 경우 null 반환
     }
 
-    return latestUserProfile[0];
+    // 각 소셜 ID의 존재 여부에 따라 1 또는 아무것도 설정하지 않음
+    const response = {
+      ...userProfile,
+      googleId: userProfile.users.googleId ? 1 : undefined,
+      kakaoId: userProfile.users.kakaoId ? 1 : undefined,
+      naverId: userProfile.users.naverId ? 1 : undefined,
+    };
+
+    return response;
   } catch (error) {
     console.error("최신 프로필 정보 조회 중 오류가 발생했습니다.", error);
     throw new Error("프로필 정보 조회 중 오류가 발생했습니다.");

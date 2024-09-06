@@ -103,7 +103,7 @@ const CarInfo = () => {
       <TitleBox title="회원정보" subtitle="차량정보" />
       <div className="content">
         <div className="inputWrap">
-          <h3>차량정보</h3>
+          <h3>차량구분</h3>
           <DynamicInput
             labelName={"차량 구분"}
             inputType={"select"}

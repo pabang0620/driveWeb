@@ -14,6 +14,10 @@ const FranchiseFee = ({ carType, jobtype }) => {
     "택시(승합)": ["카드", "카카오벤티", "아이엠", "기타"],
   };
 
+  const formatFee = (fee) => {
+    return parseFloat(fee).toFixed(2);
+  };
+
   useEffect(() => {
     const getFranchiseData = async () => {
       try {
@@ -28,7 +32,7 @@ const FranchiseFee = ({ carType, jobtype }) => {
           return {
             id: match ? match.id : undefined, // id 추가
             franchise_name: name,
-            fee: match ? match.fee : 0,
+            fee: match ? formatFee(match.fee) : 0.0, // 서버에서 받은 수수료를 포맷
             checked: match ? true : false,
           };
         });
@@ -37,7 +41,7 @@ const FranchiseFee = ({ carType, jobtype }) => {
           setFranchiseFree(
             availableFranchises.map((name) => ({
               franchise_name: name,
-              fee: 0,
+              fee: 0.0, // 초기값 설정
               checked: false,
             }))
           );
@@ -49,7 +53,7 @@ const FranchiseFee = ({ carType, jobtype }) => {
         setFranchiseFree(
           franchises[carType].map((name) => ({
             franchise_name: name,
-            fee: 0,
+            fee: 0.0, // 초기값 설정
             checked: false,
           }))
         );
@@ -77,10 +81,16 @@ const FranchiseFee = ({ carType, jobtype }) => {
   };
 
   const handleFeeChange = (index, value) => {
-    // 유효성 검사: 숫자만 입력되도록 필터링
-    if (/^\d*$/.test(value)) {
-      handleFranchiseChange(index, "fee", value);
-    }
+    // 숫자 및 소수점을 입력받습니다.
+    const numericValue = value.replace(/[^0-9.]/g, "");
+    handleFranchiseChange(index, "fee", numericValue);
+  };
+
+  const handleFeeBlur = (index, value) => {
+    // 입력 필드에서 포커스가 벗어날 때 값을 포맷합니다.
+    // 빈 값이거나 0일 경우 '0.00'으로 설정합니다.
+    const formattedValue = value ? parseFloat(value).toFixed(2) : "0.00";
+    handleFranchiseChange(index, "fee", formattedValue);
   };
 
   const handleSaveFranchiseInfo = async () => {
@@ -126,9 +136,11 @@ const FranchiseFee = ({ carType, jobtype }) => {
                 type="text"
                 value={item.fee}
                 onChange={(e) => handleFeeChange(index, e.target.value)}
+                onBlur={(e) => handleFeeBlur(index, e.target.value)}
                 disabled={!isEditing}
-                style={{ width: "50px" }} // 숫자 입력창 크기 줄이기
+                style={{ width: "50px" }}
               />
+              %
             </div>
           ))}
         </div>

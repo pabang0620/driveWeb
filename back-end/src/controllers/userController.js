@@ -325,11 +325,11 @@ const fetchUserProfile = async (req, res) => {
   const { userId } = req;
   try {
     const userProfile = await getUserProfile(Number(userId));
-    console.log(1);
+    // console.log(1);
 
     if (userProfile) {
       res.status(200).json(userProfile);
-      console.log("성공", userProfile);
+      // console.log("성공", userProfile);
     } else {
       res.status(404).json({ error: "회원 정보를 찾을 수 없습니다." });
       console.log();

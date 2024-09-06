@@ -23,6 +23,22 @@ export function DynamicInput({
       newValue += ":00"; // 입력된 시간에 초를 추가
     } else if (inputType === "checkbox") {
       newValue = e.target.checked;
+    } else if (
+      fieldName === "birth_date" &&
+      newValue &&
+      newValue.length === 8
+    ) {
+      // 생년월일 형식 변환
+      newValue = `${newValue.substring(0, 4)}-${newValue.substring(
+        4,
+        6
+      )}-${newValue.substring(6, 8)}`;
+    } else if (fieldName === "phone" && newValue && newValue.length === 11) {
+      // 휴대폰 번호 형식 변환
+      newValue = `${newValue.substring(0, 3)}-${newValue.substring(
+        3,
+        7
+      )}-${newValue.substring(7, 11)}`;
     }
 
     onChange(fieldName, newValue);

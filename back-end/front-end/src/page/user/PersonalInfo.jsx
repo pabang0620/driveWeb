@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { DynamicInput } from "../../components/InputBox";
-import { getProfile, getJobtype } from "../../components/ApiGet";
+import { getProfile } from "../../components/ApiGet";
 import { postUserProfile } from "../../components/ApiPost";
 import { validatePhone, validateEmail } from "../../components/Validators";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,30 +9,30 @@ import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
 import JobTypeComponent from "./JobTypeComponent";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // 잘못된 임포트, 'jwt-decode'를 한 번만 작성해야 함
 
 const PersonalInfo = () => {
   useCheckPermission();
+
   const [jobtype, setJobtype] = useState(""); // 잡타입 상태
 
-  useEffect(() => {
-    const fetchJobType = async () => {
-      try {
-        const jobtypeData = await getJobtype(); // 잡타입 데이터 가져오기
-        console.log("Job Type Data:", jobtypeData);
-        setJobtype(jobtypeData); // 잡타입 상태 설정
-      } catch (error) {
-        console.error("Failed to fetch job type:", error);
-      }
-    };
+  const getJobtype = () => {
+    const token = localStorage.getItem("token");
+    const decodedToken = jwtDecode(token); // jwt-decode 라이브러리 사용
+    const jobtype = decodedToken.jobtype;
+    setJobtype(jobtype);
+  };
 
-    fetchJobType();
-  }, []);
   const [userInfo, setUserInfo] = useState({
     name: "test",
     birth_date: "",
     phone: "",
     email: "",
     imageUrl: "",
+    googleId: undefined,
+    kakaoId: undefined,
+    naverId: undefined,
   });
   const [prevUserInfo, setPrevUserInfo] = useState({});
   const [profileImage, setProfileImage] = useState(null);
@@ -44,7 +44,6 @@ const PersonalInfo = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        getJobtype();
         const data = await getProfile();
         setUserInfo(data);
         setPrevUserInfo(data); // 초기 사용자 정보를 설정합니다.
@@ -56,7 +55,33 @@ const PersonalInfo = () => {
       }
     };
     getUserData();
+    getJobtype();
   }, []);
+  // 직종 수정
+  const updateJobType = async (newJobType) => {
+    // 사용자에게 변경 확인 요청
+    const confirmChange = window.confirm("정말 직종을 변경하시겠습니까?");
+
+    if (confirmChange) {
+      try {
+        const response = await axios.put(
+          "/api/user/jobtype",
+          { jobType: newJobType },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // 로컬 스토리지에서 토큰 가져오기
+            },
+          }
+        );
+
+        localStorage.setItem("token", response.data.token); // 새 토큰을 로컬 스토리지에 저장
+        alert("직종이 변경되었습니다."); // 성공 메시지
+      } catch (error) {
+        console.error("Failed to update job type:", error);
+        alert("직종 업데이트에 실패하였습니다.");
+      }
+    }
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -146,6 +171,20 @@ const PersonalInfo = () => {
     handleSaveUserInfo();
   };
 
+  const [socialStatus, setSocialStatus] = useState("");
+
+  useEffect(() => {
+    let images = [];
+    if (userInfo.googleId)
+      images.push(`${process.env.PUBLIC_URL}/images/googlelogo.png`);
+    if (userInfo.kakaoId)
+      images.push(`${process.env.PUBLIC_URL}/images/kakaologo.png`);
+    if (userInfo.naverId)
+      images.push(`${process.env.PUBLIC_URL}/images/naverlogo.png`);
+
+    setSocialStatus(images);
+  }, [userInfo]);
+
   if (loading) {
     return <Spinner />; // 로딩 중일 때 스피너 표시
   }
@@ -200,7 +239,29 @@ const PersonalInfo = () => {
       </div>
       <div className="content">
         <div className="inputWrap">
+          <h3>업종을 선택해주세요</h3>
+          <div className="button-group">
+            <button
+              onClick={() => updateJobType(1)}
+              className={jobtype === 1 ? "active" : ""}
+            >
+              택시
+            </button>
+            <button
+              onClick={() => updateJobType(2)}
+              className={jobtype === 2 ? "active" : ""}
+            >
+              배달
+            </button>
+            <button
+              onClick={() => updateJobType(3)}
+              className={jobtype === 3 ? "active" : ""}
+            >
+              기타
+            </button>
+          </div>
           <h3>기본정보</h3>
+
           <DynamicInput
             labelName={"이름"}
             inputType={"text"}
@@ -248,6 +309,11 @@ const PersonalInfo = () => {
             showEditButton={true}
             isEditing={isEditing}
           />
+          <div className="socialMark">
+            {socialStatus.map((image, index) => (
+              <img key={index} src={image} alt="Social Logo" />
+            ))}
+          </div>{" "}
         </div>
       </div>
       <style jsx>{`
@@ -260,6 +326,29 @@ const PersonalInfo = () => {
             width: 85%;
             padding: 50px 0;
           }
+          .button-group {
+            margin-bottom: 30px;
+          }
+          .button-group button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+          }
+
+          .button-group button:hover {
+            background-color: #0056b3;
+            color: white;
+          }
+          .button-group button.active {
+            background-color: #0056b3;
+            color: white;
+          }
+
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -316,6 +405,17 @@ const PersonalInfo = () => {
           }
           .inputWrap {
             margin-top: 30px;
+            position: relative;
+            .socialMark {
+              position: absolute;
+              bottom: 9px;
+              left: -25px;
+
+              img {
+                width: 20px;
+                height: 20px;
+              }
+            }
           }
           h3 {
             font-size: 16px;
