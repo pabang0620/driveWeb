@@ -2,18 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
 
-const RankingList = ({ title, filterNumber, api_name }) => {
+const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
   const [selectedOption, setSelectedOption] = useState("전체");
-  const [selectedMonth, setSelectedMonth] = useState("");
   const [profiles, setProfiles] = useState([]);
-
-  useEffect(() => {
-    // 현재 날짜 기준으로 지난달을 기본 값으로 설정
-    const today = new Date();
-    const lastMonth = today.getMonth() === 0 ? 12 : today.getMonth();
-    setSelectedMonth(lastMonth);
-  }, []);
+  const location = useLocation();
 
   const filterTypeMap = {
     1: "jobtype",
@@ -29,19 +23,7 @@ const RankingList = ({ title, filterNumber, api_name }) => {
       options = ["전체", "택시", "배달", "기타"];
       break;
     case 2:
-      options = [
-        "전체",
-        "LPG",
-        "전기",
-        "휘발유",
-        "경유",
-        "하이브리드",
-        "천연가스",
-        "수소",
-        "바이오디젤",
-        "에탄올",
-        "기타",
-      ];
+      options = ["전체", "LPG", "전기", "휘발유", "경유", "하이브리드"];
       break;
     case 3:
       options = [
@@ -59,12 +41,12 @@ const RankingList = ({ title, filterNumber, api_name }) => {
   useEffect(() => {
     const fetchProfiles = async () => {
       if (selectedMonth) {
-        // selectedMonth가 설정된 경우에만 요청 보냄
+        // selectedMonth가 설정된 경우에만 API 요청
         try {
           const response = await axios.post(`/api/rank/${api_name}`, {
             filterType,
             filterValue: selectedOption !== "전체" ? selectedOption : undefined,
-            selectedMonth: selectedMonth, // 선택한 월을 API 요청에 포함
+            selectedMonth: selectedMonth,
           });
           setProfiles(response.data);
         } catch (error) {
@@ -80,34 +62,36 @@ const RankingList = ({ title, filterNumber, api_name }) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
-  };
+  // const handleMonthChange = (event) => {
+  //   setSelectedMonth(event.target.value);
+  // };
 
   return (
     <div className="ranking">
       <div>
         <h3>{title}</h3>
-        <div className="filters">
-          <select value={selectedOption} onChange={handleSelectChange}>
-            {options.map((option, index) => (
-              <option key={index} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <select value={selectedMonth} onChange={handleMonthChange}>
-            {[...Array(3)].map((_, index) => {
-              const month = new Date().getMonth() + 1 - (index + 1);
-              const adjustedMonth = month <= 0 ? 12 + month : month;
-              return (
-                <option key={adjustedMonth} value={adjustedMonth}>
-                  {adjustedMonth}월
+        {location.pathname === "/ranking" && (
+          <div className="filters">
+            <select value={selectedOption} onChange={handleSelectChange}>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
                 </option>
-              );
-            })}
-          </select>
-        </div>
+              ))}
+            </select>
+            {/* <select value={selectedMonth} onChange={handleMonthChange}>
+                    {[...Array(3)].map((_, index) => {
+                      const month = new Date().getMonth() + 1 - (index + 1);
+                      const adjustedMonth = month <= 0 ? 12 + month : month;
+                      return (
+                        <option key={adjustedMonth} value={adjustedMonth}>
+                          {adjustedMonth}월
+                        </option>
+                      );
+                    })}
+                  </select> */}
+          </div>
+        )}
       </div>
       <ul className="profileWrap">
         {profiles.map((profile, index) => (

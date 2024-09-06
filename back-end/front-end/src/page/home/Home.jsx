@@ -5,7 +5,7 @@ import NoticeZone from "./NoticeZone";
 import TopRankList from "./TopRankList";
 import Banner from "./Banner";
 import TabsContainer from "./TabsContainer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
@@ -18,6 +18,15 @@ function Home() {
   const [error, setError] = useState(null);
   // ----------------------------랭킹
   const [rankings, setRankings] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const location = useLocation();
+
+  useEffect(() => {
+    // 현재 날짜 기준으로 지난달을 기본 값으로 설정
+    const today = new Date();
+    const lastMonth = today.getMonth() === 0 ? 12 : today.getMonth();
+    setSelectedMonth(lastMonth);
+  }, []);
 
   useEffect(() => {
     const fetchRankingSettings = async () => {
@@ -110,13 +119,14 @@ function Home() {
         ) : (
           <>
             <NoticeZone boardsWithPosts={boardsWithPosts} />
-            <div className="rankingList">
+            <div className="rankingList" onClick={() => navigate("/ranking")}>
               {rankings.map((ranking) => (
                 <RankingList
                   key={ranking.id}
                   title={ranking.name}
                   filterNumber={ranking.filter_number}
                   api_name={ranking.api_name}
+                  selectedMonth={selectedMonth}
                 />
               ))}
             </div>
