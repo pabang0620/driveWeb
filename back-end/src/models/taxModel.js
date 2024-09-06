@@ -121,6 +121,7 @@ async function getIncomeRecords(userId, startDate, endDate) {
       income_spare_2: true,
       income_spare_3: true,
       income_spare_4: true,
+      total_income: true,
     },
   });
 }
@@ -153,6 +154,7 @@ async function getExpenseRecords(userId, startDate, endDate) {
       tada_fee: true,
       iam_fee: true,
       etc_fee: true,
+      total_expense: true,
     },
   });
 }
@@ -258,8 +260,13 @@ async function getEstimatedTotalTax(userId) {
       estimated_total_tax: true,
     },
   });
-  return userIncome.estimated_total_tax || 0;
+
+  // estimated_total_tax가 null이거나 undefined일 경우 0을 반환하고, 그렇지 않으면 숫자 타입으로 변환
+  return userIncome?.estimated_total_tax
+    ? Number(userIncome.estimated_total_tax)
+    : 0;
 }
+
 module.exports = {
   getIncomeDetailsForYear,
   getStandardExpenseRate,

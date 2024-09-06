@@ -62,11 +62,28 @@ async function getYearlyProfitLoss(req, res) {
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
 
+    // 작년 연도 계산
+    const previousYear = year - 1;
+    const previousStartDate = `${previousYear}-01-01`;
+    const previousEndDate = `${previousYear}-12-31`;
+
+    // 현재 연도 데이터 가져오기
     const incomeRecords = await getIncomeRecords(userId, startDate, endDate);
     const expenseRecords = await getExpenseRecords(userId, startDate, endDate);
 
-    // estimated_total_tax 가져오기
+    // 지난해 데이터 가져오기
+    const previousIncomeRecords = await getIncomeRecords(
+      userId,
+      previousStartDate,
+      previousEndDate
+    );
+    const previousExpenseRecords = await getExpenseRecords(
+      userId,
+      previousStartDate,
+      previousEndDate
+    );
 
+    // estimated_total_tax 가져오기
     const estimatedTotalTax = await getEstimatedTotalTax(userId);
 
     // 유지보수 비용 합계 가져오기
@@ -79,16 +96,38 @@ async function getYearlyProfitLoss(req, res) {
     // 보험료 합계 계산
     const insuranceFee = await getInsuranceFeeForYear(userId, year);
 
+    // 올해와 작년의 수입/지출 합계 계산
     const incomeTotal = calculateTotals(incomeRecords, "income");
     const expenseTotal = calculateTotals(expenseRecords, "expense");
+
+    const previousIncomeTotal = calculateTotals(
+      previousIncomeRecords,
+      "income"
+    );
+    const previousExpenseTotal = calculateTotals(
+      previousExpenseRecords,
+      "expense"
+    );
+
+    // 올해와 작년의 other_income, other_expense 가져오기
+    const currentOtherIncome = incomeRecords.reduce(
+      (acc, record) => acc + (record.other_income || 0),
+      0
+    );
+    const currentOtherExpense = expenseRecords.reduce(
+      (acc, record) => acc + (record.other_expense || 0),
+      0
+    );
 
     // 보험료 및 유지보수 비용을 포함하여 응답 반환
     res.json({
       income: incomeTotal,
       expense: expenseTotal,
       maintenanceCost,
-      insuranceFee, // 보험료 추가
+      insuranceFee,
       estimatedTotalTax,
+      previousIncomeTotal,
+      previousExpenseTotal,
     });
   } catch (error) {
     console.error(error);

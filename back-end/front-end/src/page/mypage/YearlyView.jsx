@@ -12,7 +12,10 @@ function YearlyView() {
     maintenanceCost: 0,
     insuranceFee: 0,
     estimatedTotalTax: 0,
+    previousIncomeTotal: {},
+    previousExpenseTotal: {},
   });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -52,7 +55,7 @@ function YearlyView() {
   };
 
   const formatCurrency = (value) => {
-    return `${Math.round(value).toLocaleString()}원`;
+    return `${value.toLocaleString()}원`; // 절대값을 사용하지 않음
   };
 
   // 한국어로 항목 이름 매핑
@@ -61,9 +64,9 @@ function YearlyView() {
     cash_income: "현금 수입",
     kakao_income: "카카오 수입",
     uber_income: "우버 수입",
-    onda_income: "온다 수입",
-    tada_income: "타다 수입",
-    iam_income: "아이엠 수입",
+    // onda_income: "온다 수입",
+    // tada_income: "타다 수입",
+    // iam_income: "아이엠 수입",
     etc_income: "기타 수입",
     income_spare_1: "예비 수입 1",
     income_spare_2: "예비 수입 2",
@@ -83,9 +86,9 @@ function YearlyView() {
     card_fee: "카드 수수료",
     kakao_fee: "카카오 수수료",
     uber_fee: "우버 수수료",
-    onda_fee: "온다 수수료",
-    tada_fee: "타다 수수료",
-    iam_fee: "아이엠 수수료",
+    // onda_fee: "온다 수수료",
+    // tada_fee: "타다 수수료",
+    // iam_fee: "아이엠 수수료",
     etc_fee: "기타 수수료",
   };
 
@@ -104,6 +107,10 @@ function YearlyView() {
 
   // 영업이익 계산
   const calculateOperatingIncome = () => totalIncome - totalExpense;
+  // 작년 영업 이익 계산
+  const prevCalculateOperatingIncome = () =>
+    data.previousIncomeTotal.total_income -
+    data.previousExpenseTotal.total_expense;
 
   // 세전이익 계산
   const calculatePreTaxIncome = (operatingIncome) => {
@@ -115,14 +122,25 @@ function YearlyView() {
 
   // 당기순이익 계산
   const calculateNetIncome = (preTaxIncome) => {
-    const estimatedTax = parseFloat(data.estimatedTotalTax) || 0;
-    return preTaxIncome - estimatedTax;
+    const estimatedTax = Number(data.estimatedTotalTax) || 0;
+    return estimatedTax;
   };
 
   const operatingIncome = calculateOperatingIncome();
   const preTaxIncome = calculatePreTaxIncome(operatingIncome);
   const netIncome = calculateNetIncome(preTaxIncome);
 
+  // 작년 영업 이익
+  const prevOperatingIncome = prevCalculateOperatingIncome();
+  // 작년 기타 수익
+  const previosIncome = data.previousIncomeTotal.other_income;
+  // 작년 기타 지출
+  const previousExpense = data.previousExpenseTotal.other_expense;
+
+  const calculateNet = operatingIncome - prevOperatingIncome;
+  const calculateIncome = data.income.other_income - previosIncome;
+  const calculateExpense = data.expense.other_expense - previousExpense;
+  console.log(calculateNet, calculateIncome, calculateExpense);
   // if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
 
@@ -188,6 +206,14 @@ function YearlyView() {
                 <h4>영업 이익</h4>
                 <div>
                   <span>영업 이익</span>{" "}
+                  <span
+                    style={{
+                      color: calculateNet < 0 ? "blue" : "red",
+                      marginRight: "-40%",
+                    }}
+                  >
+                    {formatCurrency(calculateNet)}
+                  </span>
                   <span>{formatCurrency(operatingIncome)}</span>
                 </div>
               </div>
@@ -195,10 +221,22 @@ function YearlyView() {
                 <h4>기타 수익/지출</h4>
                 <div>
                   <span>기타 수익</span>{" "}
+                  <span
+                    style={{
+                      color: calculateIncome < 0 ? "blue" : "red",
+                      marginRight: "-40%",
+                    }}
+                  ></span>
                   <span>{formatCurrency(data.income.other_income || 0)}</span>
                 </div>
                 <div>
                   <span>기타 지출</span>{" "}
+                  <span
+                    style={{
+                      color: calculateExpense < 0 ? "blue" : "red",
+                      marginRight: "-40%",
+                    }}
+                  ></span>
                   <span>{formatCurrency(data.expense.other_expense || 0)}</span>
                 </div>
               </div>

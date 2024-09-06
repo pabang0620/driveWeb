@@ -103,9 +103,9 @@ function QuarterlyView() {
     cash_income: "현금 수입",
     kakao_income: "카카오 수입",
     uber_income: "우버 수입",
-    onda_income: "온다 수입",
-    tada_income: "타다 수입",
-    iam_income: "아이엠 수입",
+    // onda_income: "온다 수입",
+    // tada_income: "타다 수입",
+    // iam_income: "아이엠 수입",
   };
 
   const expenseLabels = {

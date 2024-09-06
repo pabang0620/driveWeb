@@ -146,7 +146,7 @@ const DriveIncome = ({
             fieldName="uber_income"
             onChange={handleInputChange}
           />
-          <DynamicInput
+          {/* <DynamicInput
             labelName={"온다"}
             inputType={"number"}
             value={driveIncomeData.onda_income}
@@ -166,7 +166,7 @@ const DriveIncome = ({
             value={driveIncomeData.iam_income}
             fieldName="iam_income"
             onChange={handleInputChange}
-          />
+          /> */}
           <DynamicInput
             labelName={"기타가맹"}
             inputType={"number"}
