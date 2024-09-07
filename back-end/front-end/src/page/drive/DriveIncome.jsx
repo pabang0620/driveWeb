@@ -114,6 +114,12 @@ const DriveIncome = ({
     }));
   };
 
+  const handlePrevClick = () => {
+    setNumber(1); // 모달 순서를 1로 설정 (DriveWrite 컴포넌트로 돌아감)
+    toggleModal(); // 모달 닫기
+    prevtoggleModal(); // DriveWrite 모달 열기
+  };
+
   return (
     <Modal
       closeModal={closeModal}
@@ -122,7 +128,7 @@ const DriveIncome = ({
       title={"수입"}
       number={number}
       setNumber={setNumber}
-      prevtoggleModal={prevtoggleModal}
+      handlePrevClick={handlePrevClick}
       content={
         <div className="drive">
           <DynamicInput

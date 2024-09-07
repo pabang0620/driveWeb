@@ -1,20 +1,11 @@
 const Modal = ({
   showModal,
   closeModal,
-  toggleModal,
-  prevtoggleModal,
+  handlePrevClick,
   number,
   title,
   content,
-  setNumber, // number 값을 변경하는 함수 (부모에서 전달)
 }) => {
-  const handlePrevClick = () => {
-    if (number > 1) {
-      setNumber(number - 1); // 숫자를 1 감소
-    }
-    prevtoggleModal();
-  };
-
   return (
     <div className="driveModal">
       <div className="modal-inner">

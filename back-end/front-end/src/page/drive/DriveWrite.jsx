@@ -22,16 +22,18 @@ const DriveWrite = ({
     fuel_amount: 0,
     total_driving_cases: 0,
   });
-
-  // 로컬 스토리지에서 토큰 가져오기
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    setNumber(1);
+    const driveId = localStorage.getItem("drivingLogId");
+    const drivingLogIdCheck =
+      drivingLogId == undefined ? driveId : drivingLogId;
     const fetchDriveData = async () => {
-      if (drivingLogId) {
+      if (drivingLogIdCheck) {
         try {
           const response = await axios.get(
-            `/api/drive/detail/${drivingLogId}`,
+            `/api/drive/detail/${drivingLogIdCheck}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
@@ -151,7 +153,7 @@ const DriveWrite = ({
       closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
-      number={1}
+      number={number}
       title={"운행일지"}
       content={
         <div className="drive">

@@ -92,7 +92,10 @@ const DriveExpense = ({
       [field]: value,
     }));
   };
-
+  const handlePrevClick = () => {
+    setNumber(2); // 모달 순서를 1로 설정 (DriveWrite 컴포넌트로 돌아감)
+    prevtoggleModal(); // DriveWrite 모달 열기
+  };
   return (
     <Modal
       closeModal={closeModal}
@@ -101,7 +104,7 @@ const DriveExpense = ({
       number={number}
       setNumber={setNumber}
       title={"지출"}
-      prevtoggleModal={prevtoggleModal}
+      handlePrevClick={handlePrevClick}
       content={
         <div className="drive">
           <DynamicInput
