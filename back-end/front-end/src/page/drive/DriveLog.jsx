@@ -333,25 +333,11 @@ const DriveLog = () => {
       </div>
       <div className="search">
         <select value={searchField} onChange={handleFieldChange}>
-          <option value="date">날짜</option>
-          <option value="driving_distance">주행거리</option>
-          <option value="total_income">운행수익합계</option>
-          <option value="total_expense">운행지출합계</option>
-          <option value="working_hours">근무시간</option>
+          <option value="memo">메모</option>
         </select>
         <input
           type="text"
-          placeholder={`${
-            searchField === "date"
-              ? "날짜로 검색"
-              : searchField === "driving_distance"
-              ? "주행거리로 검색"
-              : searchField === "total_income"
-              ? "운행수익합계로 검색"
-              : searchField === "total_expense"
-              ? "운행지출합계로 검색"
-              : "근무시간으로 검색"
-          }`}
+          placeholder="메모로 검색"
           value={searchTerm}
           onChange={handleSearch}
         />
