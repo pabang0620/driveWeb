@@ -5,10 +5,18 @@ import { DynamicInput } from "../../components/InputBox";
 import { postDriveExpense } from "../../components/ApiPost";
 import { jwtDecode } from "jwt-decode";
 
-const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
+const DriveExpense = ({
+  number,
+  setNumber,
+  prevtoggleModal,
+  showModal,
+  toggleModal,
+  closeModal,
+}) => {
   const token = localStorage.getItem("token");
 
   const [userPermission, setUserPermission] = useState(null);
+
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode(token);
@@ -90,8 +98,10 @@ const DriveExpense = ({ showModal, toggleModal, closeModal }) => {
       closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
-      number={3}
+      number={number}
+      setNumber={setNumber}
       title={"지출"}
+      prevtoggleModal={prevtoggleModal}
       content={
         <div className="drive">
           <DynamicInput

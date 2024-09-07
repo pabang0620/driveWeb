@@ -17,6 +17,7 @@ import { jwtDecode } from "jwt-decode";
 const DriveLog = () => {
   useCheckPermission();
   const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+  const [number, setNumber] = useState(0);
 
   // ----- 정보 미 입력시 라우터 --------
   const [vehicleInfo, setVehicleInfo] = useState({
@@ -228,6 +229,8 @@ const DriveLog = () => {
           toggleModal={() => openModal("driveIncome")} // 다음 모달을 직접 열기
           closeModal={closeModal}
           drivingLogId={selectedLogId}
+          number={number}
+          setNumber={setNumber}
         />
       )}
 
@@ -237,6 +240,9 @@ const DriveLog = () => {
           showModal={true}
           toggleModal={() => openModal("driveExpense")} // 다음 모달을 직접 열기
           closeModal={closeModal}
+          number={number}
+          setNumber={setNumber}
+          prevtoggleModal={() => openModal("driveWrite")}
         />
       )}
 
@@ -246,6 +252,9 @@ const DriveLog = () => {
           showModal={true}
           toggleModal={() => closeModal(false)} // 마지막 모달은 닫기
           closeModal={closeModal}
+          number={number}
+          setNumber={setNumber}
+          prevtoggleModal={() => openModal("driveIncome")}
         />
       )}
 

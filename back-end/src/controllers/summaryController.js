@@ -268,7 +268,3 @@ const getSummaryData = async (req, res) => {
 module.exports = {
   getSummaryData,
 };
-
-module.exports = {
-  getSummaryData,
-};

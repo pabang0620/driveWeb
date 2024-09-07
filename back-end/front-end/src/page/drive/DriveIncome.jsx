@@ -16,10 +16,14 @@ const DriveIncome = ({
   toggleModal,
   closeModal,
   business_distance,
+  number,
+  setNumber,
+  prevtoggleModal,
 }) => {
   const token = localStorage.getItem("token");
 
   const [userPermission, setUserPermission] = useState(null);
+
   useEffect(() => {
     if (token) {
       const decoded = jwtDecode(token);
@@ -90,7 +94,7 @@ const DriveIncome = ({
     };
 
     fetchIncomeData();
-  }, [driveIncomeData.driving_log_id, business_distance]);
+  }, [driveIncomeData.driving_log_id, business_distance, number]);
 
   const handleNext = async () => {
     try {
@@ -99,6 +103,7 @@ const DriveIncome = ({
     } catch (error) {
       console.error("운행일지-수입 보내기 실패:", error.message);
     }
+    setNumber(3);
     toggleModal(); // 모달 닫기
   };
 
@@ -114,8 +119,10 @@ const DriveIncome = ({
       closeModal={closeModal}
       showModal={showModal}
       toggleModal={toggleModal}
-      number={2}
       title={"수입"}
+      number={number}
+      setNumber={setNumber}
+      prevtoggleModal={prevtoggleModal}
       content={
         <div className="drive">
           <DynamicInput

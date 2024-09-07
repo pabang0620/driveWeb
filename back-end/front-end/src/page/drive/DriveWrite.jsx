@@ -4,7 +4,14 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDrive } from "../../components/ApiPost";
 
-const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
+const DriveWrite = ({
+  number,
+  setNumber,
+  showModal,
+  toggleModal,
+  closeModal,
+  drivingLogId,
+}) => {
   const [driveData, setDriveData] = useState({
     date: "",
     memo: "",
@@ -50,7 +57,6 @@ const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
         }
       }
     };
-
     fetchDriveData(); // 비동기 함수 호출
   }, [drivingLogId, token]); // token이 변경될 때도 effect가 실행되도록 설정
 
@@ -80,14 +86,20 @@ const DriveWrite = ({ showModal, toggleModal, closeModal, drivingLogId }) => {
           return;
         }
 
-        console.log("Response data:", response);
-        localStorage.setItem("drivingLogId", response.driving_log_id);
+        if (response.data && response.data.driving_log_id !== undefined) {
+          // 생성할 때 응답 처리
+          localStorage.setItem("drivingLogId", response.data.driving_log_id);
+        } else if (response.driving_log_id !== undefined) {
+          // 수정할 때 응답 처리
+          localStorage.setItem("drivingLogId", response.driving_log_id);
+        }
         localStorage.setItem(
           "working_hours_seconds",
           response.working_hours_seconds
         );
         localStorage.setItem("businessDistance", driveData.business_distance);
         closeModal(false); // 모달 닫기
+        setNumber(2);
         toggleModal(); // 다음 모달 열기
       } catch (error) {
         console.error("Error saving drive data:", error);
