@@ -64,13 +64,16 @@ const DriveWrite = ({
 
   const handleNext = async () => {
     console.log(drivingLogId);
+    const driveId = localStorage.getItem("drivingLogId");
+    const drivingLogIdCheck =
+      drivingLogId == undefined ? driveId : drivingLogId;
     if (validateForm()) {
       try {
         let response;
-        if (drivingLogId) {
+        if (drivingLogIdCheck) {
           // drivingLogId가 있을 경우 PUT 요청 (수정)
           response = await axios.put(
-            `/api/drive/detail/${drivingLogId}`,
+            `/api/drive/detail/${drivingLogIdCheck}`,
             driveData,
             {
               headers: {
