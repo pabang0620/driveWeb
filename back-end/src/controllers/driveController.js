@@ -283,13 +283,15 @@ const editExpenseRecord = async (req, res) => {
 // get 시작
 const getDrivingLogsForUser = async (req, res) => {
   const { userId } = req;
-  console.log(userId);
+  const { memo } = req.body;
+  console.log(req.body);
+  console.log("Fetching driving logs for:", userId, "with memo:", memo);
 
   try {
-    const drivingLogs = await getDrivingLogs(userId);
+    const drivingLogs = await getDrivingLogs(userId, memo);
     res.status(200).json(drivingLogs);
   } catch (error) {
-    console.error("Error getting driving logs:", error);
+    console.error("Error in controller while getting driving logs:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

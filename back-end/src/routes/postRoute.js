@@ -17,6 +17,7 @@ const {
 const handleFileUpload = require("../middleware/postFileUpload");
 const authMiddleware = require("../middleware/authMiddleware");
 const { getBoardsName } = require("../models/postModel");
+const postMiddleware = require("../middleware/postMiddleware");
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.get("/board/:boardId", getPosts);
 
 router.get("/boardsName", getBoards);
 
-router.get("/:id", authMiddleware, getPost);
+router.get("/:id", postMiddleware, getPost);
 
 router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
 

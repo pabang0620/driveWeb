@@ -5,6 +5,20 @@ const getToken = () => {
   return localStorage.getItem("token");
 };
 
+const postData = async (url, data) => {
+  const token = getToken();
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(`정보 보내기 실패: ${error.message}`);
+  }
+};
+
 export const getJobtype = () => {
   const token = getToken();
   const decodedToken = jwtDecode(token); // jwt-decode 라이브러리 사용
@@ -51,13 +65,16 @@ export const getProfileIncome = async () => {
 };
 
 //운행일지-운행
-export const getDrive = async (userId) => {
+export const getDrive = async (userId, memo) => {
   const url = userId
     ? `/api/drive/driving-logs/${userId.userId}`
     : `/api/drive/driving-logs`;
-  console.log(url);
-  return getData(url);
+  const body = { memo };
+  console.log("POST to URL:", url, "with data:", body); // 디버깅을 위한 콘솔 로그
+
+  return postData(url, body);
 };
+
 export const getDriveDetails = async (driving_log_id) => {
   return getData(`/api/drive/driving-logs-detail/${driving_log_id}`);
 };

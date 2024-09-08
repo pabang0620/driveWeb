@@ -6,7 +6,7 @@ import { boardsWithPosts } from "../../components/dummy";
 import useCheckPermission from "../../utils/useCheckPermission";
 
 const Board = () => {
-  useCheckPermission();
+  // useCheckPermission();
 
   const [boardData, setBoardData] = useState(boardsWithPosts);
 

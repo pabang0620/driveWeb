@@ -24,8 +24,8 @@ router.post("/log", authMiddleware, addDrivingRecord);
 
 router.delete("/log/:id", authMiddleware, removeDrivingRecord);
 
-router.get("/driving-logs/:userId", adminMiddleware, getDrivingLogsForUser);
-router.get("/driving-logs", adminMiddleware, getDrivingLogsForUser);
+router.post("/driving-logs/:userId", adminMiddleware, getDrivingLogsForUser);
+router.post("/driving-logs", adminMiddleware, getDrivingLogsForUser);
 
 // 상세
 router.get(

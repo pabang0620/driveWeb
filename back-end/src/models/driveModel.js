@@ -472,38 +472,45 @@ const calculateProfitLoss = async (driving_log_id) => {
   }
 };
 // 겟 겟겟겟
-const getDrivingLogs = async (userId) => {
-  try {
-    const drivingLogs = await prisma.driving_logs.findMany({
-      where: {
-        userId: userId,
-      },
-      select: {
-        id: true,
-        date: true,
-        created_at: true,
-        driving_records: {
-          select: {
-            driving_distance: true,
-            working_hours: true,
-          },
-        },
-        income_records: {
-          select: {
-            total_income: true,
-          },
-        },
-        expense_records: {
-          select: {
-            total_expense: true,
-          },
+const getDrivingLogs = async (userId, memo) => {
+  const queryOptions = {
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      date: true,
+      created_at: true,
+      driving_records: {
+        select: {
+          driving_distance: true,
+          working_hours: true,
         },
       },
-      orderBy: {
-        date: "desc",
+      income_records: {
+        select: {
+          total_income: true,
+        },
       },
-    });
+      expense_records: {
+        select: {
+          total_expense: true,
+        },
+      },
+    },
+    orderBy: {
+      date: "desc",
+    },
+  };
 
+  if (memo) {
+    queryOptions.where.memo = {
+      contains: memo,
+    };
+  }
+
+  try {
+    const drivingLogs = await prisma.driving_logs.findMany(queryOptions);
     return drivingLogs.map((log) => ({
       driving_log_id: log.id,
       date: log.date,
@@ -514,10 +521,11 @@ const getDrivingLogs = async (userId) => {
       total_expense: log.expense_records[0]?.total_expense || 0,
     }));
   } catch (error) {
-    console.error("Error getting driving logs in service:", error);
+    console.error("Error in model while getting driving logs:", error);
     throw error;
   }
 };
+
 const getDrivingLogDetails = async (driving_log_id) => {
   try {
     const drivingLog = await prisma.driving_logs.findUnique({

@@ -100,7 +100,7 @@ const BoardDetail = () => {
       setIsLiked(!isLiked);
       setPost({ ...post, likeCount: response.data.likeCount });
     } catch (err) {
-      console.error("좋아요 처리 중 오류가 발생했습니다:", err);
+      alert("로그인 해주세요");
     }
   };
 
@@ -133,7 +133,7 @@ const BoardDetail = () => {
       setNewComment("");
       window.location.reload();
     } catch (err) {
-      console.error("덧글 작성 중 오류가 발생했습니다:", err);
+      alert("로그인 해주세요");
     } finally {
       setIsCommenting(false);
     }

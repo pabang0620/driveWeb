@@ -19,6 +19,21 @@ const DriveLog = () => {
   const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
   const [number, setNumber] = useState(0);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    // 날짜를 'MM-dd' 형식으로 변환
+    const monthDay = date.toLocaleDateString("ko-KR", {
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    // 요일을 '토' 형식으로 변환
+    const dayOfWeek = date.toLocaleDateString("ko-KR", { weekday: "short" });
+
+    // 최종 형식: 'MM-dd 요일'
+    return `${monthDay} ${dayOfWeek}`;
+  };
   // ----- 정보 미 입력시 라우터 --------
   const [vehicleInfo, setVehicleInfo] = useState({
     carType: "", // 차량종류
@@ -67,8 +82,18 @@ const DriveLog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // 페이지당 항목 수
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
-  const [searchField, setSearchField] = useState("date"); // 검색 필드 상태 추가
+  const [searchField, setSearchField] = useState("memo"); // 검색 필드 선택 상태
+  const [memo, setMemo] = useState("");
 
+  // 검색 필드 변경을 처리하는 핸들러
+  const handleFieldChange = (event) => {
+    setSearchField(event.target.value);
+  };
+
+  // 검색어 변경을 처리하는 핸들러
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
   const [currentModal, setCurrentModal] = useState(null); // 현재 열려 있는 모달
   const [selectedLogId, setSelectedLogId] = useState(null); // 선택된 운행 일지 ID
   console.log(userId);
@@ -106,24 +131,10 @@ const DriveLog = () => {
   // 페이지 변경 함수
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // 검색어 입력 핸들러
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // 검색 필드 변경 핸들러
-  const handleFieldChange = (e) => {
-    setSearchField(e.target.value);
-  };
-
-  // 검색어에 따라 데이터 필터링
+  // 검색 버튼 클릭을 처리하는 핸들러
   const handleSearchClick = () => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const filtered = driveLog.filter((item) => {
-      const fieldValue = String(item[searchField]).toLowerCase();
-      return fieldValue.includes(lowerCaseSearchTerm);
-    });
-    setFilteredData(filtered);
+    console.log("검색 실행:", searchField, searchTerm);
+    getDriveData();
     setCurrentPage(1); // 검색 후 첫 페이지로 이동
   };
 
@@ -135,25 +146,23 @@ const DriveLog = () => {
       working_hours: `${new Date(item.working_hours).getUTCHours()}시간`,
     }));
   };
+  const getDriveData = async () => {
+    try {
+      const data = await getDrive(userId ? { userId } : undefined, searchTerm);
+      const formattedData = formatDriveData(data);
+      // created_at 기준으로 최신순 정렬
+      const sortedData = formattedData.sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
 
+      setDriveLog(sortedData);
+      setFilteredData(sortedData); // 필터링 데이터 초기화
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
   // 운행일지-조회 불러오기
   useEffect(() => {
-    const getDriveData = async () => {
-      try {
-        const data = await getDrive(userId ? { userId } : undefined);
-        const formattedData = formatDriveData(data);
-
-        // created_at 기준으로 최신순 정렬
-        const sortedData = formattedData.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-
-        setDriveLog(sortedData);
-        setFilteredData(sortedData); // 필터링 데이터 초기화
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
     getDriveData();
   }, [userId]);
 
@@ -273,8 +282,9 @@ const DriveLog = () => {
             <th>No</th>
             <th>날짜</th>
             <th>주행거리</th>
-            <th>운행수익합계</th>
-            <th>운행지출합계</th>
+            <th>운행수익</th>
+            <th>운행지출</th>
+            <th>운행손익</th>
             <th>근무시간</th>
             <th>수정</th>
           </tr>
@@ -286,10 +296,11 @@ const DriveLog = () => {
               onClick={() => handleRowClick(item.driving_log_id)}
             >
               <td>{indexOfFirstItem + index + 1}</td>
-              <td>{item.date}</td>
+              <td>{formatDate(item.date)}</td> {/* 날짜 포맷 적용 */}
               <td>{item.driving_distance} km</td>
               <td>{item.total_income} 원</td>
               <td>{item.total_expense} 원</td>
+              <td>{item.total_income - item.total_expense} 원</td>
               <td>{item.working_hours}</td>
               <td>
                 <button
@@ -339,7 +350,7 @@ const DriveLog = () => {
           type="text"
           placeholder="메모로 검색"
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={handleSearchChange} // 입력 필드가 변경될 때 호출
         />
         <button onClick={handleSearchClick}>검색</button>
       </div>

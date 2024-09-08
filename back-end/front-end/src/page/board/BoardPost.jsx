@@ -7,7 +7,7 @@ import { dummyboardData } from "../../components/dummy";
 import useCheckPermission from "../../utils/useCheckPermission";
 
 const BoardPost = () => {
-  useCheckPermission();
+  // useCheckPermission();
 
   const navigate = useNavigate();
   const { boardId } = useParams();
