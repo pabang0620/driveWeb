@@ -17,9 +17,10 @@ const DriveDashBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)), // 한 달 전
+    endDate: new Date(), // 오늘
   });
+
   const [isBlurred, setIsBlurred] = useState(false);
   // -----------------------------------------------------
   const [vehicleInfo, setVehicleInfo] = useState({

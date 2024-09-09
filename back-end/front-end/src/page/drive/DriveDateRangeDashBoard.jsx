@@ -14,53 +14,83 @@ const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
 
     const items = [
       {
-        title: "총 작업 시간(초)",
-        value: data.totalWorkingHours,
-        percent: data.workingHoursPercentage,
+        title: "총 작업 시간",
+        value: data.totalWorkingHours
+          ? `${data.totalWorkingHours} (시간)`
+          : "N/A", // 데이터가 없으면 "N/A" 표시
+        percent: data.workingHoursPercentage
+          ? data.workingHoursPercentage.toFixed(2)
+          : "0.00", // 데이터가 없으면 0.00 표시
       },
       {
-        title: "총 주행 거리(킬로미터)",
-        value: data.totalDrivingDistance,
-        percent: data.drivingDistancePercentage,
+        title: "총 주행 거리",
+        value: data.totalDrivingDistance
+          ? `${data.totalDrivingDistance} km`
+          : "N/A", // km 단위 추가
+        percent: data.drivingDistancePercentage
+          ? data.drivingDistancePercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "총 영업 거리(킬로미터)",
-        value: data.totalBusinessDistance,
-        percent: data.businessDistancePercentage,
+        title: "총 영업 거리",
+        value: data.totalBusinessDistance
+          ? `${data.totalBusinessDistance} km`
+          : "N/A", // km 단위 추가
+        percent: data.businessDistancePercentage
+          ? data.businessDistancePercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "총 영업 비율(%)",
-        value: data.totalBusinessRate,
-        percent: data.businessRatePercentage,
+        title: "총 영업 비율",
+        value: data.totalBusinessRate ? `${data.totalBusinessRate}%` : "N/A", // 퍼센트 단위 추가
+        percent: data.businessRatePercentage
+          ? data.businessRatePercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "총 연료 소모량(리터)",
-        value: data.totalFuelAmount,
-        percent: data.fuelAmountPercentage,
+        title: "총 연료 소모량",
+        value: data.totalFuelAmount ? `${data.totalFuelAmount} L` : "N/A", // 리터 단위 추가
+        percent: data.fuelAmountPercentage
+          ? data.fuelAmountPercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "총 연비(킬로미터/리터)",
-        value: data.totalFuelEfficiency,
-        percent: data.fuelEfficiencyPercentage,
+        title: "총 연비",
+        value: data.totalFuelEfficiency
+          ? `${data.totalFuelEfficiency} km/L`
+          : "N/A", // 연비 단위 추가
+        percent: data.fuelEfficiencyPercentage
+          ? data.fuelEfficiencyPercentage.toFixed(2)
+          : "0.00",
       },
       {
         title: "총 운전 횟수",
-        value: data.totalDrivingCases,
-        percent: data.drivingCasesPercentage,
+        value: data.totalDrivingCases ? `${data.totalDrivingCases} 회` : "N/A", // 횟수 단위 추가
+        percent: data.drivingCasesPercentage
+          ? data.drivingCasesPercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "시간당 총 수입(원)",
-        value: data.totalIncomePerHour,
-        percent: data.incomePerHourPercentage,
+        title: "시간당 총 수입",
+        value: data.totalIncomePerHour
+          ? `${data.totalIncomePerHour} 원`
+          : "N/A", // 원 단위 추가
+        percent: data.incomePerHourPercentage
+          ? data.incomePerHourPercentage.toFixed(2)
+          : "0.00",
       },
       {
-        title: "킬로미터당 총 수입(원)",
-        value: data.totalIncomePerKm,
-        percent: data.incomePerKmPercentage,
+        title: "킬로미터당 총 수입",
+        value: data.totalIncomePerKm ? `${data.totalIncomePerKm} 원` : "N/A", // 원 단위 추가
+        percent: data.incomePerKmPercentage
+          ? data.incomePerKmPercentage.toFixed(2)
+          : "0.00",
       },
     ];
+
     return items;
   };
+
   const items = useMemo(() => getItems(data), [data]);
 
   // 운행일지 대시보드 데이터 가져오기
@@ -84,7 +114,7 @@ const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
 
   useEffect(() => {
     fetchData();
-  }, [dateRange]);
+  }, [dateRange.endDate]);
 
   return (
     <div className={`selectedDateRangeData ${isBlurred ? "blurred" : ""}`}>
