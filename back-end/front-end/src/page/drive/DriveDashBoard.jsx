@@ -20,6 +20,7 @@ const DriveDashBoard = () => {
     startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)), // 한 달 전
     endDate: new Date(), // 오늘
   });
+  const [datepermission, setdatePermission] = useState(null); // 권한 상태
 
   const [isBlurred, setIsBlurred] = useState(false);
   // -----------------------------------------------------
@@ -54,7 +55,8 @@ const DriveDashBoard = () => {
         const decodedToken = jwtDecode(token);
         const { permission } = decodedToken;
         console.log(permission);
-        // permission이 5인 경우 블러 상태로 설정
+        setdatePermission(permission); // 권한 값을 상태에 저장
+
         if (permission === 5) {
           setIsBlurred(true);
         } else {
@@ -65,6 +67,7 @@ const DriveDashBoard = () => {
       }
     }
   }, []);
+
   const onDateChange = (update) => {
     let startDate = update[0];
     let endDate = update[1] || update[0]; // endDate가 없으면 startDate와 동일하게 설정
@@ -84,6 +87,20 @@ const DriveDashBoard = () => {
 
   const handleDateChange = (range) => {
     const { startDate, endDate } = range;
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+
+    // 권한이 5인 경우 한 달 이상 범위 선택을 제한
+    if (datepermission === 5) {
+      // 선택된 시작 날짜가 한 달 이전이거나 종료 날짜가 오늘 이후인 경우
+      if (startDate < oneMonthAgo || endDate > today) {
+        alert("프리미엄 기능입니다. 한 달 이상의 기간을 선택할 수 없습니다.");
+        return; // 날짜 범위를 업데이트하지 않음
+      }
+    }
+
+    // 유효한 경우에만 날짜 범위를 업데이트
     setDateRange({ startDate, endDate });
   };
 
@@ -150,6 +167,8 @@ const DriveDashBoard = () => {
             <DriveDateRangeDashBoard
               dateRange={dateRange}
               isBlurred={isBlurred}
+              datepermission={datepermission}
+              handleDateChange={handleDateChange}
             />
           </div>
         </div>

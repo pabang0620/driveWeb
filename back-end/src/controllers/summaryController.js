@@ -98,30 +98,40 @@ const getSummaryData = async (req, res) => {
         (acc, record) => acc + (Number(record._sum.business_distance) || 0),
         0
       );
-      const totalBusinessRate = records.drivingRecords.reduce(
-        (acc, record) => acc + (Number(record._sum.business_rate) || 0),
-        0
-      );
+
+      // 평균값을 계산해야 하는 항목들
+      const totalBusinessRate =
+        records.drivingRecords.reduce(
+          (acc, record) => acc + (Number(record._sum.business_rate) || 0),
+          0
+        ) / records.drivingRecords.length || 0; // 평균 계산
+
       const totalFuelAmount = records.drivingRecords.reduce(
         (acc, record) => acc + (Number(record._sum.fuel_amount) || 0),
         0
       );
-      const totalFuelEfficiency = records.drivingRecords.reduce(
-        (acc, record) => acc + (Number(record._sum.fuel_efficiency) || 0),
-        0
-      );
+
+      const totalFuelEfficiency =
+        records.drivingRecords.reduce(
+          (acc, record) => acc + (Number(record._sum.fuel_efficiency) || 0),
+          0
+        ) / records.drivingRecords.length || 0; // 평균 계산
+
       const totalDrivingCases = records.drivingRecords.reduce(
         (acc, record) => acc + (Number(record._sum.total_driving_cases) || 0),
         0
       );
+
       const totalIncomePerHour = records.incomeRecords.reduce(
         (acc, record) => acc + (Number(record._sum.income_per_hour) || 0),
         0
       );
-      const totalIncomePerKm = records.incomeRecords.reduce(
-        (acc, record) => acc + (Number(record._sum.income_per_km) || 0),
-        0
-      );
+
+      const totalIncomePerKm =
+        records.incomeRecords.reduce(
+          (acc, record) => acc + (Number(record._sum.income_per_km) || 0),
+          0
+        ) / records.incomeRecords.length || 0; // 평균 계산
 
       // 사용자별 데이터 저장
       userSums.push({

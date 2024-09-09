@@ -11,6 +11,7 @@ export function DynamicInput({
   onSave,
   maxLength,
   showEditButton,
+  needed,
 }) {
   const [isEditing, setIsEditing] = useState(onSave ? false : true); // 수정 상태 관리
   const [customValue, setCustomValue] = useState(""); // 직접 입력 값 상태 관리
@@ -210,7 +211,10 @@ export function DynamicInput({
 
   return (
     <div className={`dynamicInput ${inputType}Type`}>
-      <label>{labelName}</label>
+      <label>
+        {labelName}
+        {needed === 1 && <span style={{ color: "#d9534f" }}>*</span>}
+      </label>
       {renderInput()}
     </div>
   );

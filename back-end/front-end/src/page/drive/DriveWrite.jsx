@@ -23,7 +23,7 @@ const DriveWrite = ({
     total_driving_cases: 0,
   });
   const token = localStorage.getItem("token");
-
+  const needed = 1;
   useEffect(() => {
     setNumber(1);
     const driveId = localStorage.getItem("drivingLogId");
@@ -166,6 +166,7 @@ const DriveWrite = ({
             value={driveData.date}
             fieldName="date"
             onChange={handleInputChange}
+            needed={needed}
           />
           <DynamicInput
             labelName="시작시간"
@@ -173,6 +174,7 @@ const DriveWrite = ({
             value={driveData.start_time}
             fieldName="start_time"
             onChange={handleInputChange}
+            needed={needed}
           />
           <DynamicInput
             labelName="종료시간"
@@ -180,6 +182,7 @@ const DriveWrite = ({
             value={driveData.end_time}
             fieldName="end_time"
             onChange={handleInputChange}
+            needed={needed}
           />
           <DynamicInput
             labelName="누적거리(km)"
@@ -187,6 +190,7 @@ const DriveWrite = ({
             value={driveData.cumulative_km}
             fieldName="cumulative_km"
             onChange={handleInputChange}
+            needed={needed}
           />
           <DynamicInput
             labelName="영업거리(km)"
@@ -216,6 +220,17 @@ const DriveWrite = ({
             fieldName="memo"
             onChange={handleInputChange}
           />
+          <div
+            style={{
+              fontSize: "16px",
+              color: "#555",
+              fontWeight: "500",
+              margin: "10px 0",
+              textAlign: "center",
+            }}
+          >
+            영업거리(km)는 수정이 불가능합니다. 한번 더 확인해주세요.
+          </div>
           <button onClick={handleNext}>다음</button>
         </div>
       }

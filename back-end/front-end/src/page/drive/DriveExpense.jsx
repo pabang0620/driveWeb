@@ -172,6 +172,17 @@ const DriveExpense = ({
                 fieldName="expense_spare_4"
                 onChange={handleInputChange}
               />
+              <div
+                style={{
+                  fontSize: "16px",
+                  color: "#555",
+                  fontWeight: "500",
+                  margin: "10px 0",
+                  textAlign: "center",
+                }}
+              >
+                모든 수수료 항목은 자동 계산됩니다.
+              </div>
             </>
           )}
           <button onClick={handleSave}>저장</button>
