@@ -472,7 +472,7 @@ const calculateProfitLoss = async (driving_log_id) => {
   }
 };
 // 겟 겟겟겟
-const getDrivingLogs = async (userId, memo) => {
+const getDrivingLogs = async (userId, memo, selectedYear, selectedMonth) => {
   const queryOptions = {
     where: {
       userId: userId,
@@ -502,6 +502,23 @@ const getDrivingLogs = async (userId, memo) => {
       date: "desc",
     },
   };
+
+  // 날짜 필터를 적용하기 위한 조건 추가 (YYYY-MM-DD 형식으로 비교)
+  if (selectedYear && selectedMonth) {
+    // 해당 월의 첫날과 마지막 날을 YYYY-MM-DD 형식으로 계산
+    const startDate = `${selectedYear}-${String(selectedMonth).padStart(
+      2,
+      "0"
+    )}-01`;
+    const endDate = new Date(selectedYear, selectedMonth, 0)
+      .toISOString()
+      .split("T")[0]; // 마지막 날짜 계산
+
+    queryOptions.where.date = {
+      gte: startDate, // 시작일 (예: 2024-08-01)
+      lte: endDate, // 종료일 (예: 2024-08-31)
+    };
+  }
 
   if (memo) {
     queryOptions.where.memo = {

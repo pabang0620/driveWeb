@@ -84,6 +84,28 @@ const DriveLog = () => {
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
   const [searchField, setSearchField] = useState("memo"); // 검색 필드 선택 상태
   const [memo, setMemo] = useState("");
+  //  ----------------------------- 날짜필터
+  // 현재 날짜를 가져오기 위한 변수들
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 년도와 월에 대한 state
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  // 선택 가능한 년도 배열 생성 (예: 2020 ~ 현재 년도)
+  const years = Array.from(new Array(10), (v, i) => currentYear - i);
+
+  // 선택 가능한 월 배열 생성 (1월~12월)
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
+  //  ----------------------------- 날짜필터
 
   // 검색 필드 변경을 처리하는 핸들러
   const handleFieldChange = (event) => {
@@ -146,17 +168,30 @@ const DriveLog = () => {
       working_hours: `${new Date(item.working_hours).getUTCHours()}시간`,
     }));
   };
+
+  // 시간 변환 함수
+  const formatWorkingHours = (working_hours) => {
+    const date = new Date(working_hours);
+    const hours = date.getUTCHours(); // UTC 기준으로 시간만 추출
+    return `${hours}시간`;
+  };
+
   const getDriveData = async () => {
     try {
-      const data = await getDrive(userId ? { userId } : undefined, searchTerm);
-      const formattedData = formatDriveData(data);
-      // created_at 기준으로 최신순 정렬
-      const sortedData = formattedData.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      const data = await getDrive(
+        userId ? { userId } : undefined,
+        searchTerm,
+        selectedYear,
+        selectedMonth
       );
+      const formattedData = formatDriveData(data);
+      // // created_at 기준으로 최신순 정렬
+      // const sortedData = formattedData.sort(
+      //   (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      // );
 
-      setDriveLog(sortedData);
-      setFilteredData(sortedData); // 필터링 데이터 초기화
+      setDriveLog(data);
+      setFilteredData(data); // 필터링 데이터 초기화
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -164,7 +199,7 @@ const DriveLog = () => {
   // 운행일지-조회 불러오기
   useEffect(() => {
     getDriveData();
-  }, [userId]);
+  }, [userId, selectedYear, selectedMonth]);
 
   // 페이지 수 계산
   const pageCount = Math.ceil(filteredData.length / itemsPerPage);
@@ -230,7 +265,23 @@ const DriveLog = () => {
           운행일지 작성
         </button>
       )}
+      <div className="date-filter">
+        <select value={selectedYear} onChange={handleYearChange}>
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}년
+            </option>
+          ))}
+        </select>
 
+        <select value={selectedMonth} onChange={handleMonthChange}>
+          {months.map((month) => (
+            <option key={month} value={month}>
+              {month}월
+            </option>
+          ))}
+        </select>
+      </div>
       {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
       {currentModal === "driveWrite" && (
         <DriveWrite
@@ -301,7 +352,7 @@ const DriveLog = () => {
               <td>{item.total_income} 원</td>
               <td>{item.total_expense} 원</td>
               <td>{item.total_income - item.total_expense} 원</td>
-              <td>{item.working_hours}</td>
+              <td>{formatWorkingHours(item.working_hours)}</td>
               <td>
                 <button
                   onClick={(e) => {
@@ -361,6 +412,53 @@ const DriveLog = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 0;
+          .date-filter {
+            display: flex;
+            justify-content: end;
+            margin: 0px 8px 0 8px;
+          }
+
+          .date-filter select {
+            margin-right: 5px;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .date-filter select:hover {
+            border-color: #05aced;
+          }
+
+          .date-filter button {
+            padding: 10px 20px;
+            background-color: #05aced;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+          }
+
+          .date-filter button:hover {
+            background-color: #0398cb;
+          }
+
+          @media (max-width: 768px) {
+            .date-filter {
+              margin: 4px 8px 0 8px;
+            }
+
+            .date-filter select,
+            .date-filter button {
+              font-size: 13px;
+              padding: 6px;
+            }
+          }
           @media (max-width: 768px) {
             width: 85%;
             padding: 50px 0;

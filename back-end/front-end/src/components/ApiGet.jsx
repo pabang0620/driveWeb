@@ -65,11 +65,11 @@ export const getProfileIncome = async () => {
 };
 
 //운행일지-운행
-export const getDrive = async (userId, memo) => {
+export const getDrive = async (userId, memo, selectedYear, selectedMonth) => {
   const url = userId
     ? `/api/drive/driving-logs/${userId.userId}`
     : `/api/drive/driving-logs`;
-  const body = { memo };
+  const body = { memo, selectedYear, selectedMonth };
   console.log("POST to URL:", url, "with data:", body); // 디버깅을 위한 콘솔 로그
 
   return postData(url, body);
