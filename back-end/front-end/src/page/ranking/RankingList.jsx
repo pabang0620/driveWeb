@@ -3,11 +3,25 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
+import UserInfoModal from "./UserInfoModal";
 
 const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
   const [selectedOption, setSelectedOption] = useState("전체");
   const [profiles, setProfiles] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
+
+  const openModal = (userId) => {
+    console.log(1);
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
 
   const filterTypeMap = {
     1: "jobtype",
@@ -95,7 +109,12 @@ const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
       </div>
       <ul className="profileWrap">
         {profiles.map((profile, index) => (
-          <li key={index} className="profile">
+          <li
+            key={profile.userId} // 각 프로필의 userId를 key로 사용
+            className="profile"
+            onClick={() => openModal(profile.id)} // 클릭 시 모달 열기
+          >
+            {" "}
             <div className="profilePicture">
               {profile.imageUrl ? (
                 <img src={profile.imageUrl} alt="Profile" />
@@ -112,7 +131,9 @@ const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
           </li>
         ))}
       </ul>
-
+      {isModalOpen && (
+        <UserInfoModal userId={selectedUserId} onClose={closeModal} />
+      )}
       <style jsx>{`
         .ranking {
           min-width: 160px;

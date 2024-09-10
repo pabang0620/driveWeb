@@ -9,6 +9,7 @@ const {
   topTotalCasesUsers,
   topDrivingDistanceUsers,
   getTopNetIncomeUsersController,
+  getUserDetails,
 } = require("../controllers/rankController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -26,6 +27,7 @@ router.post("/total-cases", topTotalCasesUsers);
 router.post("/profit-loss", topProfitLossUsers);
 // 홈에서 쓰는 게시물 최신
 router.get("/topRank", getTopPosts);
+router.get("/userinfo/:userId", getUserDetails);
 
 // 홈에서 쓰는 게시물 인기
 module.exports = router;

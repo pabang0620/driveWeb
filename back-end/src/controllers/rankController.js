@@ -11,6 +11,7 @@ const {
   getTopProfitLossUsersModel,
   getTopDrivingDistanceUsersModel,
   getTopUsersByFuelEfficiency,
+  getUserById,
 } = require("../models/rankModel");
 
 // 관리자모드 설정
@@ -180,6 +181,35 @@ async function topProfitLossUsers(req, res) {
   }
 }
 
+const getUserDetails = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const userData = await getUserById(userId);
+
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const response = {
+      nickname: userData.nickname,
+      createdAt: userData.createdAt,
+      profileImageUrl: userData.user_profiles?.imageUrl || null,
+      incomeType: userData.user_incomes?.income_type || null,
+      region1: userData.user_incomes?.region1 || null,
+      region2: userData.user_incomes?.region2 || null,
+      carType: userData.user_vehicles?.carType || null,
+      franchiseStatus: userData.user_vehicles?.franchise_status || null,
+      vehicleName: userData.user_vehicles?.vehicle_name || null,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getRankings,
   updateRanking,
@@ -192,4 +222,5 @@ module.exports = {
   topTotalCasesUsers,
   getTopNetIncomeUsersController,
   topProfitLossUsers,
+  getUserDetails,
 };

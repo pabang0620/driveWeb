@@ -658,6 +658,17 @@ async function getTopProfitLossUsersModel(
     }));
 }
 
+const getUserById = async (userId) => {
+  return await prisma.users.findUnique({
+    where: { id: parseInt(userId) },
+    include: {
+      user_profiles: true,
+      user_incomes: true,
+      user_vehicles: true,
+    },
+  });
+};
+
 module.exports = {
   getAllRankings,
   updateRankingModel,
@@ -668,4 +679,5 @@ module.exports = {
   getTopDrivingDistanceUsersModel,
   getTopTotalCasesUsersModel,
   getTopProfitLossUsersModel,
+  getUserById,
 };
