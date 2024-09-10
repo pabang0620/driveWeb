@@ -16,6 +16,56 @@ const createDrivingRecord = async ({
   parsedEndTime,
 }) => {
   try {
+    // // ################### 최신 날짜가 아닌 경우
+    const inputDate = date; // new Date()로 변환하지 않음
+
+    // 해당 유저의 입력한 date 이후의 기록이 있는지 확인
+    const existingRecordAfterDate = await prisma.driving_logs.findFirst({
+      where: {
+        userId: userId,
+        date: {
+          gt: inputDate, // 문자열 그대로 비교
+        },
+      },
+    });
+
+    // 해당 유저의 입력한 date 이전의 기록 중 가장 최신 기록을 찾음 (driving_logs 테이블에서 조회)
+    const latestDrivingLogBeforeDate = await prisma.driving_logs.findFirst({
+      where: {
+        userId: userId,
+        date: {
+          lt: inputDate, // 입력한 날짜보다 이전의 기록을 조회
+        },
+      },
+      orderBy: {
+        date: "desc", // 날짜 기준으로 가장 최근 기록을 가져옴
+      },
+    });
+
+    let previousMileage;
+
+    if (latestDrivingLogBeforeDate) {
+      // 가장 최신의 driving_log_id로 driving_records 테이블에서 누적 거리(cumulative_km) 가져옴
+      const latestDrivingRecord = await prisma.driving_records.findFirst({
+        where: {
+          driving_log_id: latestDrivingLogBeforeDate.id, // 최신 로그의 ID로 조회
+        },
+        select: {
+          cumulative_km: true, // 누적거리만 가져옴
+        },
+      });
+
+      previousMileage = latestDrivingRecord?.cumulative_km || 0;
+    } else {
+      // 이전 기록이 없을 경우 user_vehicles의 mileage 값을 가져옴
+      const vehicle = await prisma.user_vehicles.findUnique({
+        where: { userId: userId },
+        select: { mileage: true },
+      });
+
+      previousMileage = vehicle?.mileage || 0;
+    }
+
     const vehicle = await prisma.user_vehicles.findUnique({
       where: { userId: userId },
       select: { mileage: true },
@@ -25,12 +75,6 @@ const createDrivingRecord = async ({
       where: { userId: userId },
       select: { mileage: true },
     });
-
-    const previousMileage = Math.max(vehicle.mileage || 0, car.mileage || 0);
-
-    if (cumulative_km < previousMileage) {
-      throw new Error("누적거리를 확인해주세요.");
-    }
 
     const drivingDistance = cumulative_km - previousMileage;
 
@@ -90,19 +134,22 @@ const createDrivingRecord = async ({
       },
     });
 
-    const updatedVehicle = await prisma.user_vehicles.updateMany({
-      where: { userId: userId },
-      data: {
-        mileage: Number(cumulative_km),
-      },
-    });
+    // 누적거리 업데이트 (date 이후의 기록이 없는 경우에만)
+    if (!existingRecordAfterDate) {
+      await prisma.user_vehicles.updateMany({
+        where: { userId: userId },
+        data: {
+          mileage: Number(cumulative_km),
+        },
+      });
 
-    const updatedCar = await prisma.my_car.updateMany({
-      where: { userId: userId },
-      data: {
-        mileage: Number(cumulative_km),
-      },
-    });
+      await prisma.my_car.updateMany({
+        where: { userId: userId },
+        data: {
+          mileage: Number(cumulative_km),
+        },
+      });
+    }
 
     const updatedMaintenanceRecords =
       await prisma.maintenance_records.updateMany({

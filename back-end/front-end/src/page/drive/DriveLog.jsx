@@ -48,7 +48,7 @@ const DriveLog = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (userId != undefined) {
+    if (userId !== undefined) {
       if (token) {
         const decodedToken = jwtDecode(token);
         setUserPermission(decodedToken.permission);

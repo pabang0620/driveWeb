@@ -229,7 +229,8 @@ const DriveWrite = ({
               textAlign: "center",
             }}
           >
-            영업거리(km)는 수정이 불가능합니다. 한번 더 확인해주세요.
+            누적거리(km) , 영업거리(km)는 수정이 불가능합니다. 한번 더
+            확인해주세요.
           </div>
           <button onClick={handleNext}>다음</button>
         </div>

@@ -20,13 +20,13 @@ const createPostModel = async ({
   userId,
   imageUrl,
 }) => {
-  console.log("Data received for creating post:", {
-    title,
-    content,
-    boardId,
-    userId,
-    imageUrl,
-  });
+  // console.log("Data received for creating post:", {
+  //   title,
+  //   content,
+  //   boardId,
+  //   userId,
+  //   imageUrl,
+  // });
   try {
     const createdPost = await prisma.posts.create({
       data: {
