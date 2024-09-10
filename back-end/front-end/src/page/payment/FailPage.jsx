@@ -1,68 +1,29 @@
-import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-export function SuccessPage() {
-  const navigate = useNavigate();
+export function FailPage() {
   const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    const requestData = {
-      orderId: searchParams.get("orderId"),
-      amount: searchParams.get("amount"),
-      paymentKey: searchParams.get("paymentKey"),
-    };
-
-    async function confirm() {
-      const response = await fetch("/confirm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      const json = await response.json();
-
-      if (!response.ok) {
-        navigate(`/fail?message=${json.message}&code=${json.code}`);
-        return;
-      }
-
-      // 결제 성공 비즈니스 로직을 추가하세요.
-    }
-    confirm();
-  }, [searchParams, navigate]);
 
   return (
     <div className="result wrapper">
       <div className="box_section">
-        <h2>결제 성공!</h2>
-        <p>
-          주문이 완료되었습니다.
-          <br />
-          유료서비스를 이용해보세요!
-        </p>
-        {/* <p>{`주문번호: ${searchParams.get("orderId")}`}</p> */}
-        {/* <p>{`결제 금액: ${Number(
-          searchParams.get("amount")
-        ).toLocaleString()}원`}</p> */}
-        {/* <p>{`결제 키: ${searchParams.get("paymentKey")}`}</p> */}
-        <a href="/" className="navyBox">
-          홈으로 돌아가기
-        </a>
+        <h2>결제 실패</h2>
+        <p>문제가 발생했습니다. 다시 시도해 주세요.</p>
+        <a href="/">홈으로 돌아가기</a>
+        <p>{`에러 코드: ${searchParams.get("code")}`}</p>
+        <p>{`실패 사유: ${searchParams.get("message")}`}</p>
       </div>
-
       <style jsx>{`
         .result.wrapper {
           background-color: rgb(244, 244, 244);
-          height: calc(100vh - 300px);
-          position: relative;
+          padding: 100px 0;
+          @media (max-width: 768px) {
+            padding: 0;
+          }
+
           .box_section {
             max-width: 350px;
             width: 70%;
-            position: absolute;
-            left: 50%;
-            top: 50%;
+            margin: 0 auto;
             background-color: white;
             padding: 30px;
             border-radius: 10px;
@@ -86,7 +47,7 @@ export function SuccessPage() {
           h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #4caf50;
+            color: #e53935;
           }
 
           p {

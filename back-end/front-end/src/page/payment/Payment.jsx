@@ -1,57 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
-import { nanoid } from "nanoid";
-
-const clientKey = "_";
-const customerKey = "_";
+import Checkout from "./Checkout";
 
 export default function Payment() {
-  const paymentWidgetRef = useRef(null);
-  const paymentMethodsWidgetRef = useRef(null);
-  const [price, setPrice] = useState(50_000);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-      const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
-        "#payment-widget",
-        price
-      );
+  // 각 플랜의 가격 정보
+  const plans = [
+    { duration: "1개월(30일)", originalPrice: 5900, discountedPrice: 5900 },
+    {
+      duration: "6개월(180일)",
+      originalPrice: 33000,
+      discountedPrice: 24900,
+      discount: 25,
+    },
+    {
+      duration: "12개월(365일)",
+      originalPrice: 66900,
+      discountedPrice: 33000,
+      discount: 51,
+    },
+  ];
 
-      paymentWidgetRef.current = paymentWidget;
-      paymentMethodsWidgetRef.current = paymentMethodsWidget;
-    })();
-  }, [price]);
-
-  useEffect(() => {
-    const paymentMethodsWidget = paymentMethodsWidgetRef.current;
-
-    if (paymentMethodsWidget == null) {
-      return;
-    }
-
-    paymentMethodsWidget.updateAmount(
-      price,
-      paymentMethodsWidget.UPDATE_REASON.COUPON
-    );
-  }, [price]);
-
-  const handlePaymentClick = async () => {
-    const paymentWidget = paymentWidgetRef.current;
-
-    try {
-      await paymentWidget.requestPayment({
-        orderId: nanoid(),
-        orderName: "토스 티셔츠 외 2건",
-        customerName: "김토스",
-        customerEmail: "customer123@gmail.com",
-        successUrl: `${window.location.origin}/success`,
-        failUrl: `${window.location.origin}/fail`,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="payment_container">
@@ -82,18 +53,20 @@ export default function Payment() {
           </div>
         </div>
 
-        {/* <div>
-        // 할인제도 있다면
-        <input
-          type="checkbox"
-          onChange={(event) => {
-            setPrice(event.target.checked ? price - 5_000 : price + 5_000);
-          }}
-        />
-      </div> */}
-        <button onClick={handlePaymentClick} className="payment_button">
+        <button onClick={openModal} className="payment_button">
           멤버십 가입하기
         </button>
+
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button onClick={closeModal} className="modal-close-button">
+                ×
+              </button>
+              <Checkout plans={plans} />
+            </div>
+          </div>
+        )}
 
         <div className="subscription_info">
           <h4>
@@ -107,54 +80,70 @@ export default function Payment() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>3개월</td>
-                <td>9,900원</td>
-              </tr>
-              <tr>
-                <td>12개월</td>
-                <td>39,600원 → 35,000원 (12% 할인)</td>
-              </tr>
-              <tr>
-                <td>36개월</td>
-                <td>118,800원 → 99,000원 (17% 할인)</td>
-              </tr>
+              {plans.map((plan) => (
+                <tr key={plan.duration}>
+                  <td>{plan.duration}</td>
+                  <td>
+                    {plan.originalPrice === plan.discountedPrice ? (
+                      `${plan.discountedPrice.toLocaleString()}원`
+                    ) : (
+                      <>
+                        <span className="original_price">
+                          {plan.originalPrice.toLocaleString()}원
+                        </span>{" "}
+                        → {plan.discountedPrice.toLocaleString()}원 (
+                        <span className="discount">{plan.discount}% 할인</span>)
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+          <p className="premium_warning">
+            *프리미엄 회원가입 후 서비스 제공 기간 중 운행일지 오류 등으로
+            <br />
+            프리미엄 서비스를 3시간 이상 원활히 제공하지 못한 경우, 서비스
+            기간을 연장해드립니다.
+          </p>
         </div>
         <div className="refund_policy">
           <h4>환불 정책</h4>
           <p>
             운행일지 환불 정책은
             <br className="mobile_br" />
-            공정거래위원회 표준약관을 준수합니다.
+            공정거래위원회의 표준약관을 준수합니다.
             <br />
           </p>
+          <br />
+          <p>서비스 이용일수를 제외하고 일할계산되어 환불 진행됩니다.</p>
           <p>
-            환불과정에서 수수료가 발생한 경우
-            <br className="mobile_br" />
-            수수료 차감 후 환불 진행됩니다.
+            *단, 수수료나 위약금, 할인요금으로 결제한 경우
+            <br />
+            환불 진행시 수수료, 위약금 및 할인율을 적용하여 환불되오니 다음
+            예시표를 확인하시기 바랍니다.
+            <br />
           </p>
+          <br />
+          <p className="refund_formula">
+            환불 예상 요금 =<br className="mobile_br" /> [ 결제금액 / 서비스
+            전체 일수 * <br className="mobile_br" />
+            잔여일수 * (1 - 할인율) - <br className="mobile_br" />
+            (위약금 + 수수료 등) ]
+          </p>
+
           <ul>
             <li>
-              3개월 요금 결제 후 7일이 지나지 않은 경우
-              <br className="mobile_br" />
+              1개월 요금 결제한 경우 <br className="mobile_br" />
               잔여기간 요금 100% 환불
             </li>
             <li>
-              3개월 요금 결제 후 7일이 지난 경우
-              <br className="mobile_br" />
-              잔여기간 요금 90% 환불
+              6개월 요금 결제한 경우 <br className="mobile_br" />
+              잔여기간 요금 75% 환불
             </li>
             <li>
-              12개월 요금 결제한 경우
-              <br className="mobile_br" />
-              잔여기간 요금 80% 환불
-            </li>
-            <li>
-              36개월 요금 결제한 경우
-              <br className="mobile_br" />
-              잔여기간 요금 70% 환불
+              12개월 요금 결제한 경우 <br className="mobile_br" />
+              잔여기간 요금 50% 환불
             </li>
           </ul>
           <div className="refund_example">
@@ -191,36 +180,28 @@ export default function Payment() {
               </thead>
               <tbody>
                 <tr>
-                  <td>3개월</td>
-                  <td>9,900원</td>
-                  <td>7일</td>
-                  <td>83일</td>
-                  <td>9,240원</td>
-                  <td>100% 환불</td>
+                  <td>1개월</td>
+                  <td>5,500원</td>
+                  <td>10일</td>
+                  <td>20일</td>
+                  <td>3,670원</td>
+                  <td>-</td>
                 </tr>
                 <tr>
-                  <td>3개월</td>
-                  <td>9,900원</td>
-                  <td>10일</td>
-                  <td>80일</td>
-                  <td>7,920원</td>
-                  <td>90% 환불</td>
+                  <td>6개월</td>
+                  <td>24,900원</td>
+                  <td>30일</td>
+                  <td>150일</td>
+                  <td>15,560원</td>
+                  <td>75% 환불</td>
                 </tr>
                 <tr>
                   <td>12개월</td>
-                  <td>35,000원</td>
-                  <td>90일</td>
-                  <td>275일</td>
-                  <td>21,100원</td>
-                  <td>80% 환불</td>
-                </tr>
-                <tr>
-                  <td>36개월</td>
-                  <td>99,000원</td>
-                  <td>730일</td>
-                  <td>365일</td>
-                  <td>23,100원</td>
-                  <td>70% 환불</td>
+                  <td>33,000원</td>
+                  <td>30일</td>
+                  <td>335일</td>
+                  <td>15,140원</td>
+                  <td>50% 환불</td>
                 </tr>
               </tbody>
             </table>
@@ -362,6 +343,19 @@ export default function Payment() {
                 th {
                   background-color: #f4f4f4;
                 }
+                .original_price {
+                  color: #ff4500;
+                  text-decoration: line-through;
+                }
+                .discount {
+                  color: #ff4500;
+                }
+              }
+              .premium_warning {
+                font-size: 13px;
+                @media (max-width: 1024px) {
+                  font-size: 11px;
+                }
               }
             }
             .refund_policy {
@@ -470,6 +464,42 @@ export default function Payment() {
                 box-shadow: 0 0 0 3px rgba;
               }
             }
+          }
+          /*페이먼트 모달 */
+          .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+          }
+          .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 80%;
+            height: 80%;
+            overflow-y: scroll;
+            max-width: 600px;
+            position: relative;
+            @media (max-width: 767px) {
+              width: 85%;
+              height: 85%;
+            }
+          }
+
+          .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
           }
         }
       `}</style>

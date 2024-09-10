@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
@@ -16,6 +17,9 @@ const Banner = () => {
           <br />
           기록하자
         </h2>
+        <Link to="https://krdriver.com/board/post/43" className="detail_button">
+          자세히 보기
+        </Link>
       </div>
       <style jsx>{`
         .main_banner {
@@ -46,6 +50,7 @@ const Banner = () => {
             }
             h2 {
               margin-top: 10px;
+              margin-bottom: 20px;
               font-size: 40px;
               color: white;
             }
@@ -55,6 +60,21 @@ const Banner = () => {
               }
               h2 {
                 font-size: 4.5vw;
+              }
+            }
+
+            .detail_button {
+              padding: 8px 10px;
+              font-size: 13px;
+              color: white;
+              background-color: #3c5997;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              text-shadow: none;
+              @media (max-width: 768px) {
+                font-size: 11px;
               }
             }
           }
