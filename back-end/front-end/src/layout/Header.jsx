@@ -172,6 +172,9 @@ function Header() {
                 <li className="listOption">
                   <Link to="/board/post/add">글쓰기</Link>
                 </li>
+                <li className="listOption">
+                  <Link to="/board/post/myboard">작성한 게시글</Link>
+                </li>
               </ul>
             </li>
             <li className={getSelectedClass("/ranking")}>
