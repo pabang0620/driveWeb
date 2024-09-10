@@ -208,7 +208,7 @@ function SidebarMenu({
           width: 50vw;
           height: 100vh;
           background-color: white;
-          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+
           display: flex;
           flex-direction: column;
           padding: 50px 25px 100px 25px;
@@ -227,6 +227,7 @@ function SidebarMenu({
           }
           &.open {
             transform: translateX(0);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
           }
           .close-btn {
             position: absolute;

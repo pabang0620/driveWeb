@@ -8,7 +8,7 @@ const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
 // paymentKey, orderId는 서버에 필수로 저장하세요.
 // 결제 조회, 결제 취소에 사용되는 값입니다. 나머지 값들은 필요에 따라 저장하세요.
 
-function Checkout() {
+function Checkout({ plans }) {
   useCheckPermission();
 
   const [ready, setReady] = useState(false);
@@ -18,22 +18,6 @@ function Checkout() {
     currency: "KRW",
     value: null,
   });
-  // 각 플랜의 가격 정보
-  const plans = [
-    { duration: "3개월", originalPrice: 9900, discountedPrice: 9900 },
-    {
-      duration: "12개월",
-      originalPrice: 39600,
-      discountedPrice: 35000,
-      discount: 12,
-    },
-    {
-      duration: "36개월",
-      originalPrice: 118800,
-      discountedPrice: 99000,
-      discount: 17,
-    },
-  ];
 
   useEffect(() => {
     async function fetchPaymentWidgets() {

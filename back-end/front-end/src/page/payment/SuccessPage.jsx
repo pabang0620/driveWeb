@@ -55,15 +55,14 @@ export function SuccessPage() {
       <style jsx>{`
         .result.wrapper {
           background-color: rgb(244, 244, 244);
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            padding: 0;
-          }
-
+          height: calc(100vh - 300px);
+          position: relative;
           .box_section {
             max-width: 350px;
             width: 70%;
-            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
             background-color: white;
             padding: 30px;
             border-radius: 10px;

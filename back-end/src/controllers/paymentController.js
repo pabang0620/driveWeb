@@ -1,5 +1,5 @@
 const got = require("got");
-
+// npm install got@11 기존의 require('got') 구문을 그대로 사용할 수 있.
 exports.confirmPayment = async (req, res) => {
   const { paymentKey, orderId, amount } = req.body;
 

@@ -22,7 +22,7 @@ app.use("/api", Router);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // -----토스페이먼트 라우트 설정--------------------------------------
-const paymentRoutes = require("./routes/paymentRoutes");
+const paymentRoutes = require("./routes/paymentRoute");
 app.use("/payment", paymentRoutes);
 
 app.listen(4242, () =>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
@@ -15,12 +16,29 @@ function Footer() {
           <li>사업자 등록번호 298-88-01870</li>
           <li>서울특별시 양천구 화곡로12길 23-22 202호</li>
         </ul>
+
+        <div className="terms">
+          <h2>서비스 약관</h2>
+          <ul>
+            <li>
+              <Link to="/terms/privacy_policy" target="_blank">
+                개인정보 수집/이용 동의
+              </Link>
+            </li>
+            <li>
+              <Link to="/terms/general" target="_blank">
+                이용약관 동의
+              </Link>
+            </li>
+          </ul>
+        </div>
+
         <p className="copyline">&copy; 상호 국민대부 주식회사</p>
       </div>
 
       <style jsx>{`
         .footer {
-          height: 220px;
+          height: 300px;
           background-color: rgb(222, 226, 229);
           padding: 20px;
           color: #5c667b;
@@ -33,11 +51,11 @@ function Footer() {
             list-style: none;
           }
           @media (max-width: 1024px) {
-            height: 220px;
+            height: 300px;
             padding: 5% 8%;
           }
           @media (max-width: 767px) {
-            height: 300px;
+            height: 400px;
             padding: 10% 8%;
           }
           > div {
@@ -58,7 +76,8 @@ function Footer() {
               }
             }
             ul.help_area,
-            ul.company_area {
+            ul.company_area,
+            .terms ul {
               display: flex;
               justify-content: flex-start;
               gap: 0 10px;
@@ -77,13 +96,14 @@ function Footer() {
                 }
               }
             }
-          }
-          .copyline {
-            margin: 0;
-            padding: 20px 0 10px 0;
-            font-size: 11px;
-            @media (max-width: 1024px) {
-              padding: 15px 0 5px 0;
+
+            .copyline {
+              margin: 0;
+              padding: 20px 0 10px 0;
+              font-size: 11px;
+              @media (max-width: 1024px) {
+                padding: 15px 0 30px 0;
+              }
             }
           }
         }
