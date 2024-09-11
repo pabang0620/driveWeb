@@ -15,6 +15,7 @@ const summaryRoute = require("./summaryRoute");
 const taxRoute = require("./taxRoute");
 const adminRoute = require("./adminRoute");
 const socialRoute = require("./socialRoute");
+const excelRoute = require("./excelRoute");
 
 router.use("/user", userRoute);
 router.use("/post", postRoute);
@@ -29,5 +30,6 @@ router.use("/summary", summaryRoute);
 router.use("/tax", taxRoute);
 router.use("/admin", adminRoute);
 router.use("/social", socialRoute);
+router.use("/excel", excelRoute);
 
 module.exports = router;

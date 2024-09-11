@@ -13,6 +13,8 @@ import TitleBox from "../../components/TitleBox";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useCheckPermission from "../../utils/useCheckPermission";
 import { jwtDecode } from "jwt-decode";
+import ExportToExcelButton from "./ExportToExcelButton";
+import UploadExcelButton from "./UploadExcelButton";
 
 const DriveLog = () => {
   useCheckPermission();
@@ -282,6 +284,12 @@ const DriveLog = () => {
           ))}
         </select>
       </div>
+      {(userPermission === 1 ||
+        userPermission === 2 ||
+        userPermission === 3) && <UploadExcelButton />}
+
+      {/* ExportToExcelButton은 userPermission이 5가 아닐 때만 보임 */}
+      {userPermission !== 5 && <ExportToExcelButton />}
       {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
       {currentModal === "driveWrite" && (
         <DriveWrite
@@ -427,6 +435,7 @@ const DriveLog = () => {
             background-color: #fff;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 50px;
           }
 
           .date-filter select:hover {
