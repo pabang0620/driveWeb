@@ -112,7 +112,7 @@ const saveDrivingLog = async (data, userId) => {
             end_time: data["종료 시간"],
             working_hours: convertTimeToISO(data["작업 시간"]), // "n시간 n분"을 ISO로 변환
             working_hours_seconds: convertTimeToSeconds(data["작업 시간"]), // "n시간 n분"을 초로 변환
-            day_of_week: convertDayToKorean(data["요일"]), // 요일을 한국어로 변환
+            day_of_week: data["요일"], // 요일을 한국어로 변환
             cumulative_km: parseFloat(data["누적 거리 (km)"]),
             driving_distance: parseFloat(data["주행 거리 (km)"]),
             business_distance: parseFloat(data["영업 거리 (km)"]),
