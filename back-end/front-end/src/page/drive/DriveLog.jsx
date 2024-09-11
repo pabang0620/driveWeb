@@ -50,11 +50,18 @@ const DriveLog = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserPermission(decodedToken.permission);
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
     if (userId !== undefined) {
       if (token) {
         const decodedToken = jwtDecode(token);
         setUserPermission(decodedToken.permission);
-
         // 권한이 1 또는 2가 아닌 경우 홈으로 리디렉션
         if (decodedToken.permission !== 1 && decodedToken.permission !== 2) {
           alert("접근 권한이 없습니다.");
@@ -289,7 +296,7 @@ const DriveLog = () => {
         userPermission === 3) && <UploadExcelButton />}
 
       {/* ExportToExcelButton은 userPermission이 5가 아닐 때만 보임 */}
-      {userPermission !== 5 && <ExportToExcelButton />}
+      <ExportToExcelButton userPermission={userPermission} />
       {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
       {currentModal === "driveWrite" && (
         <DriveWrite
