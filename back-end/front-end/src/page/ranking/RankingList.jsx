@@ -4,18 +4,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import UserInfoModal from "./UserInfoModal";
+import { jwtDecode } from "jwt-decode";
 
 const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
   const [selectedOption, setSelectedOption] = useState("전체");
   const [profiles, setProfiles] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userPermission, setUserPermission] = useState(null);
+
   const location = useLocation();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserPermission(decodedToken.permission);
+    }
+  }, []);
+
   const openModal = (userId) => {
-    console.log(1);
-    setSelectedUserId(userId);
-    setIsModalOpen(true);
+    if (userPermission !== 5) {
+      setSelectedUserId(userId);
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
