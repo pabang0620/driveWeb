@@ -13,7 +13,7 @@ import useCheckPermission from "../../utils/useCheckPermission";
 import { jwtDecode } from "jwt-decode";
 
 const BoardDetail = () => {
-  useCheckPermission();
+  // useCheckPermission();
 
   const location = useLocation();
   const { boardId = 2 } = location.state || {}; // 전달된 state가 없는

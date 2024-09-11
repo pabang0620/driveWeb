@@ -3,21 +3,17 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import axios from "axios";
 
-const ExportToExcelButton = ({ userPermission }) => {
+const ExportToExcelButton = () => {
   // 백엔드에서 데이터를 가져오는 함수
   const fetchDrivingLogData = async () => {
     try {
-      if (userPermission !== 5) {
-        const token = localStorage.getItem("token"); // 토큰이 있을 경우
-        const response = await axios.get("/api/excel", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
-          },
-        });
-        return response.data;
-      } else {
-        alert("프리미엄 기능 입니다.");
-      }
+      const token = localStorage.getItem("token"); // 토큰이 있을 경우
+      const response = await axios.get("/api/excel", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
+        },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching driving log data:", error);
       return [];

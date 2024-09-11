@@ -36,7 +36,7 @@ router.get("/:id", postMiddleware, getPost);
 
 router.get("/:boardId/top", getTopPosts); // 인기순위 가져오는 API
 
-router.post("/:id/like", authMiddleware, likePost);
+router.post("/:id/like", postMiddleware, likePost);
 
 router.put("/:id", authMiddleware, editPost);
 

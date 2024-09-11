@@ -45,6 +45,7 @@ import UserManagement from "./page/admin/UserManagement";
 import RankingManagement from "./page/admin/RankingManagement";
 import StatisticsManagement from "./page/admin/StatisticsManagement";
 import AuthCheck from "./AuthCheck";
+import ServiceUnavailable from "./ServiceUnavailable";
 
 function RouterApp() {
   return (
@@ -56,18 +57,15 @@ function RouterApp() {
           <Route path="/" element={<Home />} />
           {/* 로그인 */}
           <Route path="/login" element={<Login />} />
-
           {/* 비밀번호 찾기 & 재설정 */}
           <Route path="/login/forgotpassword" element={<ForgotPassword />} />
           <Route path="/login/resetpassword" element={<ResetPassword />} />
           <Route path="/login/findUsername" element={<FindUsername />} />
-
           {/* 회원가입 */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/signup/email" element={<SignupEmail />} />
           <Route path="/signup/password" element={<SignupPassword />} />
           <Route path="/signup/job" element={<SignupJob />} />
-
           {/* 회원정보 */}
           <Route
             path="/user/personalinfo"
@@ -93,17 +91,14 @@ function RouterApp() {
               </AuthCheck>
             }
           />
-
           {/* 게시판 */}
           <Route path="/board" element={<Board />} />
           <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />
           <Route path="/board/post/edit/:id" element={<BoardPostAdd />} />
-
           {/* 랭킹 */}
           <Route path="/ranking" element={<Ranking />} />
-
           {/* 마이페이지 */}
           <Route
             path="/mypage"
@@ -113,7 +108,6 @@ function RouterApp() {
               </AuthCheck>
             }
           />
-
           {/* 차계부 */}
           <Route
             path="/mycar"
@@ -125,7 +119,6 @@ function RouterApp() {
           />
           <Route path="/mycar/maintenance" element={<MyCarMaintenance />} />
           <Route path="/mycar/log" element={<MyCarLog />} />
-
           {/* 운행일지 */}
           <Route
             path="/driving_log"
@@ -137,21 +130,19 @@ function RouterApp() {
           />
           <Route path="/driving_log/:userId" element={<DriveLog />} />
           <Route path="/driving_log/dashboard" element={<DriveDashBoard />} />
-
           {/* 결재 */}
           <Route path="/payment" element={<Payment />} />
           <Route path="/payment/success" element={<SuccessPage />} />
           <Route path="/payment/fail" element={<FailPage />} />
-
           {/* 관리자페이지 */}
           <Route path="/admin/user" element={<UserManagement />} />
           <Route path="/admin/board" element={<BoardManagement />} />
           <Route path="/admin/ranking" element={<RankingManagement />} />
           <Route path="/admin/statistics" element={<StatisticsManagement />} />
-
           {/* 기타 */}
           <Route path="/SummaryComponent" element={<SummaryComponent />} />
           {/* <Route path="/topRank" element={<TopRank />} /> */}
+          {/* 에러 처리 경로 */}
         </Route>
 
         {/* Layout이 적용되지 않은 경로 */}

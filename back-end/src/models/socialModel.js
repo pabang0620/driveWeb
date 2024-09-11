@@ -78,31 +78,85 @@ async function createMyCar(data) {
 }
 // 정비목록 회원가입 시 생성
 const defaultMaintenanceItems = [
-  "에어클리너 필터",
-  "공조 장치용 에어필터",
-  "타이어 위치 교체",
-  "브레이크/클러치(사양 적용시)액",
-  "엔진 오일 및 오일필터",
-  "점화 플러그",
-  "냉각수량 점검 및 교체",
+  {
+    name: "에어클리너 필터",
+    maintenanceInterval: 3,
+    maintenanceDistance: null, // 주행거리가 없음
+  },
+  {
+    name: "공조 장치용 에어필터",
+    maintenanceInterval: 3,
+    maintenanceDistance: null,
+  },
+  {
+    name: "타이어 위치 교체",
+    maintenanceInterval: 6,
+    maintenanceDistance: 50000,
+  },
+  {
+    name: "브레이크/클러치(사양 적용시)액",
+    maintenanceInterval: 6,
+    maintenanceDistance: 80000,
+  },
+  {
+    name: "엔진 오일 및 오일필터",
+    maintenanceInterval: 6,
+    maintenanceDistance: 8000,
+  },
+  {
+    name: "점화 플러그",
+    maintenanceInterval: 6,
+    maintenanceDistance: 140000,
+  },
+  {
+    name: "냉각수량 점검 및 교체",
+    maintenanceInterval: 12,
+    maintenanceDistance: null,
+  },
 ];
 
+// 기본 정비 항목 및 레코드 생성
 const createDefaultMaintenanceItems = async (carId, userId) => {
-  const maintenanceItems = defaultMaintenanceItems.map((item) => ({
-    name: item,
-    my_carId: carId,
-    userId: userId,
-  }));
-
   try {
-    await prisma.maintenance_items.createMany({
-      data: maintenanceItems,
-    });
+    // 1. maintenance_items 테이블에 항목 생성
+    const createdItems = await Promise.all(
+      defaultMaintenanceItems.map(async (item) => {
+        const newItem = await prisma.maintenance_items.create({
+          data: {
+            name: item.name,
+            my_carId: carId,
+            userId: userId,
+          },
+        });
+        return { ...newItem, ...item }; // 새로 생성된 항목과 기본 설정값 병합
+      })
+    );
+
+    // 2. 생성된 maintenance_items의 id 값을 사용하여 maintenance_records 생성
+    await Promise.all(
+      createdItems.map(async (item) => {
+        await prisma.maintenance_records.create({
+          data: {
+            maintenanceItemId: item.id, // 생성된 maintenance_items의 id 전달
+            userId: userId,
+            carId: carId,
+            maintenanceInterval: item.maintenanceInterval, // 기본 설정값
+            maintenanceDistance: item.maintenanceDistance || null, // 없으면 null
+          },
+        });
+      })
+    );
+
+    console.log("Default maintenance items and records created successfully.");
   } catch (error) {
-    console.error("Error creating default maintenance items:", error);
-    throw new Error("Error creating default maintenance items");
+    console.error(
+      "Error creating default maintenance items and records:",
+      error
+    );
+    throw new Error("Error creating default maintenance items and records");
   }
 };
+
 module.exports = {
   findUserByKakaoId,
   findUserByGoogleId,

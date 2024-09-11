@@ -289,7 +289,7 @@ const DriveLog = () => {
         userPermission === 3) && <UploadExcelButton />}
 
       {/* ExportToExcelButton은 userPermission이 5가 아닐 때만 보임 */}
-      <ExportToExcelButton userPermission={userPermission} />
+      {userPermission !== 5 && <ExportToExcelButton />}
       {/* DriveWrite에서 다음 버튼 클릭 시 호출될 함수 */}
       {currentModal === "driveWrite" && (
         <DriveWrite

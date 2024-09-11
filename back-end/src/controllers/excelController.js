@@ -1,5 +1,8 @@
 const XLSX = require("xlsx");
-const { saveDrivingLog } = require("../models/excelModel");
+const {
+  saveDrivingLog,
+  getDrivingLogDataForExcelModel,
+} = require("../models/excelModel");
 
 // 운행 일지 데이터를 엑셀용으로 가져오기
 const getDrivingLogsForExcel = async (req, res) => {
