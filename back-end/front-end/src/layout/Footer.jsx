@@ -14,6 +14,7 @@ function Footer() {
         <ul className="company_area">
           <li>대표자 김재청</li>
           <li>사업자 등록번호 298-88-01870</li>
+          <li>통신판매업신고번호 : 2024-서울양천-1171</li>
           <li>서울특별시 양천구 화곡로12길 23-22 202호</li>
         </ul>
 
