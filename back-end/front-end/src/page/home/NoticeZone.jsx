@@ -46,11 +46,11 @@ const NoticeZone = ({ boardsWithPosts }) => {
   };
 
   const handleNoticeClick = (id) => {
-    if (isAuthorized) {
-      navigate(`/board/post/${id}`);
-    } else {
-      alert("로그인 해주세요.");
-    }
+    // if (isAuthorized) {
+    navigate(`/board/post/${id}`);
+    // } else {
+    // alert("로그인 해주세요.");
+    // }
   };
 
   return (

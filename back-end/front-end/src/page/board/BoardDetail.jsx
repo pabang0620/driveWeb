@@ -283,7 +283,13 @@ const BoardDetail = () => {
   };
 
   const handleEdit = () => {
-    navigate(`/board/post/edit/${postId}`, { state: { boardId } });
+    const userId = getUserId();
+
+    if (userId === post.userId) {
+      navigate(`/board/post/edit/${postId}`, { state: { boardId } });
+    } else {
+      alert("수정 권한이 없습니다.");
+    }
   };
 
   return (
@@ -392,7 +398,7 @@ const BoardDetail = () => {
                   />
                   {commentOptionModalOpen[comment.id] && (
                     <div className="postControllButtonBox">
-                      <div className="postDelectButton adited">수정</div>
+                      {/* <div className="postDelectButton adited">수정</div> */}
                       <div
                         className="postDelectButton"
                         onClick={() => handleCommentDelete(comment.id)}
