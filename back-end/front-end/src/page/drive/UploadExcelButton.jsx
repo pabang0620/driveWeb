@@ -1,7 +1,10 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const UploadExcelButton = () => {
+  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -35,6 +38,10 @@ const UploadExcelButton = () => {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
+
+    if (userId) {
+      formData.append("userId", userId);
+    }
 
     try {
       const response = await axios.post("/api/excel/upload-excel", formData, {

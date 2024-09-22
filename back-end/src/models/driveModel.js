@@ -86,6 +86,9 @@ const createDrivingRecord = async ({
       },
     });
 
+    if (parsedEndTime < parsedStartTime) {
+      parsedEndTime.setDate(parsedEndTime.getDate() + 1);
+    }
     // working_hours 계산
     const workingHoursMilliseconds = Math.abs(parsedEndTime - parsedStartTime);
     const workingHoursSeconds = Math.floor(workingHoursMilliseconds / 1000); // 초 단위로 변환
@@ -275,11 +278,11 @@ const updateTotalIncome = async (id, data) => {
     const income_per_hour = working_hours_seconds
       ? total_income / (working_hours_seconds / 3600) // seconds to hours
       : 0;
-    // console.log("###########################################");
-    // console.log(total_income);
-    // console.log(working_hours_seconds);
-    // console.log(income_per_km);
-    // console.log(income_per_hour);
+    console.log("###########################################");
+    console.log(total_income);
+    console.log(working_hours_seconds);
+    console.log(income_per_km);
+    console.log(income_per_hour);
     const updatedRecord = await prisma.income_records.update({
       where: { id: id },
       data: {

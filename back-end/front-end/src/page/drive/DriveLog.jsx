@@ -364,9 +364,9 @@ const DriveLog = () => {
               <td>{indexOfFirstItem + index + 1}</td>
               <td>{formatDate(item.date)}</td> {/* 날짜 포맷 적용 */}
               <td>{item.driving_distance} km</td>
-              <td>{item.total_income} 원</td>
-              <td>{item.total_expense} 원</td>
-              <td>{item.total_income - item.total_expense} 원</td>
+              <td>{Math.round(item.total_income)} 원</td>
+              <td>{Math.round(item.total_expense)} 원</td>
+              <td>{Math.round(item.total_income - item.total_expense)} 원</td>
               <td>{formatWorkingHours(item.working_hours)}</td>
               <td>
                 <button
@@ -479,6 +479,7 @@ const DriveLog = () => {
             width: 85%;
             padding: 50px 0;
           }
+
           h2 {
             font-size: 25px;
             font-weight: 600;
@@ -628,6 +629,11 @@ const DriveLog = () => {
         @media (max-width: 480px) {
           .drivingTable .editButton {
             font-size: 12px;
+          }
+          @media (max-width: 346px) {
+            td {
+              font-size: 9px;
+            }
           }
         }
       `}</style>

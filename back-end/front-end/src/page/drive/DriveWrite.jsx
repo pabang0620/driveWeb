@@ -108,7 +108,9 @@ const DriveWrite = ({
         toggleModal(); // 다음 모달 열기
       } catch (error) {
         console.error("Error saving drive data:", error);
-        alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
+        alert(
+          "누적 거리를 확인해주세요. (차량 정보에 기입된 누적거리보다 커야합니다.)"
+        );
       }
     }
   };
@@ -137,9 +139,9 @@ const DriveWrite = ({
       start_time: "시작시간",
       end_time: "종료시간",
       cumulative_km: "누적거리",
-      business_distance: "영업거리",
-      fuel_amount: "주유량",
-      total_driving_cases: "총 운행 수",
+      // business_distance: "영업거리",
+      // fuel_amount: "주유량",
+      // total_driving_cases: "총 운행 수",
     };
 
     for (let field in requiredFields) {

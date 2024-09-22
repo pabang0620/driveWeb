@@ -88,7 +88,7 @@ function Footer() {
                 margin-top: 7px;
               }
               li {
-                font-size: 12px;
+                font-size: 11px;
                 line-height: 15px;
                 margin-bottom: 6px;
                 span {

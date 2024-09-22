@@ -16,6 +16,17 @@ const getDrivingLogsForExcel = async (req, res) => {
   }
 };
 
+// 운행 일지 데이터를 엑셀용으로 가져오기
+const getDrivingLogsForExcelAdmin = async (req, res) => {
+  const { userId } = req.params; // req.params에서 userId를 가져옴
+  try {
+    const data = await getDrivingLogDataForExcelModel(userId);
+    res.json(data); // 데이터를 JSON으로 클라이언트에 전송
+  } catch (error) {
+    console.error("Error generating excel data:", error);
+    res.status(500).json({ error: "Failed to generate excel data" });
+  }
+};
 // 엑셀 파일을 파싱하고 데이터베이스에 저장하는 컨트롤러
 const uploadExcel = async (req, res) => {
   try {
@@ -46,5 +57,6 @@ const uploadExcel = async (req, res) => {
 
 module.exports = {
   getDrivingLogsForExcel,
+  getDrivingLogsForExcelAdmin,
   uploadExcel,
 };

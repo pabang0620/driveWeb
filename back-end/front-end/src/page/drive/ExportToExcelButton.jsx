@@ -2,14 +2,22 @@ import React from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ExportToExcelButton = ({ userPermission }) => {
   // 백엔드에서 데이터를 가져오는 함수
+  // 백엔드에서 데이터를 가져오는 함수
+  const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
+
   const fetchDrivingLogData = async () => {
     try {
       if (userPermission !== 5) {
         const token = localStorage.getItem("token"); // 토큰이 있을 경우
-        const response = await axios.get("/api/excel", {
+
+        // userId가 있을 경우 경로에 추가
+        const url = userId ? `/api/excel/${userId}` : "/api/excel"; // userId가 있으면 URL에 추가
+
+        const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`, // Authorization 헤더에 토큰 추가
           },
