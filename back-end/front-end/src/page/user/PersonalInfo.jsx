@@ -35,6 +35,7 @@ const PersonalInfo = () => {
     phone: "",
     email: "",
     imageUrl: "",
+    nickname: "",
     googleId: undefined,
     kakaoId: undefined,
     naverId: undefined,
@@ -273,6 +274,17 @@ const PersonalInfo = () => {
             </button>
           </div>
           <h3>기본정보</h3>
+          <DynamicInput
+            labelName={"닉네임"}
+            inputType={"text"}
+            value={userInfo.users.nickname} // userInfo 상태에서 nickname 값을 사용
+            fieldName="nickname"
+            onChange={handleInputChange} // 기존 handleInputChange 함수를 재사용하여 상태 업데이트
+            placeholder={"닉네임을 입력해주세요."}
+            onSave={handleSaveUserInfo} // 닉네임 저장도 같은 함수 사용
+            showEditButton={true}
+            isEditing={isEditing}
+          />
 
           <DynamicInput
             labelName={"이름"}

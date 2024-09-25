@@ -132,6 +132,7 @@ const findUsername = async (req, res) => {
 async function resetPassword(req, res) {
   const { username, newPassword } = req.body;
 
+  console.log(username, newPassword);
   try {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await updateUserPassword(username, hashedPassword);
@@ -187,7 +188,7 @@ const loginUser = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
   const { userId } = req;
-  const { name, birth_date, phone, username } = req.body;
+  const { name, birth_date, phone, username, nickname } = req.body;
   let imageUrl = req.file ? req.file.location : req.body.imageUrl || null;
 
   const profileData = {
@@ -199,7 +200,7 @@ const updateUserProfile = async (req, res) => {
   };
 
   try {
-    const profile = await updateUserProfileData(userId, profileData);
+    const profile = await updateUserProfileData(userId, profileData, nickname);
     res.status(200).json(profile);
   } catch (error) {
     res.status(500).json({ error: "프로필 업데이트 중 오류가 발생했습니다." });

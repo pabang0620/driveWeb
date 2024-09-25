@@ -68,7 +68,7 @@ function Footer() {
             }
             h2 {
               font-weight: 600;
-              font-size: 16px;
+              font-size: 14px;
               margin: 30px 0 10px 0;
               @media (max-width: 1024px) {
                 font-weight: 600;

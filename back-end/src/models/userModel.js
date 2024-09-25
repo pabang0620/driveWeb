@@ -119,13 +119,21 @@ async function updateUserPassword(username, hashedPassword) {
   });
 }
 
-const updateUserProfileData = async (userId, profileData) => {
+const updateUserProfileData = async (userId, profileData, nickname) => {
   try {
+    // 프로필 정보 업데이트
     const userProfile = await prisma.user_profiles.update({
       where: { userId: userId },
       data: profileData,
     });
-    return userProfile;
+
+    // 사용자 닉네임 업데이트
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { nickname: nickname },
+    });
+
+    return { userProfile, user }; // 두 업데이트 결과를 함께 반환
   } catch (error) {
     console.error("프로필 업데이트 중 오류 발생:", error);
     throw error;
@@ -259,6 +267,7 @@ const getUserProfile = async (userId) => {
       include: {
         users: {
           select: {
+            nickname: true,
             googleId: true,
             kakaoId: true,
             naverId: true,
