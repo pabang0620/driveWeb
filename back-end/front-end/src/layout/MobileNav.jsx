@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const MobileNav = () => {
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollPosition = window.scrollY + windowHeight;
+
+      // 스크롤이 페이지 맨 아래에 도달하면 Nav 숨기기
+      if (scrollPosition >= documentHeight) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <div className="MobileNavbar">
+    <div className={`MobileNavbar ${isVisible ? "" : "hidden"}`}>
       <div className="nav-item" onClick={() => navigate("/driving_log")}>
         <img
           src={`${process.env.PUBLIC_URL}/images/driveIcon.png`}
@@ -48,6 +69,11 @@ const MobileNav = () => {
             padding: 10px 0;
             border-top: 1px solid #ddd;
           }
+
+          .MobileNavbar.hidden {
+            display: none;
+          }
+
           .nav-item {
             display: flex;
             flex-direction: column;
