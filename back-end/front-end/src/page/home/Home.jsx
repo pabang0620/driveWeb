@@ -20,12 +20,15 @@ function Home() {
   const [rankings, setRankings] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const location = useLocation();
+  // 모바일 확인 ---------------------------------------------------------------------------------------------
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // 모바일 확인
 
   useEffect(() => {
-    // 현재 날짜 기준으로 지난달을 기본 값으로 설정
+    // 현재 날짜 기준으로 이번 달을 기본 값으로 설정
     const today = new Date();
-    const lastMonth = today.getMonth() === 0 ? 12 : today.getMonth();
-    setSelectedMonth(lastMonth);
+    const currentMonth = today.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+    setSelectedMonth(currentMonth);
   }, []);
 
   useEffect(() => {
@@ -43,7 +46,16 @@ function Home() {
     };
 
     fetchRankingSettings();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const displayedRankings = isMobile ? rankings.slice(0, 1) : rankings;
 
   // ----------------------------랭킹
 
@@ -108,6 +120,7 @@ function Home() {
     fetchTopRank();
   }, []);
 
+  console.log(rankings);
   return (
     <div className="home-container">
       <Banner />
@@ -120,7 +133,7 @@ function Home() {
           <>
             <NoticeZone boardsWithPosts={boardsWithPosts} />
             <div className="rankingList" onClick={() => navigate("/ranking")}>
-              {rankings.map((ranking) => (
+              {displayedRankings.map((ranking) => (
                 <RankingList
                   key={ranking.id}
                   title={ranking.name}

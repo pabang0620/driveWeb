@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom"; // useNavigate 추가
 import TitleBox from "../../components/TitleBox";
 import RankCategorySetting from "./RankCategorySetting";
 import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
+import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
 
 const RankingManagement = () => {
   const navigate = useNavigate();
+  useAdminCheckPermission();
+
   const [userPermission, setUserPermission] = useState(null);
 
   useEffect(() => {

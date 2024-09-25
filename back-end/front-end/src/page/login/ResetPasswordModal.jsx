@@ -23,7 +23,7 @@ function ResetPasswordModal({ username, onClose }) {
       const { data } = response;
 
       if (data.success) {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
+        alert("비밀번호가 성공적으로 변경되었습니다. 다시 로그인 해주세요.");
         navigate("/login");
       } else {
         setError(data.message || "비밀번호 재설정에 실패했습니다.");

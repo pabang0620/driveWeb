@@ -92,6 +92,7 @@ const createUser = async (
 };
 
 const findUserByUsername = async (username) => {
+  console.log(username);
   return await prisma.users.findUnique({
     where: { username },
     select: {
@@ -101,6 +102,8 @@ const findUserByUsername = async (username) => {
       jobtype: true,
       permission: true,
       nickname: true, // 닉네임도 조회하도록 추가
+      userQuestion: true, // 보안 질문 필드 추가
+      userAnswer: true, // 보안 답변 필드 추가
     },
   });
 };

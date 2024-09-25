@@ -4,8 +4,10 @@ import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
 import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import SearchBox from "./SearchBox";
+import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
 
 const UserManagement = () => {
+  useAdminCheckPermission();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);

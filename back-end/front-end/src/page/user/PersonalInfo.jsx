@@ -11,11 +11,13 @@ import useCheckPermission from "../../utils/useCheckPermission";
 import JobTypeComponent from "./JobTypeComponent";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // 잘못된 임포트, 'jwt-decode'를 한 번만 작성해야 함
+import ResetPasswordModal from "../login/ResetPasswordModal";
 
 const PersonalInfo = () => {
   useCheckPermission();
 
   const [jobtype, setJobtype] = useState(""); // 잡타입 상태
+  const [showModal, setShowModal] = useState(false); // 모달 표시 여부 상태 추가
 
   const getJobtype = () => {
     const token = localStorage.getItem("token");
@@ -24,6 +26,9 @@ const PersonalInfo = () => {
     setJobtype(jobtype);
   };
 
+  const openPasswordModal = () => {
+    setShowModal(true); // 보안 질문과 답변이 일치하면 모달 표시
+  };
   const [userInfo, setUserInfo] = useState({
     name: "test",
     birth_date: "",
@@ -54,9 +59,16 @@ const PersonalInfo = () => {
         setLoading(false); // 데이터 로딩 후 로딩 상태 해제
       }
     };
-    getUserData();
-    getJobtype();
+
+    // 토큰이 있는지 확인
+    const token = localStorage.getItem("token"); // 또는 sessionStorage 사용 가능
+    if (token) {
+      // 토큰이 있을 때만 getUserData와 getJobtype 호출
+      getUserData();
+      getJobtype();
+    }
   }, []);
+
   // 직종 수정
   const updateJobType = async (newJobType) => {
     // 사용자에게 변경 확인 요청
@@ -315,6 +327,16 @@ const PersonalInfo = () => {
             ))}
           </div>{" "}
         </div>
+        <div className="password-change-btn" onClick={openPasswordModal}>
+          비밀번호 변경
+        </div>
+
+        {showModal && (
+          <ResetPasswordModal
+            username={userInfo.email}
+            onClose={() => setShowModal(false)}
+          />
+        )}
       </div>
       <style jsx>{`
         .userInfo {
@@ -468,6 +490,29 @@ const PersonalInfo = () => {
                 color: rgb(100 255 0);
               }
             }
+          }
+          .password-change-btn {
+            margin: 40px 0px;
+            display: inline-block;
+            background-color: #007bff; /* 파란색 배경 */
+            color: white; /* 텍스트 색상 */
+            padding: 12px 24px; /* 적당한 패딩 */
+            font-size: 16px; /* 글씨 크기 */
+            font-weight: bold; /* 굵은 글씨 */
+            border-radius: 8px; /* 둥근 모서리 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+            cursor: pointer; /* 클릭 가능 커서 */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* 배경색과 클릭 시 애니메이션 */
+          }
+
+          .password-change-btn:hover {
+            background-color: #0056b3; /* 호버 시 더 어두운 파란색 */
+            transform: translateY(-2px); /* 살짝 올라가는 애니메이션 */
+          }
+
+          .password-change-btn:active {
+            background-color: #004085; /* 클릭 시 더 어두운 색 */
+            transform: translateY(0); /* 클릭 시 원래 위치로 */
           }
           .buttonWrap {
             display: flex;

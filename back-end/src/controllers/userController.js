@@ -62,19 +62,24 @@ const registerUser = async (req, res) => {
     res.status(500).json({ error: "사용자 생성 중 오류가 발생했습니다." });
   }
 };
-
+// 비밀번호찾기
 async function verifySecurityAnswer(req, res) {
   const { username, securityQuestion, securityAnswer } = req.body;
 
   try {
     const user = await findUserByUsername(username);
-
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
 
+    console.log(
+      user.userQuestion,
+      securityQuestion,
+      user.userAnswer,
+      securityAnswer
+    );
     if (
       user.userQuestion === securityQuestion &&
       user.userAnswer === securityAnswer

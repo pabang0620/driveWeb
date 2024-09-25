@@ -1,6 +1,8 @@
 import TitleBox from "../../components/TitleBox";
+import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
 
 const StatisticsManagement = () => {
+  useAdminCheckPermission();
   return (
     <div className="statisticsManagement_container">
       <TitleBox title="관리자페이지" subtitle="통계관리" />

@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import MobileNav from "./MobileNav";
 
 function Layout({ children }) {
   return (
@@ -8,6 +9,7 @@ function Layout({ children }) {
       <Header />
       {children}
       <Footer />
+      <MobileNav />
     </>
   );
 }

@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import CategorySetting from "./CategorySetting";
 import SearchBox from "./SearchBox";
+import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
 
 function BoardManagement() {
+  useAdminCheckPermission();
   const navigate = useNavigate();
   const [boardData, setBoardData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
