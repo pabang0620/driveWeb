@@ -24,7 +24,7 @@ const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
   }, []);
 
   const openModal = (userId) => {
-    if (userPermission !== 5) {
+    if ([1, 2, 3, 4].includes(userPermission)) {
       setSelectedUserId(userId);
       setIsModalOpen(true);
     }

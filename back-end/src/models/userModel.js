@@ -128,7 +128,7 @@ const updateUserProfileData = async (userId, profileData, nickname) => {
     });
 
     // 사용자 닉네임 업데이트
-    const user = await prisma.user.update({
+    const user = await prisma.users.update({
       where: { id: userId },
       data: { nickname: nickname },
     });

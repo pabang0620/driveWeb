@@ -35,11 +35,17 @@ const PersonalInfo = () => {
     phone: "",
     email: "",
     imageUrl: "",
-    nickname: "",
+
     googleId: undefined,
     kakaoId: undefined,
     naverId: undefined,
+    users: {
+      // users 객체 초기화
+      nickname: "",
+    },
   });
+
+  console.log(userInfo.users.nickname); // 수정된 부분
   const [prevUserInfo, setPrevUserInfo] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -160,6 +166,10 @@ const PersonalInfo = () => {
         formData.append("image", ""); // 이미지가 없을 때 빈 값으로 처리
       }
 
+      // 닉네임 변경 여부 확인 및 추가
+      if (userInfo.users.nickname !== prevUserInfo.users.nickname) {
+        formData.append("nickname", userInfo.users.nickname);
+      }
       await postUserProfile(formData);
       setPrevUserInfo(userInfo); // 변경된 값을 prevUserInfo에 저장합니다.
       console.log("회원 정보 저장 성공!");
@@ -169,10 +179,22 @@ const PersonalInfo = () => {
   };
 
   const handleInputChange = (field, value) => {
-    setUserInfo((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+    setUserInfo((prevState) => {
+      if (field === "nickname") {
+        // users 객체의 nickname 값을 변경
+        return {
+          ...prevState,
+          users: {
+            ...prevState.users,
+            nickname: value,
+          },
+        };
+      }
+      return {
+        ...prevState,
+        [field]: value,
+      };
+    });
   };
 
   const handleEditClick = () => {
@@ -277,15 +299,14 @@ const PersonalInfo = () => {
           <DynamicInput
             labelName={"닉네임"}
             inputType={"text"}
-            value={userInfo.users.nickname} // userInfo 상태에서 nickname 값을 사용
+            value={userInfo.users.nickname}
             fieldName="nickname"
-            onChange={handleInputChange} // 기존 handleInputChange 함수를 재사용하여 상태 업데이트
+            onChange={handleInputChange}
             placeholder={"닉네임을 입력해주세요."}
-            onSave={handleSaveUserInfo} // 닉네임 저장도 같은 함수 사용
+            onSave={handleSaveUserInfo}
             showEditButton={true}
             isEditing={isEditing}
           />
-
           <DynamicInput
             labelName={"이름"}
             inputType={"text"}
