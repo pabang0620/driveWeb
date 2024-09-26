@@ -466,7 +466,8 @@ const DriveLog = () => {
 
           @media (max-width: 768px) {
             .date-filter {
-              margin: 4px 8px 0 8px;
+              clear: both;
+              width: 100%;
             }
 
             .date-filter select,
