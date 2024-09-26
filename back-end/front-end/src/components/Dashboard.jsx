@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 
+import "./components.scss";
+
 const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
   const navigate = useNavigate();
   const handleMoreClick = () => {
@@ -179,112 +181,6 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
       </div>
 
       {/* 스타일링 */}
-      <style jsx>{`
-        .dashboard_container {
-          width: 100%;
-          h3 {
-            font-size: 20px;
-          }
-          .dashboard {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-            @media (max-width: 1024px) {
-              gap: 15px;
-            }
-            @media (max-width: 767px) {
-              gap: 10px;
-            }
-            .dashboard_item {
-              margin: 10px 0;
-              width: 31%;
-              @media (max-width: 1024px) {
-                width: 48%;
-              }
-              @media (max-width: 767px) {
-                width: 100%;
-              }
-              & > div {
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                background-color: white;
-                padding: 5%;
-                border-radius: 5px;
-                div {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  &:nth-of-type(1) {
-                    border-bottom: 1px solid #d9d9d9;
-                    padding-bottom: 10px;
-                    margin-bottom: 10px;
-                    h4 {
-                      color: #666;
-                      font-size: 18px;
-                      @media (max-width: 768px) {
-                        font-size: 15px;
-                      }
-                    }
-                    p {
-                      color: #05aced;
-                      font-size: 18px;
-                      @media (max-width: 768px) {
-                        font-size: 15px;
-                      }
-                    }
-                  }
-                }
-                &:not(:nth-of-type(1)) {
-                  padding-left: 5%;
-                  font-weight: normal;
-                  line-height: 22px;
-                  h5 {
-                    font-weight: normal;
-                    color: #666;
-                    font-size: 15px;
-                    @media (max-width: 768px) {
-                      font-size: 12px;
-                    }
-                  }
-                  p {
-                    color: #666;
-                    font-size: 16px;
-                    @media (max-width: 768px) {
-                      font-size: 13px;
-                    }
-                  }
-                }
-              }
-              .top_percent {
-                color: #05aced;
-                font-size: 18px;
-                font-weight: 700;
-                width: 100%;
-                text-align: right;
-                margin-top: 10px;
-
-                @media (max-width: 768px) {
-                  font-size: 15px;
-                  margin-top: 5px;
-                }
-              }
-              .more_style_button div {
-                text-align: center;
-                background-color: white;
-                padding: 10px;
-                border-radius: 5px;
-                font-weight: bold;
-                color: #333;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-              }
-              .more_style_button {
-                cursor: pointer;
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

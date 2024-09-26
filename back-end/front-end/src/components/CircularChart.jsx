@@ -2,6 +2,7 @@ import ApexChart from "react-apexcharts";
 import { useEffect, useMemo, useState } from "react";
 import Spinner from "./Spinner"; // Spinner 컴포넌트 임포트
 import { getMypageExpenseSummary, getMypageIncomeSummary } from "./ApiGet";
+import "./components.scss";
 
 const generateColors = (num) => {
   const baseColors = [
@@ -269,26 +270,6 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
           type="donut"
         />
       </div>
-      <style jsx>{`
-        .circularChart_container {
-          width: 48.5%;
-          &.blurred {
-            filter: blur(5px);
-          }
-          @media (max-width: 768px) {
-            width: 100%;
-          }
-          .circularChart {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 2%;
-            border-radius: 5px;
-            width: 100%;
-            height: 85%;
-            aspect-ratio: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 };

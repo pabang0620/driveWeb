@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
+import "./layout.scss";
 
 function SidebarMenu({
   showSidebar,
@@ -203,6 +204,7 @@ function SidebarMenu({
           </li>
         )}
       </ul>
+      {/*       
       <style jsx>{`
         .sidebar-menu {
           position: fixed;
@@ -352,7 +354,7 @@ function SidebarMenu({
             }
           }
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 }

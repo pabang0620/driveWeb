@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MaintenanceRecordModal from "./MaintenanceRecordModal";
 import { useNavigate } from "react-router-dom";
+import "./components.scss";
 
 const MaintenanceItemCard = ({
   item,
@@ -112,125 +113,6 @@ const MaintenanceItemCard = ({
         progressBarColor={progressBarColor}
         formatDate={formatDate}
       />
-      <style jsx>{`
-        .maintenance-item-card {
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          padding: 3.5%;
-          width: 48%;
-          box-sizing: border-box;
-          position: relative;
-          @media (max-width: 768px) {
-            width: 47%;
-          }
-          @media (max-width: 480px) {
-            width: 100%;
-          }
-          h3 {
-            font-size: 18px;
-            @media (max-width: 768px) {
-              font-size: 16px;
-            }
-          }
-          .itemCardResent {
-            color: #c1c1c1;
-            font-size: 14px;
-            @media (max-width: 768px) {
-              font-size: 11px;
-            }
-          }
-          .nowSizeandFree {
-            font-size: 11px;
-          }
-
-          .no-records {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100px;
-            background-color: #f9f9f9;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            margin: 10px 0;
-            position: relative;
-            text-align: center;
-            font-size: 14px;
-            @media (max-width: 768px) {
-              font-size: 12px;
-            }
-          }
-          .maintenance-addRecord {
-            background-color: #3c5997;
-            white-space: nowrap;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 24px;
-            cursor: pointer;
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: background-color 0.3s ease;
-          }
-          .no-records:hover .maintenance-addRecord {
-            display: block;
-          }
-          .maintenance-addRecord:hover {
-            background-color: #2b4b79;
-          }
-          .maintenance-reportCard {
-            width: 100%;
-            margin: 0px auto;
-            background-color: #3c5997;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-top: 8%;
-            transition: background-color 0.3s ease;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            .penOppset {
-              transform: scaleX(-1);
-              margin-right: 10px;
-            }
-            div {
-              color: white;
-              @media (max-width: 768px) {
-                font-size: 12px;
-              }
-            }
-          }
-
-          .maintenance-reportCard:hover {
-            background-color: #2b4b79;
-          }
-          .maintenance-progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px 0;
-            height: 7px; /* 게이지 바의 높이를 7픽셀로 조정 */
-          }
-          .maintenance-progress {
-            height: 100%; /* 부모 요소의 전체 높이를 차지하도록 설정 */
-          }
-          .warning-icon {
-            text-align: center;
-            padding: 0px 7px;
-            font-size: 15px;
-            background-color: red;
-            color: white;
-            border-radius: 50%;
-            margin-right: 10px;
-          }
-        }
-      `}</style>
     </div>
   );
 };

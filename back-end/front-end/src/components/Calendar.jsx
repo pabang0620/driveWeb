@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { ko } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
+import "./components.scss";
 
 const Calendar = ({
   dateRange,
@@ -36,118 +37,6 @@ const Calendar = ({
         }}
         open={true}
       />
-      <style jsx>{`
-        .calendar_container {
-          display: block;
-          position: relative;
-          display: flex;
-          flex-direction: row;
-          align-items: flex-start;
-          justify-content: center;
-          width: 48.5%;
-          aspect-ratio: 1 / 01;
-          @media (max-width: 768px) {
-            width: 100%;
-            margin-bottom: 25px;
-          }
-          /*------------- 상단 인풋 박스 -------------*/
-          .react-datepicker-wrapper {
-            width: 100%;
-          }
-
-          .datepicker {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #fff;
-            font-size: 14px;
-            color: #333;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-          }
-
-          /*------------- 하단 달력 -------------*/
-          .react-datepicker {
-            width: 100%;
-          }
-          .react-datepicker-popper {
-            top: 0;
-            transform: translate(0%, 50px) !important;
-            width: 100%;
-            .react-datepicker__month-container {
-              width: 100%;
-              /*------------- 달력헤더 -------------*/
-              .react-datepicker__header {
-                background-color: #05aced; // 파란색 배경
-                color: #fff; // 흰색 글자
-              }
-              .react-datepicker__year-read-view--down-arrow,
-              .react-datepicker__month-read-view--down-arrow,
-              .react-datepicker__month-year-read-view--down-arrow,
-              .react-datepicker__navigation-icon::before {
-                border-color: gold;
-              }
-              .react-datepicker__current-month {
-                font-size: 16px;
-                font-weight: 600;
-                color: white;
-                padding-bottom: 10px;
-              }
-              .react-datepicker__day-names {
-                background-color: #69c2ef;
-                .react-datepicker__day-name {
-                  color: white;
-                  width: 13%;
-                  line-height: 2.2vw;
-                  text-align: center;
-                  margin: 0.3%;
-                  @media (max-width: 768px) {
-                    line-height: 5vw;
-                  }
-                }
-              }
-
-              /*------------- 달력바디 -------------*/
-
-              .react-datepicker__week {
-                margin: 0;
-              }
-              .react-datepicker__day {
-                border-radius: 5px; //선택된 날짜
-              }
-              .react-datepicker__day,
-              .react-datepicker__day--030,
-              .react-datepicker__day--weekend,
-              .react-datepicker__day--outside-month {
-                width: 13%;
-                line-height: 2.2rem;
-                text-align: center;
-                margin: 0.5%;
-                @media (max-width: 768px) {
-                  line-height: 7vw;
-                }
-              }
-              .react-datepicker__day:hover {
-                background-color: #e6f0ff; // 마우스 오버 시 밝은 파란색
-              }
-
-              .react-datepicker__day--disabled {
-                color: #ccc; // 비활성화된 날짜 회색
-              }
-
-              .react-datepicker__navigation--next,
-              .react-datepicker__navigation--previous {
-                color: white; // 화살표 색상 파란색
-
-                &::before {
-                  color: white; // 화살표 아이콘 파란색
-                }
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./layout.scss";
 
 function Footer() {
   return (
@@ -37,7 +38,7 @@ function Footer() {
         <p className="copyline">&copy; 상호 국민대부 주식회사</p>
       </div>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         .footer {
           height: 300px;
           background-color: rgb(222, 226, 229);
@@ -108,7 +109,7 @@ function Footer() {
             }
           }
         }
-      `}</style>
+      `}</style> */}
     </footer>
   );
 }

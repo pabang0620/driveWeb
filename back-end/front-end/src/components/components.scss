@@ -1,0 +1,725 @@
+// Calendar.jsx
+.calendar_container {
+  display: block;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  width: 48.5%;
+  aspect-ratio: 1 / 01;
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 25px;
+  }
+  /*------------- 상단 인풋 박스 -------------*/
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .datepicker {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+  }
+
+  /*------------- 하단 달력 -------------*/
+  .react-datepicker {
+    width: 100%;
+  }
+  .react-datepicker-popper {
+    top: 0;
+    transform: translate(0%, 50px) !important;
+    width: 100%;
+    .react-datepicker__month-container {
+      width: 100%;
+      /*------------- 달력헤더 -------------*/
+      .react-datepicker__header {
+        background-color: #05aced; // 파란색 배경
+        color: #fff; // 흰색 글자
+      }
+      .react-datepicker__year-read-view--down-arrow,
+      .react-datepicker__month-read-view--down-arrow,
+      .react-datepicker__month-year-read-view--down-arrow,
+      .react-datepicker__navigation-icon::before {
+        border-color: gold;
+      }
+      .react-datepicker__current-month {
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        padding-bottom: 10px;
+      }
+      .react-datepicker__day-names {
+        background-color: #69c2ef;
+        .react-datepicker__day-name {
+          color: white;
+          width: 13%;
+          line-height: 2.2vw;
+          text-align: center;
+          margin: 0.3%;
+          @media (max-width: 768px) {
+            line-height: 5vw;
+          }
+        }
+      }
+
+      /*------------- 달력바디 -------------*/
+
+      .react-datepicker__week {
+        margin: 0;
+      }
+      .react-datepicker__day {
+        border-radius: 5px; //선택된 날짜
+      }
+      .react-datepicker__day,
+      .react-datepicker__day--030,
+      .react-datepicker__day--weekend,
+      .react-datepicker__day--outside-month {
+        width: 13%;
+        line-height: 2.2rem;
+        text-align: center;
+        margin: 0.5%;
+        @media (max-width: 768px) {
+          line-height: 7vw;
+        }
+      }
+      .react-datepicker__day:hover {
+        background-color: #e6f0ff; // 마우스 오버 시 밝은 파란색
+      }
+
+      .react-datepicker__day--disabled {
+        color: #ccc; // 비활성화된 날짜 회색
+      }
+
+      .react-datepicker__navigation--next,
+      .react-datepicker__navigation--previous {
+        color: white; // 화살표 색상 파란색
+
+        &::before {
+          color: white; // 화살표 아이콘 파란색
+        }
+      }
+    }
+  }
+}
+
+// CircularChart.jsx
+.circularChart_container {
+  width: 48.5%;
+  &.blurred {
+    filter: blur(5px);
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  .circularChart {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2%;
+    border-radius: 5px;
+    width: 100%;
+    height: 85%;
+    aspect-ratio: 1;
+  }
+}
+
+.dashboard_container {
+  width: 100%;
+  h3 {
+    font-size: 20px;
+  }
+  .dashboard {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    @media (max-width: 1024px) {
+      gap: 15px;
+    }
+    @media (max-width: 767px) {
+      gap: 10px;
+    }
+    .dashboard_item {
+      margin: 10px 0;
+      width: 31%;
+      @media (max-width: 1024px) {
+        width: 48%;
+      }
+      @media (max-width: 767px) {
+        width: 100%;
+      }
+      & > div {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        padding: 5%;
+        border-radius: 5px;
+        div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          &:nth-of-type(1) {
+            border-bottom: 1px solid #d9d9d9;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            h4 {
+              color: #666;
+              font-size: 18px;
+              @media (max-width: 768px) {
+                font-size: 15px;
+              }
+            }
+            p {
+              color: #05aced;
+              font-size: 18px;
+              @media (max-width: 768px) {
+                font-size: 15px;
+              }
+            }
+          }
+        }
+        &:not(:nth-of-type(1)) {
+          padding-left: 5%;
+          font-weight: normal;
+          line-height: 22px;
+          h5 {
+            font-weight: normal;
+            color: #666;
+            font-size: 15px;
+            @media (max-width: 768px) {
+              font-size: 12px;
+            }
+          }
+          p {
+            color: #666;
+            font-size: 16px;
+            @media (max-width: 768px) {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+      .top_percent {
+        color: #05aced;
+        font-size: 18px;
+        font-weight: 700;
+        width: 100%;
+        text-align: right;
+        margin-top: 10px;
+
+        @media (max-width: 768px) {
+          font-size: 15px;
+          margin-top: 5px;
+        }
+      }
+      .more_style_button div {
+        text-align: center;
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .more_style_button {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.myCarAddedmodal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  .myCarmodal-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  h2 {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .section {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section label {
+    font-weight: bold;
+    flex: 1;
+    font-size: 14px;
+  }
+  .section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: right;
+    height: 30px;
+  }
+  .input-container {
+    width: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .input-container .unit {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  .button-group button {
+    flex: 1;
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+  .button-group button.selected {
+    border: 1px solid #3c5997;
+    color: #3c5997;
+  }
+  .MaintenaceSaveBTN {
+    width: 100%;
+    background-color: #3c5997;
+    color: white;
+    margin: 15px auto 10px;
+    padding: 8.5px 0px;
+    border-radius: 5px;
+  }
+}
+
+.maintenance-item-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 3.5%;
+  width: 48%;
+  box-sizing: border-box;
+  position: relative;
+  @media (max-width: 768px) {
+    width: 47%;
+  }
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+  h3 {
+    font-size: 18px;
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+  }
+  .itemCardResent {
+    color: #c1c1c1;
+    font-size: 14px;
+    @media (max-width: 768px) {
+      font-size: 11px;
+    }
+  }
+  .nowSizeandFree {
+    font-size: 11px;
+  }
+
+  .no-records {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    background-color: #f9f9f9;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  .maintenance-addRecord {
+    background-color: #3c5997;
+    white-space: nowrap;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease;
+  }
+  .no-records:hover .maintenance-addRecord {
+    display: block;
+  }
+  .maintenance-addRecord:hover {
+    background-color: #2b4b79;
+  }
+  .maintenance-reportCard {
+    width: 100%;
+    margin: 0px auto;
+    background-color: #3c5997;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 8%;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    .penOppset {
+      transform: scaleX(-1);
+      margin-right: 10px;
+    }
+    div {
+      color: white;
+      @media (max-width: 768px) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .maintenance-reportCard:hover {
+    background-color: #2b4b79;
+  }
+  .maintenance-progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+    height: 7px; /* 게이지 바의 높이를 7픽셀로 조정 */
+  }
+  .maintenance-progress {
+    height: 100%; /* 부모 요소의 전체 높이를 차지하도록 설정 */
+  }
+  .warning-icon {
+    text-align: center;
+    padding: 0px 7px;
+    font-size: 15px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+}
+
+.nowSizeandFree {
+  font-size: 11px;
+}
+.recrodModalHeaderP {
+  color: #c1c1c1;
+  font-size: 14px;
+}
+.myCarmodal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.RecordModalHeader {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 15px;
+}
+
+.myCarAddedmodal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 400px;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 768px) {
+      width: 80%;
+    }
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  h2 {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .section {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @media (max-width: 768px) {
+      margin-bottom: 10px;
+    }
+  }
+  .section label {
+    font-weight: bold;
+    flex: 1;
+    font-size: 14px;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  .section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: right;
+    height: 30px;
+    @media (max-width: 768px) {
+      font-size: 12px;
+      padding: 3px 8px;
+    }
+  }
+
+  .input-container {
+    width: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .input-container .unit {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  .button-group button {
+    flex: 1;
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid #ccc;
+  }
+  .button-group button.selected {
+    border: 1px solid #3c5997;
+    color: #3c5997;
+  }
+  #maintenanceInterval {
+    width: 131px;
+  }
+  #maintenanceDistance {
+    width: 134px;
+  }
+  #maintenanceDate {
+    width: 165px;
+    padding-right: 30px;
+  }
+  #maintenanceDate::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 25px;
+    cursor: pointer;
+  }
+  #mileageAtMaintenance {
+    width: 134px;
+  }
+  #maintenanceCost {
+    width: 144px;
+  }
+  .MaintenaceSaveBTN {
+    width: 100%;
+    background-color: #3c5997;
+    color: white;
+    margin: 15px auto 10px;
+    padding: 8.5px 0px;
+    border-radius: 5px;
+  }
+}
+
+.barChart_container {
+  width: 100%;
+  height: 500px; /* 컨테이너 높이 설정 */
+  &.blurred {
+    filter: blur(5px);
+  }
+  .barChart {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2%;
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+
+  .modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 400px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .close {
+    color: #333;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .close:hover {
+    color: #000;
+  }
+  h2 {
+    margin: 0 0 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+  }
+  .modal-content input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  .modal-content input:focus {
+    border-color: #3c5997;
+    outline: none;
+  }
+  .modal-content button {
+    width: 100%;
+    padding: 15px;
+    background-color: #3c5997;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  .modal-content button:hover {
+    background-color: #2b4b79;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+// TitleBox.jsx
+
+.mainTitle {
+  font-size: 25px;
+  font-weight: 600;
+  .subTitle {
+    font-size: 20px;
+    color: #4c4c4c;
+    margin-left: 10px;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+    .subTitle {
+      font-size: 15px;
+    }
+  }
+}

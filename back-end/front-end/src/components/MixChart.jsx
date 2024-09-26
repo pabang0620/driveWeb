@@ -1,6 +1,7 @@
 import ApexChart from "react-apexcharts";
 import { useEffect, useState } from "react";
 import { getMypageMix } from "./ApiGet";
+import "./components.scss";
 
 const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
   const [series, setSeries] = useState([]);
@@ -125,23 +126,6 @@ const MixChart = ({ dateRange, setLoading, setError, title, isBlurred }) => {
           <p>데이터가 없습니다.</p>
         )}
       </div>
-      <style jsx>{`
-        .barChart_container {
-          width: 100%;
-          height: 500px; /* 컨테이너 높이 설정 */
-          &.blurred {
-            filter: blur(5px);
-          }
-          .barChart {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 2%;
-            border-radius: 5px;
-            width: 100%;
-            height: 100%;
-          }
-        }
-      `}</style>
     </div>
   );
 };

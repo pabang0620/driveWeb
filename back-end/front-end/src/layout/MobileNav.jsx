@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./layout.scss";
 
 const MobileNav = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const MobileNav = () => {
         />
       </div>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         .MobileNavbar {
           display: none;
         }
@@ -85,7 +86,7 @@ const MobileNav = () => {
             }
           }
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 };

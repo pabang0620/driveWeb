@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./layout.scss";
 
 function SubMenu() {
   return (
@@ -73,7 +74,7 @@ function SubMenu() {
           <Link to="/admin_page">관리자페이지</Link>
         </li>
       </ul>
-
+      {/* 
       <style jsx>{`
         .submenu {
           position: absolute;
@@ -127,6 +128,7 @@ function SubMenu() {
           }
         }
       `}</style>
+       */}
     </div>
   );
 }
