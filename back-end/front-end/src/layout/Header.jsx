@@ -23,7 +23,7 @@ function Header() {
     if (token) {
       const decoded = jwtDecode(token);
       setUserPermission(decoded.permission); // 사용자 권한 설정
-      console.log(decoded.permission);
+      // console.log(decoded.permission);
 
       const storedNickname = localStorage.getItem("nickname");
       if (storedNickname) {

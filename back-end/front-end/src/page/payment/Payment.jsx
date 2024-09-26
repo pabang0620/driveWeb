@@ -5,15 +5,23 @@ export default function Payment() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 각 플랜의 가격 정보
+
   const plans = [
-    { duration: "1개월(30일)", originalPrice: 5900, discountedPrice: 5900 },
     {
+      id: 1,
+      duration: "1개월(30일)",
+      originalPrice: 5900,
+      discountedPrice: 5900,
+    },
+    {
+      id: 2,
       duration: "6개월(180일)",
       originalPrice: 33000,
       discountedPrice: 24900,
       discount: 25,
     },
     {
+      id: 3,
       duration: "12개월(365일)",
       originalPrice: 66900,
       discountedPrice: 33000,
