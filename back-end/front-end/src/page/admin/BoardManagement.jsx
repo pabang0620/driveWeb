@@ -5,6 +5,7 @@ import TitleBox from "../../components/TitleBox";
 import CategorySetting from "./CategorySetting";
 import SearchBox from "./SearchBox";
 import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
+import "./admin.scss";
 
 function BoardManagement() {
   useAdminCheckPermission();
@@ -229,115 +230,6 @@ function BoardManagement() {
           {currentPage} / {totalPages} 페이지
         </span>
       </div>
-      <style jsx>{`
-        .board-management {
-          width: 75%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          .seletedDelete {
-            background-color: #f44336;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-          }
-          .seletedDelete:hover {
-            background-color: #d32f2f;
-            color: white;
-          }
-          /*------------------게시물테이블------------------*/
-          table.board_table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            tr {
-              cursor: pointer;
-              &:hover {
-                background-color: #f9f9f9;
-              }
-            }
-            th,
-            td {
-              border: 1px solid #ddd;
-            }
-
-            th {
-              background-color: #f4f4f4;
-              font-size: 14px;
-              padding: 10px 0;
-              @media (max-width: 768px) {
-                font-size: 12px;
-                padding: 5px;
-              }
-            }
-
-            td {
-              font-size: 14px;
-              padding: 3px 0;
-              text-align: center;
-              @media (max-width: 768px) {
-                font-size: 12px;
-                padding: 2px;
-              }
-              select {
-                width: 80%;
-                padding: 3px 0;
-                font-size: 14px;
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                }
-              }
-            }
-
-            button {
-              margin: 5px;
-              padding: 8px 16px;
-              border: none;
-              border-radius: 5px;
-              background-color: #3c5997;
-              color: white;
-              cursor: pointer;
-              font-size: 14px;
-              transition: background-color 0.3s;
-              &:hover {
-                background-color: #7388b6;
-              }
-              @media (max-width: 768px) {
-                font-size: 12px;
-                padding: 5px 10px;
-                white-space: nowrap;
-              }
-            }
-          }
-
-          .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-          }
-          .pagination button {
-            margin: 0 5px;
-            padding: 8px 12px;
-            border: none;
-            background-color: #f0f0f0;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-          }
-          .pagination span {
-            margin-left: 10px;
-            font-size: 14px;
-          }
-          .pagination button.active {
-            background-color: #007bff;
-            color: white;
-          }
-        }
-      `}</style>
     </div>
   );
 }

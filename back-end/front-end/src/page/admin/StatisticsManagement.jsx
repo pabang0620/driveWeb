@@ -1,5 +1,6 @@
 import TitleBox from "../../components/TitleBox";
 import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
+import "./admin.scss";
 
 const StatisticsManagement = () => {
   useAdminCheckPermission();
@@ -36,71 +37,6 @@ const StatisticsManagement = () => {
           바로 확인하기
         </button>
       </div>
-      <style jsx>{`
-        .statisticsManagement_container {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0 200px 0;
-          @media (max-width: 768px) {
-            height: calc(100vh - 350px);
-          }
-          .pbr {
-            display: block;
-            @media (max-width: 768px) {
-              display: none;
-            }
-          }
-          .mbr {
-            display: none;
-            @media (max-width: 768px) {
-              display: block;
-            }
-          }
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          div.description {
-            width: 100%;
-            text-align: center;
-            margin: 15% 0 8% 0;
-            font-size: 16px;
-            p {
-              margin-bottom: 11px;
-            }
-            @media (max-width: 768px) {
-              font-size: 14px;
-            }
-          }
-          button.navyBox {
-            display: block;
-            width: 40%;
-            margin: 0 auto;
-            padding: 12px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            font-weight: bold;
-            @media (max-width: 768px) {
-              font-size: 14px;
-            }
-            a {
-              color: white;
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
-            &:hover {
-              background-color: #7388b6;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

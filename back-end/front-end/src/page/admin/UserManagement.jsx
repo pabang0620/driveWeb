@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TitleBox from "../../components/TitleBox";
 import SearchBox from "./SearchBox";
 import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
+import "./admin.scss";
 
 const UserManagement = () => {
   useAdminCheckPermission();
@@ -477,132 +478,6 @@ const UserManagement = () => {
           다음
         </button>
       </div>
-      <style jsx>
-        {`
-          .userManagement_container {
-            width: 75%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 0;
-            @media (max-width: 768px) {
-              width: 85%;
-              padding: 50px 0 100px 0;
-            }
-
-            .user_table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 20px 0;
-
-              @media (max-width: 1024px) {
-                display: block;
-                overflow-x: scroll;
-                overflow-y: visible;
-              }
-
-              tr:nth-child(even) {
-                background-color: #f9f9f9;
-              }
-              th,
-              td {
-                border: 1px solid #ddd;
-              }
-
-              th {
-                background-color: #f4f4f4;
-                font-size: 14px;
-                padding: 10px 0;
-                white-space: nowrap;
-
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 5px;
-                  /*overflow-x: scroll; 원호가 지움*/
-                }
-              }
-
-              td {
-                font-size: 14px;
-                padding: 3px 2px;
-                text-align: center;
-                white-space: nowrap;
-
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 2px;
-                }
-
-                input {
-                  width: 60%;
-                  padding: 3px 0;
-                  font-size: 14px;
-                  @media (max-width: 768px) {
-                    font-size: 12px;
-                  }
-                }
-                select {
-                  width: 100%;
-                  padding: 3px 0;
-                  font-size: 14px;
-                  margin: 0 5px;
-                  @media (max-width: 768px) {
-                    font-size: 12px;
-                  }
-                }
-              }
-
-              button {
-                margin: 5px;
-                padding: 8px 16px;
-                border: none;
-                border-radius: 5px;
-                background-color: #3c5997;
-                color: white;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s;
-                white-space: nowrap;
-                &:hover {
-                  background-color: #7388b6;
-                }
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  padding: 5px 10px;
-                  white-space: nowrap;
-                }
-              }
-            }
-
-            /*------------------------페이지------------------------ */
-            .pagination {
-              display: flex;
-              justify-content: center;
-              margin-top: 20px;
-              button {
-                margin: 0 10px;
-                padding: 8px 16px;
-                border: none;
-                border-radius: 5px;
-                background-color: #3c5997;
-                color: white;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background-color 0.3s;
-              }
-              button:disabled {
-                background-color: #c0c0c0;
-                cursor: not-allowed;
-              }
-              button:hover:not(:disabled) {
-                background-color: #7388b6;
-              }
-              span {
-                align-self: center;
-              }
-            }
-          }
-        `}
-      </style>
     </div>
   );
 };

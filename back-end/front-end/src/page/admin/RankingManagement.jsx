@@ -4,6 +4,7 @@ import TitleBox from "../../components/TitleBox";
 import RankCategorySetting from "./RankCategorySetting";
 import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
 import useAdminCheckPermission from "../../utils/useAdminCheckPermission";
+import "./admin.scss";
 
 const RankingManagement = () => {
   const navigate = useNavigate();
@@ -36,18 +37,6 @@ const RankingManagement = () => {
     <div className="ranking-management">
       <TitleBox title="관리자페이지" subtitle="랭킹관리" />
       <RankCategorySetting />
-      <style jsx>{`
-        .ranking-management {
-          width: 75%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-        }
-      `}</style>
     </div>
   );
 };
