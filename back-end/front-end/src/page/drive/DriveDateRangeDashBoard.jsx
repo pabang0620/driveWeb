@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { getDriveDashBoard } from "../../components/ApiGet";
+import "./drive.scss";
 
 const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
   const [startDate, setStartDate] = useState("");
@@ -145,87 +146,6 @@ const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
           </div>
         ))}
       </div>
-      <style jsx>{`
-        .selectedDateRangeData {
-          width: 48.5%;
-          aspect-ratio: 1 / 0.9;
-          background-color: white;
-          padding: 2%;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          border-radius: 5px;
-          &.blurred {
-            filter: blur(5px);
-            position: relative;
-          }
-          .blurredPremium {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            filter: none; /* 블러 효과가 적용되지 않도록 설정 */
-            color: black; /* 텍스트 색상 */
-            font-size: 24px; /* 텍스트 크기 */
-            font-weight: bold; /* 텍스트 굵기 */
-          }
-          @media (max-width: 768px) {
-            width: 100%;
-            aspect-ratio: unset;
-            height: auto;
-            padding: 3% 5%;
-          }
-          > div {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            gap: 1%;
-            @media (max-width: 768px) {
-              justify-content: center;
-              gap: 10%;
-            }
-          }
-          .selectedDateRangeData_item {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #222;
-            @media (max-width: 768px) {
-              font-size: 12px;
-              padding: 1.5% 0;
-            }
-            > div {
-              width: 60%;
-              display: flex;
-              h4 {
-                color: #05aced;
-                margin-right: 5px;
-              }
-              p {
-              }
-            }
-            .top_percent {
-              background-color: #05aced;
-              color: white;
-              font-size: 13px;
-              width: 20%;
-              border-radius: 5px;
-              width: auto;
-              padding: 1% 2%;
-              text-align: center;
-              @media (max-width: 768px) {
-                font-size: 11px;
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import "./drive.scss";
+
 const Modal = ({
   showModal,
   closeModal,

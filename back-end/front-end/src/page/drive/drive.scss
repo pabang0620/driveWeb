@@ -1,0 +1,554 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 67vh;
+  h2 {
+    color: #333;
+    font-family: "Arial", sans-serif;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+  }
+  a {
+    color: rgb(132 141 148);
+    font-weight: bold;
+    padding: 5px 10px;
+    display: block;
+  }
+}
+
+.dashboard-container {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  height: auto;
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+  h2.mainTitle {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    float: left;
+    span {
+      font-size: 20px;
+      color: #4c4c4c;
+      margin-left: 10px;
+    }
+  }
+  h3 {
+    width: 100%;
+    text-align: left;
+  }
+  .selectedDateRangeDataBox {
+    width: 100%;
+    > div {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+  .dataBox {
+    width: 100%;
+    height: auto;
+    clear: both;
+    background-color: #f0f0f0;
+    padding: 2% 2% 7% 2%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    h3 {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.selectedDateRangeData {
+  width: 48.5%;
+  aspect-ratio: 1 / 0.9;
+  background-color: white;
+  padding: 2%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  &.blurred {
+    filter: blur(5px);
+    position: relative;
+  }
+  .blurredPremium {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    filter: none; /* 블러 효과가 적용되지 않도록 설정 */
+    color: black; /* 텍스트 색상 */
+    font-size: 24px; /* 텍스트 크기 */
+    font-weight: bold; /* 텍스트 굵기 */
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    aspect-ratio: unset;
+    height: auto;
+    padding: 3% 5%;
+  }
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 1%;
+    @media (max-width: 768px) {
+      justify-content: center;
+      gap: 10%;
+    }
+  }
+  .selectedDateRangeData_item {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #222;
+    @media (max-width: 768px) {
+      font-size: 12px;
+      padding: 1.5% 0;
+    }
+    > div {
+      width: 60%;
+      display: flex;
+      h4 {
+        color: #05aced;
+        margin-right: 5px;
+      }
+      p {
+      }
+    }
+    .top_percent {
+      background-color: #05aced;
+      color: white;
+      font-size: 13px;
+      width: 20%;
+      border-radius: 5px;
+      width: auto;
+      padding: 1% 2%;
+      text-align: center;
+      @media (max-width: 768px) {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+.driveModal {
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  .modal-inner {
+    background-color: #fefefe;
+    margin: auto;
+    border: 1px solid #888;
+    width: 70%;
+    max-width: 400px;
+    height: 500px;
+    position: relative;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 768px) {
+      width: 80%;
+      max-width: 600px;
+      max-height: 80vh;
+    }
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f3f4fb;
+    padding: 10px 20px;
+    flex-shrink: 0;
+
+    h3 {
+      width: 100%;
+      text-align: left;
+      color: #4c4c4c;
+      font-size: 16px;
+      span {
+        display: inline-block;
+        background-color: #05aced;
+        width: 25px;
+        height: 25px;
+        margin-right: 5px;
+        border-radius: 100%;
+        color: white;
+        text-align: center;
+      }
+    }
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      @media (max-width: 768px) {
+        font-size: 25px;
+      }
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 3% 7%;
+    gap: 10px;
+    button {
+      flex: 1;
+      padding: 10px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background-color: #e7e7e7;
+      color: #595959;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 4px; /* 약간의 둥근 모서리 */
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s; /* 부드러운 전환 효과 */
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+    }
+
+    button.active {
+      background-color: #05aced;
+      border: 1px solid #05aced;
+      color: white;
+    }
+
+    button:focus {
+      outline: none; /* 포커스 상태에서 강조 표시 */
+    }
+  }
+  .modal-content {
+    width: 100%;
+    padding: 0% 8% 10% 8%;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .tab-content {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @media (max-width: 768px) {
+      font-size: 13px;
+      gap: 5px;
+    }
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  .data-row strong {
+    color: #4c4c4c;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 67vh;
+  h2 {
+    color: #333;
+    font-family: "Arial", sans-serif;
+    font-size: 24px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+  }
+  a {
+    color: rgb(132 141 148);
+    font-weight: bold;
+    padding: 5px 10px;
+    display: block;
+  }
+}
+
+.driving {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  .date-filter {
+    display: flex;
+    justify-content: end;
+    margin: 0px 8px 0 8px;
+  }
+
+  .date-filter select {
+    margin-right: 5px;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 50px;
+  }
+
+  .date-filter select:hover {
+    border-color: #05aced;
+  }
+
+  .date-filter button {
+    padding: 10px 20px;
+    background-color: #05aced;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .date-filter button:hover {
+    background-color: #0398cb;
+  }
+
+  @media (max-width: 768px) {
+    .date-filter {
+      margin: 4px 8px 0 8px;
+    }
+
+    .date-filter select,
+    .date-filter button {
+      font-size: 13px;
+      padding: 6px;
+    }
+  }
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    float: left;
+    span {
+      font-size: 20px;
+      color: #4c4c4c;
+      margin-left: 10px;
+    }
+  }
+  .writeBtn {
+    float: right;
+  }
+  .drivingTable {
+    width: 100%;
+    font-size: 15px;
+    border-top: 1px solid #4c4c4c;
+    text-align: center;
+    border-collapse: collapse;
+    @media (max-width: 768px) {
+      font-size: 13px;
+    }
+    @media (max-width: 480px) {
+      font-size: 11px;
+    }
+    tr {
+      width: 100%;
+      line-height: 40px;
+      th {
+        font-weight: normal;
+      }
+      td {
+        border-top: 1px solid #d9d9d9;
+        cursor: pointer;
+        text-align: center; /* 텍스트 수평 가운데 정렬 */
+        vertical-align: middle; /* 텍스트 수직 가운데 정렬 */
+      }
+    }
+  }
+  .pagination {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    button {
+      width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      background-color: white;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      color: #222;
+      &.activePage,
+      &:hover {
+        color: white;
+        background-color: #05aced;
+      }
+    }
+  }
+  .search {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    input,
+    select {
+      border-radius: 5px;
+      border: 1px solid #c1c1c1;
+      padding: 10px;
+    }
+    input[type="text"] {
+      width: 40%;
+    }
+  }
+  button {
+    background-color: #05aced;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+  }
+}
+.drive {
+  .dynamicInput {
+    width: 100%;
+    border-bottom: 1px solid #d9d9d9;
+
+    label {
+      display: inline-block;
+      width: 25%;
+      color: #c1c1c1;
+      padding: 3% 1%;
+      @media (max-width: 768px) {
+        width: 40%;
+        font-size: 13px;
+        padding: 3% 0%;
+      }
+    }
+    input {
+      border: none;
+      background: none;
+      color: #c1c1c1;
+      width: 70%;
+      &:focus {
+        color: #222;
+      }
+      @media (max-width: 768px) {
+        font-size: 13px;
+        width: 55%;
+      }
+    }
+  }
+  button {
+    margin: 30px 0;
+    float: right;
+  }
+}
+.drivingTable .editButton {
+  background-color: transparent; /* 배경색 제거 */
+  color: #05aced;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  justify-content: center; /* 아이콘을 flexbox로 수평 가운데 정렬 */
+  align-items: center; /* 아이콘을 flexbox로 수직 가운데 정렬 */
+  padding: 0;
+  transition: color 0.2s;
+  margin: 0 0 0 39%;
+  transform: scaleX(-1);
+}
+
+.drivingTable .editButton:hover {
+  color: #0398cb;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .drivingTable .editButton {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .drivingTable .editButton {
+    font-size: 12px;
+  }
+  @media (max-width: 346px) {
+    td {
+      font-size: 9px;
+    }
+  }
+}
+
+.excelbtnRelate {
+  position: relative;
+}
+.excelbtn {
+  padding: 7px !important;
+  background-color: #4caf50 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  position: absolute !important;
+  top: -40px !important;
+  right: 0px;
+}
+.excelbtn:hover {
+  background-color: #45a049;
+}
+
+.uploadbtnRelate {
+  position: relative;
+}
+.uploadbtn {
+  padding: 7px !important;
+  background-color: #007bff !important; /* 업로드 버튼 배경색: 파란색 */
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  position: absolute !important;
+  top: -40px !important;
+  right: 110px;
+}
+.uploadbtn:hover {
+  background-color: #0056b3 !important; /* 업로드 버튼 호버 색상: 더 어두운 파란색 */
+}

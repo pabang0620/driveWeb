@@ -3,6 +3,7 @@ import axios from "axios"; // axios를 직접 임포트
 import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDrive } from "../../components/ApiPost";
+import "./drive.scss";
 
 const DriveWrite = ({
   number,

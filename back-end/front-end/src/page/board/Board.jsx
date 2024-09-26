@@ -5,6 +5,8 @@ import BoardBox from "./BoardBox";
 import { boardsWithPosts } from "../../components/dummy";
 import useCheckPermission from "../../utils/useCheckPermission";
 
+import "./board.scss";
+
 const Board = () => {
   // useCheckPermission();
 
@@ -63,29 +65,6 @@ const Board = () => {
           />
         ))}
       </div>
-      <style jsx>{`
-        .board {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          .boardFlex {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: 50px 0;
-            justify-content: space-between;
-            @media (max-width: 768px) {
-              height: auto;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

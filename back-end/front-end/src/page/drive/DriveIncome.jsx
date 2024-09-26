@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveIncome } from "../../components/ApiPost";
 import { jwtDecode } from "jwt-decode";
+import "./drive.scss";
 
 const convertSecondsToTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);

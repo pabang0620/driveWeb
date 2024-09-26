@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import { DynamicInput } from "../../components/InputBox";
 import { postDriveExpense } from "../../components/ApiPost";
 import { jwtDecode } from "jwt-decode";
+import "./drive.scss";
 
 const DriveExpense = ({
   number,

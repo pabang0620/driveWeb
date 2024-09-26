@@ -6,6 +6,7 @@ import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
 import { jwtDecode } from "jwt-decode";
+import "./board.scss";
 
 const BoardPostAdd = () => {
   useCheckPermission();
@@ -205,99 +206,6 @@ const BoardPostAdd = () => {
           <div ref={quillRef} />
         </div>
       </section>
-
-      <style jsx>{`
-        .BoardPostAdd {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0 200px;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-        }
-
-        .boardPostHeader {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px 0px 10px 0px;
-          .writeButton {
-            padding: 8px 16px;
-            background-color: #05aced;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            margin: 0 0 0 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            outline: none;
-            @media (max-width: 768px) {
-              font-size: 13px;
-            }
-          }
-        }
-        .BoardPostSection {
-          border: 1px solid #999;
-          border-radius: 10px;
-          padding: 30px 30px 100px;
-          @media (max-width: 768px) {
-            padding: 20px;
-          }
-        }
-
-        .BoardPostHeader {
-          padding-bottom: 10px;
-          border-bottom: 1px solid #d9d9d9;
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          @media (max-width: 768px) {
-            align-items: flex-start;
-            flex-direction: column-reverse;
-            gap: 10px;
-          }
-          .PostTitle {
-            height: 70px;
-            font-size: 30px;
-            border: none;
-            padding: 0 0 0 10px;
-            flex-grow: 1;
-            @media (max-width: 768px) {
-              font-size: 20px;
-              padding: 0;
-              height: auto;
-            }
-          }
-          .boardSelect {
-            margin-left: 20px;
-            font-size: 16px;
-            padding: 5px;
-            border-radius: 5px;
-            outline: none;
-            @media (max-width: 768px) {
-              margin-left: 0px;
-              font-size: 14px;
-            }
-          }
-        }
-        .EditorWrapper {
-          margin-top: 20px;
-          height: 700px; /* 높이 600픽셀로 설정 */
-          @media (max-width: 768px) {
-            height: 500px;
-          }
-        }
-        .EditorWrapper .ql-container {
-          height: 100%; /* 부모 높이에 맞게 설정 */
-          @media (max-width: 768px) {
-            height: calc(100% - 120px);
-          }
-        }
-      `}</style>
     </div>
   );
 };

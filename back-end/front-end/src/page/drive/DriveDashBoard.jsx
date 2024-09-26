@@ -10,6 +10,7 @@ import PremiumButton from "../admin/PremiumButton ";
 import useCheckPermission from "../../utils/useCheckPermission";
 import { getJobtype, getProfileVehicle } from "../../components/ApiGet";
 import { Link } from "react-router-dom";
+import "./drive.scss";
 
 const DriveDashBoard = () => {
   useCheckPermission();
@@ -124,29 +125,6 @@ const DriveDashBoard = () => {
     return (
       <div className="container">
         <Link to="/user/carInfo">차량 정보를 입력해주세요(클릭 시 이동)</Link>
-        <style jsx>{`
-          .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 67vh;
-            h2 {
-              color: #333;
-              font-family: "Arial", sans-serif;
-              font-size: 24px;
-              text-align: center;
-              padding: 20px;
-              border-radius: 8px;
-              background-color: #ffffff;
-            }
-            a {
-              color: rgb(132 141 148);
-              font-weight: bold;
-              padding: 5px 10px;
-              display: block;
-            }
-          }
-        `}</style>
       </div>
     );
   }
@@ -198,59 +176,6 @@ const DriveDashBoard = () => {
         />
         <PremiumButton />
       </div>
-      <style jsx>{`
-        .dashboard-container {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          height: auto;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          h2.mainTitle {
-            font-size: 25px;
-            font-weight: 600;
-            margin-bottom: 30px;
-            float: left;
-            span {
-              font-size: 20px;
-              color: #4c4c4c;
-              margin-left: 10px;
-            }
-          }
-          h3 {
-            width: 100%;
-            text-align: left;
-          }
-          .selectedDateRangeDataBox {
-            width: 100%;
-            > div {
-              width: 100%;
-              display: flex;
-              flex-direction: row;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              align-items: flex-start;
-            }
-          }
-          .dataBox {
-            width: 100%;
-            height: auto;
-            clear: both;
-            background-color: #f0f0f0;
-            padding: 2% 2% 7% 2%;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: space-between;
-            h3 {
-              margin-bottom: 10px;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

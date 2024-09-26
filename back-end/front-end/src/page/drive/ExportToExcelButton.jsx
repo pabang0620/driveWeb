@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./drive.scss";
 
 const ExportToExcelButton = ({ userPermission }) => {
   // 백엔드에서 데이터를 가져오는 함수
@@ -154,26 +155,6 @@ const ExportToExcelButton = ({ userPermission }) => {
       <button className="excelbtn" onClick={exportToExcel}>
         Excel 다운로드
       </button>
-      <style jsx>{`
-        .excelbtnRelate {
-          position: relative;
-        }
-        .excelbtn {
-          padding: 7px !important;
-          background-color: #4caf50 !important;
-          color: white !important;
-          border: none !important;
-          border-radius: 4px !important;
-          cursor: pointer !important;
-          font-size: 13px !important;
-          position: absolute !important;
-          top: -40px !important;
-          right: 0px;
-        }
-        .excelbtn:hover {
-          background-color: #45a049;
-        }
-      `}</style>
     </div>
   );
 };

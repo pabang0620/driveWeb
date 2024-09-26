@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getDriveDetails } from "../../components/ApiGet";
 import translateKey from "../../utils/translateKey";
+import "./drive.scss";
 
 const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
   const [details, setDetails] = useState(null);
@@ -207,129 +208,6 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
       <style jsx>{`
         .driveModal {
           display: ${showModal ? "flex" : "none"};
-          align-items: center;
-          justify-content: center;
-          position: fixed;
-          z-index: 1;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          .modal-inner {
-            background-color: #fefefe;
-            margin: auto;
-            border: 1px solid #888;
-            width: 70%;
-            max-width: 400px;
-            height: 500px;
-            position: relative;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            @media (max-width: 768px) {
-              width: 80%;
-              max-width: 600px;
-              max-height: 80vh;
-            }
-          }
-          .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #f3f4fb;
-            padding: 10px 20px;
-            flex-shrink: 0;
-
-            h3 {
-              width: 100%;
-              text-align: left;
-              color: #4c4c4c;
-              font-size: 16px;
-              span {
-                display: inline-block;
-                background-color: #05aced;
-                width: 25px;
-                height: 25px;
-                margin-right: 5px;
-                border-radius: 100%;
-                color: white;
-                text-align: center;
-              }
-            }
-            .close {
-              color: #aaa;
-              font-size: 28px;
-              font-weight: bold;
-              cursor: pointer;
-              @media (max-width: 768px) {
-                font-size: 25px;
-              }
-            }
-            .close:hover,
-            .close:focus {
-              color: black;
-              text-decoration: none;
-              cursor: pointer;
-            }
-          }
-          .tabs {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            padding: 3% 7%;
-            gap: 10px;
-            button {
-              flex: 1;
-              padding: 10px;
-              cursor: pointer;
-              border: 1px solid #ccc;
-              background-color: #e7e7e7;
-              color: #595959;
-              font-size: 14px;
-              font-weight: bold;
-              border-radius: 4px; /* 약간의 둥근 모서리 */
-              transition: background-color 0.2s, color 0.2s, border-color 0.2s; /* 부드러운 전환 효과 */
-              @media (max-width: 768px) {
-                font-size: 13px;
-              }
-            }
-
-            button.active {
-              background-color: #05aced;
-              border: 1px solid #05aced;
-              color: white;
-            }
-
-            button:focus {
-              outline: none; /* 포커스 상태에서 강조 표시 */
-            }
-          }
-          .modal-content {
-            width: 100%;
-            padding: 0% 8% 10% 8%;
-            flex: 1;
-            overflow-y: auto;
-          }
-          .tab-content {
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            @media (max-width: 768px) {
-              font-size: 13px;
-              gap: 5px;
-            }
-          }
-          .data-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px solid #ddd;
-          }
-          .data-row strong {
-            color: #4c4c4c;
-          }
         }
       `}</style>
     </div>

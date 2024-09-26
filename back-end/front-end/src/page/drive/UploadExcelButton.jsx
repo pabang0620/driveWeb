@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import "./drive.scss";
 
 const UploadExcelButton = () => {
   const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
@@ -73,27 +74,6 @@ const UploadExcelButton = () => {
       <button className="uploadbtn" onClick={triggerFileInput}>
         Excel 파일 업로드
       </button>
-
-      <style jsx>{`
-        .uploadbtnRelate {
-          position: relative;
-        }
-        .uploadbtn {
-          padding: 7px !important;
-          background-color: #007bff !important; /* 업로드 버튼 배경색: 파란색 */
-          color: white !important;
-          border: none !important;
-          border-radius: 4px !important;
-          cursor: pointer !important;
-          font-size: 13px !important;
-          position: absolute !important;
-          top: -40px !important;
-          right: 110px;
-        }
-        .uploadbtn:hover {
-          background-color: #0056b3 !important; /* 업로드 버튼 호버 색상: 더 어두운 파란색 */
-        }
-      `}</style>
     </div>
   );
 };
