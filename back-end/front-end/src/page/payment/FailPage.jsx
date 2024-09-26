@@ -16,6 +16,8 @@ export function FailPage() {
         .result.wrapper {
           background-color: rgb(244, 244, 244);
           padding: 100px 0;
+          height: calc(100vh - 300px);
+          position: relative;
           @media (max-width: 768px) {
             padding: 0;
           }
@@ -23,17 +25,20 @@ export function FailPage() {
           .box_section {
             max-width: 350px;
             width: 70%;
-            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
             background-color: white;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transform: translate(-50%, -50%);
 
             @media (max-width: 768px) {
               width: 100%;
               max-width: 100%;
-              height: calc(100vh - 80px);
+              height: 100%;
               border-radius: 0px;
               box-shadow: 0 0 0;
               display: flex;

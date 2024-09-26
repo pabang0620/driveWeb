@@ -1,15 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 
 export function SuccessPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [nickname, setNickname] = useState(""); // 닉네임 상태 추가
+
+  const token = localStorage.getItem("token");
+
+  const [orderState, setOrderState] = useState(null);
+  // 1="1개월(30일)", 2="6개월(180일)", 3="12개월(365일)"
 
   useEffect(() => {
     const requestData = {
       orderId: searchParams.get("orderId"),
       amount: searchParams.get("amount"),
       paymentKey: searchParams.get("paymentKey"),
+      customerName: searchParams.get("customerName"),
     };
 
     async function confirm() {
@@ -29,24 +37,39 @@ export function SuccessPage() {
       }
 
       // 결제 성공 비즈니스 로직을 추가하세요.
+      const selectedPlanId = requestData.orderId.split("_")[1]; // 주문 아이디에서 선택한 결제 아이디 추출
+      setOrderState(selectedPlanId);
+      console.log(selectedPlanId);
     }
     confirm();
   }, [searchParams, navigate]);
+
+  useEffect(() => {
+    if (token) {
+      const storedNickname = localStorage.getItem("nickname");
+      if (storedNickname) {
+        setNickname(storedNickname); // 닉네임 설정
+      }
+    }
+  }, [token]); // 컴포넌트가 마운트될 때 한 번 실행
 
   return (
     <div className="result wrapper">
       <div className="box_section">
         <h2>결제 성공!</h2>
         <p>
-          주문이 완료되었습니다.
+          {`${nickname}님, 주문이 완료되었습니다.`}
           <br />
           유료서비스를 이용해보세요!
         </p>
-        {/* <p>{`주문번호: ${searchParams.get("orderId")}`}</p> */}
-        {/* <p>{`결제 금액: ${Number(
+        <p>{`주문번호: ${searchParams.get("orderId")}`}</p>
+
+        <p>{`결제 금액: ${Number(
           searchParams.get("amount")
-        ).toLocaleString()}원`}</p> */}
-        {/* <p>{`결제 키: ${searchParams.get("paymentKey")}`}</p> */}
+        ).toLocaleString()}원`}</p>
+
+        <p>{`결제 키: ${searchParams.get("paymentKey")}`}</p>
+
         <a href="/" className="navyBox">
           홈으로 돌아가기
         </a>
@@ -68,11 +91,11 @@ export function SuccessPage() {
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-
+            transform: translate(-50%, -50%);
             @media (max-width: 768px) {
               width: 100%;
               max-width: 100%;
-              height: calc(100vh - 80px);
+              height: 100%;
               border-radius: 0px;
               box-shadow: 0 0 0;
               display: flex;

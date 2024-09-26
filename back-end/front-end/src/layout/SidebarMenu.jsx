@@ -28,7 +28,7 @@ function SidebarMenu({
     if (token) {
       const decoded = jwtDecode(token);
       setUserPermission(decoded.permission); // 사용자 권한 설정
-      console.log(decoded.permission);
+      // console.log(decoded.permission);
     }
   }, [token]); // 컴포넌트가 마운트될 때 한 번 실행
 

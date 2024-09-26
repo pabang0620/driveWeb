@@ -57,7 +57,7 @@ const NoticeZone = ({ boardsWithPosts }) => {
   return (
     <div className="noticeZone">
       <Slider {...settings}>
-        {boardsWithPosts[1]?.posts.map((post, index) => (
+        {boardsWithPosts[0]?.posts.map((post, index) => (
           <div
             key={index}
             className="notice"

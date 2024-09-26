@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import useCheckPermission from "../../utils/useCheckPermission";
+import { jwtDecode } from "jwt-decode";
 
 const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
@@ -67,6 +68,54 @@ function Checkout({ plans }) {
     });
   };
 
+  const handlePaymentRequest = async () => {
+    const token = localStorage.getItem("token"); // 로컬 스토리지에서 토큰 가져오기
+    let userId = null;
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // 토큰 디코딩
+        userId = decoded.userId; // userId 추출
+      } catch (error) {
+        console.error("토큰 디코딩 오류:", error);
+        alert("아이디를 읽을 수 없습니다.");
+      }
+    }
+
+    const selectedPlanId = selectedPlan ? selectedPlan.id : "defaultPlan"; // 선택된 플랜의 ID
+
+    // 현재 날짜를 YYYYMMDD 형식으로 포맷팅합니다.
+    const date = new Date();
+    const formattedDate = date.toISOString().slice(0, 10).replace(/-/g, "");
+
+    // 주문 ID 생성
+    const orderId = `${formattedDate}${userId}_${Math.floor(
+      Math.random() * 1000
+    )}${selectedPlanId}`;
+    // 주문아이디orerId = (날짜)(유저아이디)_(랜덤숫자)(선택한결제아이디)
+    // 선택한결제아이디 1="1개월(30일)", 2="6개월(180일)", 3="12개월(365일)"
+
+    try {
+      await widgets.requestPayment({
+        orderId: orderId, // 생성된 주문 ID
+
+        orderName: `회원권: ${
+          selectedPlan ? selectedPlan.duration : "선택되지 않음"
+        }`,
+
+        successUrl: `${window.location.origin}/payment/success`,
+
+        failUrl: window.location.origin + "/payment/fail",
+
+        customerEmail: "customer123@gmail.com",
+        customerName: "김토스",
+        customerMobilePhone: "01012341234",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="checkout_page">
       <div className="plans">
@@ -100,30 +149,7 @@ function Checkout({ plans }) {
         <div id="payment-method" />
         <div id="agreement" />
         <div className="buttonBox">
-          <button
-            disabled={!ready}
-            onClick={async () => {
-              try {
-                await widgets.requestPayment({
-                  orderId: "DigbpIqrafQ29-xKAatIS",
-                  orderName: `회원권: ${
-                    selectedPlan ? selectedPlan.duration : "선택되지 않음"
-                  }`,
-                  successUrl: `${
-                    window.location.origin
-                  }/payment/success?plan=${encodeURIComponent(
-                    JSON.stringify(selectedPlan)
-                  )}`,
-                  failUrl: window.location.origin + "/payment/fail",
-                  customerEmail: "customer123@gmail.com",
-                  customerName: "김토스",
-                  customerMobilePhone: "01012341234",
-                });
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-          >
+          <button disabled={!ready} onClick={handlePaymentRequest}>
             결제하기
           </button>
         </div>
