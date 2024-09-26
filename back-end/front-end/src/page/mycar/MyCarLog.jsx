@@ -4,6 +4,7 @@ import Spinner from "../../components/Spinner";
 import TitleBox from "../../components/TitleBox";
 import MaintenanceEditModal from "../../components/MaintenanceEditModal";
 import useCheckPermission from "../../utils/useCheckPermission";
+import "./mycar.scss";
 
 const MyCarLog = () => {
   useCheckPermission();
@@ -144,115 +145,6 @@ const MyCarLog = () => {
         onClose={() => setIsModalOpen(false)}
         recordData={selectedRecordData}
       />
-      <style jsx>{`
-        .myCarLog {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          .MyCarHeader {
-            padding: 30px 20px;
-            font-size: 14px;
-            color: #4d4d4d;
-            font-weight: 700;
-            border-bottom: 1px solid #c1c1c1;
-          }
-          .displayRow {
-            display: flex;
-            flex-direction: row;
-            font-size: 11px;
-          }
-          .MyCarHeader span {
-            color: #05aced;
-          }
-          .records-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-top: 20px;
-          }
-          .record-card {
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            border-bottom: 1px solid #e4e4e4;
-          }
-          .edited-notification {
-            font-size: 14px;
-            color: #ff0000;
-            font-weight: bold;
-            margin-left: 30px;
-          }
-          .record-detail {
-            margin-bottom: 10px;
-          }
-          .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-          }
-          .pagination-button {
-            padding: 10px 15px;
-            margin: 0 5px;
-            border: none;
-            background-color: #05aced;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-          }
-          .pagination-button:disabled {
-            background-color: #d3d3d3;
-            cursor: not-allowed;
-          }
-          .pagination-button:not(:disabled):hover {
-            background-color: #0288c7;
-          }
-          .pagination-button.active {
-            background-color: #0288c7;
-            font-weight: bold;
-          }
-
-          .logMaintenance-item {
-            margin-top: 10px;
-            font-size: 16px;
-            font-weight: 700;
-          }
-          .logMaintenance-item span {
-            margin: 0 5px 0 0;
-            padding: 6px;
-            border-radius: 3px;
-            background-color: #05aced;
-            height: 25px;
-            line-height: 25px;
-            color: white;
-            text-align: center;
-            font-size: 11px;
-            font-weight: 400;
-          }
-          .penOppset {
-            transform: scaleX(-1);
-            margin-right: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-          }
-          .myCarMoney {
-            font-size: 12px;
-            font-weight: 700;
-          }
-          .date-and-distance {
-            font-size: 11px;
-            color: #4c4c4c;
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Spinner from "../../components/Spinner";
 import { dummyQuarterlyData } from "../../components/dummy";
+import "./mypage.scss";
+
 function QuarterlyView() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [quarter, setQuarter] = useState(1);

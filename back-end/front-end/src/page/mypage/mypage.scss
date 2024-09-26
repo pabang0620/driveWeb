@@ -1,0 +1,879 @@
+// EstimatedIncomeTaxPage.jsx
+.container {
+  display: block !important;
+}
+.taxCulContainer {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  height: auto;
+  ul,
+  li,
+  ol {
+    list-style: none;
+  }
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0 100px 0;
+  }
+  .taxCulContents {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-top: 30px;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 30px;
+    }
+  }
+  .taxCulContent {
+    padding: 3%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 48%;
+    @media (max-width: 768px) {
+      width: 100%;
+      padding: 8%;
+    }
+  }
+
+  .taxCulInputGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    @media (max-width: 768px) {
+      margin-bottom: 10px;
+    }
+  }
+  .taxCulInputGroup label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .taxCulInputGroup span {
+    font-size: 16px;
+    width: 40%;
+    white-space: nowrap;
+    @media (max-width: 1024px) {
+      font-size: 14px;
+      flex: 1;
+    }
+  }
+  input,
+  select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 45%;
+    text-align: right;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    cursor: pointer;
+    @media (max-width: 768px) {
+      width: 40%;
+      font-size: 14px;
+    }
+  }
+
+  .taxCulButton {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #05aced;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+    @media (max-width: 1024px) {
+      font-size: 14px;
+      margin-top: 30px;
+    }
+  }
+  .taxCulButton:hover {
+    background-color: #69c2ef;
+  }
+  .taxCulResult {
+    background-color: #05aced;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .estimatedTotalTax {
+      width: 100%;
+      text-align: center;
+      h4 {
+        font-weight: 500;
+        font-size: 18px;
+        color: white;
+      }
+      p {
+        font-size: 20px;
+        font-weight: 600;
+        padding: 10px 0 30px 0;
+        color: white;
+        span {
+          font-size: 50px;
+          color: white;
+          font-weight: bold;
+          margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+          padding: 10px 0 20px 0;
+        }
+      }
+    }
+    ul {
+      background-color: #f6f6f6;
+      border-radius: 8px;
+      padding: 1% 3%;
+      li {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        line-height: 40px;
+        @media (max-width: 1024px) {
+          font-size: 14px;
+          line-height: 35px;
+          padding: 0 3%;
+        }
+        label {
+          text-align: left;
+          color: #555;
+        }
+        p {
+          text-align: right;
+          font-weight: 500;
+        }
+        &:not(:last-of-type) {
+          border-bottom: 1px solid #d9d9d9;
+        }
+      }
+    }
+  }
+  .btnBox {
+    width: 100%;
+    height: 65px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    @media (max-width: 1024px) {
+      height: 50px;
+    }
+    button {
+      width: 50%;
+      height: 100%;
+      line-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      height: 100%;
+      background-color: white;
+      font-size: 14px;
+      cursor: pointer;
+      @media (max-width: 1024px) {
+        font-size: 13px;
+      }
+      &:nth-of-type(1) {
+        span {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: #05aced;
+          position: relative;
+          img {
+            width: 40%;
+            filter: brightness(0) invert(1);
+            z-index: 2;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-55%, -50%);
+          }
+        }
+      }
+      &:nth-of-type(2) {
+        border-left: 1px solid #f0f0f0;
+      }
+    }
+  }
+}
+
+// incomeTaxComponent.jsx
+
+.income_container {
+  font-family: Arial, sans-serif;
+  margin: 10px;
+  flex: 1;
+  cursor: pointer;
+  &.blurred {
+    filter: blur(5px);
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: #f9f9f9;
+    justify-content: space-around;
+    @media (max-width: 768px) {
+    }
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  .icon {
+    font-size: 58px;
+    margin: -10p 6px 0 20px;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    @media (max-width: 768px) {
+      font-size: 40px;
+      width: 45px;
+      height: 45px;
+      background-color: transparent;
+    }
+  }
+  .content {
+    width: 60%;
+    @media (max-width: 768px) {
+      width: 70%;
+    }
+  }
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    color: #333;
+    @media (max-width: 768px) {
+      font-size: 16px;
+      margin: 0 0 5px 0;
+    }
+  }
+  .description {
+    width: 90%;
+    font-size: 16px;
+    color: #555;
+    margin: 0 0 15px 0;
+    line-height: 1.4;
+    @media (max-width: 768px) {
+      font-size: 14px;
+      width: 100%;
+      margin: 0 0 5px 0;
+    }
+  }
+  .button {
+    padding: 8px 28px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #3c5997;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+  .button:hover {
+    background-color: #486bb5;
+  }
+}
+
+.monthlyView {
+  padding: 50px;
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  .moblie {
+    display: none;
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+  .opacity {
+    opacity: 100%;
+    @media (max-width: 768px) {
+      opacity: 0%;
+    }
+  }
+  .titleFitler {
+    margin-bottom: 30px;
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+    h3 {
+      text-align: center;
+      width: 100%;
+      font-weight: 700;
+      font-size: 22px;
+      color: #333;
+      margin: 30px 0 20px 0;
+      @media (max-width: 1024px) {
+        font-size: 20px;
+        margin: 15px 0 10px 0;
+      }
+    }
+    .filterGroup {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 50px;
+      gap: 10px;
+      @media (max-width: 1024px) {
+        flex-direction: column;
+        margin-top: 15px;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        span {
+          margin-right: 10px;
+          font-weight: 600;
+          color: #444;
+          font-size: 15px;
+          @media (max-width: 768px) {
+            font-size: 13px;
+          }
+        }
+      }
+      select {
+        padding: 5px 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        color: #444;
+        cursor: pointer;
+        @media (max-width: 768px) {
+          font-size: 13px;
+          padding: 5px;
+        }
+      }
+
+      .datePicker {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        @media (max-width: 768px) {
+          font-size: 13px;
+          padding: 5px;
+        }
+      }
+    }
+  }
+  .fetchButton {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: #05aced;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    @media (max-width: 768px) {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+  }
+  .fetchButton:hover {
+    background-color: #69c2ef;
+  }
+  .result {
+    display: flex;
+    flex-direction: column;
+    margin: 70px 0 50px 0;
+    @media (max-width: 768px) {
+      margin: 20px 0 50px 0;
+    }
+    h3 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    h4 {
+      width: 100%;
+      padding: 10px 0;
+      color: #222;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 10px;
+      text-align: center;
+      @media (max-width: 768px) {
+        margin-bottom: 5px;
+        transform: translateX(-50%);
+      }
+    }
+
+    .section {
+      background-color: #ffffff;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      @media (max-width: 768px) {
+        flex-wrap: wrap;
+      }
+    }
+    .column {
+      width: 48%;
+      @media (max-width: 768px) {
+        width: 50%;
+      }
+      div {
+        justify-content: flex-end;
+      }
+      &.item_categorys div {
+        justify-content: flex-start;
+      }
+      &:not(:first-child) h4 {
+        padding-left: 10px;
+      }
+    }
+  }
+  /*------------------요약 파란박스 -------------------- */
+  .section.summarySection {
+    margin-top: 30px;
+    background-color: #05aced;
+    padding: 1% 5% 5% 5%;
+    border-radius: 10px;
+    h3,
+    h4 {
+      color: white;
+    }
+    h3 {
+      font-size: 25px;
+      width: 100%;
+      text-align: center;
+      margin: 20px 0 20px 0;
+    }
+    h4 {
+      margin: 0;
+      padding-left: 10px;
+      text-align: center;
+    }
+    .row {
+      .item_categorys div {
+        text-align: left;
+      }
+      div {
+        text-align: right;
+      }
+      .column:first-of-type {
+        div {
+          &:first-of-type {
+            border-top-left-radius: 8px;
+          }
+          &:last-of-type {
+            border-bottom-left-radius: 8px;
+          }
+        }
+      }
+      .column:last-of-type {
+        div {
+          &:first-of-type {
+            border-top-right-radius: 8px;
+          }
+          &:last-of-type {
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+      @media (max-width: 768px) {
+        .column:nth-of-type(2) {
+          div {
+            &:first-of-type {
+              border-top-right-radius: 8px;
+            }
+            &:last-of-type {
+              border-bottom-right-radius: 8px;
+            }
+          }
+        }
+        .column:nth-of-type(3) {
+          div {
+            &:first-of-type {
+              border-top-left-radius: 8px;
+            }
+            &:last-of-type {
+              border-bottom-left-radius: 8px;
+            }
+          }
+        }
+      }
+    }
+    .column div {
+      background-color: white;
+      font-size: 14px;
+      line-height: 40px;
+      padding: 0 10%;
+      &:not(:last-of-type) {
+        border-bottom: 1px solid #d9d9d9;
+      }
+      @media (max-width: 768px) {
+        padding: 0 6%;
+        line-height: 35px;
+        font-size: 13px;
+      }
+    }
+  }
+  /*-------------------------------------- */
+  .income,
+  .expense {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    @media (max-width: 768px) {
+      gap: 5px;
+    }
+    div {
+      display: flex;
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: 500;
+      background-color: #f4f4f4;
+      justify-content: space-between;
+
+      @media (max-width: 768px) {
+        font-size: 13px;
+      }
+    }
+
+    .noDataMessage {
+      color: #ff0000;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  }
+}
+
+// ProfitLossMainPage.jsx
+
+.profitLossContainer {
+  width: 70%;
+  max-width: 1200px;
+  margin: 100px auto 100px auto;
+  height: auto;
+  @media (max-width: 768px) {
+    width: 90%;
+    margin: 50px auto 100px auto;
+  }
+  > div {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  .tapGroup {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    background-color: #fff;
+    button {
+      flex: 1;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      color: #666;
+      transition: background-color 0.3s;
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0%;
+        width: 1px;
+        height: 50%;
+        background-color: #ddd;
+        z-index: 2;
+      }
+      &:last-child::before {
+        display: none; /* 마지막 버튼의 ::before 제거 */
+      }
+      @media (max-width: 768px) {
+        font-size: 14px;
+      }
+    }
+    button.active {
+      color: #05aced;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30%;
+        height: 3px;
+        background-color: #05aced;
+      }
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+  }
+  .scrollBtn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: fixed;
+    right: 50px;
+    bottom: 100px;
+    background-color: #05aced;
+    cursor: pointer;
+    @media (max-width: 1024px) {
+      width: 40px;
+      height: 40px;
+      right: 20px;
+      bottom: 80px;
+    }
+    img {
+      width: 40%;
+      filter: brightness(0) invert(1);
+      z-index: 2;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -40%) rotate(-90deg);
+    }
+    &.bottonScrollBtn {
+      img {
+        transform: translate(-50%, -40%) rotate(-90deg);
+      }
+    }
+    &.topScrollBtn {
+      img {
+        transform: translate(-50%, -55%) rotate(90deg);
+      }
+    }
+  }
+  .btnBox {
+    width: 100%;
+    height: 65px;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    @media (max-width: 1024px) {
+      height: 50px;
+    }
+    button {
+      width: 50%;
+      height: 100%;
+      line-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      height: 100%;
+      background-color: white;
+      font-size: 14px;
+      cursor: pointer;
+      @media (max-width: 1024px) {
+        font-size: 13px;
+      }
+      &:nth-of-type(1) {
+        span {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: #05aced;
+          position: relative;
+          img {
+            width: 40%;
+            filter: brightness(0) invert(1);
+            z-index: 2;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-55%, -50%);
+          }
+        }
+      }
+      &:nth-of-type(2) {
+        border-left: 1px solid #f0f0f0;
+      }
+    }
+  }
+}
+
+.yearlyView {
+  padding: 50px;
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  h3 {
+    text-align: center;
+    width: 100%;
+    font-weight: 700;
+    font-size: 22px;
+    color: #333;
+    margin: 30px 0 20px 0;
+    @media (max-width: 1024px) {
+      font-size: 20px;
+      margin: 15px 0 10px 0;
+    }
+  }
+  .titleFitler {
+    position: relative;
+    margin-bottom: 60px;
+    @media (max-width: 1024px) {
+      margin-bottom: 20px;
+    }
+    .filterGroup {
+      position: absolute;
+      right: 0;
+      top: 0%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+      @media (max-width: 768px) {
+        position: static;
+        width: 100%;
+      }
+      label {
+        display: flex;
+        align-items: center;
+        @media (max-width: 768px) {
+          width: 100%;
+          justify-content: center;
+        }
+        span {
+          margin-right: 10px;
+          font-weight: 600;
+          color: #444;
+          font-size: 15px;
+        }
+      }
+      select {
+        padding: 5px 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        color: #444;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .result {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    h4 {
+      width: 100%;
+      padding: 10px 0;
+      color: #222;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+    .section {
+      background-color: #ffffff;
+    }
+    .section.summarySection {
+      margin-top: 30px;
+      background-color: #05aced;
+      padding: 1% 5% 5% 5%;
+      border-radius: 10px;
+
+      h3,
+      h4 {
+        color: white;
+      }
+      h3 {
+        font-size: 25px;
+      }
+      h4 {
+        margin: 0;
+      }
+      .column {
+        margin-bottom: 20px;
+        div {
+          font-size: 14px;
+          line-height: 30px;
+          margin: 0;
+          &:not(:last-of-type) {
+            border-bottom: 1px solid #d9d9d9;
+          }
+          &:first-of-type {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+          &:last-of-type {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      @media (max-width: 768px) {
+        flex-wrap: wrap;
+      }
+    }
+    .column {
+      width: 48%;
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+    .column div {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: 500;
+      background-color: #f4f4f4;
+      &.total {
+        justify-content: flex-end;
+        gap: 20px;
+        background-color: transparent;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    }
+
+    .divider {
+      height: 1px;
+      background-color: #000;
+      margin: 20px 0;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import securityQuestions from "../../components/securityQuestions"; // 보안 질문 목록 가져오기
+import "./login.scss";
 
 function FindUsername() {
   const [nickname, setNickname] = useState(""); // 닉네임 상태
@@ -82,128 +83,6 @@ function FindUsername() {
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        .findusername-container {
-          padding: 80px 0 150px 0;
-          ul,
-          li,
-          ol {
-            list-style: none;
-          }
-          .findusername-box {
-            max-width: 350px;
-            width: 70%;
-            margin: auto;
-            background-color: white;
-
-            @media (max-width: 768px) {
-              width: 85%;
-              height: calc(100vh - 80px);
-            }
-          }
-          h3 {
-            font-size: 24px;
-            margin: 50px 0;
-            @media (max-width: 768px) {
-              font-size: 20px;
-              margin: 30px 0;
-            }
-          }
-          p {
-            font-size: 14px;
-            margin-bottom: 30px;
-            @media (max-width: 768px) {
-              font-size: 12px;
-              white-space: nowrap;
-              margin: 15px 0;
-            }
-          }
-          .input-container {
-            margin-bottom: 15px;
-            text-align: left;
-
-            &.security {
-              margin-top: 15%;
-            }
-
-            label {
-              display: block;
-              color: rgb(156, 165, 173);
-              font-size: 12px;
-              @media (max-width: 768px) {
-                font-size: 12px;
-              }
-            }
-
-            input {
-              width: 95%;
-              padding: 10px 0 10px 5px;
-              border: none;
-              border-bottom: 1px solid #d0d7de;
-              font-size: 16px;
-              color: rgb(156, 165, 173);
-              @media (max-width: 768px) {
-                font-size: 14px;
-              }
-            }
-            input:focus {
-              border-color: #222;
-              outline: none;
-              color: #222;
-            }
-
-            select {
-              width: 95%;
-              margin-top: 10px;
-              padding: 10px 0;
-              border: none;
-              border-bottom: 1px solid #d0d7de;
-              font-size: 16px;
-              color: rgb(156, 165, 173);
-              @media (max-width: 768px) {
-                font-size: 14px;
-              }
-            }
-            select:focus {
-              border-color: #222;
-              outline: none;
-              color: #222;
-            }
-          }
-
-          button.navyBox {
-            width: 100%;
-            padding: 12px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 30px;
-            font-weight: bold;
-            @media (max-width: 768px) {
-              font-size: 14px;
-            }
-            &:hover {
-              background-color: #7388b6;
-            }
-          }
-
-          .found-username {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #333;
-            text-align: center;
-            strong {
-              font-weight: bold;
-              color: #3c5997;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }

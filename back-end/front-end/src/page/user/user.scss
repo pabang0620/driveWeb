@@ -1,0 +1,491 @@
+.userInfo {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    span {
+      font-size: 20px;
+      color: #4c4c4c;
+      margin-left: 10px;
+    }
+  }
+  .inputWrap {
+    margin-top: 30px;
+  }
+  h3 {
+    font-size: 16px;
+    color: #4c4c4c;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .checkboxes {
+    width: 100%;
+    border: none;
+    font-size: 14px;
+    color: #c1c1c1;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    > label {
+      font-size: 14px;
+      color: #c1c1c1;
+      width: 15%;
+      line-height: 50px;
+      @media (max-width: 768px) {
+        width: 25%;
+      }
+    }
+
+    > div {
+      width: 80%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      @media (max-width: 768px) {
+        flex-wrap: wrap;
+      }
+      .franchise-item {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+        height: 50px;
+        @media (max-width: 768px) {
+          width: 50%;
+          gap: 3px;
+          height: 40px;
+        }
+        p {
+        }
+        label:first-child {
+          display: none;
+        }
+        input[type="text"] {
+          border-radius: 5px;
+          border: 1px solid #d9d9d9;
+          padding: 5px;
+        }
+      }
+    }
+    > button {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #4c4c4c;
+      color: #4c4c4c;
+      border-radius: 5px;
+      width: 40px;
+      height: 25px;
+      text-align: center;
+      &.savebtn {
+        border-color: rgb(100 255 0);
+        color: rgb(100 255 0);
+      }
+    }
+  }
+
+  .dynamicInput {
+    border-bottom: 1px solid #c1c1c1;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 14px;
+    color: #c1c1c1;
+
+    label:first-child {
+      font-size: 14px;
+      color: #c1c1c1;
+      width: 15%;
+      @media (max-width: 768px) {
+        width: 25%;
+      }
+    }
+    input {
+      font-size: 14px;
+      color: #c1c1c1;
+      border: none;
+      width: 60%;
+      height: 100%;
+      text-align: left;
+      background: none;
+      @media (max-width: 768px) {
+        width: 60%;
+      }
+      &:focus {
+        border: none;
+        outline: none;
+        color: #222;
+      }
+    }
+
+    select {
+      height: 70%;
+      width: 20%;
+      color: #c1c1c1;
+      border: 1px solid #c1c1c1;
+      border-radius: 3px;
+      padding: 5px;
+      @media (max-width: 768px) {
+        width: 50%;
+      }
+      &:focus {
+        outline: 1px solid #c1c1c1;
+        color: #222;
+      }
+    }
+
+    button {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #4c4c4c;
+      color: #4c4c4c;
+      border-radius: 5px;
+      width: 40px;
+      height: 25px;
+
+      &.savebtn {
+        border-color: rgb(100 255 0);
+        color: rgb(100 255 0);
+      }
+    }
+  }
+}
+
+.userInfo {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    span {
+      font-size: 20px;
+      color: #4c4c4c;
+      margin-left: 10px;
+    }
+  }
+  .inputWrap {
+    margin-top: 30px;
+  }
+  h3 {
+    font-size: 16px;
+    color: #4c4c4c;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .dynamicInput {
+    border-bottom: 1px solid #c1c1c1;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    label {
+      font-size: 14px;
+      color: #c1c1c1;
+      width: 15%;
+      @media (max-width: 768px) {
+        width: 25%;
+        font-size: 13px;
+      }
+    }
+    input {
+      font-size: 14px;
+      color: #c1c1c1;
+      border: none;
+      width: 75%;
+      height: 100%;
+      text-algin: left;
+      background: none;
+      @media (max-width: 768px) {
+        width: 60%;
+        font-size: 13px;
+      }
+      &:focus {
+        border: none;
+        outline: none;
+        color: #222;
+      }
+    }
+    select {
+      height: 70%;
+      width: 20%;
+      color: #c1c1c1;
+      border: 1px solid #c1c1c1;
+      border-radius: 3px;
+      padding: 5px;
+      @media (max-width: 768px) {
+        width: 50%;
+      }
+      &:focus {
+        outline: 1px solid #c1c1c1;
+        color: #222;
+      }
+    }
+
+    button {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #4c4c4c;
+      color: #4c4c4c;
+      border-radius: 5px;
+      width: 40px;
+      height: 25px;
+      text-align: center;
+      &.savebtn {
+        border-color: rgb(100 255 0);
+        color: rgb(100 255 0);
+      }
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 67vh;
+  min-width: 300px;
+  h2 {
+    color: #333;
+    font-family: "Arial", sans-serif;
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .button-group button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .button-group button:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+}
+
+.userInfo {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+  .button-group {
+    margin-bottom: 30px;
+  }
+  .button-group button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .button-group button:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+  .button-group button.active {
+    background-color: #0056b3;
+    color: white;
+  }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    span {
+      font-size: 20px;
+      color: #4c4c4c;
+      margin-left: 10px;
+    }
+  }
+  .userInfoImgBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    @media (max-width: 768px) {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    svg {
+      @media (max-width: 768px) {
+        width: 100px;
+        aspect-ratio: 1/1;
+      }
+    }
+    .imageWrapper {
+      position: relative;
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      .userIcon {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .deleteIcon {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        bottom: 18px;
+        right: 5px;
+        cursor: pointer;
+        color: red;
+      }
+    }
+  }
+  .inputWrap {
+    margin-top: 30px;
+    position: relative;
+    .socialMark {
+      position: absolute;
+      bottom: 9px;
+      left: -25px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  h3 {
+    font-size: 16px;
+    color: #4c4c4c;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .dynamicInput {
+    border-bottom: 1px solid #c1c1c1;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    label {
+      font-size: 14px;
+      color: #c1c1c1;
+      width: 15%;
+      @media (max-width: 768px) {
+        width: 25%;
+      }
+    }
+    input {
+      font-size: 14px;
+      color: #c1c1c1;
+      border: none;
+      width: 75%;
+      margin-right: 5%;
+      height: 100%;
+      text-align: left;
+      background: none;
+      &:focus {
+        border: none;
+        outline: none;
+        color: #222;
+      }
+    }
+    button {
+      margin-left: auto;
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #4c4c4c;
+      color: #4c4c4c;
+      border-radius: 5px;
+      width: 40px;
+      height: 25px;
+      text-align: center;
+      &.savebtn {
+        border-color: rgb(100 255 0);
+        color: rgb(100 255 0);
+      }
+    }
+  }
+  .password-change-btn {
+    margin: 40px 0px;
+    display: inline-block;
+    background-color: #007bff; /* 파란색 배경 */
+    color: white; /* 텍스트 색상 */
+    padding: 12px 24px; /* 적당한 패딩 */
+    font-size: 16px; /* 글씨 크기 */
+    font-weight: bold; /* 굵은 글씨 */
+    border-radius: 8px; /* 둥근 모서리 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    cursor: pointer; /* 클릭 가능 커서 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 배경색과 클릭 시 애니메이션 */
+  }
+
+  .password-change-btn:hover {
+    background-color: #0056b3; /* 호버 시 더 어두운 파란색 */
+    transform: translateY(-2px); /* 살짝 올라가는 애니메이션 */
+  }
+
+  .password-change-btn:active {
+    background-color: #004085; /* 클릭 시 더 어두운 색 */
+    transform: translateY(0); /* 클릭 시 원래 위치로 */
+  }
+  .buttonWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    @media (max-width: 768px) {
+      margin-top: 10px;
+    }
+    button {
+      cursor: pointer;
+      font-size: 14px;
+      border: 1px solid #4c4c4c;
+      color: #4c4c4c;
+      border-radius: 5px;
+      width: 80px;
+      height: 30px;
+      text-align: center;
+      &.savebtn {
+        border-color: rgb(100 255 0);
+        color: rgb(100 255 0);
+      }
+    }
+  }
+}

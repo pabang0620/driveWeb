@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import "./home.scss";
 
 const TopRankList = ({ posts }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -76,43 +77,6 @@ const TopRankList = ({ posts }) => {
           ))}
         </div>
       )}
-      <style jsx>{`
-        .postListBox {
-          width: 100%;
-          padding: 10px;
-
-          .postList {
-            background-color: white;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-
-            gap: 5px;
-            .postBox {
-              width: 100%;
-              padding: 5px;
-              display: flex;
-              justify-content: flex-start;
-              gap: 10px;
-              align-items: center;
-              &:not(:nth-of-type(1)) {
-                border-top: 1px solid #ddd;
-              }
-              h4 {
-                font-size: 14px;
-                font-weight: normal;
-                color: #222;
-                @media (max-width: 768px) {
-                }
-              }
-              p {
-                font-size: 12px;
-                color: #222;
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

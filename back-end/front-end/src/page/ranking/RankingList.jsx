@@ -5,6 +5,7 @@ import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import UserInfoModal from "./UserInfoModal";
 import { jwtDecode } from "jwt-decode";
+import "./ranking.scss";
 
 const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
   const [selectedOption, setSelectedOption] = useState("전체");
@@ -146,97 +147,6 @@ const RankingList = ({ title, filterNumber, api_name, selectedMonth }) => {
       {isModalOpen && (
         <UserInfoModal userId={selectedUserId} onClose={closeModal} />
       )}
-      <style jsx>{`
-        .ranking {
-          min-width: 160px;
-          width: 30%;
-          margin-bottom: 15px;
-          @media (max-width: 768px) {
-            width: 100%;
-          }
-          > div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            h3 {
-              color: #4c4c4c;
-              font-size: 16px;
-              margin-bottom: 10px;
-            }
-            .filters {
-              width: 100%;
-              justify-content: space-between;
-              display: flex;
-              margin: 0 0 10px 0;
-              gap: 10px;
-              select {
-                width: 40%;
-                padding: 8px 10px;
-                font-size: 14px;
-                border-radius: 5px;
-                border: 1px solid #ccc;
-              }
-            }
-            @media (max-width: 768px) {
-              .filters select {
-                font-size: 11px;
-                padding: 5px 6px;
-              }
-            }
-          }
-        }
-
-        .profileWrap {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          padding: 10px;
-          background-color: #f0f3f5;
-          border-radius: 5px;
-          min-width: 120px;
-          li.profile {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: white;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            @media (max-width: 768px) {
-              padding: 5px 10px;
-            }
-            .profilePicture {
-              width: 35px;
-              height: 35px;
-              border-radius: 50%;
-              overflow: hidden;
-              margin-right: 10px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              @media (max-width: 768px) {
-                width: 30px;
-                height: 30px;
-              }
-            }
-
-            .profilePicture img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-            }
-
-            .profileName {
-              font-size: 14px;
-              flex-grow: 1;
-            }
-
-            .profileValue {
-              font-size: 14px;
-              color: #555;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

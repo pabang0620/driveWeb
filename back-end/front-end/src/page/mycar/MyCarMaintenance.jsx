@@ -4,6 +4,7 @@ import TitleBox from "../../components/TitleBox";
 import MyCarModal from "../../components/MyCarModal";
 import MaintenanceItemCard from "../../components/MaintenanceItemCard";
 import useCheckPermission from "../../utils/useCheckPermission";
+import "./mycar.scss";
 
 const MyCarMaintenance = () => {
   useCheckPermission();
@@ -154,55 +155,6 @@ const MyCarMaintenance = () => {
         onItemAdded={handleItemAdded}
         myCarId={myCarId} // 추가된 부분
       />
-      <style jsx>{`
-        .MyCarMaintenance {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0 100px 0;
-          }
-        }
-        .maintenance-items {
-          display: flex;
-          flex-wrap: wrap;
-          margin-top: 30px;
-          gap: 20px;
-          justify-content: space-between;
-        }
-        .no-items {
-          width: 100%;
-          text-align: center;
-          color: #666;
-        }
-        .add-item {
-          border: 1px solid #ccc;
-          border-radius: 8px;
-          padding: 3.5%;
-          width: 48%;
-          box-sizing: border-box;
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          @media (max-width: 768px) {
-            width: 47%;
-          }
-          @media (max-width: 480px) {
-            width: 100%;
-          }
-        }
-        .add-item.centered {
-          width: 100%;
-          margin-top: 20px;
-        }
-        .add-icon {
-          font-size: 24px;
-          color: #0070f3;
-        }
-      `}</style>
     </div>
   );
 };

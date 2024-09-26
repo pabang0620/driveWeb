@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import "./user.scss";
 
 const JobTypeComponent = () => {
   const updateJobType = async (newJobType) => {
@@ -35,37 +36,6 @@ const JobTypeComponent = () => {
         <button onClick={() => updateJobType(2)}>배달</button>
         <button onClick={() => updateJobType(3)}>기타</button>
       </div>
-      <style jsx>{`
-        .container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 67vh;
-          min-width: 300px;
-          h2 {
-            color: #333;
-            font-family: "Arial", sans-serif;
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
-          }
-          .button-group button {
-            padding: 10px 20px;
-            margin: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
-          }
-          .button-group button:hover {
-            background-color: #0056b3;
-            color: white;
-          }
-        }
-      `}</style>
     </div>
   );
 };

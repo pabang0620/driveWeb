@@ -4,6 +4,7 @@ import axios from "axios";
 import TitleBox from "../../components/TitleBox";
 import RankingList from "./RankingList";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./ranking.scss";
 
 const Ranking = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
@@ -69,33 +70,6 @@ const Ranking = () => {
           />
         ))}
       </div>
-      <style jsx>{`
-        .ranking-container {
-          width: 70%;
-          padding: 100px 0;
-          margin: 0 auto;
-          select {
-            padding: 8px 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-          }
-          @media (max-width: 768px) {
-            width: 85%;
-            padding: 50px 0;
-          }
-          .rankingInner {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            @media (max-width: 1024px) {
-              margin-top: 15px;
-              gap: 10px;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

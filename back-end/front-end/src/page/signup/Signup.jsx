@@ -1,6 +1,7 @@
 // SignupPage.jsx
 import React from "react";
 import { Link } from "react-router-dom";
+import "./signup.scss";
 
 function Signup() {
   return (
@@ -21,92 +22,6 @@ function Signup() {
           <Link to="/login">로그인</Link>
         </p>
       </div>
-
-      <style jsx>{`
-        .signup-container {
-          background-color: rgb(244, 244, 244);
-          height: calc(100vh - 300px);
-          position: relative;
-          .signup-box {
-            max-width: 350px;
-            width: 70%;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            @media (max-width: 768px) {
-              width: 100%;
-              max-width: 100%;
-              height: 100%;
-              border-radius: 0px;
-              box-shadow: 0 0 0;
-              display: flex;
-              flex-wrap: wrap;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-            }
-          }
-          h2 {
-            img {
-              width: 35px;
-              height: 35px;
-            }
-            margin-bottom: 20px;
-            @media (max-width: 768px) {
-              margin-bottom: 0;
-            }
-          }
-          h3 {
-            @media (max-width: 768px) {
-              font-size: 20px;
-            }
-          }
-          button.navyBox {
-            width: 100%;
-            padding: 12px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 30px;
-            font-weight: bold;
-            @media (max-width: 768px) {
-              width: 70%;
-              font-size: 16px;
-            }
-            a {
-              color: white;
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
-            &:hover {
-              background-color: #7388b6;
-            }
-          }
-          .smallText {
-            font-size: 12px;
-            text-align: right;
-            padding: 10px 0;
-            @media (max-width: 768px) {
-              font-size: 14px;
-            }
-            a {
-              color: rgb(132 141 148);
-              font-weight: bold;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }

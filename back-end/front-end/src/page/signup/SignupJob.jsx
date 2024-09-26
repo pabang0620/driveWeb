@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./signup.scss";
 
 const SignupJob = () => {
   const location = useLocation();
@@ -71,96 +72,6 @@ const SignupJob = () => {
           다음
         </button>
       </div>
-
-      <style jsx>{`
-        .signup-container {
-          padding: 30px 0 120px 0;
-          .signup-box {
-            max-width: 350px;
-            width: 70%;
-            margin: 0 auto;
-            background-color: white;
-            height: calc(100vh - 80px);
-            @media (max-width: 768px) {
-              width: 85%;
-              height: calc(100vh - 80px);
-            }
-          }
-          button.goBack {
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            text-align: left;
-            position: relative;
-            img {
-              width: 30%;
-              position: absolute;
-              top: 50%;
-              transform: translateY(-50%);
-            }
-          }
-          h3 {
-            font-size: 24px;
-            margin: 50px 0;
-            @media (max-width: 768px) {
-              font-size: 20px;
-              margin: 30px 0;
-            }
-          }
-          p {
-            font-size: 14px;
-            margin-bottom: 30px;
-            @media (max-width: 768px) {
-              font-size: 14px;
-              margin: 15px 0;
-            }
-          }
-          .jobBox {
-            margin-bottom: 50px;
-            button {
-              margin-right: 10px;
-              padding: 10px 20px;
-              background-color: #ddd;
-              border-radius: 5px;
-              cursor: pointer;
-              @media (max-width: 768px) {
-                font-size: 14px;
-              }
-              &.selected {
-                background-color: #05aced;
-                color: white;
-              }
-            }
-          }
-          button.navyBox {
-            width: 100%;
-            padding: 12px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 30px;
-            font-weight: bold;
-            @media (max-width: 768px) {
-              font-size: 14px;
-            }
-            a {
-              color: white;
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
-            &:hover {
-              background-color: #7388b6;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

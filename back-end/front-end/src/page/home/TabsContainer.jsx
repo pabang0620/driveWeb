@@ -1,5 +1,6 @@
 import React from "react";
 import TopRankList from "./TopRankList";
+import "./home.scss";
 
 const TabsContainer = ({
   boardsWithPosts,
@@ -53,47 +54,6 @@ const TabsContainer = ({
           />
         </div>
       </div>
-      <style jsx>{`
-        .tabsContainer {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-
-          @media (max-width: 768px) {
-            flex-direction: column;
-            gap: 15px;
-          }
-          .leftTabs,
-          .rightTabs {
-            width: 45%;
-            @media (max-width: 768px) {
-              width: 100%;
-            }
-            .tabList {
-              display: flex;
-              justify-content: center;
-              background-color: #f0f3f5;
-              border-radius: 5px;
-              overflow: hidden;
-              button:not(:last-of-type) {
-                border-right: 1px solid #ddd;
-              }
-              button {
-                padding: 10px 5px;
-                cursor: pointer;
-                flex: 1;
-                font-weight: bold;
-                &.active {
-                  font-weight: bold;
-                  background-color: #05aced;
-                  color: white;
-                  border: none;
-                }
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

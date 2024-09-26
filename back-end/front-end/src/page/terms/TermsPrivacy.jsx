@@ -1,4 +1,5 @@
 import React from "react";
+import "./terms.scss";
 
 const TermsPrivacy = () => {
   return (
@@ -354,98 +355,6 @@ const TermsPrivacy = () => {
           </li>
         </ul>
       </div>
-      <style jsx>{`
-        .termsPrivacy-container {
-          width: 80%;
-          margin: 0 auto;
-          padding: 80px 0;
-
-          .title {
-            font-size: 30px;
-            font-weight: bold;
-            color: #555;
-            padding: 0;
-          }
-
-          .outer_list {
-            padding-left: 15px;
-            li {
-              font-size: 14px;
-              line-height: 20px;
-            }
-            > li:not(:last-of-type) {
-              font-weight: bold;
-              p {
-                margin: 10px 0;
-                font-weight: normal;
-              }
-              .inner_list {
-                list-style: none;
-                li {
-                  font-weight: normal;
-                  margin-bottom: 10px;
-                }
-              }
-              .decimal_list {
-                margin: 10px 0 10px 30px;
-                > li {
-                  list-style-type: decimal;
-                }
-              }
-
-              .circle_list {
-                counter-reset: list-item;
-                list-style-type: none;
-                > li {
-                  counter-increment: list-item;
-                  list-style-type: none; /* 기본 숫자 제거 */
-                  margin-left: 30px;
-                  position: relative;
-                  &::before {
-                    content: counter(list-item);
-
-                    position: absolute;
-                    left: -20px;
-                    top: 4px;
-                    width: 11px;
-                    height: 11px;
-                    border: 1px solid #000;
-                    color: #000;
-                    border-radius: 50%;
-                    background-color: #fff;
-                    text-align: center;
-                    line-height: 10px;
-                    font-size: 10px;
-                  }
-                }
-              }
-              .disc_list {
-                margin: 10px 0 10px 30px;
-                li {
-                  list-style-type: disc; /* 원형 점 */
-                }
-              }
-            }
-          }
-
-          .section {
-            margin-top: 30px;
-          }
-          .section-title {
-            font-size: 16px;
-            margin-bottom: 10px;
-          }
-          .section-text {
-            font-size: 14px;
-            margin-top: 10px;
-          }
-          .content {
-            font-size: 14px;
-            line-height: 1.6;
-            font-weight: normal;
-          }
-        }
-      `}</style>
     </div>
   );
 };

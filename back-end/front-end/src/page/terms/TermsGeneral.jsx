@@ -1,4 +1,5 @@
 import React from "react";
+import "./terms.scss";
 
 const TermsGeneral = () => {
   return (
@@ -266,98 +267,6 @@ const TermsGeneral = () => {
           </li>
         </ul>
       </div>
-
-      <style jsx>{`
-        .termsPrivacy-container {
-          width: 80%;
-          margin: 0 auto;
-          padding: 80px 0;
-
-          .title {
-            font-size: 30px;
-            font-weight: bold;
-            color: #555;
-            padding: 0;
-            margin-bottom: 30px;
-          }
-          .title_sub {
-            font-size: 14px;
-            margin-top: 20px;
-          }
-          .outer_list {
-            li {
-              font-size: 14px;
-              line-height: 20px;
-            }
-            > li {
-              font-weight: bold;
-              .inner_list {
-                padding-left: 15px;
-                li {
-                  font-weight: normal;
-                  margin-bottom: 10px;
-                }
-              }
-
-              .decimal-leading-zero {
-                counter-reset: list-item;
-                list-style-type: decimal;
-                li {
-                  counter-increment: list-item; /* 각 항목마다 카운터 증가 */
-                  position: relative;
-                  margin-left: 8px;
-                }
-                li::marker {
-                  content: "(" counter(list-item) ") "; /* 숫자를 괄호로 감싸기 */
-                }
-              }
-              .circle_list {
-                counter-reset: list-item;
-                list-style-type: none;
-                > li {
-                  counter-increment: list-item;
-                  list-style-type: none; /* 기본 숫자 제거 */
-                  margin-left: 25px;
-                  position: relative;
-                  font-weight: normal;
-                  &::before {
-                    content: counter(list-item);
-                    position: absolute;
-                    left: -20px;
-                    top: 4px;
-                    width: 11px;
-                    height: 11px;
-                    border: 1px solid #000;
-                    color: #000;
-                    border-radius: 50%;
-                    background-color: #fff;
-                    text-align: center;
-                    line-height: 10px;
-                    font-size: 10px;
-                  }
-                }
-              }
-            }
-          }
-
-          .section {
-            margin-top: 30px;
-            p {
-              font-weight: 400;
-              margin-bottom: 10px;
-            }
-          }
-          .section-title {
-            font-size: 16px;
-            margin-bottom: 10px;
-          }
-          .content {
-            font-size: 14px;
-            line-height: 1.6;
-            font-weight: normal;
-          }
-        }
-      `}</style>
     </div>
   );
 };

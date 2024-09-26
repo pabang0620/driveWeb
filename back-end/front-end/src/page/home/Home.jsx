@@ -6,6 +6,7 @@ import TopRankList from "./TopRankList";
 import Banner from "./Banner";
 import TabsContainer from "./TabsContainer";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./home.scss";
 
 function Home() {
   const navigate = useNavigate();
@@ -155,32 +156,6 @@ function Home() {
           </>
         )}
       </div>
-
-      <style jsx>{`
-        .home-container {
-          .contents_inner {
-            width: 70%;
-            margin: 50px auto;
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: column;
-            gap: 50px;
-            @media (max-width: 768px) {
-              width: 90%;
-              margin: 30px auto;
-              gap: 30px;
-            }
-            .rankingList {
-              width: 100%;
-              display: flex;
-              flex-wrap: wrap;
-              flex-direction: row;
-              justify-content: space-between;
-              align-items: flex-start;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }

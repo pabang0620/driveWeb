@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getProfilefranchise } from "../../components/ApiGet";
 import { postProfilefranchise } from "../../components/ApiPost";
+import "./user.scss";
 
 const FranchiseFee = ({ carType, jobtype }) => {
   const [franchiseFree, setFranchiseFree] = useState([]);

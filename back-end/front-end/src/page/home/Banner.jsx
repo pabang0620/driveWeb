@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import "./home.scss";
 
 const Banner = () => {
   const navigate = useNavigate();
@@ -23,61 +24,7 @@ const Banner = () => {
       </div>
       <style jsx>{`
         .main_banner {
-          width: 100%;
-          height: 350px;
           background-image: url("/images/home/banner1.png");
-          background-size: cover;
-          background-position: center;
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-          @media (max-width: 768px) {
-            background-position: 85%;
-          }
-          @media (max-width: 480px) {
-            height: 200px;
-            background-position: 80%;
-          }
-          .banner_text {
-            width: 80%;
-            margin: 0 auto;
-            max-width: 1200px;
-            color: white;
-            text-shadow: 1.5px 1.5px 1.5px rgba(0, 0, 0, 0.5);
-            h3 {
-              font-size: 20px;
-              color: white;
-            }
-            h2 {
-              margin-top: 10px;
-              margin-bottom: 20px;
-              font-size: 40px;
-              color: white;
-            }
-            @media (max-width: 768px) {
-              h3 {
-                font-size: 6.5vw;
-              }
-              h2 {
-                font-size: 4.5vw;
-              }
-            }
-
-            .detail_button {
-              padding: 8px 10px;
-              font-size: 13px;
-              color: white;
-              background-color: #3c5997;
-              color: white;
-              border: none;
-              border-radius: 5px;
-              cursor: pointer;
-              text-shadow: none;
-              @media (max-width: 768px) {
-                font-size: 11px;
-              }
-            }
-          }
         }
       `}</style>
     </div>

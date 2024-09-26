@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import "./home.scss";
 
 const NoticeZone = ({ boardsWithPosts }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -67,36 +68,6 @@ const NoticeZone = ({ boardsWithPosts }) => {
           </div>
         ))}
       </Slider>
-      <style jsx>{`
-        .noticeZone {
-          width: 100%;
-          padding: 5px 10px 7px 10px;
-          background-color: #f0f3f5;
-          border-radius: 10px;
-          .notice {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-
-            h3 {
-              font-size: 14px;
-              font-weight: normal;
-              display: inline-block;
-              color: #4c4c4c;
-              width: 50%;
-            }
-            p {
-              font-size: 13px;
-              text-align: right;
-              width: 50%;
-              display: inline-block;
-              color: #4c4c4c;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

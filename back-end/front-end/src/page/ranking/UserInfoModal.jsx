@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import "./ranking.scss";
 
 const UserInfoModal = ({ userId, onClose }) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -77,135 +78,6 @@ const UserInfoModal = ({ userId, onClose }) => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .userRankmodal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.6);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-          animation: fadeIn 0.3s ease-in;
-
-          .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
-            animation: slideIn 0.3s ease-out;
-            border: 1px solid #ddd;
-          }
-
-          .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            color: #666;
-          }
-
-          .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-            background: #f7f7f7;
-            padding: 15px;
-            border-radius: 8px;
-          }
-
-          .profilePicture {
-            display: flex;
-            justify-content: center;
-          }
-
-          img {
-            max-width: 80px;
-            border-radius: 50%;
-            border: 3px solid #eee;
-          }
-
-          h2 {
-            font-size: 22px;
-            color: #333;
-          }
-
-          .user-details {
-            display: flex;
-            flex-direction: column;
-          }
-
-          .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 20px;
-            border-bottom: 1px solid #eee;
-            background: #f9f9f9;
-            border-radius: 4px;
-          }
-
-          .detail-item p {
-            margin: 0;
-            font-size: 16px;
-            color: #555;
-          }
-
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-
-          @keyframes slideIn {
-            from {
-              transform: translateY(-20px);
-              opacity: 0;
-            }
-            to {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .modal-content {
-              width: 95%;
-              max-width: none;
-            }
-
-            .profile-header {
-              flex-direction: column;
-              align-items: center;
-            }
-
-            img {
-              max-width: 60px;
-            }
-
-            h2 {
-              font-size: 20px;
-            }
-
-            .detail-item {
-              flex-direction: column;
-              align-items: flex-start;
-              padding: 10px 5px;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 };

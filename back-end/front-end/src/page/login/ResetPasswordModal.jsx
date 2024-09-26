@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./login.scss";
 
 function ResetPasswordModal({ username, onClose }) {
   const navigate = useNavigate();
@@ -64,74 +65,6 @@ function ResetPasswordModal({ username, onClose }) {
           닫기
         </button>
       </div>
-      <style jsx>{`
-        .modal {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .modal-content {
-          background-color: white;
-          padding: 20px;
-          border-radius: 5px;
-          width: 400px;
-          max-width: 90%;
-        }
-        .input-container {
-          margin-bottom: 15px;
-          text-align: left;
-        }
-        label {
-          display: block;
-          margin-bottom: 5px;
-          font-size: 14px;
-        }
-        input {
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          font-size: 14px;
-        }
-        .error {
-          color: red;
-          font-size: 12px;
-          margin-top: 10px;
-        }
-        button.navyBox {
-          width: 100%;
-          padding: 12px;
-          background-color: #3c5997;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 16px;
-          transition: background-color 0.3s;
-          margin-top: 20px;
-          font-weight: bold;
-        }
-        button.navyBox:hover {
-          background-color: #7388b6;
-        }
-        button.close {
-          margin-top: 15px;
-          background-color: #e2e2e2;
-          color: white;
-          border: none;
-          padding: 10px;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 14px;
-          width: 100%;
-        }
-      `}</style>
     </div>
   );
 }
