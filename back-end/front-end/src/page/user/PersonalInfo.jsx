@@ -5,30 +5,30 @@ import { postUserProfile } from "../../components/ApiPost";
 import { validatePhone, validateEmail } from "../../components/Validators";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import Spinner from "../../components/Spinner"; // 로딩 스피너 컴포넌트 경로에 맞게 수정하세요
+import Spinner from "../../components/Spinner";
 import TitleBox from "../../components/TitleBox";
 import useCheckPermission from "../../utils/useCheckPermission";
 import JobTypeComponent from "./JobTypeComponent";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // 잘못된 임포트, 'jwt-decode'를 한 번만 작성해야 함
+import { jwtDecode } from "jwt-decode";
 import ResetPasswordModal from "../login/ResetPasswordModal";
 import "./user.scss";
 
 const PersonalInfo = () => {
   useCheckPermission();
 
-  const [jobtype, setJobtype] = useState(""); // 잡타입 상태
-  const [showModal, setShowModal] = useState(false); // 모달 표시 여부 상태 추가
+  const [jobtype, setJobtype] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const getJobtype = () => {
     const token = localStorage.getItem("token");
-    const decodedToken = jwtDecode(token); // jwt-decode 라이브러리 사용
+    const decodedToken = jwtDecode(token);
     const jobtype = decodedToken.jobtype;
     setJobtype(jobtype);
   };
 
   const openPasswordModal = () => {
-    setShowModal(true); // 보안 질문과 답변이 일치하면 모달 표시
+    setShowModal(true);
   };
   const [userInfo, setUserInfo] = useState({
     name: "test",

@@ -133,7 +133,7 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
           breakpoint: 500,
           options: {
             chart: {
-              width: 500,
+              width: 336,
             },
             legend: {
               show: true,
