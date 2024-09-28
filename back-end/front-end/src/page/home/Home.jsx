@@ -121,7 +121,7 @@ function Home() {
     fetchTopRank();
   }, []);
 
-  console.log(rankings);
+  console.log("sadfasdf", boardsWithPosts);
   return (
     <div className="home-container">
       <Banner />

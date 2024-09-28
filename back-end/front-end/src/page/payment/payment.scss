@@ -1,0 +1,493 @@
+.payment_container {
+  width: 70%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  ul,
+  li,
+  ol {
+    list-style: none;
+  }
+  .mobile_br {
+    display: none;
+  }
+  @media (max-width: 1024px) {
+    width: 90%;
+  }
+  @media (max-width: 767px) {
+    width: 85%;
+    .mobile_br {
+      display: block;
+    }
+  }
+  .content {
+    margin: 0 auto;
+    border-radius: 4px;
+    .payment_info {
+      text-align: center;
+      h3 {
+        font-size: 35px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #007bff;
+        @media (max-width: 768px) {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      }
+
+      p {
+        font-size: 15px;
+        line-height: 30px;
+        color: #666;
+        @media (max-width: 768px) {
+          font-size: 14px;
+          line-height: 22px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+    .premium_benefits {
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      border: 1px solid #d9d9d9;
+      margin-top: 50px;
+      @media (max-width: 1024px) {
+        width: 90%;
+      }
+      @media (max-width: 768px) {
+        width: 50%;
+        margin: 30px auto 0 auto;
+        text-align: center;
+        flex-direction: column;
+        border: none;
+        gap: 10px;
+      }
+      > div {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 33%;
+        padding: 2%;
+        font-size: 13px;
+        @media (max-width: 768px) {
+          width: 100%;
+          font-size: 12px;
+          padding: 3%;
+          gap: 5px;
+        }
+        .imgbox {
+          text-align: center;
+          font-size: 50px;
+          line-height: 98px;
+        }
+        &:not(:nth-of-type(3n)) {
+          border-right: 1px solid #d9d9d9;
+          @media (max-width: 768px) {
+            border: none;
+          }
+        }
+      }
+    }
+
+    .subscription_info {
+      margin-top: 60px;
+      text-align: center;
+      h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+        span {
+          font-size: 15px;
+        }
+        @media (max-width: 768px) {
+          margin-bottom: 10px;
+        }
+      }
+      table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        font-size: 12px;
+        line-height: 18px;
+        @media (max-width: 1024px) {
+          width: 70%;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+        }
+        th {
+          background-color: #f4f4f4;
+        }
+        .original_price {
+          color: #ff4500;
+          text-decoration: line-through;
+        }
+        .discount {
+          color: #ff4500;
+        }
+      }
+      .premium_warning {
+        font-size: 13px;
+        @media (max-width: 1024px) {
+          font-size: 11px;
+        }
+      }
+    }
+    .refund_policy {
+      text-align: center;
+      font-size: 14px;
+      line-height: 25px;
+      margin-top: 60px;
+      h4 {
+        font-size: 18px;
+        line-height: 25px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      p,
+      ul li {
+        color: #666;
+        @media (max-width: 768px) {
+          margin-bottom: 10px;
+          line-height: 20px;
+          font-size: 12px;
+        }
+      }
+      ul {
+        list-style-type: disc;
+        margin-top: 20px;
+      }
+    }
+    .refund_example {
+      margin: 30px auto 0 auto;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+      h5 {
+        font-size: 13px;
+        line-height: 25px;
+        text-align: right;
+        color: #666;
+        width: 85%;
+        margin: 0 auto;
+        @media (max-width: 1024px) {
+          width: 90%;
+        }
+        @media (max-width: 768px) {
+          font-size: 12px;
+          width: 100%;
+        }
+      }
+
+      table {
+        width: 85%;
+        margin: 0 auto;
+        white-space: nowrap;
+        border-collapse: collapse;
+        font-size: 12px;
+        line-height: 18px;
+        @media (max-width: 1024px) {
+          width: 90%;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+          @media (max-width: 768px) {
+            font-size: 11px;
+            line-height: 15px;
+          }
+        }
+        th {
+          background-color: #f4f4f4;
+        }
+      }
+    }
+
+    .payment_button {
+      display: block;
+      width: 20%;
+      padding: 15px;
+      margin: 50px auto 0 auto;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      @media (max-width: 1024px) {
+        width: 50%;
+      }
+      @media (max-width: 767px) {
+        width: 60%;
+        margin: 60px auto 100px auto;
+      }
+
+      &:hover {
+        background-color: #0056b3;
+      }
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba;
+      }
+    }
+  }
+  /*페이먼트 모달 */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 80%;
+    height: 80%;
+    overflow-y: scroll;
+    max-width: 600px;
+    position: relative;
+    @media (max-width: 767px) {
+      width: 85%;
+      height: 85%;
+    }
+  }
+
+  .modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.result.wrapper {
+  background-color: rgb(244, 244, 244);
+  padding: 100px 0;
+  height: calc(100vh - 300px);
+  position: relative;
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+
+  .box_section {
+    max-width: 350px;
+    width: 70%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transform: translate(-50%, -50%);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      border-radius: 0px;
+      box-shadow: 0 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #e53935;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 25px;
+    margin-bottom: 30px;
+  }
+
+  .navyBox {
+    width: 100%;
+    padding: 12px;
+    background-color: #3c5997;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+
+    @media (max-width: 768px) {
+      width: 70%;
+      font-size: 16px;
+    }
+    a {
+      color: white;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+    &:hover {
+      background-color: #7388b6;
+    }
+  }
+}
+
+.result.wrapper {
+  background-color: rgb(244, 244, 244);
+  height: calc(100vh - 300px);
+  position: relative;
+  .box_section {
+    max-width: 350px;
+    width: 70%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transform: translate(-50%, -50%);
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      border-radius: 0px;
+      box-shadow: 0 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #4caf50;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 25px;
+    margin-bottom: 30px;
+  }
+
+  .navyBox {
+    width: 100%;
+    padding: 12px;
+    background-color: #3c5997;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+
+    @media (max-width: 768px) {
+      width: 70%;
+      font-size: 16px;
+    }
+    a {
+      color: white;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+    &:hover {
+      background-color: #7388b6;
+    }
+  }
+}
+
+.checkout_page {
+  padding: 10px;
+  .plans {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    .plan {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .plan.selected {
+      border-color: #007bff;
+      background-color: #f0f8ff;
+    }
+  }
+
+  .discount {
+    display: block;
+    color: #999;
+    font-size: 14px;
+    text-decoration: line-through;
+  }
+
+  .payment-section {
+    margin-top: 20px;
+    .buttonBox {
+      width: 100%;
+      text-align: center;
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        width: 100%;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:disabled {
+        background-color: #d0d0d0;
+      }
+
+      button:hover:not(:disabled) {
+        background-color: #0056b3;
+      }
+    }
+  }
+}

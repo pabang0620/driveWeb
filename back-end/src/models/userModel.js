@@ -107,7 +107,26 @@ const findUserByUsername = async (username) => {
     },
   });
 };
+const getPremiumPaymentByUserId = async (userId) => {
+  return await prisma.premium_payments.findFirst({
+    where: { userId }, // userId로 결제 정보 조회
+    select: {
+      expirationDate: true, // expirationDate 필드만 조회
+    },
+  });
+};
+const updateUserPermission = async (userId, permission) => {
+  return await prisma.users.update({
+    where: { id: userId },
+    data: { permission },
+  });
+};
 
+const deletePremiumPaymentByUserId = async (userId) => {
+  return await prisma.premium_payments.deleteMany({
+    where: { userId }, // userId로 해당 유저의 결제 정보를 삭제
+  });
+};
 async function updateUserPassword(username, hashedPassword) {
   return prisma.users.update({
     where: {
@@ -366,6 +385,8 @@ async function findUserById(userId) {
 module.exports = {
   createUser,
   findUserByUsername,
+  updateUserPermission,
+  deletePremiumPaymentByUserId,
   findUserByNicknameAndSecurity,
   updateUserPassword,
   updateUserProfileData,

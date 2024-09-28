@@ -125,9 +125,11 @@ const CarInfo = () => {
             onSave={handleSaveUserInfo}
             showEditButton={true}
           />
-          {vehicleInfo.franchise_status === "가맹" && (
-            <FranchiseFee carType={vehicleInfo.carType} jobtype={jobtype} />
-          )}
+          <FranchiseFee
+            carType={vehicleInfo.carType}
+            jobtype={jobtype}
+            status={vehicleInfo.franchise_status}
+          />
         </div>
         <div className="inputWrap">
           <h3>차량 정보</h3>

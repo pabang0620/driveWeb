@@ -15,7 +15,11 @@ const {
   updateUserJobType,
   findUserById,
   findUserByNicknameAndSecurity,
+  updateUserPermission,
+  deletePremiumPaymentByUserId,
 } = require("../models/userModel");
+const paymentController = require("../controllers/paymentController");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
@@ -172,6 +176,22 @@ const loginUser = async (req, res) => {
       return res
         .status(401)
         .json({ error: "잘못된 이메일 또는 비밀번호입니다." });
+    }
+
+    // 만료일 확인
+    const paymentRecord = await paymentController.getPremiumPaymentByUserId(
+      user.id
+    );
+    if (paymentRecord) {
+      const today = new Date();
+      const expirationDate = new Date(paymentRecord.expirationDate);
+
+      // 만료일이 현재 날짜보다 이전인 경우 permission을 5로 업데이트
+      if (expirationDate < today) {
+        await updateUserPermission(user.id, 5); // permission을 5로 변경
+        user.permission = 5; // 토큰에 반영할 permission 값도 업데이트
+        await deletePremiumPaymentByUserId(user.id); // 해당 사용자의 프리미엄 결제 정보 삭제
+      }
     }
 
     const token = jwt.sign(

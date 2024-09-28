@@ -16,7 +16,7 @@ import "./user.scss";
 
 const PersonalInfo = () => {
   useCheckPermission();
-
+  const [expireDate, setExpireDate] = useState("");
   const [jobtype, setJobtype] = useState("");
   const [showModal, setShowModal] = useState(false);
 
@@ -46,7 +46,6 @@ const PersonalInfo = () => {
     },
   });
 
-  console.log(userInfo.users.nickname); // 수정된 부분
   const [prevUserInfo, setPrevUserInfo] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -54,6 +53,19 @@ const PersonalInfo = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const fileInputRef = useRef(null);
 
+  const fetchExpirationDate = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("/api/payments", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setExpireDate(response.data.expirationDate);
+    } catch (error) {
+      console.error("Error fetching date:", error);
+    }
+  };
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -74,13 +86,14 @@ const PersonalInfo = () => {
       // 토큰이 있을 때만 getUserData와 getJobtype 호출
       getUserData();
       getJobtype();
+      fetchExpirationDate();
     }
   }, []);
 
   // 직종 수정
   const updateJobType = async (newJobType) => {
     // 사용자에게 변경 확인 요청
-    const confirmChange = window.confirm("정말 직종을 변경하시겠습니까?");
+    const confirmChange = window.confirm("정말 업종을 변경하시겠습니까?");
 
     if (confirmChange) {
       try {
@@ -95,10 +108,10 @@ const PersonalInfo = () => {
         );
 
         localStorage.setItem("token", response.data.token); // 새 토큰을 로컬 스토리지에 저장
-        alert("직종이 변경되었습니다."); // 성공 메시지
+        alert("업종이 변경되었습니다."); // 성공 메시지
       } catch (error) {
         console.error("Failed to update job type:", error);
-        alert("직종 업데이트에 실패하였습니다.");
+        alert("업종 업데이트에 실패하였습니다.");
       }
     }
   };
@@ -228,6 +241,13 @@ const PersonalInfo = () => {
     // 차량 종류가 비어있을 경우 메시지 표시
     return <JobTypeComponent />;
   }
+
+  // 날짜를 "YYYY년 MM월 DD일" 형식으로 변환하는 함수
+  const formatExpirationDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString("ko-KR", options); // 한국어 형식으로 변환
+  };
+
   return (
     <div className="container userInfo">
       <TitleBox title="회원정보" subtitle="개인정보" />
@@ -355,6 +375,14 @@ const PersonalInfo = () => {
             showEditButton={true}
             isEditing={isEditing}
           />
+          {expireDate && (
+            <div className="expiration_date_container">
+              <p>
+                프리미엄 서비스 만료일 :
+                <strong> {formatExpirationDate(expireDate)}</strong>
+              </p>
+            </div>
+          )}
           <div className="socialMark">
             {socialStatus.map((image, index) => (
               <img key={index} src={image} alt="Social Logo" />
@@ -372,6 +400,24 @@ const PersonalInfo = () => {
           />
         )}
       </div>
+      <style jsx>{`
+        .expiration_date_container {
+          font-size: 18px;
+          color: #333;
+          margin: 20px;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          text-align: center;
+          background-color: #f9f9f9;
+        }
+        p {
+          font-size: 20px;
+        }
+        strong {
+          color: #007bff;
+        }
+      `}</style>
     </div>
   );
 };

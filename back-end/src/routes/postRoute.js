@@ -13,6 +13,7 @@ const {
   fetchAllLatestPosts,
   createPost,
   getBoards,
+  getUserPosts,
 } = require("../controllers/postController");
 const handleFileUpload = require("../middleware/postFileUpload");
 const authMiddleware = require("../middleware/authMiddleware");
@@ -29,6 +30,8 @@ router.post("/", authMiddleware, createPost);
 router.get("/latest", fetchAllLatestPosts);
 // 해당 보드의 게시글 모두 조회 100개씩
 router.get("/board/:boardId", getPosts);
+
+router.get("/user/:userId", getUserPosts);
 
 router.get("/boardsName", getBoards);
 

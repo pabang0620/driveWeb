@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import useCheckPermission from "../../utils/useCheckPermission";
 import { jwtDecode } from "jwt-decode";
+import "./payment.scss";
 
 const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
 const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
@@ -11,6 +12,16 @@ const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
 
 function Checkout({ plans }) {
   useCheckPermission();
+
+  //   const clientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
+  //   const [decodedUserId, setDecodedUserId] = useState("");
+  //   useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const decoded = jwtDecode(token);
+  //   setDecodedUserId(decoded.userId);
+  // }, []);
+
+  // const customerKey = `user_${decodedUserId}`;
 
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState(null);
@@ -154,65 +165,6 @@ function Checkout({ plans }) {
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        .checkout_page {
-          padding: 10px;
-          .plans {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            .plan {
-              padding: 10px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-              cursor: pointer;
-              text-align: center;
-            }
-
-            .plan.selected {
-              border-color: #007bff;
-              background-color: #f0f8ff;
-            }
-          }
-
-          .discount {
-            display: block;
-            color: #999;
-            font-size: 14px;
-            text-decoration: line-through;
-          }
-
-          .payment-section {
-            margin-top: 20px;
-            .buttonBox {
-              width: 100%;
-              text-align: center;
-              button {
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                width: 100%;
-                font-size: 16px;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: background-color 0.3s;
-              }
-
-              button:disabled {
-                background-color: #d0d0d0;
-              }
-
-              button:hover:not(:disabled) {
-                background-color: #0056b3;
-              }
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }

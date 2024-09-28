@@ -46,10 +46,35 @@ const deleteComment = async (id) => {
     where: { id },
   });
 };
-
+const getUserCommentsById = async (userId) => {
+  try {
+    const comments = await prisma.comments.findMany({
+      where: {
+        userId: Number(userId),
+      },
+      orderBy: { createdAt: "desc" }, // 최신 댓글부터 정렬
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        posts: {
+          select: {
+            id: true,
+            title: true, // 댓글이 달린 게시글의 제목
+          },
+        },
+      },
+    });
+    return comments;
+  } catch (error) {
+    console.error(`Error fetching comments for user ${userId}:`, error);
+    throw error; // 에러를 호출한 쪽으로 전달
+  }
+};
 module.exports = {
   createComment,
   getCommentsByPost,
   updateComment,
   deleteComment,
+  getUserCommentsById,
 };

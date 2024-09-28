@@ -53,6 +53,7 @@ export function DynamicInput({
   };
 
   const handleEditToggle = () => {
+    if (fieldName === "email") return; // 이메일 필드는 수정 불가
     setIsEditing(!isEditing); // 수정 버튼 클릭 시 상태 토글
     if (isEditing) {
       onSave(fieldName, value);

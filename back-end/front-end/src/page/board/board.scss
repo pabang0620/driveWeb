@@ -565,3 +565,47 @@
     height: calc(100% - 120px);
   }
 }
+
+.boardComment {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 0;
+  @media (max-width: 768px) {
+    width: 85%;
+    padding: 50px 0;
+  }
+
+  .boardCommentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .tableWrapper {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .commentTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .commentTable th,
+  .commentTable td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+
+  .commentTable th {
+    background-color: #f7f7f7;
+  }
+
+  .commentTable tr:hover {
+    background-color: #f1f1f1;
+  }
+}

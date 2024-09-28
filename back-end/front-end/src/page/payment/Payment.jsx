@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Checkout from "./Checkout";
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
+import "./payment.scss";
 
 export default function Payment() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [permission, setPermission] = useState(null); // permission 상태 추가
 
   // 각 플랜의 가격 정보
 
@@ -31,7 +34,44 @@ export default function Payment() {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  // JWT 토큰에서 permission 값을 가져오는 useEffect
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setPermission(decodedToken.permission); // permission 값 설정
+      } catch (error) {
+        console.error("JWT 디코딩 오류:", error);
+      }
+    }
+  }, []);
 
+  // 버튼의 텍스트 및 상태 결정
+  const renderButton = () => {
+    if (permission === 5) {
+      // permission이 5인 경우
+      return (
+        <button onClick={openModal} className="payment_button">
+          멤버십 가입하기
+        </button>
+      );
+    } else if ([1, 2, 3, 4].includes(permission)) {
+      // permission이 1, 2, 3, 4인 경우
+      return (
+        <button onClick={openModal} className="payment_button">
+          멤버십 연장하기
+        </button>
+      );
+    } else {
+      // 그 외의 경우, 버튼 비활성화
+      return (
+        <button className="payment_button" disabled>
+          멤버십 가입하기
+        </button>
+      );
+    }
+  };
   return (
     <div className="payment_container">
       <div id="payment-widget" className="content">
@@ -61,9 +101,7 @@ export default function Payment() {
           </div>
         </div>
 
-        <button onClick={openModal} className="payment_button">
-          멤버십 가입하기
-        </button>
+        {renderButton()}
 
         {isModalOpen && (
           <div className="modal-overlay">
@@ -126,10 +164,10 @@ export default function Payment() {
           <br />
           <p>서비스 이용일수를 제외하고 일할계산되어 환불 진행됩니다.</p>
           <p>
-            *단, 수수료나 위약금, 할인요금으로 결제한 경우
+            *환불진행시 수수료가 발생한 경우
             <br />
-            환불 진행시 수수료, 위약금 및 할인율을 적용하여 환불되오니 다음
-            예시표를 확인하시기 바랍니다.
+            수수료와 할인율 등을 적용하여 환불되오니 다음 예시표를 확인하시기
+            바랍니다.
             <br />
           </p>
           <br />
@@ -217,300 +255,6 @@ export default function Payment() {
           </div>
         </div>
       </div>
-      <style jsx>{`
-        .payment_container {
-          width: 70%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 100px 0;
-          ul,
-          li,
-          ol {
-            list-style: none;
-          }
-          .mobile_br {
-            display: none;
-          }
-          @media (max-width: 1024px) {
-            width: 90%;
-          }
-          @media (max-width: 767px) {
-            width: 85%;
-            .mobile_br {
-              display: block;
-            }
-          }
-          .content {
-            margin: 0 auto;
-            border-radius: 4px;
-            .payment_info {
-              text-align: center;
-              h3 {
-                font-size: 35px;
-                font-weight: 700;
-                margin-bottom: 10px;
-                color: #007bff;
-                @media (max-width: 768px) {
-                  font-size: 24px;
-                  margin-bottom: 20px;
-                }
-              }
-
-              p {
-                font-size: 15px;
-                line-height: 30px;
-                color: #666;
-                @media (max-width: 768px) {
-                  font-size: 14px;
-                  line-height: 22px;
-                  margin-bottom: 10px;
-                }
-              }
-            }
-            .premium_benefits {
-              width: 100%;
-              margin: 0 auto;
-              display: flex;
-              justify-content: space-around;
-              border: 1px solid #d9d9d9;
-              margin-top: 50px;
-              @media (max-width: 1024px) {
-                width: 90%;
-              }
-              @media (max-width: 768px) {
-                width: 50%;
-                margin: 30px auto 0 auto;
-                text-align: center;
-                flex-direction: column;
-                border: none;
-                gap: 10px;
-              }
-              > div {
-                display: flex;
-                flex-wrap: wrap;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                width: 33%;
-                padding: 2%;
-                font-size: 13px;
-                @media (max-width: 768px) {
-                  width: 100%;
-                  font-size: 12px;
-                  padding: 3%;
-                  gap: 5px;
-                }
-                .imgbox {
-                  text-align: center;
-                  font-size: 50px;
-                  line-height: 98px;
-                }
-                &:not(:nth-of-type(3n)) {
-                  border-right: 1px solid #d9d9d9;
-                  @media (max-width: 768px) {
-                    border: none;
-                  }
-                }
-              }
-            }
-
-            .subscription_info {
-              margin-top: 60px;
-              text-align: center;
-              h4 {
-                font-size: 18px;
-                font-weight: 700;
-                color: #333;
-                margin-bottom: 20px;
-                span {
-                  font-size: 15px;
-                }
-                @media (max-width: 768px) {
-                  margin-bottom: 10px;
-                }
-              }
-              table {
-                width: 80%;
-                margin: 0 auto;
-                border-collapse: collapse;
-                font-size: 12px;
-                line-height: 18px;
-                @media (max-width: 1024px) {
-                  width: 70%;
-                }
-                @media (max-width: 768px) {
-                  width: 100%;
-                }
-                th,
-                td {
-                  border: 1px solid #ddd;
-                  padding: 8px;
-                  text-align: center;
-                }
-                th {
-                  background-color: #f4f4f4;
-                }
-                .original_price {
-                  color: #ff4500;
-                  text-decoration: line-through;
-                }
-                .discount {
-                  color: #ff4500;
-                }
-              }
-              .premium_warning {
-                font-size: 13px;
-                @media (max-width: 1024px) {
-                  font-size: 11px;
-                }
-              }
-            }
-            .refund_policy {
-              text-align: center;
-              font-size: 14px;
-              line-height: 25px;
-              margin-top: 60px;
-              h4 {
-                font-size: 18px;
-                line-height: 25px;
-                font-weight: 700;
-                color: #333;
-                margin-bottom: 20px;
-              }
-              p,
-              ul li {
-                color: #666;
-                @media (max-width: 768px) {
-                  margin-bottom: 10px;
-                  line-height: 20px;
-                  font-size: 12px;
-                }
-              }
-              ul {
-                list-style-type: disc;
-                margin-top: 20px;
-              }
-            }
-            .refund_example {
-              margin: 30px auto 0 auto;
-
-              @media (max-width: 768px) {
-                width: 100%;
-              }
-              h5 {
-                font-size: 13px;
-                line-height: 25px;
-                text-align: right;
-                color: #666;
-                width: 85%;
-                margin: 0 auto;
-                @media (max-width: 1024px) {
-                  width: 90%;
-                }
-                @media (max-width: 768px) {
-                  font-size: 12px;
-                  width: 100%;
-                }
-              }
-
-              table {
-                width: 85%;
-                margin: 0 auto;
-                white-space: nowrap;
-                border-collapse: collapse;
-                font-size: 12px;
-                line-height: 18px;
-                @media (max-width: 1024px) {
-                  width: 90%;
-                }
-                @media (max-width: 768px) {
-                  width: 100%;
-                }
-                th,
-                td {
-                  border: 1px solid #ddd;
-                  padding: 8px;
-                  text-align: center;
-                  @media (max-width: 768px) {
-                    font-size: 11px;
-                    line-height: 15px;
-                  }
-                }
-                th {
-                  background-color: #f4f4f4;
-                }
-              }
-            }
-
-            .payment_button {
-              display: block;
-              width: 20%;
-              padding: 15px;
-              margin: 50px auto 0 auto;
-              font-size: 18px;
-              font-weight: 600;
-              color: #fff;
-              background-color: #007bff;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-              transition: background-color 0.3s ease;
-              @media (max-width: 1024px) {
-                width: 50%;
-              }
-              @media (max-width: 767px) {
-                width: 60%;
-                margin: 60px auto 100px auto;
-              }
-
-              &:hover {
-                background-color: #0056b3;
-              }
-              &:focus {
-                outline: none;
-                box-shadow: 0 0 0 3px rgba;
-              }
-            }
-          }
-          /*페이먼트 모달 */
-          .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-          }
-          .modal-content {
-            background: white;
-            border-radius: 8px;
-            width: 80%;
-            height: 80%;
-            overflow-y: scroll;
-            max-width: 600px;
-            position: relative;
-            @media (max-width: 767px) {
-              width: 85%;
-              height: 85%;
-            }
-          }
-
-          .modal-close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            border: none;
-            background: none;
-            font-size: 24px;
-            cursor: pointer;
-          }
-        }
-      `}</style>
     </div>
   );
 }

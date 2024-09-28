@@ -46,6 +46,7 @@ import RankingManagement from "./page/admin/RankingManagement";
 import StatisticsManagement from "./page/admin/StatisticsManagement";
 import AuthCheck from "./AuthCheck";
 import ServiceUnavailable from "./ServiceUnavailable";
+import BoardMyArticle from "./page/board/BoardMyArticle";
 
 function RouterApp() {
   return (
@@ -93,6 +94,8 @@ function RouterApp() {
           />
           {/* 게시판 */}
           <Route path="/board" element={<Board />} />
+          <Route path="/board/post/myboard" element={<BoardMyArticle />} />
+
           <Route path="/board/list/:boardId" element={<BoardPost />} />
           <Route path="/board/post/:postId" element={<BoardDetail />} />
           <Route path="/board/post/add" element={<BoardPostAdd />} />

@@ -3,6 +3,7 @@ const {
   updateCarByUserId,
   updateUserVehicleByUserId,
   updateCarImageUrl,
+  getMaintenanceItemsByUserId,
 } = require("../models/mycarModel");
 
 const getCarInfo = async (req, res) => {
@@ -70,8 +71,25 @@ const uploadCarImage = async (req, res) => {
   }
 };
 
+const getUserMaintenanceItems = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const items = await getMaintenanceItemsByUserId(userId);
+    res.status(200).json(items);
+  } catch (error) {
+    console.error(
+      `Error fetching maintenance items for user ${userId}:`,
+      error
+    );
+    res
+      .status(500)
+      .json({ error: "유지보수 항목을 가져오는 중 오류가 발생했습니다." });
+  }
+};
 module.exports = {
   getCarInfo,
   updateCarInfo,
   uploadCarImage,
+  getUserMaintenanceItems,
 };

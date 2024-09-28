@@ -3,21 +3,19 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // 수정: jwtDecode import 방식
 import "./home.scss";
 
-const NoticeZone = ({ boardsWithPosts }) => {
+const NoticeZone = ({ boardsWithPosts, maintenanceItem }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 실행
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         const { permission } = decodedToken;
 
-        // permission 값이 1, 2, 3, 4, 5 중 하나인지 확인
         if ([1, 2, 3, 4, 5].includes(permission)) {
           setIsAuthorized(true);
         } else {
@@ -33,6 +31,7 @@ const NoticeZone = ({ boardsWithPosts }) => {
   }, []);
 
   const navigate = useNavigate();
+
   const settings = {
     dots: false,
     infinite: true,
@@ -42,33 +41,55 @@ const NoticeZone = ({ boardsWithPosts }) => {
     autoplay: true,
     autoplaySpeed: 3000,
     pauseOnHover: true,
-    vertical: true, // 세로 방향 슬라이드 설정
-    arrows: false, // 버튼 제거
+    vertical: true,
+    arrows: false,
   };
 
   const handleNoticeClick = (id) => {
-    // if (isAuthorized) {
     navigate(`/board/post/${id}`);
-    // } else {
-    // alert("로그인 해주세요.");
-    // }
   };
 
+  // boardsWithPosts 배열이 존재하는지 확인
+  const hasBoardsWithPosts =
+    Array.isArray(boardsWithPosts) && boardsWithPosts.length > 0;
+  // maintenanceItem이 있을 때 스타일을 적용
+  const noticeZoneStyle =
+    maintenanceItem && maintenanceItem.length > 0
+      ? { width: "70%", margin: "90px auto -30px" }
+      : {};
+
   return (
-    <div className="noticeZone">
+    <div className="noticeZone" style={noticeZoneStyle}>
       <Slider {...settings}>
-        {boardsWithPosts[0]?.posts.map((post, index) => (
-          <div
-            key={index}
-            className="notice"
-            onClick={() => handleNoticeClick(post.id)}
-          >
-            <h3>{post.title}</h3>
-            <p>{post.createdAt.split("T")[0]}</p>
-          </div>
-        ))}
+        {/* maintenanceItem이 있을 경우 해당 데이터를 렌더링 */}
+        {maintenanceItem && maintenanceItem.length > 0 ? (
+          maintenanceItem.map((item, index) => (
+            <div
+              key={index}
+              className="notice"
+              onClick={() => navigate("/mycar/maintenance")}
+            >
+              <h3>{item.name}</h3>
+            </div>
+          ))
+        ) : hasBoardsWithPosts ? (
+          // boardsWithPosts 배열이 있을 경우만 접근
+          boardsWithPosts[0].posts.map((post, index) => (
+            <div
+              key={index}
+              className="notice"
+              onClick={() => handleNoticeClick(post.id)}
+            >
+              <h3>{post.title}</h3>
+              <p>{post.createdAt.split("T")[0]}</p>
+            </div>
+          ))
+        ) : (
+          <div className="notice">게시글이 없습니다.</div> // 데이터가 없을 경우 표시
+        )}
       </Slider>
     </div>
   );
 };
+
 export default NoticeZone;

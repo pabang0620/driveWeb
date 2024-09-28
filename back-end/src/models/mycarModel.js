@@ -108,10 +108,32 @@ const createDefaultMaintenanceItems = async (carId, userId) => {
   }
 };
 
+const getMaintenanceItemsByUserId = async (userId) => {
+  try {
+    const items = await prisma.maintenance_items.findMany({
+      where: {
+        userId: Number(userId),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    return items;
+  } catch (error) {
+    console.error(
+      `Error fetching maintenance items for user ${userId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
 module.exports = {
   getCarByUserId,
   updateCarByUserId,
   updateUserVehicleByUserId,
   updateCarImageUrl,
   createDefaultMaintenanceItems,
+  getMaintenanceItemsByUserId,
 };

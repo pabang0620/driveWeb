@@ -3,6 +3,7 @@ const {
   addComment,
   editComment,
   removeComment,
+  getUserComments,
 } = require("../controllers/commentController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -13,5 +14,7 @@ router.post("/", authMiddleware, addComment);
 router.put("/:id", authMiddleware, editComment);
 
 router.delete("/:id", authMiddleware, removeComment);
+
+router.get("/user/:userId", getUserComments);
 
 module.exports = router;

@@ -130,6 +130,58 @@ const getPostsByPage = async (boardId, page, search) => {
     throw err;
   }
 };
+const getPostsByUser = async (userId, page, search) => {
+  const limit = 10; // 페이지당 게시글 수
+  const offset = (page - 1) * limit; // 페이지 오프셋 계산
+
+  // 검색 조건 설정
+  const searchCondition = search
+    ? {
+        OR: [
+          { title: { contains: search } }, // 제목에서 검색
+          { content: { contains: search } }, // 내용에서 검색
+        ],
+      }
+    : {}; // 검색어가 없으면 조건 없음
+
+  try {
+    // 특정 유저가 작성한 게시글 가져오기
+    const posts = await prisma.posts.findMany({
+      where: {
+        userId: userId, // userId로 필터링
+        ...searchCondition, // 검색 조건 추가
+      },
+      orderBy: { createdAt: "desc" }, // 최신 순으로 정렬
+      skip: offset, // 페이지 오프셋 적용
+      take: limit, // 가져올 게시글 수 적용
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        users: {
+          select: { nickname: true }, // 작성자 닉네임
+        },
+        _count: {
+          select: { comments: true }, // 댓글 수 카운트
+        },
+      },
+    });
+
+    // 해당 유저의 게시글 총 개수
+    const totalPosts = await prisma.posts.count({
+      where: {
+        userId: userId, // userId로 필터링
+        ...searchCondition, // 검색 조건 추가
+      },
+    });
+
+    return { posts, totalPosts };
+  } catch (err) {
+    console.error(`Error fetching posts for user ${userId}:`, err);
+    throw err;
+  }
+};
+
 // 게시물조회
 const getPostById = async (id, userId) => {
   const post = await prisma.posts.findUnique({
@@ -477,6 +529,7 @@ module.exports = {
   createPostImages,
   getBoardById,
   getPostsByPage,
+  getPostsByUser,
   getPostById,
   updatePost,
   // 홈에서 쓰는 랭킹

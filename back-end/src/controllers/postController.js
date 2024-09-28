@@ -11,6 +11,7 @@ const {
   getBoardById,
   toggleLike,
   getBoardsName,
+  getPostsByUser,
 } = require("../models/postModel");
 
 const addBoard = async (req, res) => {
@@ -71,6 +72,26 @@ const getPosts = async (req, res) => {
     res.status(200).json({ board, posts, totalPosts });
   } catch (error) {
     res.status(500).json({ error: "게시글 조회 중 오류가 발생했습니다." });
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  const { userId } = req.params;
+  const { page = 1, search = "" } = req.query; // 검색어 및 페이지 처리
+
+  try {
+    // 특정 유저가 작성한 게시글과 게시글 총 개수 가져오기
+    const { posts, totalPosts } = await getPostsByUser(
+      Number(userId),
+      Number(page),
+      search
+    );
+    res.status(200).json({ posts, totalPosts });
+  } catch (error) {
+    console.error(`Error fetching posts for user ${userId}:`, error);
+    res
+      .status(500)
+      .json({ error: "사용자가 작성한 게시글 조회 중 오류가 발생했습니다." });
   }
 };
 
@@ -165,6 +186,7 @@ module.exports = {
   createPost,
   getPosts,
   getPost,
+  getUserPosts,
   likePost,
   editPost,
   removePost,

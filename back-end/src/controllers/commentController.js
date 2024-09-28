@@ -3,6 +3,7 @@ const {
   getCommentsByPost,
   updateComment,
   deleteComment,
+  getUserCommentsById,
 } = require("../models/commentModel");
 
 const addComment = async (req, res) => {
@@ -49,9 +50,23 @@ const removeComment = async (req, res) => {
   }
 };
 
+const getUserComments = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // 모델에서 데이터를 가져옴
+    const comments = await getUserCommentsById(Number(userId));
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error(`Error fetching comments for user ${userId}:`, error);
+    res.status(500).json({ error: "댓글 조회 중 오류가 발생했습니다." });
+  }
+};
 module.exports = {
   addComment,
   getComments,
   editComment,
   removeComment,
+  getUserComments,
 };

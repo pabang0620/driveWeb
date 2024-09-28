@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 import axios from "axios"; // axios 사용
+import "./payment.scss";
 
 export function SuccessPage() {
   const navigate = useNavigate();
@@ -138,77 +139,6 @@ export function SuccessPage() {
           홈으로 돌아가기
         </a>
       </div>
-
-      <style jsx>{`
-        .result.wrapper {
-          background-color: rgb(244, 244, 244);
-          height: calc(100vh - 300px);
-          position: relative;
-          .box_section {
-            max-width: 350px;
-            width: 70%;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transform: translate(-50%, -50%);
-            @media (max-width: 768px) {
-              width: 100%;
-              max-width: 100%;
-              height: 100%;
-              border-radius: 0px;
-              box-shadow: 0 0 0;
-              display: flex;
-              flex-wrap: wrap;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-            }
-          }
-
-          h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #4caf50;
-          }
-
-          p {
-            font-size: 16px;
-            line-height: 25px;
-            margin-bottom: 30px;
-          }
-
-          .navyBox {
-            width: 100%;
-            padding: 12px;
-            background-color: #3c5997;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: background-color 0.3s;
-
-            @media (max-width: 768px) {
-              width: 70%;
-              font-size: 16px;
-            }
-            a {
-              color: white;
-              display: inline-block;
-              width: 100%;
-              height: 100%;
-            }
-            &:hover {
-              background-color: #7388b6;
-            }
-          }
-        }
-      `}</style>
     </div>
   );
 }

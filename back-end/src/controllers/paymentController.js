@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 exports.confirmPayment = async (req, res) => {
   const { paymentKey, orderId, amount } = req.body;
-
   const widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+  // const widgetSecretKey = process.env.TOSS_SECRET_KEY;
   const encryptedSecretKey =
     "Basic " + Buffer.from(widgetSecretKey + ":").toString("base64");
 
@@ -59,6 +59,11 @@ exports.handlePaymentSuccess = async (req, res) => {
           expirationDate: new Date(expirationDate),
         },
       });
+      // 결제 성공 시 users 테이블의 permission 필드 업데이트
+      await prisma.users.update({
+        where: { id: Number(userId) }, // userId로 users 테이블에서 해당 사용자 검색
+        data: { permission: 4 }, // permission 값을 4로 업데이트
+      });
 
       return res.status(200).json({
         message: "결제 정보가 성공적으로 저장되었습니다.",
@@ -97,6 +102,49 @@ exports.handlePaymentSuccess = async (req, res) => {
   }
 };
 
+exports.getExpirationDate = async (req, res) => {
+  const { userId } = req; // URL 파라미터에서 userId를 가져옴
+
+  try {
+    // userId로 premium_payments 테이블에서 해당 사용자의 결제 정보를 조회
+    const paymentRecord = await prisma.premium_payments.findFirst({
+      where: {
+        userId: Number(userId), // userId로 조회
+      },
+      select: {
+        expirationDate: true, // expirationDate 필드만 선택
+      },
+    });
+
+    // 결제 정보가 없는 경우
+    if (!paymentRecord) {
+      return res.status(404).json({
+        message: "해당 사용자의 결제 기록을 찾을 수 없습니다.",
+      });
+    }
+
+    // 성공적으로 expirationDate 반환
+    return res.status(200).json({
+      userId: userId,
+      expirationDate: paymentRecord.expirationDate,
+    });
+  } catch (error) {
+    console.error("expirationDate 조회 오류:", error);
+    return res.status(500).json({
+      message: "expirationDate 조회 중 오류가 발생했습니다.",
+      error: error.message,
+    });
+  }
+};
+
+exports.getPremiumPaymentByUserId = async (userId) => {
+  return await prisma.premium_payments.findFirst({
+    where: { userId }, // userId로 결제 정보 조회
+    select: {
+      expirationDate: true, // expirationDate 필드만 조회
+    },
+  });
+};
 // 새로운 만료일 계산 함수
 function calculateNewExpirationDate(currentExpirationDate, orderState) {
   const expiration = new Date(currentExpirationDate);
