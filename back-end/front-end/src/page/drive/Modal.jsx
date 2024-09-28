@@ -9,7 +9,7 @@ const Modal = ({
   content,
 }) => {
   return (
-    <div className="driveModal">
+    <div className="NodriveModal">
       <div className="modal-inner">
         <div className="modal-header">
           {/* number가 1보다 클 때만 ← 버튼을 보여줌 */}
@@ -29,7 +29,7 @@ const Modal = ({
         <div className="modal-content">{content}</div>
         <style jsx>
           {`
-            .driveModal {
+            .NodriveModal {
               display: ${showModal ? "block" : "none"};
               position: fixed;
               z-index: 1;

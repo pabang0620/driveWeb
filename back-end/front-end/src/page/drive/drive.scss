@@ -453,7 +453,7 @@
     label {
       display: inline-block;
       width: 25%;
-      color: #c1c1c1;
+      // color: #c1c1c1;
       padding: 3% 1%;
       @media (max-width: 768px) {
         width: 40%;
@@ -464,7 +464,7 @@
     input {
       border: none;
       background: none;
-      color: #c1c1c1;
+      // color: #c1c1c1;
       width: 70%;
       &:focus {
         color: #222;

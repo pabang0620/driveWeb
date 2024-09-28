@@ -326,10 +326,10 @@ const DriveLog = () => {
             <th>No</th>
             <th>날짜</th>
             <th>주행거리</th>
-            <th>운행수익</th>
-            <th>운행지출</th>
-            <th>운행손익</th>
-            <th>근무시간</th>
+            <th>수입</th>
+            <th>지출</th>
+            <th>손익</th>
+            <th>운행시간</th>
             <th>수정</th>
           </tr>
         </thead>

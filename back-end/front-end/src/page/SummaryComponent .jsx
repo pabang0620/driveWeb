@@ -51,16 +51,16 @@ const SummaryComponent = () => {
       {error && <p style={{ color: "red" }}>{error}</p>}
       {data && (
         <div>
-          <h2>총 데이터</h2>
-          <p>총 작업 시간(초): {data.totalWorkingHours}</p>
-          <p>총 주행 거리(킬로미터): {data.totalDrivingDistance}</p>
-          <p>총 영업 거리(킬로미터): {data.totalBusinessDistance}</p>
-          <p>총 영업 비율(%): {data.totalBusinessRate}</p>
-          <p>총 연료 소모량(리터): {data.totalFuelAmount}</p>
-          <p>총 연비(킬로미터/리터): {data.totalFuelEfficiency}</p>
-          <p>총 운전 횟수: {data.totalDrivingCases}</p>
-          <p>시간당 총 수입(원): {data.totalIncomePerHour}</p>
-          <p>킬로미터당 총 수입(원): {data.totalIncomePerKm}</p>
+          <h2>데이터</h2>
+          <p>운행시간(초): {data.totalWorkingHours}</p>
+          <p>주행거리(킬로미터): {data.totalDrivingDistance}</p>
+          <p>영업거리(킬로미터): {data.totalBusinessDistance}</p>
+          <p>영업비율(%): {data.totalBusinessRate}</p>
+          <p>연료소모량(리터): {data.totalFuelAmount}</p>
+          <p>연비(킬로미터/리터): {data.totalFuelEfficiency}</p>
+          <p>운전건수: {data.totalDrivingCases}</p>
+          <p>1시간당수입(원): {data.totalIncomePerHour}</p>
+          <p>1km당수입(원): {data.totalIncomePerKm}</p>
 
           <h2>오늘 데이터</h2>
           <p>오늘 작업 시간(초): {data.todayWorkingHours}</p>

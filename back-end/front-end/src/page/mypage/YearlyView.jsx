@@ -55,10 +55,6 @@ function YearlyView() {
     setYear(Number(event.target.value));
   };
 
-  const formatCurrency = (value) => {
-    return `${value.toLocaleString()}원`; // 절대값을 사용하지 않음
-  };
-
   // 한국어로 항목 이름 매핑
   const incomeLabels = {
     card_income: "카드 수입",
@@ -142,6 +138,17 @@ function YearlyView() {
   const calculateIncome = data.income.other_income - previosIncome;
   const calculateExpense = data.expense.other_expense - previousExpense;
   console.log(calculateNet, calculateIncome, calculateExpense);
+
+  const currentYear = new Date().getFullYear();
+  const years = [];
+  for (let y = 2018; y <= currentYear; y++) {
+    years.push(y);
+  }
+
+  const formatCurrency = (value) => {
+    return `${Math.floor(value).toLocaleString()}원`; // 소수점 제거
+  };
+
   // if (loading) return <Spinner />;
   if (error) return <div>{error}</div>;
 
@@ -153,13 +160,11 @@ function YearlyView() {
           <label>
             <span>연도 선택</span>
             <select value={year} onChange={handleYearChange}>
-              <option value={2018}>2018</option>
-              <option value={2019}>2019</option>
-              <option value={2020}>2020</option>
-              <option value={2021}>2021</option>
-              <option value={2022}>2022</option>
-              <option value={2023}>2023</option>
-              <option value={2024}>2024</option>
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
             </select>
           </label>
         </div>

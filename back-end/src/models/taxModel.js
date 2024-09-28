@@ -186,12 +186,12 @@ async function getInsuranceFeeForYear(userId, year) {
           OR: [
             {
               insurance_period_start: {
-                lte: new Date(`${year}-12-31`),
+                lte: new Date(`${year}-12-31`), // 보험 시작이 연도 내에 시작하거나
               },
             },
             {
               insurance_period_end: {
-                gte: new Date(`${year}-01-01`),
+                gte: new Date(`${year}-01-01`), // 보험 종료가 연도 내에 종료하는 경우
               },
             },
           ],
@@ -209,6 +209,11 @@ async function getInsuranceFeeForYear(userId, year) {
     const start = car.insurance_period_start;
     const end = car.insurance_period_end;
 
+    // 연도 내에 보험 기간이 포함되지 않으면 0을 반환
+    if (end < new Date(`${year}-01-01`) || start > new Date(`${year}-12-31`)) {
+      return total; // 기간 내에 포함되지 않으면 추가하지 않음
+    }
+
     // 전체 보험 기간 동안의 개월 수 계산
     const totalMonths = calculateCoveredMonths(start, end, end.getFullYear());
 
@@ -219,7 +224,7 @@ async function getInsuranceFeeForYear(userId, year) {
     const monthsCovered = calculateCoveredMonths(start, end, year);
 
     // 주어진 연도의 보험료 계산
-    const annualFeeForCoveredMonths = monthlyFee * 12;
+    const annualFeeForCoveredMonths = monthlyFee * monthsCovered;
 
     return total + annualFeeForCoveredMonths;
   }, 0);
