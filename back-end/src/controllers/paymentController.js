@@ -5,8 +5,8 @@ const prisma = new PrismaClient();
 
 exports.confirmPayment = async (req, res) => {
   const { paymentKey, orderId, amount } = req.body;
-  const widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
-  // const widgetSecretKey = process.env.TOSS_SECRET_KEY;
+  // const widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+  const widgetSecretKey = process.env.TOSS_SECRET_KEY;
   const encryptedSecretKey =
     "Basic " + Buffer.from(widgetSecretKey + ":").toString("base64");
 

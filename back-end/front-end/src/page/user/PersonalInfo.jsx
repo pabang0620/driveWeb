@@ -108,7 +108,7 @@ const PersonalInfo = () => {
         );
 
         localStorage.setItem("token", response.data.token); // 새 토큰을 로컬 스토리지에 저장
-        alert("업종이 변경되었습니다."); // 성공 메시지
+        alert("업종이 변경되었습니다. 재로그인 시 반영됩니다."); // 성공 메시지
       } catch (error) {
         console.error("Failed to update job type:", error);
         alert("업종 업데이트에 실패하였습니다.");

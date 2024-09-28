@@ -4,8 +4,8 @@ import useCheckPermission from "../../utils/useCheckPermission";
 import { jwtDecode } from "jwt-decode";
 import "./payment.scss";
 
-const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
+// const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+// const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
 
 // paymentKey, orderId는 서버에 필수로 저장하세요.
 // 결제 조회, 결제 취소에 사용되는 값입니다. 나머지 값들은 필요에 따라 저장하세요.
@@ -13,15 +13,15 @@ const customerKey = "zwjv-5AOX_iBbBPZZoE-8";
 function Checkout({ plans }) {
   useCheckPermission();
 
-  //   const clientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
-  //   const [decodedUserId, setDecodedUserId] = useState("");
-  //   useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   const decoded = jwtDecode(token);
-  //   setDecodedUserId(decoded.userId);
-  // }, []);
+  const clientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
+  const [decodedUserId, setDecodedUserId] = useState("");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+    setDecodedUserId(decoded.userId);
+  }, []);
 
-  // const customerKey = `user_${decodedUserId}`;
+  const customerKey = `user_${decodedUserId}`;
 
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState(null);

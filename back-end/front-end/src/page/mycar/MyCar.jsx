@@ -101,8 +101,10 @@ const MyCar = () => {
 
   const handleEditClick = async (field) => {
     if (editStates[field]) {
+      // "저장" 버튼을 클릭한 경우 (editStates[field]가 true일 때)
       try {
         let data;
+        // 보험 기간인 경우 시작일과 종료일을 함께 저장
         if (field === "insurance_period") {
           data = {
             insurance_period_start: new Date(
@@ -115,10 +117,12 @@ const MyCar = () => {
         } else {
           data = {
             [field]: field.includes("date")
-              ? new Date(carInfo[field]).toISOString()
-              : carInfo[field],
+              ? new Date(carInfo[field]).toISOString() // 날짜 필드 처리
+              : carInfo[field], // 그 외 필드 처리
           };
         }
+
+        // 서버에 데이터 전송 (PUT 요청)
         await axios.put("/api/mycar", data, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -129,9 +133,11 @@ const MyCar = () => {
         console.error("There was an error updating the data:", error);
       }
     }
+
+    // 수정/저장 상태 전환
     setEditStates((prevStates) => ({
       ...prevStates,
-      [field]: !prevStates[field],
+      [field]: !prevStates[field], // 상태 토글
     }));
   };
 
@@ -178,7 +184,7 @@ const MyCar = () => {
           {[
             { label: "차명", field: "vehicle_name" },
             { label: "연식", field: "year" },
-            { label: "주행거리", field: "mileage" },
+            { label: "누적주행거리", field: "mileage" },
             { label: "차량번호", field: "license_plate" },
             {
               label: "최초등록일",
@@ -206,7 +212,7 @@ const MyCar = () => {
                   className="edit-button"
                   onClick={() => handleEditClick(field)}
                 >
-                  &#9998;
+                  수정
                 </button>
               </div>
             </div>
@@ -237,7 +243,7 @@ const MyCar = () => {
                 className="edit-button"
                 onClick={() => handleEditClick("fuel_type")}
               >
-                &#9998;
+                수정
               </button>
             </div>
           </div>
@@ -268,7 +274,7 @@ const MyCar = () => {
                   className="edit-button"
                   onClick={() => handleEditClick(field)}
                 >
-                  &#9998;
+                  수정
                 </button>
               </div>
             </div>
@@ -311,12 +317,49 @@ const MyCar = () => {
                 className="edit-button"
                 onClick={() => handleEditClick("insurance_period")}
               >
-                &#9998;
+                수정
               </button>
             </div>
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .edit-button {
+          border: 1px solid #ccc; /* 테두리 */
+          white-space: nowrap;
+          color: #333; /* 텍스트 색상 */
+          padding: 5px 10px; /* 여백 */
+          border-radius: 5px; /* 둥근 모서리 */
+          cursor: pointer; /* 커서 모양 */
+          font-size: 14px;
+          transition: background-color 0.3s ease, color 0.3s ease; /* 마우스 호버 시 애니메이션 */
+        }
+
+        .edit-button:hover {
+          background-color: #f0f0f0; /* 기본 배경색 */
+          color: #000; /* 호버 시 텍스트 색상 */
+        }
+
+        .edit-button.save {
+          background-color: #4caf50; /* 저장 상태일 때 배경색 */
+          color: white; /* 저장 상태일 때 텍스트 색상 */
+          font-weight: bold;
+        }
+
+        .edit-button.save:hover {
+          background-color: #45a049; /* 저장 상태일 때 호버 시 배경색 */
+        }
+
+        .edit-button.edit {
+          background-color: #2196f3; /* 수정 상태일 때 배경색 */
+          color: white; /* 수정 상태일 때 텍스트 색상 */
+          font-weight: bold;
+        }
+
+        .edit-button.edit:hover {
+          background-color: #1e88e5; /* 수정 상태일 때 호버 시 배경색 */
+        }
+      `}</style>
     </div>
   );
 };
