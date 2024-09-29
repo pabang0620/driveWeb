@@ -35,7 +35,7 @@ const socialLogin = async (req, res, provider) => {
       userData = {
         id: String(response.data.id),
         email: response.data.kakao_account.email,
-        // nickname: profile ? profile.nickname : "카카오 사용자",
+        nickname: "카카오 사용자",
       };
 
       console.log("Parsed user data:", userData);
