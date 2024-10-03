@@ -57,6 +57,10 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
     Saturday: "토요일",
   };
 
+  const formatNumber = (num) => {
+    return Number(num).toLocaleString();
+  };
+
   const renderTabContent = () => {
     if (activeTab === "drive") {
       if (!details.driving_records || details.driving_records.length === 0) {
@@ -92,13 +96,15 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             <span>{new Date(working_hours).getUTCHours()} 시간</span>
           </div>
           <div className="data-row">
-            <strong>주행 거리:</strong> <span>{driving_distance} km</span>
+            <strong>주행 거리:</strong>{" "}
+            <span>{formatNumber(driving_distance)} km</span>
           </div>
           <div className="data-row">
-            <strong>영업 거리:</strong> <span>{business_distance} km</span>
+            <strong>영업 거리:</strong>{" "}
+            <span>{formatNumber(business_distance)} km</span>
           </div>
           <div className="data-row">
-            <strong>주유량:</strong> <span>{fuel_amount} L</span>
+            <strong>주유량:</strong> <span>{formatNumber(fuel_amount)} L</span>
           </div>
           <div className="data-row">
             <strong>총 운행 수:</strong> <span>{total_driving_cases} 회</span>
@@ -128,7 +134,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
               <div className="data-row" key={key}>
                 <strong>{translateKey(key)}:</strong>{" "}
                 <span style={key === "total_income" ? { color: "red" } : {}}>
-                  {filteredIncome[key]} 원
+                  {formatNumber(filteredIncome[key])} 원
                 </span>
               </div>
             ))}
@@ -151,7 +157,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
           {regularExpenses.map((expenseKey) => (
             <div className="data-row" key={expenseKey}>
               <strong>{translateKey(expenseKey)}:</strong>{" "}
-              <span>{filteredExpense[expenseKey]} 원</span>
+              <span>{formatNumber(filteredExpense[expenseKey])} 원</span>
             </div>
           ))}
           {/* 총 지출 */}
@@ -159,7 +165,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
             <div className="data-row">
               <strong>{translateKey("total_expense")}:</strong>{" "}
               <span style={{ color: "blue" }}>
-                {filteredExpense["total_expense"]} 원
+                {formatNumber(filteredExpense["total_expense"])} 원
               </span>
             </div>
           )}
@@ -175,7 +181,7 @@ const DriveDetails = ({ showModal, closeModal, drivingLogId }) => {
                       : "blue",
                 }}
               >
-                {filteredExpense["profit_loss"]} 원
+                {formatNumber(filteredExpense["profit_loss"])} 원
               </span>
             </div>
           )}

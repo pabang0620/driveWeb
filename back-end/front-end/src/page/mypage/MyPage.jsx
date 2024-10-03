@@ -89,7 +89,7 @@ const MyPage = () => {
   //if (error) return <p>Error loading data: {error.message}</p>;
 
   return (
-    <div className="container mypage-container">
+    <div className="containerM mypage-container">
       <TitleBox title="마이페이지" />
       {/* <select
         className="dateSelector"

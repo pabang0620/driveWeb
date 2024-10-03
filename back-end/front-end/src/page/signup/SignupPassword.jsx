@@ -61,7 +61,7 @@ function SignupPassword() {
   }, [password, passwordCheck]);
 
   return (
-    <div className="container signup-container">
+    <div className="container signup-containerP">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
           <img src="/images/prevBtn.png" alt="이전" />

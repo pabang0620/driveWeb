@@ -47,10 +47,12 @@ function Login() {
       });
 
       // 응답 데이터에서 토큰만 추출하여 로컬스토리지에 저장
-      const { token, nickname } = response.data;
+      const { token, nickname, message } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("nickname", nickname); // 닉네임 저장
+
+      alert(message);
 
       navigate("/");
     } catch (error) {
@@ -74,10 +76,12 @@ function Login() {
         token: accessToken,
       });
 
-      const { token, nickname } = responseData.data;
+      const { token, nickname, message } = responseData.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("nickname", nickname); // 닉네임 저장
+
+      alert(message);
 
       navigate("/");
     } catch (error) {
@@ -112,12 +116,13 @@ function Login() {
       });
 
       // 응답 데이터에서 토큰만 추출하여 localStorage에 저장
-      const { token, nickname } = responseData.data;
+      const { token, nickname, message } = responseData.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("nickname", nickname); // 닉네임 저장
       localStorage.removeItem("kakao_db73a80e65b6fe722d881859aec02bb7");
 
+      alert(message);
       // 로그인이 성공하면 홈 페이지로 이동
       navigate("/");
     } catch (error) {

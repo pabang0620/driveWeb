@@ -33,12 +33,33 @@ const SignupJob = () => {
       navigate("/");
       //로그인 성공 후, 토큰 등을 저장하거나 리다이렉트하는 로직 추가
     } catch (error) {
-      console.error("Signup error:", error.response?.data || error.message);
+      console.error("Signup error:", error);
+      // 에러 응답 처리
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            alert("모든 필드를 정확히 입력해주세요.");
+            break;
+          case 409:
+            alert("이미 사용중인 이메일입니다.");
+            break;
+          case 410:
+            alert("이미 사용중인 닉네임입니다.");
+            break;
+          default:
+            alert(
+              `회원가입 중 오류가 발생했습니다: ${error.response.data.error}`
+            );
+        }
+      } else {
+        // 서버로부터 응답이 없는 경우
+        alert("서버로부터 응답을 받지 못했습니다. 잠시 후 다시 시도해주세요.");
+      }
     }
   };
 
   return (
-    <div className="container signup-container">
+    <div className="container signup-containerJ">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
           <img

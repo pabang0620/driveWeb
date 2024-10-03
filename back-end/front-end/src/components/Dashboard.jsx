@@ -11,7 +11,9 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
   const handleMoreClick = () => {
     navigate("/driving_log/dashboard");
   };
-
+  const formatNumber = (num) => {
+    return Number(num).toLocaleString();
+  };
   const [data, setData] = useState({
     totalIncome: 0,
     todayIncome: 0,
@@ -39,31 +41,31 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
     const items = [
       {
         title: "총 수입",
-        value: data.totalIncome,
+        value: formatNumber(data.totalIncome), // 천단위 구분 적용
         subTitle: "당일의 수입",
-        subValue: data.todayIncome,
+        subValue: formatNumber(data.todayIncome), // 천단위 구분 적용
         topPercentage: data.totalIncome > 0 ? data.totalIncomePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 주행거리",
-        value: `${data.totalMileage} km`,
+        value: `${formatNumber(data.totalMileage)} km`, // 천단위 구분 적용
         subTitle: "당일의 주행거리",
-        subValue: `${data.todayDrivingDistance} km`,
+        subValue: `${formatNumber(data.todayDrivingDistance)} km`,
         topPercentage:
           data.totalMileage > 0 ? data.totalMileagePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 손익(초과금)",
-        value: data.netProfit,
+        value: formatNumber(data.netProfit), // 천단위 구분 적용
         subTitle: "당일의 손익(초과금)",
-        subValue: data.todayNetProfit,
+        subValue: formatNumber(data.todayNetProfit), // 천단위 구분 적용
         topPercentage: data.netProfit > 0 ? data.netProfitPercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 지출",
-        value: data.totalExpense,
+        value: formatNumber(data.totalExpense), // 천단위 구분 적용
         subTitle: "당일의 지출",
-        subValue: data.todayExpense,
+        subValue: formatNumber(data.todayExpense), // 천단위 구분 적용
         topPercentage:
           data.totalExpense > 0 ? data.totalExpensePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },

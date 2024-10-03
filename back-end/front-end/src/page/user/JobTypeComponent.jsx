@@ -29,7 +29,7 @@ const JobTypeComponent = () => {
   };
 
   return (
-    <div className="container">
+    <div className="topBoxcontainer">
       <h2>업종을 선택해주세요</h2>
       <div className="button-group">
         <button onClick={() => updateJobType(1)}>택시</button>

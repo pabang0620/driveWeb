@@ -22,6 +22,9 @@ const DriveLog = () => {
   const { userId } = useParams(); // useParams를 사용하여 userId를 가져옴
   const [number, setNumber] = useState(0);
 
+  const formatNumber = (num) => {
+    return Number(num).toLocaleString();
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
@@ -239,7 +242,7 @@ const DriveLog = () => {
   if (!vehicleInfo.carType) {
     // 차량 종류가 비어있을 경우 메시지 표시
     return (
-      <div className="container">
+      <div className="Boxcontainer">
         <Link to="/user/carInfo">차량 정보를 입력해주세요(클릭 시 이동)</Link>
       </div>
     );
@@ -341,10 +344,15 @@ const DriveLog = () => {
             >
               <td>{indexOfFirstItem + index + 1}</td>
               <td>{formatDate(item.date)}</td> {/* 날짜 포맷 적용 */}
-              <td>{item.driving_distance} km</td>
-              <td>{Math.round(item.total_income)} 원</td>
-              <td>{Math.round(item.total_expense)} 원</td>
-              <td>{Math.round(item.total_income - item.total_expense)} 원</td>
+              <td>{formatNumber(item.driving_distance)} km</td>
+              <td>{formatNumber(Math.round(item.total_income))} 원</td>
+              <td>{formatNumber(Math.round(item.total_expense))} 원</td>
+              <td>
+                {formatNumber(
+                  Math.round(item.total_income - item.total_expense)
+                )}{" "}
+                원
+              </td>
               <td>{formatWorkingHours(item.working_hours)}</td>
               <td>
                 <button

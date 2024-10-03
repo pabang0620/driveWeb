@@ -84,7 +84,7 @@ const IncomeInfo = () => {
     return <JobTypeComponent />;
   }
   return (
-    <div className="container userInfo">
+    <div className="container userInfoIncome">
       <TitleBox title="회원정보" subtitle="소득정보" />
 
       <div className="content">

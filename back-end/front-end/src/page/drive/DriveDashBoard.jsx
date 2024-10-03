@@ -123,13 +123,13 @@ const DriveDashBoard = () => {
   if (!vehicleInfo.carType) {
     // 차량 종류가 비어있을 경우 메시지 표시
     return (
-      <div className="container">
+      <div className="Boxcontainer">
         <Link to="/user/carInfo">차량 정보를 입력해주세요(클릭 시 이동)</Link>
       </div>
     );
   }
   return (
-    <div className="container dashboard-container">
+    <div className="driveContainer dashboard-container">
       <h2 className="mainTitle">
         운행일지 <span>대쉬보드</span>
       </h2>

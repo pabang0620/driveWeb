@@ -80,7 +80,7 @@ function SignupEmail() {
   }, [agreePrivacy, agreeTerms]);
 
   return (
-    <div className="container signup-container">
+    <div className="container signup-containerE">
       <div className="signup-box">
         <button className="goBack" onClick={() => navigate(-1)}>
           <img

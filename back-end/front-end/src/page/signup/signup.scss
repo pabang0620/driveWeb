@@ -1,19 +1,14 @@
 .signup-container {
   background-color: rgb(244, 244, 244);
-  height: calc(100vh - 300px);
-  position: relative;
   .signup-box {
     max-width: 350px;
     width: 70%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     background-color: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
+    margin: 0 auto;
     @media (max-width: 768px) {
       width: 100%;
       max-width: 100%;
@@ -82,8 +77,10 @@
   }
 }
 
-.signup-container {
+.signup-containerE {
   padding: 80px 0 150px 0;
+  height: auto !important;
+
   ul,
   li,
   ol {
@@ -176,6 +173,11 @@
       }
     }
   }
+  .agreePrivacy,
+  .agreeTerms {
+    display: flex;
+    flex-direction: row;
+  }
   .terms {
     margin-top: 100px;
     @media (max-width: 768px) {
@@ -243,8 +245,10 @@
   }
 }
 
-.signup-container {
+.signup-containerJ {
   padding: 30px 0 120px 0;
+  height: auto !important;
+
   .signup-box {
     max-width: 350px;
     width: 70%;
@@ -331,8 +335,9 @@
   }
 }
 
-.signup-container {
+.signup-containerP {
   padding: 80px 0 150px 0;
+  height: auto !important;
   ul,
   li,
   ol {

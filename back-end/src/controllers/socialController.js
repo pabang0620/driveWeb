@@ -10,6 +10,7 @@ const {
   createUserIncome,
   createMyCar,
   createDefaultMaintenanceItems,
+  findUserByEmail,
 } = require("../models/socialModel");
 
 const socialLogin = async (req, res, provider) => {
@@ -49,7 +50,7 @@ const socialLogin = async (req, res, provider) => {
       userData = {
         id: response.data.sub,
         email: response.data.email,
-        nickname: response.data.name || "구글 사용자",
+        nickname: "구글 사용자",
       };
 
       console.log("Parsed user data:", userData);
@@ -65,8 +66,6 @@ const socialLogin = async (req, res, provider) => {
         email: response.data.response.email,
         nickname: response.data.response.nickname || "네이버 사용자",
       };
-
-      console.log("Parsed user data:", userData);
     } else {
       return res
         .status(400)
@@ -74,6 +73,7 @@ const socialLogin = async (req, res, provider) => {
     }
 
     const { id, email, nickname } = userData;
+
     console.log(`Looking for existing user by ${provider} ID:`, id);
 
     let user;
@@ -87,9 +87,12 @@ const socialLogin = async (req, res, provider) => {
     }
 
     if (!user) {
-      console.log("No existing user found. Creating new user...");
-
       try {
+        console.log("네이버 데이터", email, id, nickname);
+        const existingEmailUser = await findUserByEmail(email);
+        if (existingEmailUser) {
+          return res.status(409).json({ error: "중복된 이메일 입니다." });
+        }
         user = await createUser({
           nickname,
           username: email,
@@ -185,7 +188,11 @@ const socialLogin = async (req, res, provider) => {
     );
 
     console.log("JWT token generated for user ID:", user.id);
-    res.status(200).json({ token: jwtToken, nickname: user.nickname });
+    res.status(200).json({
+      token: jwtToken,
+      nickname: user.nickname,
+      message: "회원가입에 성공했습니다.",
+    });
   } catch (error) {
     console.error("Error during social login:", error);
 

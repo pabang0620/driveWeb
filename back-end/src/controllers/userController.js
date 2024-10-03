@@ -23,6 +23,10 @@ const paymentController = require("../controllers/paymentController");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
+const {
+  findUserByEmail,
+  findUserByNickname,
+} = require("../models/socialModel");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const registerUser = async (req, res) => {
@@ -43,6 +47,16 @@ const registerUser = async (req, res) => {
     !jobtype
   ) {
     return res.status(400).json({ error: "모든 필드를 입력해주세요." });
+  }
+
+  const existingEmailUser = await findUserByEmail(email);
+  if (existingEmailUser) {
+    return res.status(409).json({ error: "중복된 이메일 입니다." });
+  }
+
+  const existingNicknameUser = await findUserByNickname(nickname);
+  if (existingNicknameUser) {
+    return res.status(410).json({ error: "중복된 닉네임 입니다." });
   }
 
   try {

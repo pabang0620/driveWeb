@@ -59,11 +59,11 @@
       }
       @media (max-width: 768px) {
         width: 50%;
-        margin: 30px auto 0 auto;
         text-align: center;
-        flex-direction: column;
+        flex-direction: row;
         border: none;
-        gap: 10px;
+        gap: 39px;
+        margin: 30px 33px 0;
       }
       > div {
         display: flex;

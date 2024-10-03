@@ -22,11 +22,29 @@ async function findUserByNaverId(naverId) {
   });
 }
 
+// 이메일로 사용자 조회 함수
+async function findUserByEmail(email) {
+  return await prisma.user_profiles.findFirst({
+    where: { email },
+  });
+}
+// 이메일로 사용자 조회 함수
+async function findUserByNickname(nickname) {
+  return await prisma.users.findFirst({
+    where: { nickname },
+  });
+}
 // 사용자 생성 함수
 async function createUser(data) {
+  const { nickname, username, googleId, kakaoId, naverId } = data;
+
   return await prisma.users.create({
     data: {
-      ...data,
+      nickname,
+      username,
+      googleId: googleId || null, // 제공자에 따라 null 처리
+      kakaoId: kakaoId || null,
+      naverId: naverId || null,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -161,6 +179,8 @@ module.exports = {
   findUserByKakaoId,
   findUserByGoogleId,
   findUserByNaverId,
+  findUserByEmail,
+  findUserByNickname,
   createUser,
   createUserProfile,
   createUserVehicle,

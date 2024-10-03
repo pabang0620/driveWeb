@@ -40,7 +40,7 @@ const Ranking = () => {
 
   return (
     <div
-      className="container ranking-container"
+      className="containerR ranking-container"
       onClick={() => navigate("/ranking")}
     >
       <TitleBox title="랭킹" />

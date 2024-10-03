@@ -43,6 +43,7 @@ export default function Payment() {
         setPermission(decodedToken.permission); // permission 값 설정
       } catch (error) {
         console.error("JWT 디코딩 오류:", error);
+        setPermission(5);
       }
     }
   }, []);

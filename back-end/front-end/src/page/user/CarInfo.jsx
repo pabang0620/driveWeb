@@ -100,7 +100,7 @@ const CarInfo = () => {
     return <JobTypeComponent />;
   }
   return (
-    <div className="container userInfo">
+    <div className="container userInfoCar">
       <TitleBox title="회원정보" subtitle="차량정보" />
       <div className="content">
         <div className="inputWrap">
