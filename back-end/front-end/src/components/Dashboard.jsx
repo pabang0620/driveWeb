@@ -42,14 +42,14 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
       {
         title: "총 수입",
         value: formatNumber(data.totalIncome), // 천단위 구분 적용
-        subTitle: "당일의 수입",
+        subTitle: "최신 수입",
         subValue: formatNumber(data.todayIncome), // 천단위 구분 적용
         topPercentage: data.totalIncome > 0 ? data.totalIncomePercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 주행거리",
         value: `${formatNumber(data.totalMileage)} km`, // 천단위 구분 적용
-        subTitle: "당일의 주행거리",
+        subTitle: "최신 주행거리",
         subValue: `${formatNumber(data.todayDrivingDistance)} km`,
         topPercentage:
           data.totalMileage > 0 ? data.totalMileagePercentage : null, // 값이 0이면 퍼센테이지 숨김
@@ -57,14 +57,14 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
       {
         title: "총 손익(초과금)",
         value: formatNumber(data.netProfit), // 천단위 구분 적용
-        subTitle: "당일의 손익(초과금)",
+        subTitle: "최신 손익(초과금)",
         subValue: formatNumber(data.todayNetProfit), // 천단위 구분 적용
         topPercentage: data.netProfit > 0 ? data.netProfitPercentage : null, // 값이 0이면 퍼센테이지 숨김
       },
       {
         title: "총 지출",
         value: formatNumber(data.totalExpense), // 천단위 구분 적용
-        subTitle: "당일의 지출",
+        subTitle: "최신 지출",
         subValue: formatNumber(data.todayExpense), // 천단위 구분 적용
         topPercentage:
           data.totalExpense > 0 ? data.totalExpensePercentage : null, // 값이 0이면 퍼센테이지 숨김
@@ -72,7 +72,7 @@ const Dashboard = ({ dateRange, getDate, setLoading, setError }) => {
       {
         title: "총 운행 시간",
         value: `${data.totalDrivingTimeHours} 시간`,
-        subTitle: "당일의 운행 시간",
+        subTitle: "최신 운행 시간",
         subValue: `${data.todayDrivingTimeHours} 시간`,
         topPercentage:
           data.totalDrivingTimeHours > 0

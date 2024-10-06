@@ -3,71 +3,83 @@ const prisma = new PrismaClient();
 
 // -------------------------------------------------------------
 // 오늘의 수입 - 1
-const getTodayIncome = async (userId, date) => {
-  // console.log("getTodayIncome - Params:", { userId, date });
-  const result = await prisma.income_records.aggregate({
-    _sum: {
+const getTodayIncome = async (userId) => {
+  const result = await prisma.income_records.findFirst({
+    where: {
+      userId,
+    },
+    orderBy: {
+      driving_logs: {
+        date: "desc", // 최신 날짜 기준으로 정렬
+      },
+    },
+    select: {
       total_income: true,
-    },
-    where: {
-      userId,
-      driving_logs: {
-        date: date,
-      },
-    },
-  });
-  // console.log("getTodayIncome - Result:", result);
-  return result._sum.total_income || 0;
-};
-// 오늘의 지출 - 1
-const getTodayExpense = async (userId, date) => {
-  // console.log("getTodayExpense - Params:", { userId, date });
-  const result = await prisma.expense_records.aggregate({
-    _sum: {
-      total_expense: true,
-    },
-    where: {
-      userId,
-      driving_logs: {
-        date: date,
-      },
-    },
-  });
-  console.log("getTodayExpense - Result:", result);
-  return result._sum.total_expense || 0;
-};
-// 오늘의 주행거리 - 1
-const getTodayDrivingDistance = async (userId, date) => {
-  // console.log("getTodayDrivingDistance - Params:", { userId, date });
-  const result = await prisma.driving_records.aggregate({
-    _sum: {
-      driving_distance: true,
-    },
-    where: {
-      driving_logs: {
-        userId: userId,
-        date: date,
-      },
-    },
-  });
-  // console.log("getTodayDrivingDistance - Result:", result);
-  return result._sum.driving_distance || 0;
-};
-// 오늘의 운행시간 - 1
-const getTodayDrivingTime = async (userId, date) => {
-  const result = await prisma.driving_records.aggregate({
-    _sum: {
-      working_hours_seconds: true, // 운행 시간을 초 단위로 합산
-    },
-    where: {
-      driving_logs: {
-        userId: userId, // 특정 사용자
-        date: date, // 특정 날짜의 운행 기록
-      },
     },
   });
 
-  const totalDrivingTimeSeconds = result._sum.working_hours_seconds || 0;
+  return result?.total_income || 0; // null 또는 undefined일 때 0 반환
+};
+
+// 오늘의 지출 - 1
+const getTodayExpense = async (userId) => {
+  const result = await prisma.expense_records.findFirst({
+    where: {
+      userId,
+    },
+    orderBy: {
+      driving_logs: {
+        date: "desc", // 최신 날짜 기준으로 정렬
+      },
+    },
+    select: {
+      total_expense: true,
+    },
+  });
+
+  return result?.total_expense || 0; // null 또는 undefined일 때 0 반환
+};
+
+// 오늘의 주행거리 - 1
+const getTodayDrivingDistance = async (userId) => {
+  const result = await prisma.driving_records.findFirst({
+    where: {
+      driving_logs: {
+        userId: userId,
+      },
+    },
+    orderBy: {
+      driving_logs: {
+        date: "desc", // 최신 날짜 기준으로 정렬
+      },
+    },
+    select: {
+      driving_distance: true,
+    },
+  });
+
+  return result?.driving_distance || 0; // null 또는 undefined일 때 0 반환
+};
+
+// 오늘의 운행시간 - 1
+const getTodayDrivingTime = async (userId) => {
+  const result = await prisma.driving_records.findFirst({
+    where: {
+      driving_logs: {
+        userId: userId,
+      },
+    },
+    orderBy: {
+      driving_logs: {
+        date: "desc", // 최신 날짜 기준으로 정렬
+      },
+    },
+    select: {
+      working_hours_seconds: true, // 운행 시간을 초 단위로 가져옴
+    },
+  });
+
+  const totalDrivingTimeSeconds = result?.working_hours_seconds || 0;
   const totalDrivingTimeHours = (totalDrivingTimeSeconds / 3600).toFixed(2); // 초를 시간 단위로 변환
   return totalDrivingTimeHours; // 시간 단위로 반환
 };
