@@ -85,11 +85,16 @@ const getTopUsers = async (req, res) => {
     });
   }
 };
-// 이익만
+
+// 운송수입금 오류
+// 운송수입금 오류
+// 운송수입금 오류
+// 운송수입금 오류
 const getTopNetIncomeUsersController = async (req, res) => {
   try {
     const { filterType, filterValue, selectedMonth } = req.body; // 클라이언트로부터 필터 타입과 값을 받음
     // 모델 함수 호출
+
     const users = await getTopNetIncomeUsers(
       filterType,
       filterValue,
@@ -143,7 +148,10 @@ async function topDrivingDistanceUsers(req, res) {
   }
 }
 
-// 총 건수 랭킹
+// 총 건수 랭킹 -------------- dhfb
+// 총 건수 랭킹 -------------- dhfb
+// 총 건수 랭킹 -------------- dhfb
+// 총 건수 랭킹 -------------- dhfb
 async function topTotalCasesUsers(req, res) {
   try {
     const { filterType, filterValue, selectedMonth } = req.body;

@@ -19,13 +19,10 @@ async function updateRankingModel(id, updateData) {
 }
 
 // -----------------------------------------------
-// 총 순수익 랭킹
+// 총 운송수입금 랭킹
 const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
   try {
     let vehicleFilterCondition = {};
-    // console.log("Filter Type:", filterType);
-    // console.log("Filter Value:", filterValue);
-    // console.log("Selected Month (raw):", selectedMonth);
 
     // 필터 타입과 값에 따라 필터링 조건 설정
     if (filterType === "carType" && filterValue && filterValue !== "전체") {
@@ -47,15 +44,18 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
       }
     }
 
-    // 특정 월에 해당하는 vehicle 조건 추가
-    if (selectedMonth) {
-      const month = parseInt(selectedMonth, 10); // selectedMonth를 정수로 변환
-      const startDate = new Date(new Date().getFullYear(), month - 1, 1);
-      const endDate = new Date(new Date().getFullYear(), month, 0);
-      vehicleFilterCondition.created_at = {
-        gte: startDate,
-        lt: endDate,
-      };
+    // 날짜 필터링을 `driving_logs` 테이블의 created_at 필드에 적용
+    let startDate, endDate;
+    const currentYear = new Date().getFullYear();
+
+    if (selectedMonth === new Date().getMonth() + 1) {
+      // 이번 달인 경우 오늘 날짜까지 필터링
+      startDate = new Date(currentYear, selectedMonth - 1, 1);
+      endDate = new Date(); // 오늘 날짜로 설정
+    } else {
+      // 선택한 달의 첫째 날과 마지막 날 설정
+      startDate = new Date(currentYear, selectedMonth - 1, 1);
+      endDate = new Date(currentYear, selectedMonth, 0); // 해당 달의 마지막 날 설정
     }
 
     // 차량 정보를 필터링하여 사용자 ID를 추출
@@ -69,7 +69,7 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
     // 필터링된 사용자 ID 목록
     const userIds = userVehicles.map((uv) => uv.userId);
 
-    // 사용자와 관련된 수입 정보를 조회 (닉네임과 프로필 이미지 URL 포함)
+    // 사용자와 관련된 수입 정보를 조회
     const users = await prisma.users.findMany({
       where: {
         id: {
@@ -82,9 +82,20 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
             imageUrl: true,
           },
         },
-        income_records: {
-          select: {
-            total_income: true,
+        driving_logs: {
+          where: {
+            created_at: {
+              // `driving_logs` 테이블에서 날짜 필터링 적용
+              gte: startDate,
+              lt: endDate,
+            },
+          },
+          include: {
+            income_records: {
+              select: {
+                total_income: true,
+              },
+            },
           },
         },
       },
@@ -92,10 +103,16 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
 
     // 각 사용자의 총 수입 계산
     const usersWithTotalIncome = users.map((user) => {
-      const totalIncome = user.income_records.reduce(
-        (acc, record) => acc + parseFloat(record.total_income || 0),
-        0
-      );
+      const totalIncome = user.driving_logs.reduce((logAcc, log) => {
+        return (
+          logAcc +
+          log.income_records.reduce(
+            (incomeAcc, record) =>
+              incomeAcc + parseFloat(record.total_income || 0),
+            0
+          )
+        );
+      }, 0);
 
       const formattedIncome = totalIncome.toLocaleString("ko-KR") + "원";
 
@@ -462,19 +479,19 @@ const getTopTotalCasesUsersModel = async (
       }
     }
 
-    // 특정 월에 해당하는 vehicle 조건 추가
-    if (selectedMonth) {
-      const startDate = new Date(
-        new Date().getFullYear(),
-        selectedMonth - 1,
-        1
-      );
-      const endDate = new Date(new Date().getFullYear(), selectedMonth, 0);
+    // 특정 월에 해당하는 vehicle 조건 추가는 필요하지 않음 (driving_logs에 필터 적용)
+    let startDate, endDate;
+    const currentYear = new Date().getFullYear();
 
-      vehicleFilterCondition.created_at = {
-        gte: startDate,
-        lt: endDate,
-      };
+    // selectedMonth를 기준으로 필터링 날짜 설정
+    if (selectedMonth === new Date().getMonth() + 1) {
+      // 이번 달인 경우 오늘 날짜까지 필터링
+      startDate = new Date(currentYear, selectedMonth - 1, 1);
+      endDate = new Date(); // 오늘 날짜로 설정
+    } else {
+      // 선택한 달의 첫째 날과 마지막 날 설정
+      startDate = new Date(currentYear, selectedMonth - 1, 1);
+      endDate = new Date(currentYear, selectedMonth, 0); // 해당 달의 마지막 날 설정
     }
 
     // 차량 정보를 필터링하여 사용자 ID를 추출
@@ -497,14 +514,14 @@ const getTopTotalCasesUsersModel = async (
       },
       include: {
         driving_logs: {
+          where: {
+            created_at: {
+              gte: startDate,
+              lt: endDate, // 필터링된 날짜 범위 적용
+            },
+          },
           include: {
             driving_records: {
-              where: {
-                created_at: {
-                  gte: new Date(new Date().getFullYear(), selectedMonth - 1, 1),
-                  lt: new Date(new Date().getFullYear(), selectedMonth, 0),
-                },
-              },
               select: {
                 total_driving_cases: true,
               },
