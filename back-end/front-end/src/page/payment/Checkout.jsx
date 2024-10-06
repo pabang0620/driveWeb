@@ -10,7 +10,7 @@ import "./payment.scss";
 // paymentKey, orderId는 서버에 필수로 저장하세요.
 // 결제 조회, 결제 취소에 사용되는 값입니다. 나머지 값들은 필요에 따라 저장하세요.
 
-function Checkout({ plans }) {
+function Checkout({ plans, nickname, email, phone }) {
   useCheckPermission();
 
   const clientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
@@ -118,9 +118,9 @@ function Checkout({ plans }) {
 
         failUrl: window.location.origin + "/payment/fail",
 
-        customerEmail: "customer123@gmail.com",
-        customerName: "김토스",
-        customerMobilePhone: "01012341234",
+        customerEmail: email,
+        customerName: nickname,
+        customerMobilePhone: phone,
       });
     } catch (error) {
       console.error(error);

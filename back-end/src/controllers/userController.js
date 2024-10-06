@@ -422,7 +422,7 @@ async function updateJobType(req, res) {
     }
 
     const token = jwt.sign(
-      { userId: user.id, jobType: user.jobType, permission: user.permission }, // jobType을 토큰의 페이로드에 추가
+      { userId: user.id, jobType: user.jobtype, permission: user.permission }, // jobType을 토큰의 페이로드에 추가
       process.env.JWT_SECRET,
       { expiresIn: "10h" }
     );
@@ -433,6 +433,23 @@ async function updateJobType(req, res) {
     res.status(500).send("Internal Server Error");
   }
 }
+
+const fetchUserProfilePay = async (req, res) => {
+  const { userId } = req; // 인증 미들웨어에서 설정된 사용자 ID
+
+  try {
+    const user = await getUserProfileById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch user profile" });
+  }
+};
 module.exports = {
   registerUser,
   resetPassword,
@@ -450,4 +467,5 @@ module.exports = {
   fetchUserVehiclesWithFees,
   fetchUserIncomeRecords,
   updateJobType,
+  fetchUserProfilePay,
 };

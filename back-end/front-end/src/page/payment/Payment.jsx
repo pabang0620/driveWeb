@@ -2,13 +2,45 @@ import { useEffect, useRef, useState } from "react";
 import Checkout from "./Checkout";
 import { jwtDecode } from "jwt-decode"; // JWT 디코딩을 위해 추가
 import "./payment.scss";
+import axios from "axios";
 
 export default function Payment() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [permission, setPermission] = useState(null); // permission 상태 추가
 
   // 각 플랜의 가격 정보
+  const [profileData, setProfileData] = useState(null);
+  const [error, setError] = useState("");
 
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행되는 코드
+    const fetchPayProfile = async () => {
+      // 로컬 스토리지에서 토큰 가져오기
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("Token not found");
+        return;
+      }
+
+      try {
+        const response = await axios.get("/api/user/payprofile", {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 담아서 전송
+          },
+        });
+
+        // 요청이 성공했을 때 데이터 설정
+        setProfileData(response.data);
+      } catch (error) {
+        // 에러 처리
+        setError("Failed to fetch profile data");
+        console.error(error);
+      }
+    };
+
+    fetchPayProfile(); // 함수 호출
+  }, []); // 빈 배열을 주어 마운트 시 한 번만 실행되도록 설정
   const plans = [
     {
       id: 1,
@@ -110,7 +142,14 @@ export default function Payment() {
               <button onClick={closeModal} className="modal-close-button">
                 ×
               </button>
-              <Checkout plans={plans} />
+              {profileData && (
+                <Checkout
+                  plans={plans}
+                  nickname={profileData.users.nickname}
+                  email={profileData.email}
+                  phone={profileData.phone}
+                />
+              )}
             </div>
           </div>
         )}

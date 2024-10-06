@@ -294,7 +294,7 @@
 .result.wrapper {
   background-color: rgb(244, 244, 244);
   padding: 100px 0;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 300px) !important;
   position: relative;
   @media (max-width: 768px) {
     padding: 0;

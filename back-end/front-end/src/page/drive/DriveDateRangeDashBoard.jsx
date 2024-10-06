@@ -112,21 +112,21 @@ const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
 
   // 운행일지 대시보드 데이터 가져오기
   const fetchData = async () => {
-    if (!isBlurred) {
-      try {
-        const response = await getDriveDashBoard(
-          dateRange.startDate,
-          dateRange.endDate
-        );
-        console.log(data);
-        setData(response);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching summary data:", error);
-        setError("Error fetching summary data");
-        setData(null);
-      }
+    // if (!isBlurred) {
+    try {
+      const response = await getDriveDashBoard(
+        dateRange.startDate,
+        dateRange.endDate
+      );
+      console.log(data);
+      setData(response);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching summary data:", error);
+      setError("Error fetching summary data");
+      setData(null);
     }
+    // }
   };
 
   useEffect(() => {
@@ -134,7 +134,9 @@ const DriveDateRangeDashBoard = ({ dateRange, isBlurred }) => {
   }, [dateRange.endDate]);
 
   return (
-    <div className={`selectedDateRangeData ${isBlurred ? "blurred" : ""}`}>
+    <div className="selectedDateRangeData">
+      {/* <div className={`selectedDateRangeData ${isBlurred ? "blurred" : ""}`}> */}
+
       <div>
         {items.map((item, index) => (
           <div className="selectedDateRangeData_item" key={index}>

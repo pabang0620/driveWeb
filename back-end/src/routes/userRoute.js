@@ -51,4 +51,6 @@ router.delete("/franchise-fee/:id", authMiddleware, removeFranchiseFee);
 
 router.put("/jobtype", authMiddleware, updateJobType);
 
+router.get("/payprofile", authMiddleware, fetchUserProfile);
+
 module.exports = router;

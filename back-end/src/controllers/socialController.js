@@ -168,6 +168,25 @@ const socialLogin = async (req, res, provider) => {
         await createDefaultMaintenanceItems(myCar.id, user.id);
 
         console.log("Default maintenance items created for car ID:", myCar.id);
+
+        // JWT 발급
+        const jwtToken = jwt.sign(
+          {
+            userId: user.id,
+            jobtype: user.jobtype,
+            permission: user.permission,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "10h" }
+        );
+
+        console.log("JWT token generated for user ID:", user.id);
+
+        return res.status(200).json({
+          token: jwtToken,
+          nickname: user.nickname,
+          message: "회원가입에 성공했습니다.",
+        });
       } catch (error) {
         console.error("Error during user creation process:", error);
         return res.status(500).json({
@@ -178,21 +197,22 @@ const socialLogin = async (req, res, provider) => {
       }
     } else {
       console.log("Existing user found with ID:", user.id);
+
+      // JWT 발급
+      const jwtToken = jwt.sign(
+        { userId: user.id, jobtype: user.jobtype, permission: user.permission },
+        process.env.JWT_SECRET,
+        { expiresIn: "10h" }
+      );
+
+      console.log("JWT token generated for existing user ID:", user.id);
+
+      return res.status(200).json({
+        token: jwtToken,
+        nickname: user.nickname,
+        message: "로그인 되었습니다.",
+      });
     }
-
-    // JWT 발급
-    const jwtToken = jwt.sign(
-      { userId: user.id, jobtype: user.jobtype, permission: user.permission },
-      process.env.JWT_SECRET,
-      { expiresIn: "10h" }
-    );
-
-    console.log("JWT token generated for user ID:", user.id);
-    res.status(200).json({
-      token: jwtToken,
-      nickname: user.nickname,
-      message: "회원가입에 성공했습니다.",
-    });
   } catch (error) {
     console.error("Error during social login:", error);
 

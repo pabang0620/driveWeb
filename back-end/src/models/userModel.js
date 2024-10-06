@@ -382,6 +382,23 @@ async function findUserById(userId) {
     throw error;
   }
 }
+
+const getUserProfileById = async (userId) => {
+  return await prisma.users.findFirst({
+    where: {
+      id: userId, // userId로 특정 사용자 조회
+    },
+    select: {
+      username: true,
+      user_profiles: {
+        select: {
+          phone: true,
+          email: true,
+        },
+      },
+    },
+  });
+};
 module.exports = {
   createUser,
   findUserByUsername,
@@ -401,4 +418,5 @@ module.exports = {
   getUserIncomeRecords,
   updateUserJobType,
   findUserById,
+  getUserProfileById,
 };
