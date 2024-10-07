@@ -84,10 +84,10 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
         },
         driving_logs: {
           where: {
-            created_at: {
+            date: {
               // `driving_logs` 테이블에서 날짜 필터링 적용
-              gte: startDate,
-              lt: endDate,
+              gte: startDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식
+              lt: endDate.toISOString().slice(0, 10),
             },
           },
           include: {
@@ -515,9 +515,10 @@ const getTopTotalCasesUsersModel = async (
       include: {
         driving_logs: {
           where: {
-            created_at: {
-              gte: startDate,
-              lt: endDate, // 필터링된 날짜 범위 적용
+            date: {
+              // `driving_logs` 테이블에서 날짜 필터링 적용
+              gte: startDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식
+              lt: endDate.toISOString().slice(0, 10),
             },
           },
           include: {
