@@ -19,7 +19,9 @@ async function updateRankingModel(id, updateData) {
 }
 
 // -----------------------------------------------
-// 총 운송수입금 랭킹
+// -----------------------------------------------
+// 총 운송수입금 랭킹 - 끝
+
 const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
   try {
     let vehicleFilterCondition = {};
@@ -141,7 +143,7 @@ const getTopNetIncomeUsers = async (filterType, filterValue, selectedMonth) => {
   }
 };
 
-// 운행 시간
+// 운행 시간 - 끝
 const getTopUsersByDrivingTime = async (
   filterType,
   filterValue,
@@ -203,13 +205,16 @@ const getTopUsersByDrivingTime = async (
           },
         },
         driving_logs: {
+          where: {
+            date: {
+              gte: startDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식으로 변환
+              lt: endDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식으로 변환
+            },
+          },
           include: {
             driving_records: {
-              where: {
-                created_at: {
-                  gte: startDate,
-                  lt: endDate,
-                },
+              select: {
+                working_hours_seconds: true,
               },
             },
           },
@@ -256,7 +261,7 @@ const getTopUsersByDrivingTime = async (
   }
 };
 
-// 연비 랭킹
+// 연비 랭킹 - 끝
 const getTopUsersByFuelEfficiency = async (
   filterType,
   filterValue,
@@ -265,6 +270,7 @@ const getTopUsersByFuelEfficiency = async (
   try {
     let fuelTypeCondition = {};
 
+    // 필터 타입에 따른 조건 설정
     if (filterType === "fuelType" && filterValue && filterValue !== "전체") {
       fuelTypeCondition = {
         user_vehicles: {
@@ -273,21 +279,29 @@ const getTopUsersByFuelEfficiency = async (
       };
     }
 
-    // users와 관련된 driving_logs와 driving_records를 가져오고, user_profiles에서 imageUrl을 가져옴
+    // 날짜 범위를 선택한 월에 맞게 설정
+    const currentYear = new Date().getFullYear();
+    const startDate = new Date(currentYear, selectedMonth - 1, 1);
+    const endDate = new Date(currentYear, selectedMonth, 0); // 해당 월의 마지막 날
+
+    // 사용자 데이터를 조회 (driving_logs, driving_records, user_profiles 포함)
     const users = await prisma.users.findMany({
       where: {
         ...fuelTypeCondition,
       },
       include: {
         driving_logs: {
+          where: {
+            date: {
+              gte: startDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식
+              lt: endDate.toISOString().slice(0, 10),
+            },
+          },
           include: {
             driving_records: {
-              where: {
-                // created_at 필드에서 selectedMonth에 해당하는 데이터를 필터링
-                created_at: {
-                  gte: new Date(new Date().getFullYear(), selectedMonth - 1, 1),
-                  lt: new Date(new Date().getFullYear(), selectedMonth, 1),
-                },
+              select: {
+                driving_distance: true,
+                fuel_amount: true,
               },
             },
           },
@@ -300,6 +314,7 @@ const getTopUsersByFuelEfficiency = async (
       },
     });
 
+    // 각 사용자의 총 주행 거리 및 연료 소모량 계산
     const usersWithFuelEfficiency = users.map((user) => {
       const totalDistance = user.driving_logs.reduce(
         (acc, log) =>
@@ -332,9 +347,12 @@ const getTopUsersByFuelEfficiency = async (
       };
     });
 
+    // 연비가 높은 순서로 정렬
     usersWithFuelEfficiency.sort(
       (a, b) => parseFloat(b.value) - parseFloat(a.value)
     );
+
+    // 상위 5명의 연비 반환
     return usersWithFuelEfficiency.slice(0, 5);
   } catch (error) {
     console.error("Error fetching top users by fuel efficiency:", error);
@@ -342,7 +360,7 @@ const getTopUsersByFuelEfficiency = async (
   }
 };
 
-// 주행 거리 랭킹
+// 주행 거리 랭킹 - 끝
 const getTopDrivingDistanceUsersModel = async (
   filterType,
   filterValue,
@@ -382,6 +400,17 @@ const getTopDrivingDistanceUsersModel = async (
     // 필터링된 사용자 ID 목록
     const userIds = userVehicles.map((uv) => uv.userId);
 
+    // 날짜 범위 설정 (선택된 달의 첫날과 마지막 날 설정)
+    const currentYear = new Date().getFullYear();
+    const startDate = `${currentYear}-${String(selectedMonth).padStart(
+      2,
+      "0"
+    )}-01`; // 선택한 달의 1일
+    const endDate = `${currentYear}-${String(selectedMonth).padStart(
+      2,
+      "0"
+    )}-${new Date(currentYear, selectedMonth, 0).getDate()}`; // 선택한 달의 마지막 날
+
     // 사용자 정보를 조회
     const users = await prisma.users.findMany({
       where: {
@@ -391,14 +420,15 @@ const getTopDrivingDistanceUsersModel = async (
       },
       include: {
         driving_logs: {
+          where: {
+            // `driving_logs`의 `date` 필드로 날짜 필터링 적용
+            date: {
+              gte: startDate, // 'YYYY-MM-DD' 형식으로 필터링
+              lt: endDate,
+            },
+          },
           include: {
             driving_records: {
-              where: {
-                created_at: {
-                  gte: new Date(new Date().getFullYear(), selectedMonth - 1, 1),
-                  lt: new Date(new Date().getFullYear(), selectedMonth, 1),
-                },
-              },
               select: {
                 driving_distance: true,
               },
@@ -450,7 +480,7 @@ const getTopDrivingDistanceUsersModel = async (
   }
 };
 
-// 총 건수 랭킹
+// 총 건수 랭킹 - 끝
 const getTopTotalCasesUsersModel = async (
   filterType,
   filterValue,
@@ -610,15 +640,16 @@ async function getTopProfitLossUsersModel(
     }
   }
 
-  // 특정 월에 해당하는 expense_records 조건 추가
-  const monthCondition = {};
+  // 특정 월에 해당하는 driving_logs의 date 필드로 필터링 조건 추가
+  const drivingLogsDateCondition = {};
   if (selectedMonth) {
     const month = parseInt(selectedMonth, 10); // selectedMonth를 정수로 변환
-    const startDate = new Date(new Date().getFullYear(), month - 1, 1);
-    const endDate = new Date(new Date().getFullYear(), month, 0);
-    monthCondition.created_at = {
-      gte: startDate,
-      lt: endDate,
+    const currentYear = new Date().getFullYear();
+    const startDate = new Date(currentYear, month - 1, 1);
+    const endDate = new Date(currentYear, month, 0);
+    drivingLogsDateCondition.date = {
+      gte: startDate.toISOString().slice(0, 10), // 'YYYY-MM-DD' 형식
+      lt: endDate.toISOString().slice(0, 10),
     };
   }
 
@@ -632,10 +663,19 @@ async function getTopProfitLossUsersModel(
           imageUrl: true,
         },
       },
-      expense_records: {
-        where: monthCondition, // 날짜 필터 추가
+      driving_logs: {
+        where: drivingLogsDateCondition, // 날짜 필터링 추가
         select: {
-          profit_loss: true,
+          income_records: {
+            select: {
+              total_income: true,
+            },
+          },
+          expense_records: {
+            select: {
+              profit_loss: true,
+            },
+          },
         },
       },
     },
@@ -643,9 +683,12 @@ async function getTopProfitLossUsersModel(
 
   // 각 사용자의 순이익 합산
   const usersWithTotalProfitLoss = users.map((user) => {
-    const totalProfitLoss = user.expense_records.reduce((acc, record) => {
-      const profitLossValue = parseFloat(record.profit_loss || 0);
-      return acc + (isNaN(profitLossValue) ? 0 : profitLossValue);
+    // 총 수익과 지출을 기반으로 순이익 계산
+    const totalProfitLoss = user.driving_logs.reduce((acc, log) => {
+      const profitLossValue = log.expense_records.reduce((logAcc, record) => {
+        return logAcc + parseFloat(record.profit_loss || 0);
+      }, 0);
+      return acc + profitLossValue;
     }, 0);
 
     // 10000 -> 10,000원 형식으로 변환
