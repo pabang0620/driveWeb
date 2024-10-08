@@ -254,7 +254,7 @@ const updateTotalIncome = async (id, data) => {
   try {
     // `driving_log_id`를 사용하여 `driving_records`에서 해당 `driving_distance` 가져오기
     const drivingRecord = await prisma.driving_records.findFirst({
-      where: { driving_logs_id: data.driving_log_id },
+      where: { driving_log_id: data.driving_log_id },
       select: { driving_distance: true }, // 필요한 필드만 선택
     });
 
