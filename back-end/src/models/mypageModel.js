@@ -108,7 +108,9 @@ const getTotalExpense = async (userId) => {
       userId, // 사용자 ID로만 필터링
     },
   });
-  return result._sum.total_expense || 0;
+
+  // 소숫점 제거 후 반환 (null 또는 undefined일 때 0 반환)
+  return result._sum.total_expense ? Math.floor(result._sum.total_expense) : 0;
 };
 
 // 주행거리의 합 - 2
@@ -216,11 +218,6 @@ const getExpenseRecords = async (logIds) => {
 // 차트
 // 수입
 const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
-  // console.log("getIncomeRecordsByDateRange - Params:", {
-  //   userId,
-  //   startDate,
-  //   endDate,
-  // });
   const result = await prisma.income_records.aggregate({
     _sum: {
       card_income: true,
@@ -246,16 +243,20 @@ const getIncomeRecordsByDateRange = async (userId, startDate, endDate) => {
       },
     },
   });
-  // console.log("getIncomeRecordsByDateRange - Result:", result);
-  return result._sum;
+
+  // 소숫점 제거 (Math.floor 사용)
+  const processedResult = Object.fromEntries(
+    Object.entries(result._sum).map(([key, value]) => [
+      key,
+      value ? Math.floor(value) : 0, // 값이 있으면 소숫점 제거, 없으면 0
+    ])
+  );
+
+  return processedResult;
 };
+
 // 지출
 const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
-  // console.log("getExpenseRecordsByDateRange - Params:", {
-  //   userId,
-  //   startDate,
-  //   endDate,
-  // });
   const result = await prisma.expense_records.aggregate({
     _sum: {
       fuel_expense: true,
@@ -286,9 +287,18 @@ const getExpenseRecordsByDateRange = async (userId, startDate, endDate) => {
       },
     },
   });
-  // console.log("getExpenseRecordsByDateRange - Result:", result);
-  return result._sum;
+
+  // 소숫점 제거 (Math.floor 사용)
+  const processedResult = Object.fromEntries(
+    Object.entries(result._sum).map(([key, value]) => [
+      key,
+      value ? Math.floor(value) : 0, // 값이 있으면 소숫점 제거, 없으면 0
+    ])
+  );
+
+  return processedResult;
 };
+
 // 혼합 차트
 const getDrivingRecordsByDate = async (userId, dateString) => {
   const records = await prisma.driving_logs.findMany({

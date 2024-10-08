@@ -106,6 +106,14 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
                 style: {
                   fontWeight: "bold", // 폰트 굵게 설정
                 },
+                formatter: function (w) {
+                  const totalValue = series.reduce(
+                    (acc, curr) => acc + curr,
+                    0
+                  );
+                  const roundedValue = Math.floor(totalValue / 100) * 100; // 백의 자리 이하를 0으로
+                  return roundedValue.toLocaleString("ko-KR"); // 천 단위 콤마 추가
+                },
               },
             },
           },
@@ -259,7 +267,7 @@ const CircularChart = ({ dateRange, title, url, isBlurred }) => {
 
   return (
     <div className={`circularChart_container ${isBlurred ? "blurred" : ""}`}>
-      <h3>{title} 차트</h3>
+      <h3>{title}</h3>
       <div className="circularChart">
         <ApexChart
           options={{

@@ -58,12 +58,7 @@
         width: 90%;
       }
       @media (max-width: 768px) {
-        width: 50%;
-        text-align: center;
-        flex-direction: row;
         border: none;
-        gap: 39px;
-        margin: 30px 33px 0;
       }
       > div {
         display: flex;

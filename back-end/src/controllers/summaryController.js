@@ -122,16 +122,19 @@ const getSummaryData = async (req, res) => {
         0
       );
 
-      const totalIncomePerHour = records.incomeRecords.reduce(
-        (acc, record) => acc + (Number(record._sum.income_per_hour) || 0),
-        0
+      const totalIncomePerHour = Math.floor(
+        records.incomeRecords.reduce(
+          (acc, record) => acc + (Number(record._sum.income_per_hour) || 0),
+          0
+        )
       );
 
-      const totalIncomePerKm =
+      const totalIncomePerKm = Math.floor(
         records.incomeRecords.reduce(
           (acc, record) => acc + (Number(record._sum.income_per_km) || 0),
           0
-        ) / records.incomeRecords.length || 0; // 평균 계산
+        ) / records.incomeRecords.length || 0 // 평균 계산 후 소숫점 제거
+      );
 
       // 사용자별 데이터 저장
       userSums.push({

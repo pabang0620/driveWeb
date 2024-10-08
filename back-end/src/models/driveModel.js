@@ -239,7 +239,7 @@ const updateIncomeRecord = async (id, data) => {
         income_spare_3: data.income_spare_3,
         income_spare_4: data.income_spare_4,
         total_income: data.total_income,
-        income_per_km: data.income_per_km,
+        income_per_km: Math.round(data.income_per_km),
         income_per_hour: data.income_per_hour,
       },
     });
@@ -252,6 +252,16 @@ const updateIncomeRecord = async (id, data) => {
 
 const updateTotalIncome = async (id, data) => {
   try {
+    // `driving_log_id`를 사용하여 `driving_records`에서 해당 `driving_distance` 가져오기
+    const drivingRecord = await prisma.driving_records.findFirst({
+      where: { driving_logs_id: data.driving_log_id },
+      select: { driving_distance: true }, // 필요한 필드만 선택
+    });
+
+    const driving_distance = drivingRecord
+      ? parseFloat(drivingRecord.driving_distance || 0)
+      : 0;
+
     const total_income =
       parseFloat(data.card_income || 0) +
       parseFloat(data.cash_income || 0) +
@@ -267,28 +277,31 @@ const updateTotalIncome = async (id, data) => {
       parseFloat(data.income_spare_3 || 0) +
       parseFloat(data.income_spare_4 || 0);
 
+    // km당 시간당
     // income_per_km와 income_per_hour 계산
-    const business_distance = parseFloat(data.business_distance || 0);
+    const business_distance = driving_distance; // `driving_records`에서 가져온 값 사용
     const working_hours_seconds = parseFloat(data.working_hours || 0);
 
+    // income_per_km와 income_per_hour 계산
     const income_per_km = business_distance
-      ? business_distance / total_income
+      ? total_income / business_distance
       : 0;
 
     const income_per_hour = working_hours_seconds
       ? total_income / (working_hours_seconds / 3600) // seconds to hours
       : 0;
 
-    console.log("###########################################");
-    console.log(total_income);
-    console.log(working_hours_seconds);
-    console.log(income_per_km);
-    console.log(income_per_hour);
+    // console.log("###########################################");
+    // console.log(total_income);
+    // console.log(working_hours_seconds);
+    // console.log(income_per_km);
+    // console.log(income_per_hour);
+
     const updatedRecord = await prisma.income_records.update({
       where: { id: id },
       data: {
         total_income: total_income,
-        income_per_km: income_per_km,
+        income_per_km: Math.round(income_per_km), // 소수점 반올림
         income_per_hour: income_per_hour,
       },
     });

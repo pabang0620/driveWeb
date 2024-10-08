@@ -158,6 +158,40 @@ const updateUserProfileData = async (userId, profileData, nickname) => {
     throw error;
   }
 };
+// 닉네임 중복 확인
+const checkNicknameDuplicate = async (userId, nickname) => {
+  // 금지된 단어 리스트
+  const forbiddenWords = [
+    "관리자",
+    "admin",
+    "병신",
+    "시발",
+    "장애인",
+    "농아",
+    "고아",
+  ]; // 한국어 욕설 및 금지된 단어 추가
+
+  // 닉네임에 금지된 단어가 포함되어 있는지 확인
+  const containsForbiddenWord = forbiddenWords.some((word) =>
+    nickname.toLowerCase().includes(word.toLowerCase())
+  );
+
+  if (containsForbiddenWord) {
+    throw new Error("닉네임에 금지된 단어가 포함되어 있습니다.");
+  }
+
+  try {
+    const existingUser = await prisma.users.findFirst({
+      where: { nickname: nickname },
+    });
+
+    // 중복된 닉네임이 있고, 해당 닉네임을 사용 중인 사용자가 현재 사용자가 아닌 경우 중복으로 간주
+    return existingUser && existingUser.id !== userId;
+  } catch (error) {
+    console.error("닉네임 중복 확인 중 오류 발생:", error);
+    throw new Error("닉네임 중복 확인에 실패했습니다.");
+  }
+};
 
 // 닉네임, 보안 질문, 보안 답변을 기반으로 사용자 찾기
 const findUserByNicknameAndSecurity = async (
@@ -407,6 +441,7 @@ module.exports = {
   findUserByNicknameAndSecurity,
   updateUserPassword,
   updateUserProfileData,
+  checkNicknameDuplicate, // 닉네임 중복 확인
   updateUserVehicle,
   updateUserIncomeData,
   createFranchiseFee,

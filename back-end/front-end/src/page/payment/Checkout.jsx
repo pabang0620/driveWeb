@@ -107,6 +107,10 @@ function Checkout({ plans, nickname, email, phone }) {
     // 선택한결제아이디 1="1개월(30일)", 2="6개월(180일)", 3="12개월(365일)"
 
     try {
+      if (!phone) {
+        alert("회원정보 > 개인정보에서 휴대폰을 등록해주세요.");
+        return; // 더 이상 진행하지 않음
+      }
       await widgets.requestPayment({
         orderId: orderId, // 생성된 주문 ID
 

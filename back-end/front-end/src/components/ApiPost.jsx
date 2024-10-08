@@ -33,6 +33,10 @@ const putData = async (url, data, isFormData = false) => {
     });
     return response.data;
   } catch (error) {
+    // 서버에서 반환된 오류가 505인 경우 처리
+    if (error.response && error.response.status === 505) {
+      alert("중복된 닉네임입니다."); // 505 오류 시 경고창 출력
+    }
     throw new Error(`정보 보내기 실패: ${error.message}`);
   }
 };

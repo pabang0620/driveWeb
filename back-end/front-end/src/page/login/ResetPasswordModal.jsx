@@ -36,7 +36,7 @@ function ResetPasswordModal({ username, onClose }) {
   };
 
   return (
-    <div className="modal">
+    <div className="modalChage">
       <div className="modal-content">
         <h3>비밀번호 재설정</h3>
         <p>새로운 비밀번호를 입력하고 확인하세요.</p>

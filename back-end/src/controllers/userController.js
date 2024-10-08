@@ -17,6 +17,7 @@ const {
   findUserByNicknameAndSecurity,
   updateUserPermission,
   deletePremiumPaymentByUserId,
+  checkNicknameDuplicate,
 } = require("../models/userModel");
 const paymentController = require("../controllers/paymentController");
 
@@ -234,6 +235,12 @@ const updateUserProfile = async (req, res) => {
   };
 
   try {
+    if (nickname) {
+      const isDuplicate = await checkNicknameDuplicate(userId, nickname);
+      if (isDuplicate) {
+        return res.status(505).json({ error: "중복된 닉네임입니다." });
+      }
+    }
     const profile = await updateUserProfileData(userId, profileData, nickname);
     res.status(200).json(profile);
   } catch (error) {

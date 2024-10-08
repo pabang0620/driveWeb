@@ -87,9 +87,7 @@ const getTopUsers = async (req, res) => {
 };
 
 // 운송수입금 오류
-// 운송수입금 오류
-// 운송수입금 오류
-// 운송수입금 오류
+
 const getTopNetIncomeUsersController = async (req, res) => {
   try {
     const { filterType, filterValue, selectedMonth } = req.body; // 클라이언트로부터 필터 타입과 값을 받음
@@ -148,10 +146,8 @@ async function topDrivingDistanceUsers(req, res) {
   }
 }
 
-// 총 건수 랭킹 -------------- dhfb
-// 총 건수 랭킹 -------------- dhfb
-// 총 건수 랭킹 -------------- dhfb
-// 총 건수 랭킹 -------------- dhfb
+// 총 건수 랭킹 --------------
+
 async function topTotalCasesUsers(req, res) {
   try {
     const { filterType, filterValue, selectedMonth } = req.body;

@@ -692,7 +692,8 @@ async function getTopProfitLossUsersModel(
     }, 0);
 
     // 10000 -> 10,000원 형식으로 변환
-    const formattedProfitLoss = totalProfitLoss.toLocaleString("ko-KR") + "원";
+    const formattedProfitLoss =
+      Math.floor(totalProfitLoss).toLocaleString("ko-KR") + "원";
 
     return {
       id: user.id,

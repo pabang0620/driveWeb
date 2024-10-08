@@ -313,6 +313,20 @@ const getDriveDetails = async (req, res) => {
 
     const incomeRecord = drivingLog.income_records[0];
     const expenseRecord = drivingLog.expense_records[0];
+
+    // 소숫점 제거하는 부분 추가 (income_per_km 및 income_per_hour)
+    const processedIncomeRecord = incomeRecord
+      ? {
+          ...filterZeroValues(incomeRecord),
+          income_per_km: incomeRecord.income_per_km
+            ? Math.floor(incomeRecord.income_per_km) // 소숫점 제거
+            : 0,
+          income_per_hour: incomeRecord.income_per_hour
+            ? Math.floor(incomeRecord.income_per_hour) // 소숫점 제거
+            : 0,
+        }
+      : {};
+
     const result = {
       id: drivingLog.id,
       memo: drivingLog.memo,
@@ -330,7 +344,7 @@ const getDriveDetails = async (req, res) => {
         business_rate: record.business_rate,
         day_of_week: record.day_of_week,
       })),
-      income_records: incomeRecord ? filterZeroValues(incomeRecord) : {},
+      income_records: processedIncomeRecord,
       expense_records: expenseRecord ? filterZeroValues(expenseRecord) : {},
     };
 

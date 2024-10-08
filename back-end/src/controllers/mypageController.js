@@ -50,11 +50,13 @@ const getMyPageData = async (req, res) => {
 
     // 전체 유저 데이터에서 각 항목별 리스트 생성
     const allIncomes = incomeRecords.map(
-      (record) => record._sum.total_income || 0
+      (record) => Math.floor(record._sum.total_income || 0) // 소숫점 제거
     );
+
     const allExpenses = expenseRecords.map(
-      (record) => record._sum.total_expense || 0
+      (record) => Math.floor(record._sum.total_expense || 0) // 소숫점 제거
     );
+
     const allDrivingDistances = drivingRecords.map(
       (record) => record._sum.driving_distance || 0
     );
